@@ -1,0 +1,16 @@
+<div class="top">
+    <h1 class="fl"><a href="/"><img src="<?php echo STATICS_IMG?>logo_ks.png" width="32" height="32"/></a></h1>	
+    <p class="fr">	<a href="<?php echo url('book/index/shelf')?>" class="icon_user" title="用户中心">用户中心</a>	
+    </p>
+</div>
+
+<div class="search">
+    <div class="searchbox mt10 clearfix">
+        <form action="<?php echo url('search')?>" method="get">
+            <input name="str" type="text" class="t_i" placeholder="关键字" autocomplete="off" value="<?php echo $str?>"/>
+            <div class="searchbtn"> <span class="t_b"></span>  <span class="t_t">搜索</span> 
+                <input type="submit" value="" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<?php $this->view('Book/Public/header')?>
+
+<body>
+    <div class="header"> 
+        <span class="nav_left"><a href="javascript:history.go(-1)">返回</a></span>  
+        <span class="nav_right"><a href="/">首页</a></span> 
+        <h1>登录</h1>
+    </div>
+    <div class="wrap">
+        <div class="t_p">
+            <p></p>
+        </div>
+        <div class="section">
+            <div class="login">
+                <ul class="blist">
+                    <li class="item">
+                        <div class="item_box"> <span class="icons icon_log fl"></span>  <span class="item_inp"><input placeholder="请输入用户名" name="username" id="username" class="t_i" type="text"></span> 
+                        </div>
+                    </li>
+                    <li class="item">
+                        <div class="item_box"> <span class="icons icon_pass"></span>  <span class="item_inp"><input placeholder="请输入密码" name="password" id="password" class="t_i" type="password"></span> 
+                        </div>
+                    </li>
+                    <li class="item">
+                        <div class="item_box"> <span class="icons icon_code"><img src="<?php echo url('account/user/code')?>" data-url="<?php echo url('account/user/code')?>"  id="code_img" /></span>  <span class="item_inp2"><input placeholder="请输入验证码" name="code" id="code" class="t_i" type="text"></span>
+                        </div>
+                    </li>
+                    <li class="item">
+                        <input id="dologin" class="t_b btn_log" value="登录" type="button">
+                    </li>
+                    <li class="item"> <a href="<?php echo url('reg')?>" class="t_b btn_reg">还没账号？点此注册</a> 
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="<?php echo JS_PATH?>jsencrypt.min.js"></script>
+    <script src="<?php echo JS_PATH?>login.js"></script>
+    
+<?php $this->view('Book/Public/footer')?>

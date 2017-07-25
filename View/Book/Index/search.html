@@ -1,0 +1,53 @@
+<?php $this->view('Book/Public/header')?>
+
+<body>
+
+    <?php $this->view('Book/Public/header2')?>
+    
+    <div class="section">
+        <h3 class="title"><span class="b_l"><?php echo $str?></span></h3>
+        <div class="box tab-pane clearfix">
+            <div class="blist tab-content active">
+                <ul id="search_list">
+                    <?php foreach($list as $v):?>
+                    <li>
+                        <a href="<?php echo uri('book', $v['DefaultFromId'].'_'.$v['BookId']);?>">
+                            <div class="bcover fl">
+                                <img src="<?php echo $v['Cover']?>" height="130" width="85" />
+                            </div>
+                            <div class="bintro pl10">
+                                <h4><?php echo $v['BookName']?></h4>
+                                <p><?php echo $v['TypeName']?> . <?php echo $v['Author']?>
+                                    <br><?php echo $v['BookDesc']?></p>
+                            </div>
+                        </a>
+                    </li>
+                    <?php endforeach;?>
+                </ul>
+                <?php if (count($list) == 10):?>
+                <p class="item mt15"><a href="javascript:void(0);" class="t_b btn_vip" id="search_more_btn">加载更多</a></p>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+
+    <div class="search">
+        <div class="searchbox mt10 clearfix">
+            <form action="<?php echo url('search')?>" method="get">
+                <input name="str" type="text" class="t_i" placeholder="关键字" autocomplete="off" value="<?php echo $str?>"/>
+                <div class="searchbtn"> <span class="t_b"></span>  <span class="t_t">搜索</span>
+                    <input type="submit" value="" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(window).scroll(function () {
+            var bot = 160; //bot是底部距离的高度
+            if ((bot + $(window).scrollTop()) >= ($(document).height() - $(window).height())) {
+                getAjaxList();
+            }
+        });
+    </script>
+
+    <?php $this->view('Book/Public/footer')?>

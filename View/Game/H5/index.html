@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $seo['title']?></title>
+    <meta name="keywords" content="<?php echo $seo['key']?>">
+    <meta name="description" content="<?php echo $seo['desc']?>">
+    <style>
+        *,html,body{margin: 0;padding: 0;}
+        body{background: #A3C293}
+        .container{width: 1000px; margin: 29px auto; overflow: hidden;}
+        .container a.floating{display: block; float: left; width: 225px; height: 150px; border: solid 1px #e3e3e3; border-radius: 5px; margin: 6px 0 6px 18px; cursor: pointer; background: #ffefaa;text-decoration: none; color: #2c2c2c;}
+        .container a:hover{text-decoration: none; color: #ff5bd1}
+        .container .floating .header{margin-top:50px;width: 225px; height: 50px; text-align: center; line-height: 50px; text-overflow: ellipsis; white-space:nowrap; overflow: hidden;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <?php foreach($list as $k => $v):?>
+    <a class="floating" title="<?php echo $v?>" href="<?php echo url($k)?>">
+        <h1 class="header"><?php echo $v?></h1>
+    </a>
+    <?php endforeach;?>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>成功</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- 确保适当的绘制和触屏缩放 -->
+    <style type="text/css">
+        .container span {
+            font-size: 30px;
+            height: 80px;
+            display: inline-block;
+            line-height: 80px;
+        }
+
+        #time {
+            color: #80E31C;
+            font-size: 60px;
+        }
+
+        #new {
+            text-decoration: underline;
+            color: #2828FF;
+        }
+
+        .container {
+            height: 80px;
+            margin: 50px auto;
+            text-align: center;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body style="background-color: #007900;">
+<div>
+    <div class="container">
+        <span>恭喜，提交成功！<span id="time"> 3 </span>秒后跳转至添加页。<a id="new" href="{($success)?$success:'?do=Add'}">立即跳转</a></span>
+    </div>
+</div>
+
+<script>
+    var time = 3;
+    var url =  "{($success)?$success:'?do=Add'}";
+    var timer = setInterval(function () {
+        time--;
+        document.getElementById("time").innerHTML = time;
+        if (time < 1) {
+            location.href = url;
+            clearInterval(timer);
+        }
+    }, 1000);
+</script>
+</body>
+<html>

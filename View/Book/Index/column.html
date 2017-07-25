@@ -1,0 +1,69 @@
+<?php $this->view('Book/Public/header')?>
+
+<body>
+    <div class="header"> <span class="nav_left"><a href="javascript:history.back()">返回</a></span><span class="nav_right"><a rel="internal" href="<?php echo uri('book', 'type_'.$rtypes[$book['TypeName']])?>"><?php echo $book['TypeName']?></a></span>
+        <h1>目录</h1>
+    </div>
+    <div class="wrap">
+       <div class="section bindex">
+            <div class="btitle"><a class="ye"><?php echo $book['BookName']?></a>
+            </div>
+            <div class="blist">
+                <ul>
+                    <li>
+                        <div class="bookwrap clearfix">
+                            <div class="bcover fl">
+                                <img src="<?php echo $book['Cover']?>" height="110" width="75">
+                            </div>
+                            <div class="bintro b_i pl10">
+                                <p>类型: <b class="tname"><a href="{:U('search',array('t'=>$_info['tid']))}" class="ye"><?php echo $book['TypeName']?></a></b>
+                                    <br/>作者: <?php echo $book['Author']?>
+                                    <br/>推荐: <?php echo $book['LikeCount']?>
+                                    <br/>阅读: <?php echo $book['ViewCount']?>
+                                    <br/>状态: <?php echo $book['IsFinish'] >= 1 ? '完结' : '连载'?>
+                                    </p>
+                            </div>
+                        </div>
+                        <div class="blink gyb bl3 mt5">
+                            <?php if ($rdbk):?>
+                            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $rdbk)?>" class="cur">继续阅读</a>
+                            <?php else:?>
+                            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $column[0]['ChapterId'])?>" class="cur">立即阅读</a>
+                            <?php endif;?>
+                            
+                            <a href="javascript:void(0);" class="favBook" data-bid="<?php echo $book['BookId']?>" ><?php if ($isfav):?>取消收藏<?php else:?>收藏本书<?php endif;?></a>
+                            
+                            <a href="javascript:void(0);" class="last recmBook" data-bid="<?php echo $book['BookId']?>" ><?php if ($isrec):?>已推荐<?php else:?>推荐本书<?php endif;?></a>
+                            
+                        </div>
+                    </li>
+                    <li>
+                        <div class="intro">
+                            <p><b>简介：</b><?php echo htmlspecialchars_decode($book['BookDesc'])?></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+            <div class="tab-menu t2 mt15">
+                <a href="javascript:void(0)">
+                    <select onchange="location.href=this.value" class="siteselect">
+                        <?php foreach($fromsites as $k => $v):?>
+                        <option <?php if($k == $fromid):?>selected="selected"<?php endif;?> value="<?php echo uri('book', $k.'_'.$bookid)?>"><?php echo $v?></option>
+                        <?php endforeach;?>
+                    </select>
+                </a>
+                <a href="javascript:void(0)" id="gobottom">直达底部</a>
+            </div>
+            <div class="dir_list">
+                <ul class="blist">
+                    <?php foreach($column as $v):?>
+                        <li><span class="bname"><a href="<?php echo uri('book', $fromid.'_'.$bookid, $v['ChapterId'])?>"><?php echo $v['ChapterName']?></a></span></li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <?php $this->view('Book/Public/footer')?>

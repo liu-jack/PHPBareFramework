@@ -1,0 +1,30 @@
+<?php $this->view('Tool/Public/header');?>
+
+<div class="ui text container" style="max-width: none !important;margin-top: 50px;">
+    <div class="ui floating message">
+        <h1 class="ui header">类列表</h1>
+        <table class="ui black celled striped table">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>类名称</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+                if (!empty($files)) {
+                    $num = 1;
+                    foreach ($files as $k => $v) {
+                        echo '<tr>';
+                        echo '<td>'.$num.'</td>';
+                        echo '<td><a href="'. uri('apidoc/methods', $_GET['module'].'_'.$v) .'">'.$_GET['module'] .'/'.$v.'</a></td>';
+                        echo '</tr>';
+                        $num++;
+                    }
+                }
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+<?php $this->view('Tool/Public/footer');?>
