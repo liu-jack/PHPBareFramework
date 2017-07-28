@@ -19,11 +19,21 @@ class Apidoc extends Controller
      */
     public function index()
     {
-        $api_path = CONTROLLER_PATH . API_PATH;
+        if (empty($_GET['ver'])) {
+            $api_path = CONTROLLER_PATH . API_PATH;
+        } else {
+            $_GET['ver'] = str_replace('.', '', $_GET['ver']);
+            $api_path = CONTROLLER_PATH . API_PATH . '/Adapter/' . $_GET['ver'];
+        }
+
         $dirs = scandir($api_path);
         foreach ($dirs as $k => $v) {
-            if ($v == '.' || $v == '..') {
+            if ($v == '.' || $v == '..' || $v == 'Adapter') {
                 unset($dirs[$k]);
+            } else {
+                if (!empty($_GET['ver'])) {
+                    $dirs[$k] = 'Adapter.' . $_GET['ver'] . '.' . $v;
+                }
             }
         }
         $this->value('dirs', $dirs);
@@ -37,7 +47,7 @@ class Apidoc extends Controller
     public function lists()
     {
         $dir = $_GET['module'];
-        $dir_path = CONTROLLER_PATH . API_PATH . '/' . $dir;
+        $dir_path = CONTROLLER_PATH . API_PATH . '/' . str_replace('.', '/', $dir);
         $files = scandir($dir_path);
         foreach ($files as $k => $v) {
             if ($v == '.' || $v == '..') {
@@ -58,7 +68,7 @@ class Apidoc extends Controller
     {
         $dir = $_GET['module'];
         $file = $_GET['class'];
-        $file_path = CONTROLLER_PATH . API_PATH . '/' . $dir . '/' . $file . '.php';
+        $file_path = CONTROLLER_PATH . API_PATH . '/' . str_replace('.', '/', $dir) . '/' . $file . '.php';
 
         $file_data = self::_makeFile($file_path); //通过原来的类文件生成新的类文件
         include_once($file_data['file_name']); //包含文件
@@ -95,10 +105,11 @@ class Apidoc extends Controller
         $dir = $_GET['module'];
         $class = $_GET['class'];
         $method = $_GET['method'];
-        $file_path = CONTROLLER_PATH . API_PATH . '/' . $dir . '/' . $class . '.php';
+        $file_path = CONTROLLER_PATH . API_PATH . '/' . str_replace('.', '/', $dir) . '/' . $class . '.php';
         include_once($file_path);
         //获取返回结果
-        $r_method = new \ReflectionMethod('\\Controller\\' . API_PATH . '\\' . $dir . '\\' . $class, $method);
+        $r_method = new \ReflectionMethod('\\Controller\\' . API_PATH . '\\' . str_replace('.', '\\',
+                $dir) . '\\' . $class, $method);
         $doc_comment = $r_method->getDocComment();
         //获取接口参数
         $sp = '/*/';

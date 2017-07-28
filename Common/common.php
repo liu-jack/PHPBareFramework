@@ -9,7 +9,7 @@
  * @param string $table 共用表名
  * @return bool|string
  */
-function table(int $id, $table = '')
+function table($id, $table = '')
 {
     if ($id > 0) {
         return $table . sprintf('%02x', $id % 256);
@@ -24,7 +24,7 @@ function table(int $id, $table = '')
  * @param string $ext 图片保持扩展名
  * @return mixed|string
  */
-function cover(int $id, $ver = -1, $ext = '.jpg')
+function cover($id, $ver = -1, $ext = '.jpg')
 {
     $base = 'book/cover/%02x/%02x/%d' . $ext;
     $url = UPLOAD_URI . sprintf($base, $id % 256, $id % 255, $id);
@@ -43,7 +43,7 @@ function cover(int $id, $ver = -1, $ext = '.jpg')
  * @param int $ver 图片版本号
  * @return mixed|string
  */
-function contentImg(int $id, $fid, $ver = -1, $ext = '.gif')
+function contentImg($id, $fid, $ver = -1, $ext = '.gif')
 {
     $base = 'book/content/%02x/%02x/%s' . $ext;
     $url = UPLOAD_PATH . sprintf($base, $fid % 256, $id % 256, $fid . '_' . $id);

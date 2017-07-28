@@ -7,6 +7,9 @@
 
 namespace Bare;
 
+use Model\Account\User as AUser;
+use Model\Passport\PassportApi;
+
 Class Controller
 {
     /**
@@ -124,7 +127,7 @@ Class Controller
                     session_id($ssid);
                     session_start();
                     if (empty($_SESSION['uid'])) {
-                        $decode = \Model\Passport\PassportApi::decode($ssid);
+                        $decode = PassportApi::decode($ssid);
                         if (!empty($decode['uid']) && is_numeric($decode['uid'])) {
                             $_SESSION['uid'] = $decode['uid'];
                             $_SESSION['login_count'] = $decode['login_count'];
@@ -144,7 +147,7 @@ Class Controller
                 }
 
                 succ:
-                $userinfo = \Model\Account\User::getUserById($_SESSION['uid']);
+                $userinfo = AUser::getUserById($_SESSION['uid']);
                 if (empty($userinfo['UserId'])) {
                     goto fail;
                 }

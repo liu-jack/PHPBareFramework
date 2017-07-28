@@ -9,7 +9,7 @@
 
 return [
     'create_book' => <<<EOT
-CREATE TABLE IF NOT EXISTS `book` (
+CREATE TABLE IF NOT EXISTS `Book` (
   `BookId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `BookName` varchar(50) NOT NULL COMMENT '书名',
   `Author` varchar(50) NOT NULL COMMENT '作者',
@@ -34,7 +34,7 @@ ALTER TABLE `book` AUTO_INCREMENT=30;
 EOT
     ,
     'create_book_collect' => <<<EOT
-CREATE TABLE `book_collect` (
+CREATE TABLE `BookCollect` (
 `CollectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
 `BookId` int(11) unsigned NOT NULL COMMENT '书id',
 `FromId` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '来源id',
@@ -45,8 +45,8 @@ PRIMARY KEY (`CollectId`)
 ALTER TABLE `book` AUTO_INCREMENT=30;
 EOT
     ,
-    'create_book_columns' => <<<EOT
-CREATE TABLE IF NOT EXISTS `book_columns` (
+    'create_book_column' => <<<EOT
+CREATE TABLE IF NOT EXISTS `BookColumn` (
   `ChapterId` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `BookId` int(11) unsigned NOT NULL COMMENT '书id',
   `ChapterName` varchar(100) NOT NULL DEFAULT '' COMMENT '章节名称',
@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS `book_columns` (
 ALTER TABLE `book_columns` AUTO_INCREMENT=30;
 EOT
     ,
-    'create_book_contents' => <<<EOT
-CREATE TABLE IF NOT EXISTS `book_contents` (
+    'create_book_content' => <<<EOT
+CREATE TABLE IF NOT EXISTS `BookContent` (
   `ContentId` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `ChapterId` bigint(20) unsigned NOT NULL COMMENT '章节id',
   `Content` text NOT NULL COMMENT '章节内容',

@@ -31,62 +31,62 @@ $config = [
     'TEST' => [
         'mysql' => [
             'default' => [
-                'w' => ['host' => '192.168.1.105', 'user' => 'proxy_w', 'password' => 'proxy'],
-                'r' => ['host' => '192.168.1.105', 'user' => 'proxy_r', 'password' => 'proxy'],
+                'w' => ['host' => '192.168.1.102', 'user' => 'proxy_w', 'password' => 'proxy'],
+                'r' => ['host' => '192.168.1.102', 'user' => 'proxy_r', 'password' => 'proxy'],
+            ],
+        ],
+        'memcache' => [
+            'default' => [
+                ['host' => '192.168.1.102', 'port' => 11211]
+            ]
+        ],
+        'redis' => [
+            'default' => [
+                'w' => ['host' => '192.168.1.102', 'port' => 6379],
+                'r' => ['host' => '192.168.1.102', 'port' => 6379],
+            ]
+        ],
+        'search' => [
+            'default' => ['host' => '192.168.1.102', 'port' => 9200],
+        ],
+        'mongodb' => [
+            'default' => ['host' => '192.168.1.102', 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
+        ]
+    ],
+    'ONLINE' => [
+        'mysql' => [
+            'default' => [
+                'w' => ['host' => '192.168.1.105', 'user' => 'camfee', 'password' => 'camfee29'],
+                'r' => ['host' => '192.168.1.105', 'user' => 'camfee', 'password' => 'camfee29']
+            ],
+            'other' => [
+                'w' => ['host' => '192.168.1.111', 'user' => 'camfee', 'password' => 'camfee29'],
+                'r' => ['host' => '192.168.1.111', 'user' => 'camfee', 'password' => 'camfee29']
             ],
         ],
         'memcache' => [
             'default' => [
                 ['host' => '192.168.1.105', 'port' => 11211]
-            ]
+            ],
+            'other' => [
+                ['host' => '192.168.1.111', 'port' => 11211]
+            ],
         ],
         'redis' => [
             'default' => [
                 'w' => ['host' => '192.168.1.105', 'port' => 6379],
-                'r' => ['host' => '192.168.1.105', 'port' => 6379],
-            ]
+                'r' => ['host' => '192.168.1.105', 'port' => 6379]
+            ],
+            'other' => [
+                'w' => ['host' => '192.168.1.111', 'port' => 6379],
+                'r' => ['host' => '192.168.1.111', 'port' => 6379]
+            ],
         ],
         'search' => [
             'default' => ['host' => '192.168.1.105', 'port' => 9200],
         ],
         'mongodb' => [
             'default' => ['host' => '192.168.1.105', 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
-        ]
-    ],
-    'ONLINE' => [
-        'mysql' => [
-            'default' => [
-                'w' => ['host' => '192.168.1.111', 'user' => 'camfee', 'password' => 'camfee29'],
-                'r' => ['host' => '192.168.1.111', 'user' => 'camfee', 'password' => 'camfee29']
-            ],
-            'other' => [
-                'w' => ['host' => '192.168.1.105', 'user' => 'camfee', 'password' => 'camfee29'],
-                'r' => ['host' => '192.168.1.105', 'user' => 'camfee', 'password' => 'camfee29']
-            ],
-        ],
-        'memcache' => [
-            'default' => [
-                ['host' => '192.168.1.111', 'port' => 11211]
-            ],
-            'other' => [
-                ['host' => '192.168.1.105', 'port' => 11211]
-            ],
-        ],
-        'redis' => [
-            'default' => [
-                'w' => ['host' => '192.168.1.111', 'port' => 6379],
-                'r' => ['host' => '192.168.1.111', 'port' => 6379]
-            ],
-            'other' => [
-                'w' => ['host' => '192.168.1.105', 'port' => 6379],
-                'r' => ['host' => '192.168.1.105', 'port' => 6379]
-            ],
-        ],
-        'search' => [
-            'default' => ['host' => '192.168.1.111', 'port' => 9200],
-        ],
-        'mongodb' => [
-            'default' => ['host' => '192.168.1.111', 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
         ]
     ]
 ];

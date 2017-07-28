@@ -12,12 +12,12 @@ namespace Bare;
 class MongoModel
 {
     /**
-     * 库名
+     * 库名 继承修改
      */
     protected static $_mongo_db = 'test';
 
     /**
-     * 集合名
+     * 集合名  继承修改
      */
     protected static $_mongo_collection = 'test';
 
@@ -64,7 +64,7 @@ class MongoModel
      * @param array $data
      * @return bool
      */
-    public static function add($id, array $data)
+    public static function add($id, $data)
     {
         self::getMongodb();
         $id = is_numeric($id) ? (int)$id : (string)$id;
@@ -85,7 +85,7 @@ class MongoModel
      * @param bool $upsert
      * @return bool
      */
-    public static function update($id, array $data, bool $upsert = true)
+    public static function update($id, $data, $upsert = true)
     {
         self::getMongodb();
         $id = is_numeric($id) ? (int)$id : (string)$id;

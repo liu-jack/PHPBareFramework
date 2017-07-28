@@ -1,6 +1,6 @@
 <?php defined('ROOT_PATH') or exit('Access deny');
 /**
- * API请求配置
+ * API请求客户端配置
  */
 $config = [
     'appid' => 10,

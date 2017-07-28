@@ -176,7 +176,7 @@ class Geocoding
      */
     private static function getAk($oldak = null, $status = self::BAIDU_RESULT_CODE)
     {
-        $redis = DB::redis(DB::REDIS_OTHER_W);
+        $redis = DB::redis(DB::REDIS_DEFAULT_W);
         $len = $redis->hLen(self::BAIDU_AK_REDIS);
         if ($len == 0) {
             $akarr = self::$_ak_value;

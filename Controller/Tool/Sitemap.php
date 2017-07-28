@@ -43,15 +43,15 @@ class Sitemap extends Controller
         $xml .= '<urlset>' . PHP_EOL;
 
         $types = config('book/types');
-        $xml .= '<url><loc>http://29shu.iok.la</loc><lastmod>' . $date . '</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>' . PHP_EOL;
+        $xml .= '<url><loc>http://29shu.iok.la</loc><lastmod>' . $date . '</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>' . PHP_EOL;
         foreach ($types as $k => $v) { // 小说分类
-            $xml .= '<url><loc>http://29shu.iok.la/book/type_' . $k . '.html</loc><lastmod>' . $date . '</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>' . PHP_EOL;
+            $xml .= '<url><loc>http://29shu.iok.la/book/type_' . $k . '.html</loc><lastmod>' . $date . '</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>' . PHP_EOL;
         }
 
         $games = config('game/h5');
-        $xml .= '<url><loc>http://29shu.iok.la/game/h5/index.html</loc><lastmod>' . $date . '</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>' . PHP_EOL;
+        $xml .= '<url><loc>http://29shu.iok.la/game/h5/index.html</loc><lastmod>' . $date . '</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>' . PHP_EOL;
         foreach ($games as $k => $v) { // 游戏列表
-            $xml .= '<url><loc>http://29shu.iok.la/game/h5/' . $k . '.html</loc><lastmod>' . $date . '</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>' . PHP_EOL;
+            $xml .= '<url><loc>http://29shu.iok.la/game/h5/' . $k . '.html</loc><lastmod>' . $date . '</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>' . PHP_EOL;
         }
 
         $xml .= '</urlset>' . PHP_EOL;
@@ -67,7 +67,7 @@ class Sitemap extends Controller
                 $m = count($list);
                 foreach ($list as $k => $v) {
                     echo "Page Process: " . ($k + 1) . "/{$m} \r";
-                    $xml .= '<url><loc>http://29shu.iok.la/book/' . self::FROM_ID . '_' . $v['BookId'] . '.html</loc><lastmod>' . date('Y-m-d', $v['UpdateTime']) . '</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>' . PHP_EOL;
+                    $xml .= '<url><loc>http://29shu.iok.la/book/' . self::FROM_ID . '_' . $v['BookId'] . '.html</loc><lastmod>' . date('Y-m-d', $v['UpdateTime']) . '</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>' . PHP_EOL;
                 }
             }
             $xml .= '</urlset>' . PHP_EOL;

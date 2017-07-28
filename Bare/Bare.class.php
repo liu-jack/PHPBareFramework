@@ -73,6 +73,14 @@ class Bare
                     }
                 }
             }
+            // 适配版本
+            if (API_VERSION != $ver) {
+                $adapter_ver = self::apiVerAdapter($ver, $GLOBALS['_M'], $GLOBALS['_C']);
+                if (!empty($adapter_ver)) {
+                    $GLOBALS['_ADAPTER_NAMESPACE'] = '\\' . API_PATH . '\\Adapter\\' . $adapter_ver . '\\' . $GLOBALS['_M'] . '\\' . $GLOBALS['_C'];
+                }
+            }
+
             $GLOBALS['_PATH'] = API_PATH . '/' . $GLOBALS['_M'] . '/' . $GLOBALS['_C'] . '/' . $GLOBALS['_A'];
             $GLOBALS['_MPATH'] = API_PATH . '/' . $GLOBALS['_M'] . '/' . $GLOBALS['_C'];
             $GLOBALS['_NAMESPACE'] = '\\' . API_PATH . '\\' . $GLOBALS['_M'] . '\\' . $GLOBALS['_C'];
@@ -91,10 +99,9 @@ class Bare
             define('STATICS_JS', $s_path . '/js/');
             define('STATICS_CSS', $s_path . '/css/');
             define('STATICS_IMG', $s_path . '/images/');
-
         }
         // 开始访问
-        $controller = '\\Controller' . $GLOBALS['_NAMESPACE'];
+        $controller = '\\Controller' . (!empty($adapter_ver) ? $GLOBALS['_ADAPTER_NAMESPACE'] : $GLOBALS['_NAMESPACE']);
         $bare = new $controller;
         $action = $GLOBALS['_A'];
         $bare->$action();
@@ -278,5 +285,44 @@ class Bare
         }
         header('Content-type: application/json');
         exit(json_encode($json));
+    }
+
+    /**
+     * 获取适配版本信息
+     *
+     * @param string $ver 版本信息
+     * @param string $dir_name 目录名
+     * @param string $class_name 类名
+     * @return bool|string
+     */
+    private static function apiVerAdapter($ver, $dir_name, $class_name)
+    {
+        $adapter = config('api/adapter');
+        $name = $dir_name . '.' . $class_name;
+
+        foreach ($adapter['='] as $k => $v) {
+            if ($k == $ver && isset($v[$name])) {
+                return self::apiVerFormat($k);
+            }
+        }
+
+        foreach ($adapter['<='] as $k => $v) {
+            if (version_compare($ver, $k, '<=') && isset($v[$name])) {
+                return self::apiVerFormat($k);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 格式化版本信息
+     *
+     * @param string $ver 版本信息
+     * @return string
+     */
+    private static function apiVerFormat($ver)
+    {
+        return str_replace('.', '', $ver);
     }
 }

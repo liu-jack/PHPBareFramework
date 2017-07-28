@@ -64,7 +64,7 @@ class Api
      * @param int $timeout 超时时间
      * @return array       结果数组
      */
-    public static function request($url, $data = [], $timeout = 10)
+    public static function request($url, $data = [], $timeout = 15)
     {
         $time_start = microtime(true);
         $curl = curl_init();
@@ -90,7 +90,7 @@ class Api
         }
         $time_end = microtime(true);
         $time_out = $time_end - $time_start;
-        if ($time_out > 3) {
+        if ($time_out > 5) {
             $log = [
                 'url' => $url,
                 'time_start' => $time_start,

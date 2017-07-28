@@ -80,7 +80,7 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
     } else {
         $domain .= '/index.php/';
     }
-    if (!$url) {
+    if (empty($url)) {
         $temp = explode('/', $GLOBALS['_PATH']);
         $temp = array_map('lcfirst', $temp);
         $url = implode('/', $temp);

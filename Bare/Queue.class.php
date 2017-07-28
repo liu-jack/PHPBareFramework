@@ -48,9 +48,9 @@ class Queue
     protected static function getRedis($type = false)
     {
         if ($type) {
-            return DB::redis(DB::REDIS_OTHER_W, self::REDIS_DB);
+            return DB::redis(DB::REDIS_DEFAULT_W, self::REDIS_DB);
         } else {
-            return DB::redis(DB::REDIS_OTHER_R, self::REDIS_DB);
+            return DB::redis(DB::REDIS_DEFAULT_R, self::REDIS_DB);
         }
     }
 

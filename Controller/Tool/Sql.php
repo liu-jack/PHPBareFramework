@@ -31,11 +31,11 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/book');
-        $create_sql = $sqls['create_book_columns'];
+        $create_sql = $sqls['create_book_column'];
 
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
-            $sql = str_replace('book_columns', 'book_columns_' . $suff, $create_sql);
+            $sql = str_replace('BookColumn', 'BookColumn_' . $suff, $create_sql);
             $this->m->run29shu($sql);
             echo $i . PHP_EOL;
         }
@@ -48,11 +48,11 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/book');
-        $create_sql = $sqls['create_book_contents'];
+        $create_sql = $sqls['create_book_content'];
 
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
-            $sql = str_replace('book_contents', 'book_contents_' . $suff, $create_sql);
+            $sql = str_replace('BookContent', 'BookContent_' . $suff, $create_sql);
             $this->m->run29shuContent($sql);
             echo $i . PHP_EOL;
         }
@@ -66,7 +66,7 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/user');
         $create_sql = $sqls['create_passport'];
-
+        $this->m->runPassport($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`User`', '`User_' . $suff . '`', $create_sql);
@@ -83,6 +83,7 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/user');
         $create_sql = $sqls['create_account'];
+        $this->m->runAccount($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`User`', '`User_' . $suff . '`', $create_sql);
@@ -99,7 +100,7 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_favorite'];
-
+        $this->m->runFavorite($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Favorite`', '`Favorite_' . $suff . '`', $create_sql);
@@ -129,7 +130,7 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_device'];
-
+        $this->m->runDevice($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Device`', '`Device_' . $suff . '`', $create_sql);
@@ -146,7 +147,6 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_comment'];
-
         $this->m->runComment($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
