@@ -31,8 +31,8 @@ $config = [
     'TEST' => [
         'mysql' => [
             'default' => [
-                'w' => ['host' => '192.168.1.102', 'user' => 'proxy_w', 'password' => 'proxy'],
-                'r' => ['host' => '192.168.1.102', 'user' => 'proxy_r', 'password' => 'proxy'],
+                'w' => ['host' => '192.168.1.102', 'user' => 'camfee', 'password' => 'camfee29'],
+                'r' => ['host' => '192.168.1.102', 'user' => 'camfee', 'password' => 'camfee29'],
             ],
         ],
         'memcache' => [

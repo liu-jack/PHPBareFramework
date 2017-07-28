@@ -19,7 +19,7 @@ class Collect extends Model
             'r' => DB::DB_29SHU_R
         ],
         // 必选, 数据表名
-        'table' => 'book_collect',
+        'table' => 'BookCollect',
         // 必选, 字段信息
         'fields' => [
             'CollectId' => self::VAR_TYPE_KEY,

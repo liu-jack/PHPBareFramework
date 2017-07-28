@@ -1,4 +1,4 @@
-<?php $this->view('Book/Public/header')?>
+<?php $this->view('Account/Public/header')?>
 
 <body>
     <div class="header"> 
@@ -22,6 +22,10 @@
                         </div>
                     </li>
                     <li class="item">
+                        <div class="item_box">	<span class="icons icon_pass"></span> 	<span class="item_inp"><input placeholder="请确认密码" name="password2" id="password2" class="t_i" value="" type="password"></span>
+                        </div>
+                    </li>
+                    <li class="item">
                         <div class="item_box"> <span class="icons icon_code"><img src="<?php echo url('account/user/code')?>" data-url="<?php echo url('account/user/code')?>" id="code_img" /></span>  <span class="item_inp2"><input placeholder="请输入验证码" name="code" id="code" class="t_i" value="" type="text"></span>
                         </div>
                     </li>
@@ -38,4 +42,4 @@
     <script src="<?php echo JS_PATH?>jsencrypt.min.js"></script>
     <script src="<?php echo JS_PATH?>login.js"></script>
     
-<?php $this->view('Book/Public/footer')?>
+<?php $this->view('Account/Public/footer')?>

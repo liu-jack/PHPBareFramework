@@ -20,7 +20,7 @@ class Book extends Model
             'r' => DB::DB_29SHU_R
         ],
         // 必选, 数据表名
-        'table' => 'book',
+        'table' => 'Book',
         // 必选, 字段信息
         'fields' => [
             'BookId' => self::VAR_TYPE_KEY,

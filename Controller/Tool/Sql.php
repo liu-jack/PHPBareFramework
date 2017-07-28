@@ -76,7 +76,7 @@ class Sql extends Controller
     }
 
     /**
-     * 通行证表管理 php index.php Tool/Sql/account
+     * 用户表管理 php index.php Tool/Sql/account
      */
     public function account()
     {
@@ -93,7 +93,7 @@ class Sql extends Controller
     }
 
     /**
-     * 通行证表管理 php index.php Tool/Sql/favorite
+     * 收藏表管理 php index.php Tool/Sql/favorite
      */
     public function favorite()
     {
@@ -110,20 +110,20 @@ class Sql extends Controller
     }
 
     /**
-     * application表管理 php index.php Tool/Sql/application
+     * 应用表管理 php index.php Tool/Sql/application
      */
     public function application()
     {
         need_cli();
-        $sql = '';
-        for ($i = 0; $i < 256; $i++) {
-            $this->m->runApplication($sql);
-            echo $i . PHP_EOL;
-        }
+//        $sql = '';
+//        for ($i = 0; $i < 256; $i++) {
+//            $this->m->runApplication($sql);
+//            echo $i . PHP_EOL;
+//        }
     }
 
     /**
-     * device表管理 php index.php Tool/Sql/device
+     * 设备表管理 php index.php Tool/Sql/device
      */
     public function device()
     {
@@ -140,7 +140,7 @@ class Sql extends Controller
     }
 
     /**
-     * comment表管理 php index.php Tool/Sql/comment
+     * 评论表管理 php index.php Tool/Sql/comment
      */
     public function comment()
     {
@@ -157,7 +157,7 @@ class Sql extends Controller
     }
 
     /**
-     * tag表管理 php index.php Tool/Sql/tag
+     * 标签表管理 php index.php Tool/Sql/tag
      */
     public function tag()
     {
@@ -213,7 +213,7 @@ class Sql extends Controller
     }
 
     /**
-     * 设备表管理 php index.php Tool/Sql/mobile
+     * 手机表管理 php index.php Tool/Sql/mobile
      */
     public function mobile()
     {
@@ -236,7 +236,7 @@ class Sql extends Controller
         $sqls = config('sql/collect');
         $create_sql1 = $sqls['create_atlas'];
         $create_sql2 = $sqls['create_picture'];
-        $this->m->runCollect($create_sql1);
-        $this->m->runCollect($create_sql2);
+        $this->m->runPicture($create_sql1);
+        $this->m->runPicture($create_sql2);
     }
 }

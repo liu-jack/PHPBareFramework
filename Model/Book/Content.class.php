@@ -19,7 +19,7 @@ class Content extends Model
             'r' => DB::DB_29SHU_CONTENT_R
         ],
         // 必选, 数据表名
-        'table' => 'book_content_',
+        'table' => 'BookContent_',
         // 必选, 字段信息
         'fields' => [
             'ContentId' => self::VAR_TYPE_KEY,

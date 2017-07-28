@@ -94,10 +94,6 @@ class Login extends Passport
      */
     public static function updateLoginInfo($userid, $update_count = true)
     {
-        $update_data = [
-            'LoginTime' => date("Y-m-d H:i:s"),
-            'LoginIp' => ip()
-        ];
         $userinfo = AUser::getUserById($userid);
         if (empty($userinfo)) {
             $user = self::getUserById($userid);
@@ -110,7 +106,12 @@ class Login extends Passport
         if ($update_count) {
             AUser::updateCount($userid, [AUser::COUNT_LOGIN => '+1']);
         }
-        return self::updateUser($userid, $update_data);
+        $passport_update = [
+            'LoginTime' => date("Y-m-d H:i:s"),
+            'LoginCount' => ['LoginCount', '+1'],
+            'LoginIp' => ip()
+        ];
+        return self::updateUser($userid, $passport_update);
     }
 
     /**

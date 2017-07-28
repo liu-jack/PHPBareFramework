@@ -45,11 +45,16 @@ class User extends Controller
         if (!empty($_POST)) {
             $username = trim($_POST['username']);
             $pwd = trim($_POST['password']);
+            $pwd2 = trim($_POST['password2']);
             $code = trim($_POST['code']);
-            $pwd = Rsa::private_decode($pwd);
             $img = new Securimage();
             if ($img->check($code) === false) {
                 output(201, '验证码错误');
+            }
+            $pwd = Rsa::private_decode($pwd);
+            $pwd2 = Rsa::private_decode($pwd2);
+            if ($pwd !== $pwd2) {
+                output(202, '两次输入的密码不一致');
             }
             $data = [
                 'UserName' => $username,
