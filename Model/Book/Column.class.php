@@ -64,6 +64,7 @@ class Column extends Model
             return $ret;
 
         }
+        return false;
     }
 
     /**
@@ -88,6 +89,7 @@ class Column extends Model
             }
             return $ret;
         }
+        return false;
     }
 
     /**
@@ -100,6 +102,7 @@ class Column extends Model
         if ($id > 0 && $bookid > 0) {
             return parent::getDataById($id, [], table($bookid));
         }
+        return [];
     }
 
     /**
@@ -195,6 +198,7 @@ class Column extends Model
             }
             return $ret;
         }
+        return false;
     }
 
     /**

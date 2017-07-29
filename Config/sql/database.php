@@ -6,7 +6,8 @@
  * Time: 下午10:53
  */
 
-return <<<EOT
+return [
+    'createdb' => <<<EOT
 CREATE DATABASE IF NOT EXISTS 29shu_book default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS 29shu_content default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_passport default character set utf8 COLLATE utf8_general_ci;
@@ -20,4 +21,5 @@ CREATE DATABASE IF NOT EXISTS zf_admin default character set utf8 COLLATE utf8_g
 CREATE DATABASE IF NOT EXISTS zf_collect default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_mobile default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_picture default character set utf8 COLLATE utf8_general_ci;
-EOT;
+EOT
+];

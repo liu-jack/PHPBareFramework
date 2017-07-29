@@ -1,5 +1,8 @@
 cd ../../
 
+REM create database
+start cmd /c "mode con cols=45 lines=10 && title book && php index.php Tool/Sql/createdb
+
 REM book
 start cmd /c "mode con cols=45 lines=10 && title book && php index.php Tool/Sql/book"
 start cmd /c "mode con cols=45 lines=10 && title column && php index.php Tool/Sql/column"

@@ -7,8 +7,9 @@ use Model\Favorite\BookFavorite;
 use Model\Account\User as AUser;
 use Model\Account\UserData;
 use Model\Book\{
-    Book, Column, Content, Search
+    Book, Column, Content
 };
+use Model\Search\BookSearch as SBook;
 
 /**
  * 书库首页
@@ -24,10 +25,10 @@ class Index extends Controller
     const CK_BOOK_RECOMMEND = 'BOOK_RECOMMEND:%d';
     // 排行榜
     private static $type_search = [
-        101 => Search::TOP_VIEW,
-        102 => Search::TOP_LIKE,
-        103 => Search::TOP_FINISH,
-        104 => Search::TOP_FAVORITE,
+        101 => SBook::TOP_VIEW,
+        102 => SBook::TOP_LIKE,
+        103 => SBook::TOP_FINISH,
+        104 => SBook::TOP_FAVORITE,
     ];
 
     /**
@@ -35,13 +36,13 @@ class Index extends Controller
      */
     public function index()
     {
-        $list_ids1 = Search::getBookTop(Search::TOP_VIEW);
+        $list_ids1 = SBook::getBookTop(SBook::TOP_VIEW);
         $rmlist = Book::getBookByIds($list_ids1['data'], [Book::EXTRA_COVER => true]);
-        $list_ids2 = Search::getBookTop(Search::TOP_LIKE);
+        $list_ids2 = SBook::getBookTop(SBook::TOP_LIKE);
         $tjlist = Book::getBookByIds($list_ids2['data'], [Book::EXTRA_COVER => true]);
-        $list_ids3 = Search::getBookTop(Search::TOP_FINISH);
+        $list_ids3 = SBook::getBookTop(SBook::TOP_FINISH);
         $wblist = Book::getBookByIds($list_ids3['data'], [Book::EXTRA_COVER => true]);
-        $list_ids4 = Search::getBookTop(Search::TOP_FAVORITE);
+        $list_ids4 = SBook::getBookTop(SBook::TOP_FAVORITE);
         $sclist = Book::getBookByIds($list_ids4['data'], [Book::EXTRA_COVER => true]);
         $typelist = config('book/types');
         $seo = [
@@ -73,9 +74,9 @@ class Index extends Controller
             output(201);
         }
         if ($tid > 100) {
-            $list_ids = Search::getBookTop(self::$type_search[$tid], $offset);
+            $list_ids = SBook::getBookTop(self::$type_search[$tid], $offset);
         } else {
-            $list_ids = Search::getBookByTypeName($typename, $offset);
+            $list_ids = SBook::getBookByTypeName($typename, $offset);
         }
         $tlist = Book::getBookByIds($list_ids['data'], [Book::EXTRA_COVER => true]);
         if ($offset > 0) {
@@ -132,7 +133,7 @@ class Index extends Controller
             }
         }
         // 阅读量
-        Search::setViewCount($bid);
+        SBook::setViewCount($bid);
         $seo = [
             'title' => $book['BookName'] . '_29书集',
             'keywords' => $book['BookName'] . '全文阅读,' . $book['BookName'] . '最新章节,' . implode('小说,', $types) . ',29书集',
@@ -203,7 +204,7 @@ class Index extends Controller
         if ($offset > self::LIST_LIMIT) {
             output(201);
         }
-        $list_ids = Search::searchBook($str, $offset);
+        $list_ids = SBook::searchBook($str, $offset);
         $list_info = [];
         if (!empty($list_ids['data'])) {
             $list_info = Book::getBookByIds($list_ids['data'], [Book::EXTRA_COVER => true]);
@@ -235,7 +236,7 @@ class Index extends Controller
         if ($bid > 0) {
             $rkey = sprintf(self::CK_BOOK_RECOMMEND, $bid);
             if (empty($_COOKIE[$rkey])) {
-                $ret = Search::setLikeCount($bid);
+                $ret = SBook::setLikeCount($bid);
                 if ($ret) {
                     setcookie($rkey, 1, strtotime(date('Y-m-d 23:59:59')), '/');
                     output(200, '推荐成功！');

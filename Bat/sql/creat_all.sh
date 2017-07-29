@@ -1,6 +1,9 @@
 cd `dirname $0`
 cd ../../
 
+# create database
+php index.php Tool/Sql/createdb
+
 # book
 php index.php Tool/Sql/book
 php index.php Tool/Sql/column

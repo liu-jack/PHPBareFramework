@@ -8,7 +8,7 @@
 
 namespace Model\Queue;
 
-use Model\Book\Search;
+use Model\Search\BookSearch as SBook;
 
 class SearchBook extends Queue
 {
@@ -20,9 +20,9 @@ class SearchBook extends Queue
     public function run($data)
     {
         if ($data['type'] == 'add') {
-            Search::add($data['data']);
+            SBook::add($data['data']);
         } elseif ($data['type'] == 'update') {
-            Search::update($data['data']);
+            SBook::update($data['data']);
         }
 
     }

@@ -102,6 +102,26 @@ class AdminUser extends Model
     }
 
     /**
+     * 根据用户获取详细信息
+     * @param string $name
+     * @return array|bool
+     */
+    public static function getUserByName($name)
+    {
+        if (empty($name)) {
+            return false;
+        }
+        $where = ['UserName' => trim($name)];
+        $extra = [
+            'fields' => '*',
+            'limit' => 1,
+        ];
+        $ret = parent::getDataByFields($where, $extra);
+        return !empty(current($ret['data'])) ? current($ret['data']) : [];
+
+    }
+
+    /**
      * 查询
      * @param array $where
      * @param int $offset

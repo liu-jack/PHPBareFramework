@@ -3,18 +3,19 @@
  * 书库采集管理
  */
 
-namespace Controller\Book;
+namespace Controller\Collect;
 
 use Bare\DB;
 use Bare\Controller;
 use Model\Book\{
-    Collect77, Column, Book
+    Column, Book
 };
+use Model\Collect\CollectBook77 as Collect77;
 
-class Collect extends Controller
+class CollectBook extends Controller
 {
     /**
-     * 书本采集 php index.php Book/Collect/index
+     * 书本采集 php index.php Collect/CollectBook/index
      */
     public function index()
     {
@@ -24,7 +25,7 @@ class Collect extends Controller
     }
 
     /**
-     * 章节内容采集 php index.php Book/Collect/content/id/1
+     * 章节内容采集 php index.php Collect/CollectBook/content/id/1
      */
     public function content()
     {
@@ -34,7 +35,7 @@ class Collect extends Controller
     }
 
     /**
-     * 章节内容采集 php index.php Book/Collect/contentOne/id/6418
+     * 章节内容采集 php index.php Collect/CollectBook/contentOne/id/6418
      */
     public function contentOne()
     {
@@ -46,7 +47,7 @@ class Collect extends Controller
     }
 
     /**
-     * 内容错误日志重新采集 php index.php Book/Collect/collectLog 77_20170108.log
+     * 内容错误日志重新采集 php index.php Collect/CollectBook/collectLog 77_20170108.log
      * @return bool
      */
     public function collectLog()
@@ -70,11 +71,12 @@ class Collect extends Controller
             }
         }
         fclose($fp);
+        return true;
     }
 
     /**
      * book字段修复
-     * php index.php book/collect/fixField
+     * php index.php Collect/CollectBook/fixField
      */
     public function fixField()
     {
@@ -109,7 +111,7 @@ class Collect extends Controller
 
     /**
      * 删除无效空图片
-     * php index.php book/collect/rmEmptyCover
+     * php index.php Collect/CollectBook/rmEmptyCover
      */
     public function rmEmptyCover()
     {

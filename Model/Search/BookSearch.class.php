@@ -3,12 +3,12 @@
  * 书本搜索
  */
 
-namespace Model\Book;
+namespace Model\Search;
 
 use Bare\DB;
 use Bare\Queue;
 
-class Search
+class BookSearch
 {
     /**
      * 搜索位置

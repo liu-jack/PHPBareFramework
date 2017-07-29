@@ -5,6 +5,9 @@
 $config = [
     'DEV' => [
         'mysql' => [
+            'create' => [
+                'db' => ['host' => '10.7.10.250', 'port' => 3306, 'user' => 'root', 'password' => '123456']
+            ],
             'default' => [
                 'w' => ['host' => '10.7.10.250', 'user' => 'root', 'password' => '123456'],
                 'r' => ['host' => '10.7.10.250', 'user' => 'root', 'password' => '123456'],
@@ -30,6 +33,9 @@ $config = [
     ],
     'TEST' => [
         'mysql' => [
+            'create' => [
+                'db' => ['host' => '127.0.0.1', 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
+            ],
             'default' => [
                 'w' => ['host' => '127.0.0.1', 'user' => 'camfee', 'password' => 'camfee29'],
                 'r' => ['host' => '127.0.0.1', 'user' => 'camfee', 'password' => 'camfee29'],
@@ -55,6 +61,9 @@ $config = [
     ],
     'ONLINE' => [
         'mysql' => [
+            'create' => [
+                'db' => ['host' => '192.168.1.105', 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
+            ],
             'default' => [
                 'w' => ['host' => '192.168.1.105', 'user' => 'camfee', 'password' => 'camfee29'],
                 'r' => ['host' => '192.168.1.105', 'user' => 'camfee', 'password' => 'camfee29']

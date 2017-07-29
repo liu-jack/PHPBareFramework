@@ -45,6 +45,7 @@ class Collect extends Model
         if (!empty($data)) {
             return parent::addData($data);
         }
+        return false;
     }
 
     /**
@@ -57,6 +58,7 @@ class Collect extends Model
         if ($id > 0 && !empty($data)) {
             return parent::updateData($id, $data);
         }
+        return false;
     }
 
     /**
@@ -68,6 +70,7 @@ class Collect extends Model
         if ($id > 0) {
             return parent::getDataById($id);
         }
+        return [];
     }
 
     /**
@@ -97,6 +100,7 @@ class Collect extends Model
         if ($id > 0) {
             return parent::delData($id);
         }
+        return false;
     }
 
 }

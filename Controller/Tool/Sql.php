@@ -10,6 +10,23 @@ use  Bare\Controller;
 class Sql extends Controller
 {
     /**
+     * 书库表管理 php index.php Tool/Sql/createdb
+     */
+    public function createdb()
+    {
+        need_cli();
+        $sql = config('sql/database')['createdb'];
+        $dbconfig = config('db')['mysql']['create']['db'];
+
+        $dsn = "mysql:host={$dbconfig['host']};port={$dbconfig['port']};";
+        $pdo = new \PDO($dsn, $dbconfig['user'], $dbconfig['password']);
+
+        $pdo->exec($sql);
+
+        echo 'finished' . PHP_EOL;
+    }
+
+    /**
      * 书库表管理 php index.php Tool/Sql/book
      */
     public function book()

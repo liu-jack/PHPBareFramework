@@ -1,20 +1,27 @@
 <?php
 
-namespace Model\Book;
+namespace Model\Collect;
 
 use Classes\Net\Collects;
+use Model\Book\{
+    Book, Collect, Column, Content
+};
 
-class Collect83
+class CollectBook77
 {
-    const BASE_URL = 'http://m.83zw.com';
+    const BASE_URL = 'http://www.xiaoshuo77.com';
 
-    const ALL_VISIT_URL = 'http://m.83zw.com/bookinfo/topallvisit_%d.html';
+    const ALL_VISIT_URL = 'http://www.xiaoshuo77.com/page_allvisit_%d.html';
 
-    const ALL_VOTE_URL = 'http://m.83zw.com/bookinfo/topallvote_%d.html';
+    const ALL_VOTE_URL = 'http://www.xiaoshuo77.com/page_allvote_%d.html';
 
-    const TOP_GOODNUM_URL = 'http://m.83zw.com/bookinfo/topgoodnum_%d.html';
+    const MONTH_VISIT_URL = 'http://www.xiaoshuo77.com/page_monthvisit_%d.html';
 
-    const FROM_ID = 83;
+    const MONTH_VOTE_URL = 'http://www.xiaoshuo77.com/page_monthvote_%d.html';
+
+    const TOP_TIME_URL = 'http://www.xiaoshuo77.com/page_toptime_%d.html';
+
+    const FROM_ID = 77;
 
     /**
      * 采集整站
@@ -27,7 +34,11 @@ class Collect83
             for ($i = 1; $i <= 29; $i++) {
                 self::getBookList($i, self::ALL_VISIT_URL);
                 self::getBookList($i, self::ALL_VOTE_URL);
-                self::getBookList($i, self::TOP_GOODNUM_URL);
+                self::getBookList($i, self::TOP_TIME_URL);
+                if ($i <= 3) {
+                    self::getBookList($i, self::MONTH_VISIT_URL);
+                    self::getBookList($i, self::MONTH_VOTE_URL);
+                }
             }
         } else {
             foreach ($page as $v) {
@@ -61,11 +72,13 @@ class Collect83
 
         if (!empty($total)) {
             // @todo start
-            $all = $cc->matchAll('@<li>(.+)\s*<a href="([^"]+)">(.+)</a>\s*(.+)</li>@isU')->getMatch();
-            $type = trim(trim($all[1]), '[]');
-            $url = $all[2];
-            $name = trim($all[3]);
-            $author = trim($all[4]);
+            $type = $cc->matchAll('@<div class="con2"><a href="[^"]*">(.*)</a></div>@isU')->getMatch();
+            $url_name = $cc->matchAll('@<div class="con3"><a\s*class="tit" href="(.*)" title="(.*)" target="_blank">[^"]*</a>\s*/\s*<a href="[^"]*" title="[^"]*" target="_blank">[^"]*</a></div>@isU')->getMatch();
+            $url = $url_name[1];
+            $name = $url_name[2];
+            $word = $cc->matchAll('@<div class="con4">(\d*)</div>@isU')->getMatch();
+            $author = $cc->matchAll('@<div class="con5">(.*)</div>@isU')->getMatch();
+            $time = $cc->matchAll('@<div class="con6">(.*)</div>@isU')->getMatch();
             $count = count($name);
             // @todo end
             if ($count > 0 && count($url) == $count && count($author) == $count) {
@@ -78,15 +91,24 @@ class Collect83
                             $res = Book::getBooks($data);
                             if (!empty($res['data'][0]['BookId'])) {
                                 $res = $res['data'][0]['BookId'];
-                                $tdata['Words'] = 0;
+                                $tdata['Words'] = intval($word[$k]);
+                                if (date('m-d H:i') >= $time[$k]) {
+                                    $tdata['UpdateTime'] = strtotime(date('Y') . '-' . $time[$k]);
+                                } else {
+                                    $tdata['UpdateTime'] = strtotime((date('Y') - 1) . '-' . $time[$k]);
+                                }
                                 Book::updateBook($res, $tdata);
                             } else {
                                 $data['TypeName'] = trim($type[$k], '[]');
                                 if (empty($data['TypeName'])) {
                                     $data['TypeName'] = '其它小说';
                                 }
-                                $data['Words'] = 0;
-                                $data['UpdateTime'] = time();
+                                $data['Words'] = intval($word[$k]);
+                                if (date('m-d H:i') >= $time[$k]) {
+                                    $data['UpdateTime'] = strtotime(date('Y') . '-' . $time[$k]);
+                                } else {
+                                    $data['UpdateTime'] = strtotime((date('Y') - 1) . '-' . $time[$k]);
+                                }
                                 $data['CreateTime'] = time();
                                 $res = Book::addBook($data);
                             }
@@ -121,6 +143,60 @@ class Collect83
     }
 
     /**
+     * 采集内容
+     */
+    public static function column($collectid = 0, $step = 8)
+    {
+        $log_path = 'collect/book/column' . self::FROM_ID;
+
+        if ($collectid > 0) {
+            $res = Collect::getCollects([], 0, 1);
+            $max = max(1, $res['data'][0]['CollectId']);
+            while ($collectid <= $max) {
+                $res = Collect::getCollectById($collectid);
+                if (!empty($res)) {
+                    logs("start collect book {$res['BookId']}", $log_path);
+                    echo "start collect book {$res['BookId']}" . PHP_EOL;
+
+                    Collect::updateCollect($res['CollectId'], ['CollectTime' => time()]);
+                    $book = Book::getBookByIds($res['BookId']);
+                    if ($book['IsFinish'] != 2) {
+                        switch ($res['FromId']) {
+                            case self::FROM_ID:
+                                self::getBookColumn($res['BookId'], $res['Url'], $book);
+                                break;
+                            case 83:
+                                CollectBook83::getBookColumn($res['BookId'], $res['Url'], $book);
+                                break;
+                        }
+                    }
+                }
+                if ($step <= 0) {
+                    break;
+                }
+                $collectid += $step;
+            }
+        } else {
+            $list = Collect::getCollects();
+            if (!empty($list['data'])) {
+                foreach ($list['data'] as $k => $v) {
+                    logs("start collect book {$v['BookId']}", $log_path);
+                    echo "start collect book {$v['BookId']}" . PHP_EOL;
+
+                    Collect::updateCollect($v['CollectId'], ['CollectTime' => time()]);
+                    $book = Book::getBookByIds($v['BookId']);
+                    if ($book['IsFinish'] != 2) {
+                        self::getBookColumn($v['BookId'], $v['Url'], $book);
+                    }
+                }
+            }
+        }
+
+        logs("collect finished", $log_path);
+        echo "collect finished" . PHP_EOL;
+    }
+
+    /**
      * @param $bookid
      * @param $url
      * @param $book
@@ -143,16 +219,28 @@ class Collect83
         // @todo start
         $data = [];
         $regs = [
-            'desc' => '@<p class="intro"><b>内容简介：</b>(.*)</p>\s*</div>@isU',
+            'desc' => '@<div class="introCon">(.*)</div>@',
+            'img' => '@<img  src="(.*)" alt="[^"]*" />@',
         ];
-        $desc = $cc->match($regs)->strip()->getMatch();
-        $data['BookDesc'] = preg_replace('@((&?nbsp;?)|(&?amp;?))+@', ' ', trim(strip_tags($desc['desc'])));
-        if ((empty($book['BookDesc']) && !empty($data['BookDesc']))) {
-            //Book::updateBook($bookid, $data); // 简介
-        }
+        $desc_img = $cc->match($regs)->strip()->getMatch();
+        $data['BookDesc'] = preg_replace('@((&?nbsp;?)|(&?amp;?))+@', ' ', trim(strip_tags($desc_img['desc'])));
 
+        if (!is_file(cover($bookid)) && !empty($desc_img['img'])) {
+            $cc->getImage($desc_img['img'], cover($bookid)); // 封面
+        }
         $column = $cc->matchAll('@<dd><a href="(.*)">(.*)</a></dd>@isU')->getMatch();
 
+        if ($book['IsFinish'] == 0) {
+            $url = 'http://www.xiaoshuo77.com/modules/article/pd.php?id=' . $book['BookId'];
+            $finish = $cc->get($url)->match(['finish' => '@<title>(.+)</title>@'])->getMatch();
+            $finish = trim($finish['finish']);
+            if ($finish == '已完成') {
+                $data['IsFinish'] = 1;
+            }
+        }
+        if ((empty($book['BookDesc']) && !empty($data['BookDesc'])) || !empty($data['IsFinish'])) {
+            Book::updateBook($bookid, $data); // 简介
+        }
         // @todo end
         if (!empty($column[1]) && count($column[1]) < 10000) {
             $count = Column::getColumnCount($bookid, self::FROM_ID);
@@ -163,7 +251,7 @@ class Collect83
                 foreach ($column[1] as $k => $v) {
                     if (!empty($column[2][$k]) && $v) {
                         $cdata = [];
-                        $cdata['Url'] = $url . $v;
+                        $cdata['Url'] = self::BASE_URL . $v;
                         $res = Column::getColumnByUrl($bookid, self::FROM_ID, $cdata['Url']);
                         if (!empty($res['ChapterId'])) {
                             $res = $res['ChapterId'];
@@ -206,20 +294,30 @@ class Collect83
         $n = 0;
         $name = '';
         while ($n < 3 && empty($name)) {
-            $name = $cc->get($url)->match(['name' => '@<h1[^>]*>(.+)</h1>@'])->getMatch();  // @todo
+            $name = $cc->get($url)->match(['name' => '@<h1>(.+)</h1>@'])->getMatch();  // @todo
             $name = $name['name'] ?? '';
             $n++;
             usleep(100000);
         }
 
         $data = [];
-        $content = $cc->match(['content' => '@<div id="BookText">(.*)</div>@isU'])->strip('<p><br>')->getMatch();  // @todo
+        $content = $cc->match(['content' => '@<div id="content">(.*)</div>@isU'])->strip('<p><br>')->getMatch();  // @todo
         if (empty($content['content'])) {
-            logs("match content failed {$bookid} : {$chapterid}", $log_path);
+            // http://www.xiaoshuo77.com/view/25/25768/7757638.html
+            $contentimg = $cc->match(['img' => '@<div id="content">\s*<div class="divimage"><img src="([^"]+)" border="0" class="imagecontent"></div>\s*</div>@isU'])->getMatch();
+            if (!empty($contentimg['img'])) {
+                if (!file_exists(contentImg($chapterid, $bookid))) {
+                    $cc->getImage($contentimg['img'], contentImg($chapterid, $bookid));
+                }
+                $content['content'] = contentImg($chapterid, $bookid, 0);
+            } else {
+                logs("match content failed {$bookid} : {$chapterid}", $log_path);
+            }
         }
         $res = Content::getContentByChapterId($bookid, $chapterid);
         if (!empty($res['ContentId'])) {
             if (empty($res['Content']) && !empty($content['content'])) {
+                //if (strpos($res['Content'], '.gif') !== false && !empty($content['content'])) {
                 $data['Content'] = $content['content'];
                 Content::updateContent($bookid, $res['ContentId'], $data);
             }

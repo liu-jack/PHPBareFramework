@@ -12,7 +12,11 @@ use Model\Account\User as AUser;
 
 class Passport
 {
+    /**
+     * redis db 序号
+     */
     const REDIS_INDEX = 11;
+
     /**
      * 通行证用户MC缓存前缀
      *
@@ -58,7 +62,8 @@ class Passport
     public static function isUserNameExists($name, $check_db = false)
     {
         $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
-        $userid = $redis->get(self::$_redis_prefix['name'] . base64_encode(strtolower($name)));
+        $key = self::$_redis_prefix['name'] . base64_encode(strtolower($name));
+        $userid = $redis->get($key);
         if ($userid > 0) {
             return $userid;
         }
@@ -68,6 +73,9 @@ class Passport
             $pdo->bindValue(':name', $name);
             $pdo->execute();
             $userid = $pdo->fetchColumn();
+            if ($userid > 0) {
+                $redis->set($key, $userid);
+            }
             return $userid > 0 ? $userid : false;
         }
         return false;
@@ -83,7 +91,8 @@ class Passport
     public static function isEmailExists($email, $check_db = false)
     {
         $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
-        $userid = $redis->get(self::$_redis_prefix['email'] . $email);
+        $key = self::$_redis_prefix['email'] . $email;
+        $userid = $redis->get($key);
         if ($userid > 0) {
             return $userid;
         }
@@ -93,6 +102,9 @@ class Passport
             $pdo->bindValue(':email', $email);
             $pdo->execute();
             $userid = $pdo->fetchColumn();
+            if ($userid > 0) {
+                $redis->set($key, $userid);
+            }
             return $userid > 0 ? $userid : false;
         }
         return false;
@@ -108,7 +120,8 @@ class Passport
     public static function isMobileExists($mobile, $check_db = false)
     {
         $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
-        $userid = $redis->get(self::$_redis_prefix['mobile'] . $mobile);
+        $key = self::$_redis_prefix['mobile'] . $mobile;
+        $userid = $redis->get($key);
         if ($userid > 0) {
             return $userid;
         }
@@ -118,6 +131,9 @@ class Passport
             $pdo->bindValue(':mobile', $mobile);
             $pdo->execute();
             $userid = $pdo->fetchColumn();
+            if ($userid > 0) {
+                $redis->set($key, $userid);
+            }
             return $userid > 0 ? $userid : false;
         }
         return false;

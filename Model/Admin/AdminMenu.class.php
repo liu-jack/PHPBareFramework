@@ -58,7 +58,6 @@ class AdminMenu extends Model
     private static $_add_must_fields = [
         'Name' => 1,
         'Key' => 1,
-        'Url' => 1,
     ];
 
     /**

@@ -10,6 +10,7 @@ namespace Controller\Admin;
 use Bare\Controller;
 use Classes\Encrypt\Rsa;
 use Classes\Image\Securimage;
+use Model\Admin\AdminLogin;
 
 class Index extends Controller
 {
@@ -26,7 +27,24 @@ class Index extends Controller
      */
     public function login()
     {
-
+        if (!empty($_POST)) {
+            $login = trim($_POST['username']);
+            $pwd = trim($_POST['password']);
+            $code = trim($_POST['code']);
+            $pwd = Rsa::private_decode($pwd);
+            $img = new Securimage();
+            if ($img->check($code) === false) {
+                output(201, '验证码错误');
+            }
+            $userinfo = AdminLogin::doLogin($login, $pwd);
+            if (!empty($userinfo['UserId'])) {
+                output(200, ['url' => url('admin/index/index')]);
+            } else {
+                $code = !empty($userinfo['code']) ? $userinfo['code'] : 205;
+                $msg = !empty($userinfo['msg']) ? $userinfo['msg'] : '登录失败';
+                output($code, $msg);
+            }
+        }
     }
 
     /**
@@ -34,7 +52,8 @@ class Index extends Controller
      */
     public function logout()
     {
-
+        AdminLogin::logout();
+        redirect('admin/index/index');
     }
 
     /**

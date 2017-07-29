@@ -44,6 +44,7 @@ class Content extends Model
         if (!empty($data) || $bookid > 0) {
             return parent::addData($data, false, table($bookid));
         }
+        return false;
     }
 
     /**
@@ -57,6 +58,7 @@ class Content extends Model
         if ($id > 0 && !empty($data) && $bookid > 0) {
             return parent::updateData($id, $data, table($bookid));
         }
+        return false;
     }
 
     /**
@@ -69,6 +71,7 @@ class Content extends Model
         if ($id > 0 && $bookid > 0) {
             return parent::getDataById($id, [], table($bookid));
         }
+        return [];
     }
 
     /**
@@ -99,6 +102,7 @@ class Content extends Model
         if ($id > 0 && $bookid > 0) {
             return parent::delData($id, table($bookid));
         }
+        return false;
     }
 
 }

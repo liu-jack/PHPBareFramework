@@ -56,7 +56,8 @@ class Test extends Controller
 //            'Password' => 'camfee',
 //            'RealName' => 'camfee'
 //        ];
-        //pre(AdminUser::addUser($data));
+//        pre(AdminUser::addUser($data));
+        pre(AdminUser::getUserByName('camfee'));
         //pre(AdminGroup::addGroup(['GroupName' => '测试组']));
 //        $data = [
 //            'Name' => '首页',
@@ -80,7 +81,7 @@ class Test extends Controller
 //        pre(dirname('/asdf/3234/'),basename('/asdf/3234/'));
 //        UserData::userReadBook(1, [1,2,3,4]);
 //        var_dump(UserData::getUserData(1));
-        logs('test');
+//        logs('test');
     }
 
     /**

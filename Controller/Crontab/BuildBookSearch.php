@@ -6,18 +6,19 @@
  * Time: 16:25
  */
 
-namespace Controller\Book;
+namespace Controller\Crontab;
 
 use Bare\DB;
 use Bare\Controller;
+use Model\Search\BookSearch as SBook;
 
-class Search extends Controller
+class BuildBookSearch extends Controller
 {
     const TABLE = 'book';
     const PAGE_SIZE = 100;
 
     /**
-     * 重建书本搜索 php index.php Book/Search/index
+     * 重建书本搜索 php index.php Crontab/BuildBookSearch/index
      */
     public function index()
     {
@@ -42,7 +43,7 @@ class Search extends Controller
                 $pdo = null;
 
                 if (count($data) > 0) {
-                    $this->m->insertSearch($data);
+                    SBook::insertSearch($data);
                 }
 
                 echo "Process: {$i}/{$page}\r";
@@ -53,7 +54,7 @@ class Search extends Controller
 
     public function delete()
     {
-        $ret = $this->m->delete();
+        $ret = SBook::delete();
         if ($ret) {
             echo "Delete Success\n";
         } else {

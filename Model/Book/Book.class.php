@@ -4,6 +4,7 @@ namespace Model\Book;
 
 use Bare\DB;
 use Bare\Model;
+use Model\Search\BookSearch as SBook;
 
 class Book extends Model
 {
@@ -67,7 +68,7 @@ class Book extends Model
                 $data['FavoriteCount'] = isset($data['FavoriteCount']) ? $data['FavoriteCount'] : 0;
                 $data['Status'] = isset($data['Status']) ? $data['Status'] : 0;
                 $data['IsFinish'] = isset($data['IsFinish']) ? $data['IsFinish'] : 0;
-                Search::addBook($data);
+                SBook::addBook($data);
             }
             return $ret;
         }
@@ -84,7 +85,7 @@ class Book extends Model
         if ($id > 0 && !empty($data)) {
             $ret = parent::updateData($id, $data);
             if (!empty($ret)) {
-                Search::updateBook($id, $data);
+                SBook::updateBook($id, $data);
             }
             return $ret;
         }
