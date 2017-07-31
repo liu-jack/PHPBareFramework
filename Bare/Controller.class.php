@@ -9,6 +9,7 @@ namespace Bare;
 
 use Model\Account\User as AUser;
 use Model\Passport\PassportApi;
+use Model\Admin\AdminLogin;
 
 Class Controller
 {
@@ -21,7 +22,7 @@ Class Controller
         $model_path = MODEL_PATH . $GLOBALS['_MPATH'] . CEXT;
         if (file_exists($model_path)) {
             $model = '\\Model' . $GLOBALS['_NAMESPACE'];
-            $this->m = new $model;
+            $this->_m = new $model;
         }
         //接口访问设置
         if (!defined('NO_SESSION') && !isset($_GET['_v'])) {
@@ -30,8 +31,10 @@ Class Controller
         // 后端访问设置
         if ($GLOBALS['_M'] == 'Admin') {
             if ($GLOBALS['_C'] != 'Index') {
-                if (!$this->isLogin(2)) {
-                    redirect(url('admin/index/index'));
+                if (!self::isLogin(2)) {
+                    $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
+                } elseif (!AdminLogin::isHasAuth()) {
+                    $this->alertMsg('没有权限', ['url' => url('admin/index/index')]);
                 }
             }
         }
@@ -40,21 +43,21 @@ Class Controller
     /**
      * 数据模型
      */
-    protected $m = '';
+    protected $_m = null;
 
     /**
      * 模板数据数组
      */
-    private $_var = [];
+    private static $_var = [];
 
     /**
      * 自动html模板加载函数
      * @param string $path 模板的路径 默认为
      *      ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)
      */
-    public function view($path = '', $ext = '.html')
+    public static function view($path = '', $ext = VEXT)
     {
-        extract($this->_var);
+        extract(self::$_var);
         if ($path) {
             include(VIEW_PATH . $path . $ext);
         } else {
@@ -67,7 +70,7 @@ Class Controller
      * @param int $code 返回码 200：成功
      * @param array|string $data 接口输出的数据
      */
-    public function output($code = 200, $data = [])
+    public static function output($code = 200, $data = [])
     {
         $result['Code'] = $code;
         if (is_string($data)) {
@@ -93,9 +96,9 @@ Class Controller
      * @param string $name 保存到前端模板的变量名
      * @param mixed $data 要保存到前端模板的数据
      */
-    public function value($name, $data)
+    public static function value($name, $data)
     {
-        $this->_var[$name] = $data;
+        self::$_var[$name] = $data;
     }
 
     /**
@@ -104,7 +107,7 @@ Class Controller
      * @param bool $auto 接口未登录是否退出程序
      * @return int
      */
-    public function isLogin($type = 0, $auto = false)
+    public static function isLogin($type = 0, $auto = false)
     {
         switch ($type) {
             case 0:  // 网站登录验证
@@ -141,7 +144,7 @@ Class Controller
                 fail:
                 unset($_SESSION['uid']);
                 if ($auto) {
-                    $this->output($code, $msg);
+                    self::output($code, $msg);
                 } else {
                     return false;
                 }
@@ -164,15 +167,7 @@ Class Controller
                 return $_SESSION['uid'];
                 break;
             case 2: // 网站后台登录验证
-                if (empty($_SESSION['AdminUserId'])) {
-                    if (!empty($_COOKIE['_admin_auth'])) {
-                        $uid = cookie_decode($_COOKIE['_admin_auth']);
-                        if (!empty($uid)) {
-                            $_SESSION['AdminUserId'] = intval($uid);
-                        }
-                    }
-                }
-                return !empty($_SESSION['AdminUserId']) ? $_SESSION['AdminUserId'] : 0;
+                return AdminLogin::isLogin();
                 break;
             default:
                 return 0;
@@ -187,6 +182,39 @@ Class Controller
     public static function getAuthString()
     {
         return trim($_SERVER['HTTP_AUTH']);
+    }
+
+    /**
+     * 全局提示函数
+     *
+     * @param string $msg 消息
+     * @param array $options 都是可选参数
+     *                        url     确定后跳转URL或失败返回的URL,不设置将返回上一页
+     *                        desc    详细描述
+     *                        target  top或者self，默认 top
+     *                        type    消息类型：0：失败；1：成功,默认成功
+     *                        button  按钮显示的文字，默认：确定
+     * @return void
+     * */
+    function alertMsg($msg, $options = [])
+    {
+        $opt = [
+            'url' => '',
+            'desc' => '',
+            'target' => 'top',
+            'type' => 'success',
+            'button' => '确定',
+        ];
+        $opt = array_merge($opt, $options);
+
+        $this->value('msg', $msg);
+        $this->value('url', $opt['url']);
+        $this->value('type', $opt['type']);
+        $this->value('desc', $opt['desc']);
+        $this->value('target', $opt['target']);
+        $this->value('button', $opt['button']);
+        $this->view('Public/msg');
+        exit();
     }
 
     /**

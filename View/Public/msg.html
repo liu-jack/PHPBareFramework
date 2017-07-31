@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="<?php echo CSS_PATH?>sweetalert.css" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="<?php echo JS_PATH?>jquery-1.10.2.min.js"></script>
+    <![endif]--><!--[if gte IE 9]><!-->
+    <script type="text/javascript" src="<?php echo JS_PATH?>jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="<?php echo JS_PATH?>sweetalert.min.js"></script>
+</head>
+<body>
+    <?php if ($type == 'error'):?>
+        <script type="text/javascript">
+            var url = '<?php echo $url?>';
+            <?php echo $target?>.swal({
+                title: "<?php echo $msg?>",
+                text: "<?php echo $desc?>",
+                type: "warning",
+                // showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "<?php echo $button?>",
+                // cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },function(){
+                if(url != ''){
+                    self.location.href = "<?php echo $url?>";
+                }else{
+                    self.history.go(-1);
+                }
+            });
+        </script>
+    <?php else:?>
+        <script type="text/javascript">
+            var url = '<?php echo $url?>';
+            <?php echo $target?>.swal({
+                title: "<?php echo $msg?>",
+                text: "<?php echo $desc?>",
+                type: "success",
+                // showCancelButton: true,
+                // confirmButtonColor: "#DD6B55",
+                confirmButtonText: "<?php echo $button?>",
+                // cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            },function(){
+                if(url != ''){
+                    self.location.href = "<?php echo $url?>";
+                }else{
+                    self.history.go(-1);
+                }
+            });
+        </script>
+    <?php endif?>
+</body>
+</html>

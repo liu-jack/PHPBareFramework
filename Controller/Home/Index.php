@@ -12,7 +12,7 @@ class Index extends Controller
 
     public function index()
     {
-        $data = $this->m->test();//var_dump($data);
+        $data = $this->_m->test();//var_dump($data);
         //$this->value('data',$data);
         $this->view();
     }

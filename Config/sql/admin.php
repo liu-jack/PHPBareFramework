@@ -36,12 +36,11 @@ EOT
 CREATE TABLE IF NOT EXISTS `AdminMenu` (
   `AdminMenuId` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(16) NOT NULL,
-  `Key` varchar(255) NOT NULL DEFAULT '' COMMENT '菜单唯一Key',
   `Url` varchar(255) NOT NULL DEFAULT '' COMMENT '菜单URL',
   `ParentId` int(11) NOT NULL DEFAULT '0' COMMENT '父级ID, 若为0则表示顶级',
   `DisplayOrder` int(11) NOT NULL DEFAULT '0' COMMENT '数值越大越靠前',
   PRIMARY KEY (`AdminMenuId`),
-  UNIQUE KEY `Idx_AdminMenu_Key` (`Key`)
+  UNIQUE KEY `Idx_AdminMenu_Url` (`Url`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='后台 - 菜单表';
 EOT
     ,

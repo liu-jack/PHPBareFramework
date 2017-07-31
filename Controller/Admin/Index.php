@@ -19,6 +19,9 @@ class Index extends Controller
      */
     public function index()
     {
+        if (!AdminLogin::isLogin()) {
+            $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
+        }
         $this->view();
     }
 
@@ -45,6 +48,7 @@ class Index extends Controller
                 output($code, $msg);
             }
         }
+        $this->view();
     }
 
     /**
@@ -53,7 +57,7 @@ class Index extends Controller
     public function logout()
     {
         AdminLogin::logout();
-        redirect('admin/index/index');
+        redirect('admin/index/login');
     }
 
     /**

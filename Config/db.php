@@ -34,11 +34,11 @@ $config = [
     'TEST' => [
         'mysql' => [
             'create' => [
-                'db' => ['host' => '127.0.0.1', 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
+                'db' => ['host' => '192.168.1.102', 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
             ],
             'default' => [
-                'w' => ['host' => '127.0.0.1', 'user' => 'camfee', 'password' => 'camfee29'],
-                'r' => ['host' => '127.0.0.1', 'user' => 'camfee', 'password' => 'camfee29'],
+                'w' => ['host' => '192.168.1.102', 'user' => 'camfee', 'password' => 'camfee29'],
+                'r' => ['host' => '192.168.1.102', 'user' => 'camfee', 'password' => 'camfee29'],
             ],
         ],
         'memcache' => [
