@@ -160,7 +160,7 @@ class AdminLogin
         $auth_list = self::getAuthList();
         $menu_list = AdminMenu::getMenus();
         $mlist = [];
-        foreach ($menu_list as $k => $v) {
+        foreach ($menu_list['data'] as $k => $v) {
             $mlist[$v['ParentId']][$v['AdminMenuId']] = $v;
         }
         foreach ($mlist[0] as $k => $v) {
@@ -189,7 +189,7 @@ class AdminLogin
 
         $list = [];
         if ($pid < 0) {
-            $list = $mlist;
+            $list = array_filter($mlist);
         } elseif (!empty($mlist[$pid])) {
             $list = $mlist[$pid];
         }

@@ -8,7 +8,7 @@ use Model\Account\UserData;
 use Model\Admin\AdminLog;
 use Model\Admin\SmsLog;
 use Model\Book\{
-    Book, Column, Collect83
+    Book, Column
 };
 use Classes\Encrypt\Blowfish;
 use Classes\Encrypt\Rsa;
@@ -18,6 +18,7 @@ use Model\Admin\AdminUser;
 use Model\Admin\AdminGroup;
 use Model\Admin\AdminMenu;
 use Bare\MongoModel;
+use Model\Admin\AdminLogin;
 
 /**
  * 测试用控制器
@@ -57,14 +58,31 @@ class Test extends Controller
 //            'RealName' => 'camfee'
 //        ];
 //        pre(AdminUser::addUser($data));
-        pre(AdminUser::getUserByName('camfee'));
+//        pre(AdminUser::getUserByName('camfee'));
         //pre(AdminGroup::addGroup(['GroupName' => '测试组']));
 //        $data = [
-//            'Name' => '首页',
-//            'Key' => 'admin/idex/index',
-//            'Url' => 'admin/idex/index'
+//            [
+//                'Name' => '首页0',
+//                'Url' => 'Admin/data',
+//            ],
+//            [
+//                'Name' => '首页1',
+//                'Url' => 'Admin/Info'
+//            ],
+//            [
+//                'Name' => '首页2',
+//                'Url' => 'Admin/Info/index'
+//            ],
+//            [
+//                'Name' => '首页2',
+//                'Url' => 'Admin/Info/info'
+//            ]
 //        ];
-//        pre(AdminMenu::addMenu($data));
+//        var_dump(AdminMenu::addMenu($data));
+
+
+        pre(AdminLogin::getAuthMenu());
+
 //        $data = [
 //            'UserId' => 1,
 //            'ItemId' => 1,
