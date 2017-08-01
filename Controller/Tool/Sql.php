@@ -36,8 +36,8 @@ class Sql extends Controller
         $create_book_sql = $sqls['create_book'];
         $create_collect_sql = $sqls['create_book_collect'];
 
-        $this->m->run29shu($create_book_sql);
-        $this->m->run29shu($create_collect_sql);
+        $this->_m->run29shu($create_book_sql);
+        $this->_m->run29shu($create_collect_sql);
         echo 'finished' . PHP_EOL;
     }
 
@@ -53,7 +53,7 @@ class Sql extends Controller
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('BookColumn', 'BookColumn_' . $suff, $create_sql);
-            $this->m->run29shu($sql);
+            $this->_m->run29shu($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -70,7 +70,7 @@ class Sql extends Controller
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('BookContent', 'BookContent_' . $suff, $create_sql);
-            $this->m->run29shuContent($sql);
+            $this->_m->run29shuContent($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -83,11 +83,11 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/user');
         $create_sql = $sqls['create_passport'];
-        $this->m->runPassport($create_sql);
+        $this->_m->runPassport($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`User`', '`User_' . $suff . '`', $create_sql);
-            $this->m->runPassport($sql);
+            $this->_m->runPassport($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -100,11 +100,11 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/user');
         $create_sql = $sqls['create_account'];
-        $this->m->runAccount($create_sql);
+        $this->_m->runAccount($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`User`', '`User_' . $suff . '`', $create_sql);
-            $this->m->runAccount($sql);
+            $this->_m->runAccount($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -117,11 +117,11 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_favorite'];
-        $this->m->runFavorite($create_sql);
+        $this->_m->runFavorite($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Favorite`', '`Favorite_' . $suff . '`', $create_sql);
-            $this->m->runFavorite($sql);
+            $this->_m->runFavorite($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -134,7 +134,7 @@ class Sql extends Controller
         need_cli();
 //        $sql = '';
 //        for ($i = 0; $i < 256; $i++) {
-//            $this->m->runApplication($sql);
+//            $this->_m->runApplication($sql);
 //            echo $i . PHP_EOL;
 //        }
     }
@@ -147,11 +147,11 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_device'];
-        $this->m->runDevice($create_sql);
+        $this->_m->runDevice($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Device`', '`Device_' . $suff . '`', $create_sql);
-            $this->m->runDevice($sql);
+            $this->_m->runDevice($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -164,11 +164,11 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_comment'];
-        $this->m->runComment($create_sql);
+        $this->_m->runComment($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Comment`', '`Comment_' . $suff . '`', $create_sql);
-            $this->m->runComment($sql);
+            $this->_m->runComment($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -183,12 +183,12 @@ class Sql extends Controller
         $create_sql = $sqls['create_tag'];
         $create_sql2 = $sqls['create_tagname'];
 
-        $this->m->runTag($create_sql);
-        $this->m->runTag($create_sql2);
+        $this->_m->runTag($create_sql);
+        $this->_m->runTag($create_sql2);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Tag`', '`Tag_' . $suff . '`', $create_sql);
-            $this->m->runTag($sql);
+            $this->_m->runTag($sql);
             echo $i . PHP_EOL;
         }
     }
@@ -205,11 +205,11 @@ class Sql extends Controller
         $create_sql3 = $sqls['create_menu'];
         $create_sql4 = $sqls['create_log'];
         $create_sql5 = $sqls['create_sms'];
-        $this->m->runAdmin($create_sql1);
-        $this->m->runAdmin($create_sql2);
-        $this->m->runAdmin($create_sql3);
-        $this->m->runAdmin($create_sql4);
-        $this->m->runAdmin($create_sql5);
+        $this->_m->runAdmin($create_sql1);
+        $this->_m->runAdmin($create_sql2);
+        $this->_m->runAdmin($create_sql3);
+        $this->_m->runAdmin($create_sql4);
+        $this->_m->runAdmin($create_sql5);
     }
 
     /**
@@ -223,10 +223,10 @@ class Sql extends Controller
         $create_sql2 = $sqls['create_picinfo'];
         $create_sql3 = $sqls['create_article'];
         $create_sql4 = $sqls['create_content'];
-        $this->m->runCollect($create_sql1);
-        $this->m->runCollect($create_sql2);
-        $this->m->runCollect($create_sql3);
-        $this->m->runCollect($create_sql4);
+        $this->_m->runCollect($create_sql1);
+        $this->_m->runCollect($create_sql2);
+        $this->_m->runCollect($create_sql3);
+        $this->_m->runCollect($create_sql4);
     }
 
     /**
@@ -239,9 +239,9 @@ class Sql extends Controller
         $create_sql1 = $sqls['create_version'];
         $create_sql2 = $sqls['create_image'];
         $create_sql3 = $sqls['create_recommend'];
-        $this->m->runMobile($create_sql1);
-        $this->m->runMobile($create_sql2);
-        $this->m->runMobile($create_sql3);
+        $this->_m->runMobile($create_sql1);
+        $this->_m->runMobile($create_sql2);
+        $this->_m->runMobile($create_sql3);
     }
 
     /**
@@ -253,7 +253,7 @@ class Sql extends Controller
         $sqls = config('sql/collect');
         $create_sql1 = $sqls['create_atlas'];
         $create_sql2 = $sqls['create_picture'];
-        $this->m->runPicture($create_sql1);
-        $this->m->runPicture($create_sql2);
+        $this->_m->runPicture($create_sql1);
+        $this->_m->runPicture($create_sql2);
     }
 }

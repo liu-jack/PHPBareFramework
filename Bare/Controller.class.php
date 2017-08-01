@@ -48,21 +48,31 @@ Class Controller
     /**
      * 模板数据数组
      */
-    private static $_var = [];
+    private $_var = [];
 
     /**
      * 自动html模板加载函数
      * @param string $path 模板的路径 默认为
      *      ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)
      */
-    public static function view($path = '', $ext = VEXT)
+    public function view($path = '', $ext = VEXT)
     {
-        extract(self::$_var);
+        extract($this->_var);
         if ($path) {
             include(VIEW_PATH . $path . $ext);
         } else {
             include(VIEW_PATH . $GLOBALS['_PATH'] . $ext);
         }
+    }
+
+    /**
+     * 赋值到模板
+     * @param string $name 保存到前端模板的变量名
+     * @param mixed $data 要保存到前端模板的数据
+     */
+    public function value($name, $data)
+    {
+        $this->_var[$name] = $data;
     }
 
     /**
@@ -89,16 +99,6 @@ Class Controller
             header('Content-type: application/json');
             exit(json_encode($result));
         }
-    }
-
-    /**
-     * 赋值到模板
-     * @param string $name 保存到前端模板的变量名
-     * @param mixed $data 要保存到前端模板的数据
-     */
-    public static function value($name, $data)
-    {
-        self::$_var[$name] = $data;
     }
 
     /**
@@ -196,7 +196,7 @@ Class Controller
      *                        button  按钮显示的文字，默认：确定
      * @return void
      * */
-    function alertMsg($msg, $options = [])
+    public function alertMsg($msg, $options = [])
     {
         $opt = [
             'url' => '',
