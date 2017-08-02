@@ -7,6 +7,15 @@
  */
 !(function(win){
     /**
+     * 切歌变化
+     */
+    function changeMusic(element) {
+        $('title').innerHTML = element.innerHTML.replace(/<\/?.+?>/g,"") + ' - HTML5音乐播放器';
+        var musicBox = document.getElementsByClassName('m-music-list-wrap')[0];
+        var musicTop = document.getElementsByClassName('f-toe')[0].offsetTop;
+        musicBox.scrollTop = element.offsetTop - musicTop;
+    }
+    /**
      * 添加样式
      * @param element
      * @param className
@@ -208,6 +217,7 @@
             for(i; i< this.musicLength;i++){
                 if(i == idx){
                     addClass(playlist[i],'current');
+                    changeMusic(playlist[i]);
                 }else{
                     removeClass(playlist[i],'current');
                 }
@@ -456,7 +466,7 @@
                 if(me.audioDom.currentTime && me.audioDom.duration){
                     me.audioDom.currentTime = parseInt((progressX / width) * (me.audioDom.duration)); //重新设置播放进度
                     me.play();
-                }    
+                }
             });
         },
         /**
