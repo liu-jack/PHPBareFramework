@@ -20,7 +20,7 @@
     <input type="button" value="游戏说明" onClick="showHelp()">
 </div>
 
-<script src="<?php echo STATICS_PATH?>game/h5/tuixiangzi/js/mapdata100.js"></script>
+<script src="<?php echo STATICS_JS?>mapdata100.js"></script>
 <script>
     var can = document.getElementById("canvas");
     var msg = document.getElementById("msg");
@@ -33,14 +33,14 @@
     var moveTimes = 0;//移动了多少次
     //预加载所有图片
     var oImgs = {
-        "block" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/block.gif",
-        "wall" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/wall.png",
-        "box" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/box.png",
-        "ball" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/ball.png",
-        "up" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/up.png",
-        "down" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/down.png",
-        "left" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/left.png",
-        "right" : "<?php echo STATICS_PATH?>game/h5/tuixiangzi/images/right.png",
+        "block" : "<?php echo STATICS_IMG?>block.gif",
+        "wall" : "<?php echo STATICS_IMG?>wall.png",
+        "box" : "<?php echo STATICS_IMG?>box.png",
+        "ball" : "<?php echo STATICS_IMG?>ball.png",
+        "up" : "<?php echo STATICS_IMG?>up.png",
+        "down" : "<?php echo STATICS_IMG?>down.png",
+        "left" : "<?php echo STATICS_IMG?>left.png",
+        "right" : "<?php echo STATICS_IMG?>right.png",
     }
     function imgPreload(srcs,callback){
         var count = 0,imgNum = 0,images = {};

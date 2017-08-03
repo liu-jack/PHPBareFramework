@@ -67,8 +67,8 @@ class Index extends Controller
     {
         $options = [
             'image_width' => 96,
-            'image_height' => 42,
-            'text_scale' => 0.5, //字体比例
+            'image_height' => 30,
+            'text_scale' => 0.6, //字体比例
         ];
         $img = new Securimage($options);
         $img->show();

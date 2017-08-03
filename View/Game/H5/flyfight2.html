@@ -16,9 +16,9 @@
     #box .difficulty a{ width:180px; height:30px; line-height:30px; text-align:center; display:block; margin:20px auto 0 auto; background:#f0f0f0; color:#333; text-decoration:none;}
     #box .difficulty a:hover{ background:#900; color:#fff;}
     #box .bg img{ display:block;}
-    #box .warcraft{ width:60px; height:36px; position:absolute; left:120px;  top:500px; background:url('<?php echo STATICS_PATH?>game/h5/flyfight2/img/warcraft.png') center no-repeat; z-index:3;}
-    #box .bullet{ width:6px; height:22px; background:url('<?php echo STATICS_PATH?>game/h5/flyfight2/img/bullet.png'); position:absolute; z-index:2}
-    #box .enemy{ width:23px; height:30px; background:url('<?php echo STATICS_PATH?>game/h5/flyfight2/img/enemy.png'); position:absolute; z-index:3}
+    #box .warcraft{ width:60px; height:36px; position:absolute; left:120px;  top:500px; background:url('<?php echo STATICS_URL?>img/warcraft.png') center no-repeat; z-index:3;}
+    #box .bullet{ width:6px; height:22px; background:url('<?php echo STATICS_URL?>img/bullet.png'); position:absolute; z-index:2}
+    #box .enemy{ width:23px; height:30px; background:url('<?php echo STATICS_URL?>img/enemy.png'); position:absolute; z-index:3}
     #box .score { width:220px; height:30px; line-height:30px; position:absolute; color:#fff; font-weight:bold; padding-left:5px; font-size:16px; z-index:5;}
     #box .tips{ width:240px; height: 200px; line-height:40px; padding:10px; position:absolute; left:20px; top:130px;  background:#f0f0f0;}
     #box .tips .type{ width:160px; padding: 2px 15px; height:30px; line-height:30px; text-align:center; color:red; font-weight:bold;}
@@ -225,7 +225,7 @@
                                 by = Math.abs( y - parseInt($(".bullet").eq(i).css("top")));
                         if( bx <= 14 &&  by <= 20 )
                         {
-                            oEnemy.css("background","url('<?php echo STATICS_PATH?>game/h5/flyfight2/img/boom.png')");
+                            oEnemy.css("background","url('<?php echo STATICS_URL?>img/boom.png')");
                             $(".bullet").eq(i).remove();
                             clearInterval(oEnemy.timer);
                             game.num.score++;
@@ -247,7 +247,7 @@
                         })
                         oEnemy.remove();
                         $(".score").css("display","none");
-                        $(".warcraft").css("background","url('<?php echo STATICS_PATH?>game/h5/flyfight2/img/boom2.png')");
+                        $(".warcraft").css("background","url('<?php echo STATICS_URL?>img/boom2.png')");
                         clearInterval(oEnemy.timer);
                         setTimeout( function () { $(".warcraft").remove(); },300)
                         clearInterval(game.timer.bullet);

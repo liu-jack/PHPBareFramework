@@ -21,6 +21,7 @@ define('JS_PATH', HTTP_HOST . '/Public/js/');
 define('CSS_PATH', HTTP_HOST . '/Public/css/');
 define('IMAGES_PATH', HTTP_HOST . '/Public/images/');
 define('STATICS_PATH', HTTP_HOST . '/Public/statics/');
+define('STATICS_URI', '/Public/statics/');
 define('EXT', '.php');
 define('CEXT', '.class.php');
 define('VEXT', '.html');

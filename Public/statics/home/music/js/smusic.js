@@ -13,7 +13,7 @@
         $('title').innerHTML = element.innerHTML.replace(/<\/?.+?>/g,"") + ' - HTML5音乐播放器';
         var musicBox = document.getElementsByClassName('m-music-list-wrap')[0];
         var musicTop = document.getElementsByClassName('f-toe')[0].offsetTop;
-        musicBox.scrollTop = element.offsetTop - musicTop;
+        musicBox.scrollTop = element.offsetTop - musicTop - 30;
     }
     /**
      * 添加样式

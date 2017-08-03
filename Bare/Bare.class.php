@@ -90,12 +90,13 @@ class Bare
             $GLOBALS['_MPATH'] = $GLOBALS['_M'] . '/' . $GLOBALS['_C'];
             $GLOBALS['_NAMESPACE'] = '\\' . $GLOBALS['_M'] . '\\' . $GLOBALS['_C'];
             // 静态文件路径定义
-            $s_path = HTTP_HOST . '/Public/statics/' . strtolower($GLOBALS['_M']);
-            if (is_dir(ROOT_PATH . 'Public/statics/' . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']))) {
+            $s_path = HTTP_HOST . STATICS_URI . strtolower($GLOBALS['_M']);
+            if (is_dir(ROOT_PATH . STATICS_URI . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']))) {
                 $s_path .= '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']);
-            } elseif (is_dir(ROOT_PATH . 'Public/statics/' . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']))) {
+            } elseif (is_dir(ROOT_PATH . STATICS_URI . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']))) {
                 $s_path .= '/' . strtolower($GLOBALS['_C']);
             }
+            define('STATICS_URL', $s_path . '/');
             define('STATICS_JS', $s_path . '/js/');
             define('STATICS_CSS', $s_path . '/css/');
             define('STATICS_IMG', $s_path . '/images/');

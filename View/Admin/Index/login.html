@@ -1,0 +1,60 @@
+<?php $this->view('Admin/Public/header')?>
+
+<!-- Form area -->
+<div class="admin-form">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Widget starts -->
+            <div class="widget worange">
+              <!-- Widget head -->
+              <div class="widget-head">
+                <i class="icon-lock"></i> 登录
+              </div>
+
+              <div class="widget-content">
+                <div class="padd">
+                  <!-- Login form -->
+                  <form class="form-horizontal">
+                    <!-- Email -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="username">账号</label>
+                      <div class="col-lg-9">
+                        <input type="text" class="form-control" id="username" placeholder="username">
+                      </div>
+                    </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="password">密码</label>
+                      <div class="col-lg-9">
+                        <input type="password" class="form-control" id="password" placeholder="password">
+                      </div>
+                    </div>
+                    <!-- code -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="code">验证码</label>
+                      <div class="input-group col-lg-9">
+                        <span class="input-group-addon"><img src="<?php echo url('admin/index/code')?>" data-url="<?php echo url('admin/index/code')?>"  id="code_img" /></span>
+                        <input type="text" class="form-control input-lg" id="code" placeholder="code">
+                      </div>
+                    </div>
+                        <div class="col-lg-9 col-lg-offset-2">
+							<button type="button" id="dologin" class="btn btn-danger">登录</button>
+							<button type="reset" class="btn btn-default">重置</button>
+						</div>
+                    <br />
+                  </form>
+				  
+				</div>
+                </div>
+            </div>  
+      </div>
+    </div>
+  </div> 
+</div>
+
+<script src="<?php echo JS_PATH?>jsencrypt.min.js"></script>
+<script src="<?php echo JS_PATH?>login.js"></script>
+
+<?php view('Admin/Public/footer')?>
