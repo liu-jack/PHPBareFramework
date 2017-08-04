@@ -53,10 +53,10 @@ html,body{
 }
 
 /*SMusic*/
-.music-box{width:800px; min-height:276px; margin:12% auto;}
+.music-box{width:890px; min-height:276px; margin:12% auto;}
 .grid-music-container{
     width: 520px;
-    height: 276px;
+    height: 330px;
     padding: 20px;
     position: relative;
     margin: 10% 0;
@@ -239,7 +239,7 @@ html,body{
 .grid-music-container .m-music-list-wrap{
     margin-left: 135px;
     margin-right: 25px;
-    height: 120px;
+    height: 180px;
     border: 1px solid rgba(255,255,255,.7);
     overflow-x: hidden;
     overflow-y: auto;
@@ -329,11 +329,11 @@ html,body{
 }
 /*歌词*/
 .grid-music-container .m-music-lyric-wrap{
-    width: 275px;
+    width: 330px;
     height: 100%;
     background-color: rgba(255,255,255,.7);
     position: absolute;
-    right: -275px;
+    right: -330px;
     top : 0;
     border-left: 1px solid #fff;
     overflow: hidden;

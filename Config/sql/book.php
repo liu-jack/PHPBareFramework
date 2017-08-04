@@ -34,7 +34,7 @@ ALTER TABLE `book` AUTO_INCREMENT=30;
 EOT
     ,
     'create_book_collect' => <<<EOT
-CREATE TABLE `BookCollect` (
+CREATE TABLE IF NOT EXISTS `BookCollect` (
 `CollectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
 `BookId` int(11) unsigned NOT NULL COMMENT '书id',
 `FromId` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '来源id',
