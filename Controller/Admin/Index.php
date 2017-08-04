@@ -10,7 +10,9 @@ namespace Controller\Admin;
 use Bare\Controller;
 use Classes\Encrypt\Rsa;
 use Classes\Image\Securimage;
+use Model\Admin\AdminGroup;
 use Model\Admin\AdminLogin;
+use Model\Admin\AdminUser;
 
 class Index extends Controller
 {
@@ -72,5 +74,43 @@ class Index extends Controller
         ];
         $img = new Securimage($options);
         $img->show();
+    }
+
+    /*
+     * 创建超级管理员 php index.php admin/index/addAdminUser
+     */
+    public function addAdminUser()
+    {
+        need_cli();
+        $groupid = 29;
+        $username = 'camfee';
+        $user = AdminUser::getUserByName($username);
+        if (empty($user)) {
+            $user = [
+                'UserName' => $username,
+                'Password' => 'camfee29',
+                'RealName' => '管理员',
+                'UserGroup' => $groupid
+            ];
+
+            $group = AdminGroup::getGroupByIds($groupid);
+            if (empty($group)) {
+                $group = [
+                    'GroupId' => $groupid,
+                    'GroupName' => '超级管理员',
+                ];
+                $ret = AdminGroup::addGroup($group);
+                if (empty($ret)) {
+                    exit("Create UserGroup Failed\n");
+                }
+            }
+            $res = AdminUser::addUser($user);
+            if (empty($res)) {
+                exit("Create AdminUser Failed\n");
+            } else {
+                exit("Success\n");
+            }
+        }
+        exit("Already Exists\n");
     }
 }

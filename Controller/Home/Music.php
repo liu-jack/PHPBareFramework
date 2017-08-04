@@ -53,11 +53,14 @@ class Music extends Controller
         file_put_contents(
             str_replace('//', '/', ROOT_PATH . str_replace(HTTP_HOST, '', STATICS_JS) . 'musicList.js'),
             $json_string);
-        echo 'ok';
+        exit('ok');
     }
 
     /**
      * 歌词转为utf-8
+     *
+     * @param $data
+     * @return string
      */
     private function strToUtf8($data)
     {

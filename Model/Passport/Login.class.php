@@ -34,14 +34,14 @@ class Login extends Passport
         if ($userid === false) {
             return [
                 'code' => 202,
-                'msg' => '手机号或者密码不正确'
+                'msg' => '账号或者密码不正确'
             ];
         }
         $userinfo = self::getUserById($userid);
         if (!password_verify($pwd, $userinfo['Password']) || $userinfo['UserId'] != $userid) {
             return [
                 'code' => 203,
-                'msg' => '手机号或者密码不正确'
+                'msg' => '账号或者密码不正确'
             ];
         }
         if ($userinfo['Status'] == 0) {

@@ -62,32 +62,40 @@ class BookSearch
                     "query" => [
                         "bool" => [
                             "must" => [
-                                "multi_match" => [
-                                    "query" => $keywords,
-                                    "type" => "best_fields",
-                                    "fields" => [
-                                        "bookname^2",
-                                        "author^1",
-                                        "typename^0.2",
-                                        "description^0.2"
+                                [
+                                    "multi_match" => [
+                                        "query" => $keywords,
+                                        "type" => "best_fields",
+                                        "fields" => [
+                                            "bookname^2",
+                                            "author^1",
+                                            "typename^0.2",
+                                            "description^0.2"
+                                        ]
                                     ]
                                 ]
                             ]
                         ]
                     ],
                     "filter" => [
-                        "term" => [
-                            "status" => 1
+                        [
+                            "term" => [
+                                "status" => 1
+                            ]
                         ]
                     ]
                 ]
             ],
             "sort" => [
-                "_score" => [
-                    "order" => "desc"
+                [
+                    "_score" => [
+                        "order" => "desc"
+                    ]
                 ],
-                "updatetime" => [
-                    "order" => "desc"
+                [
+                    "updatetime" => [
+                        "order" => "desc"
+                    ]
                 ]
             ],
             "_source" => "_id",
@@ -138,12 +146,16 @@ class BookSearch
                 ]
             ],
             "sort" => [
-                "{$type}" => [
-                    "order" => "desc",
-                    "mode" => "max"
+                [
+                    "{$type}" => [
+                        "order" => "desc",
+                        "mode" => "max"
+                    ]
                 ],
-                "updatetime" => [
-                    "order" => "desc"
+                [
+                    "updatetime" => [
+                        "order" => "desc"
+                    ]
                 ]
             ],
             "_source" => "_id",
@@ -160,7 +172,7 @@ class BookSearch
                         ]
                     ]
                 ];
-                unset($query['sort']['finish']);
+                unset($query['sort'][0]);
                 break;
         }
 
@@ -205,8 +217,10 @@ class BookSearch
                 ]
             ],
             "sort" => [
-                "updatetime" => [
-                    "order" => "desc"
+                [
+                    "updatetime" => [
+                        "order" => "desc"
+                    ]
                 ]
             ],
             "_source" => "_id",

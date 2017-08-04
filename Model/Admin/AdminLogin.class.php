@@ -26,7 +26,7 @@ class AdminLogin
         if (empty($userinfo['UserId'])) {
             return [
                 'code' => 202,
-                'msg' => '手机号或者密码不正确'
+                'msg' => '账号或者密码不正确'
             ];
         }
         $userid = (int)$userinfo['UserId'];
@@ -34,7 +34,7 @@ class AdminLogin
         if (!password_verify($pwd, $userinfo['Password'])) {
             return [
                 'code' => 203,
-                'msg' => '手机号或者密码不正确'
+                'msg' => '账号或者密码不正确'
             ];
         }
         if ($userinfo['Status'] == 0) {
