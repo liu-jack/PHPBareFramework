@@ -242,6 +242,7 @@
                 h = v.volumeEventer.offsetHeight || 50;  //隐藏元素的高度不好获取，这里设置visible来实现同样的效果
             if(volume <= 0) volume = 0;
             if(volume >= 1) volume = 1;
+            localStorage.setItem("smusic_volume", volume);
             this.audioDom.volume = volume;
             var currentHeight = h * volume;
             v.volumeCurrent.style.height = currentHeight + 'px';
@@ -264,7 +265,11 @@
             if(this.playMode == 2){ //随机播放
                 idx = this.getRandomIndex();
             }
-            this.setVolume(this.config.defaultVolume);
+            var volume = localStorage.getItem("smusic_volume");
+            if (!volume) {
+                volume = this.config.defaultVolume;
+            }
+            this.setVolume(volume);
             this.audioDom.load();
             this.resetPlayer(idx);
         },

@@ -153,9 +153,10 @@ class AdminLogin
      * 获取授权的菜单
      *
      * @param int $pid
+     * @param int $level
      * @return array|mixed
      */
-    public static function getAuthMenu($pid = -1)
+    public static function getAuthMenu($pid = -1, $level = 2)
     {
         $auth_list = self::getAuthList();
         $menu_list = AdminMenu::getMenus();
@@ -166,24 +167,29 @@ class AdminLogin
         foreach ($mlist[0] as $k => $v) {
             if (!empty($mlist[$v['AdminMenuId']])) {
                 foreach ($mlist[$v['AdminMenuId']] as $kk => $vv) {
-                    if (!empty($mlist[$vv['AdminMenuId']])) {
-                        foreach ($mlist[$vv['AdminMenuId']] as $k3 => $v3) {
-                            if (!isset($auth_list[$v3['Url']])) {
-                                unset($mlist[$vv['AdminMenuId']][$k3]);
+                    if ($level == 3) {
+                        if (!empty($mlist[$vv['AdminMenuId']])) {
+                            foreach ($mlist[$vv['AdminMenuId']] as $k3 => $v3) {
+                                if (!isset($auth_list[$v3['Url']])) {
+                                    unset($mlist[$vv['AdminMenuId']][$k3]);
+                                }
                             }
-                        }
-                        if (empty($mlist[$vv['AdminMenuId']])) {
-                            unset($mlist[$v['AdminMenuId']][$kk]);
+                            if (empty($mlist[$vv['AdminMenuId']])) {
+                                unset($mlist[$v['AdminMenuId']][$kk]);
+                            }
+                        } else {
+                            unset($mlist[$vv['AdminMenuId']]);
+
                         }
                     } else {
-                        unset($mlist[$vv['AdminMenuId']]);
+                        if (!isset($auth_list[$vv['Url']])) {
+                            unset($mlist[$v['AdminMenuId']][$kk]);
+                        }
                     }
                 }
                 if (empty($mlist[$v['AdminMenuId']])) {
                     unset($mlist[0][$k]);
                 }
-            } else {
-                unset($mlist[$v['AdminMenuId']]);
             }
         }
 
