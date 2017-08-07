@@ -59,7 +59,7 @@ class Index extends Controller
     public function logout()
     {
         AdminLogin::logout();
-        redirect('admin/index/login');
+        redirect(url('admin/index/login'));
     }
 
     /**

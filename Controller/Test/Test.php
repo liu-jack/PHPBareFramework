@@ -60,26 +60,125 @@ class Test extends Controller
 //        pre(AdminUser::addUser($data));
 //        pre(AdminUser::getUserByName('camfee'));
         //pre(AdminGroup::addGroup(['GroupName' => '测试组']));
-//        $data = [
-//            [
-//                'Name' => '首页0',
-//                'Url' => 'Admin/data',
-//            ],
-//            [
-//                'Name' => '首页1',
-//                'Url' => 'Admin/Info'
-//            ],
-//            [
-//                'Name' => '首页2',
-//                'Url' => 'Admin/Info/index'
-//            ],
-//            [
-//                'Name' => '首页2',
-//                'Url' => 'Admin/Info/info'
-//            ]
-//        ];
-//        var_dump(AdminMenu::addMenu($data));
-
+        $data = [
+            [
+                'AdminMenuId' => 1,
+                'ParentId' => 0,
+                'Name' => '首页',
+                'Url' => 'Admin_Info',
+            ],
+            [
+                'AdminMenuId' => 7,
+                'ParentId' => 1,
+                'Name' => '首页',
+                'Url' => 'Admin/Info',
+            ],
+            [
+                'AdminMenuId' => 8,
+                'ParentId' => 7,
+                'Name' => '欢迎页',
+                'Url' => 'Admin/Info/index',
+            ],
+            [
+                'AdminMenuId' => 9,
+                'ParentId' => 7,
+                'Name' => '服务器信息',
+                'Url' => 'Admin/Info/info',
+            ],
+            [
+                'AdminMenuId' => 2,
+                'ParentId' => 0,
+                'Name' => '用户',
+                'Url' => 'Admin_User'
+            ],
+            [
+                'AdminMenuId' => 10,
+                'ParentId' => 2,
+                'Name' => '用户管理',
+                'Url' => 'Admin/User',
+            ],
+            [
+                'AdminMenuId' => 11,
+                'ParentId' => 10,
+                'Name' => '用户列表',
+                'Url' => 'Admin/User/index',
+            ],
+            [
+                'AdminMenuId' => 3,
+                'ParentId' => 0,
+                'Name' => '数据',
+                'Url' => 'Admin_Data'
+            ],
+            [
+                'AdminMenuId' => 12,
+                'ParentId' => 3,
+                'Name' => '书本管理',
+                'Url' => 'Admin/Book',
+            ],
+            [
+                'AdminMenuId' => 13,
+                'ParentId' => 12,
+                'Name' => '书本列表',
+                'Url' => 'Admin/Book/index',
+            ],
+            [
+                'AdminMenuId' => 4,
+                'ParentId' => 0,
+                'Name' => '应用',
+                'Url' => 'Admin_App'
+            ],
+            [
+                'AdminMenuId' => 14,
+                'ParentId' => 4,
+                'Name' => '应用管理',
+                'Url' => 'Admin/App',
+            ],
+            [
+                'AdminMenuId' => 15,
+                'ParentId' => 14,
+                'Name' => '应用列表',
+                'Url' => 'Admin/App/index',
+            ],
+            [
+                'AdminMenuId' => 5,
+                'ParentId' => 0,
+                'Name' => '工具',
+                'Url' => 'Admin_Tool'
+            ],
+            [
+                'AdminMenuId' => 16,
+                'ParentId' => 5,
+                'Name' => '工具管理',
+                'Url' => 'Admin/Tool',
+            ],
+            [
+                'AdminMenuId' => 17,
+                'ParentId' => 16,
+                'Name' => '工具列表',
+                'Url' => 'Admin/Tool/index',
+            ],
+            [
+                'AdminMenuId' => 6,
+                'ParentId' => 0,
+                'Name' => '后台',
+                'Url' => 'Admin_Admin'
+            ],
+            [
+                'AdminMenuId' => 18,
+                'ParentId' => 6,
+                'Name' => '后台管理',
+                'Url' => 'Admin/Admin',
+            ],
+            [
+                'AdminMenuId' => 19,
+                'ParentId' => 18,
+                'Name' => '管理员列表',
+                'Url' => 'Admin/Admin/index',
+            ],
+        ];
+//        foreach ($data as $v) {
+//            AdminMenu::addMenu($v);
+//        }
 
         pre(AdminLogin::getAuthMenu());
 
