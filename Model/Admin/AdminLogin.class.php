@@ -141,8 +141,9 @@ class AdminLogin
      */
     public static function isHasAuth()
     {
+        $admin_group_id = 29;
         $auth_list = self::getAuthList();
-        if (isset($auth_list[$GLOBALS['_PATH']])) {
+        if (isset($auth_list[$GLOBALS['_PATH']]) || $_SESSION['AdminUserGroup'] == $admin_group_id) {
             return true;
         } else {
             return false;
@@ -156,13 +157,25 @@ class AdminLogin
      * @param int $level
      * @return array|mixed
      */
-    public static function getAuthMenu($pid = -1, $level = 2)
+    public static function getAuthMenu($pid = -1, $level = 3)
     {
+        $admin_group_id = 29;
         $auth_list = self::getAuthList();
         $menu_list = AdminMenu::getMenus();
         $mlist = [];
         foreach ($menu_list['data'] as $k => $v) {
             $mlist[$v['ParentId']][$v['AdminMenuId']] = $v;
+        }
+        foreach ($mlist as $k => $v) {
+            foreach ($v as $kk => $vv) {
+                if ($vv['ParentId'] == 0) {
+                    $mlist[$k][$kk]['Level'] = 1;
+                } elseif (isset($mlist[0][$vv['ParentId']])) {
+                    $mlist[$k][$kk]['Level'] = 2;
+                } else {
+                    $mlist[$k][$kk]['Level'] = 3;
+                }
+            }
         }
         foreach ($mlist[0] as $k => $v) {
             if (!empty($mlist[$v['AdminMenuId']])) {
@@ -170,7 +183,7 @@ class AdminLogin
                     if ($level == 3) {
                         if (!empty($mlist[$vv['AdminMenuId']])) {
                             foreach ($mlist[$vv['AdminMenuId']] as $k3 => $v3) {
-                                if (!isset($auth_list[$v3['Url']])) {
+                                if (!isset($auth_list[$v3['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id) {
                                     unset($mlist[$vv['AdminMenuId']][$k3]);
                                 }
                             }
@@ -182,7 +195,7 @@ class AdminLogin
 
                         }
                     } else {
-                        if (!isset($auth_list[$vv['Url']])) {
+                        if (!isset($auth_list[$vv['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id) {
                             unset($mlist[$v['AdminMenuId']][$kk]);
                         }
                     }

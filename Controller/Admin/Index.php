@@ -24,6 +24,9 @@ class Index extends Controller
         if (!AdminLogin::isLogin()) {
             $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
         }
+
+        $menu = AdminLogin::getAuthMenu();
+        $this->value('menu', $menu);
         $this->view();
     }
 

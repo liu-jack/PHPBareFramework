@@ -15,6 +15,16 @@ class Info extends Controller
 {
     public function index()
     {
+        pre($_SERVER);
+        pre($_SERVER);
+        pre($_SERVER);
+        pre($_SERVER);die;
+        $this->view();
+    }
+
+    public function info()
+    {
+        var_dump($_SERVER);die;
         $this->view();
     }
 }

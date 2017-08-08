@@ -34,7 +34,7 @@ Class Controller
                 if (!self::isLogin(2)) {
                     $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
                 } elseif (!AdminLogin::isHasAuth()) {
-                    $this->alertMsg('没有权限', ['url' => url('admin/index/index')]);
+                    $this->alertMsg('没有权限', ['url' => url('admin/index/login')]);
                 }
             }
         }
