@@ -32,8 +32,8 @@
                 </li>
 
                 <?php foreach($menu[0] as $k => $v):?>
-                <li>
-                    <a href="javascript:void(0)" onclick="changeNav(<?php echo $v['AdminMenuId']?>)" data-mid="<?php echo $v['AdminMenuId']?>">
+                <li class="top-menu">
+                    <a href="javascript:void(0)" data-mid="<?php echo $v['AdminMenuId']?>">
                         <h3><?php echo $v['Name']?></h3></a>
                 </li>
                 <?php endforeach;?>
@@ -75,7 +75,7 @@
                     class="icon-table"></i> <?php echo $vv['Name']?>  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
                 <ul>
                     <?php foreach($menu[$vv['AdminMenuId']] as $k3 => $v3):?>
-                    <li><a href="<?php echo url($v3['Url'])?>" target="iframe-r"><?php echo $v3['Name']?></a></li>
+                    <li class="menu-link" data-mid="<?php echo $v3['AdminMenuId']?>"><a href="<?php echo url($v3['Url'])?>" target="iframe-<?php echo $v3['AdminMenuId']?>"><?php echo $v3['Name']?></a></li>
                     <?php endforeach;?>
                 </ul>
             </li>
@@ -88,25 +88,24 @@
 
     <!-- Main bar -->
     <div class="mainbar">
-        <!-- Page heading -->
-        <div class="page-head">
-            <div class="iframe-nav">
-                <ul class="nav nav-tabs" style="padding: 0 40px">
-                    <li class="active iframe-title none-close" mid="3"><a href="javascript://">欢迎</a><span class="close">&times;</span></li>
-                </ul>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-        <!-- Page heading ends -->
+
         <!-- Matter -->
         <div class="matter">
             <div class="container">
+                <div class="iframe-nav">
+                    <ul class="nav nav-tabs" style="padding: 0 40px">
+                        <!--
+                        <li  role="presentation" class="active iframe-title none-close" data-mid="0"><a href="javascript:void(0)">欢迎页</a><div class="close">&times;</div></li>
+                        -->
+                    </ul>
+                </div>
                 <div class="iframe">
-                    <iframe id="iframe-r" name="iframe-r" height="100%" width="100%" border="0" frameborder="0" src="<?php echo url('admin/info/index')?>"></iframe>
+                    <!--
+                    <iframe name="iframe-0" data-mid="0" height="100%" width="100%" border="0" frameborder="0" src="<?php echo url('admin/info/index')?>"></iframe>
+                    -->
                 </div>
             </div>
         </div>
-
         <!-- Matter ends -->
 
     </div>
@@ -131,34 +130,17 @@
 
 <!-- Footer ends -->
 
-<!-- Scroll to top -->
-<span class="totop"><a href="javascript:void(0)"><i class="icon-chevron-up"></i></a></span>
-
-<!-- JS -->
-<script src="<?php echo STATICS_JS?>jquery-ui-1.9.2.custom.min.js"></script> <!-- jQuery UI -->
-<script src="<?php echo STATICS_JS?>fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
-<script src="<?php echo STATICS_JS?>jquery.rateit.min.js"></script> <!-- RateIt - Star rating -->
-<script src="<?php echo STATICS_JS?>jquery.prettyPhoto.js"></script> <!-- prettyPhoto -->
-
-<!-- jQuery Notification - Noty -->
-<script src="<?php echo STATICS_JS?>jquery.noty.js"></script> <!-- jQuery Notify -->
-<script src="<?php echo STATICS_JS?>themes/default.js"></script> <!-- jQuery Notify -->
-<script src="<?php echo STATICS_JS?>layouts/bottom.js"></script> <!-- jQuery Notify -->
-<script src="<?php echo STATICS_JS?>layouts/topRight.js"></script> <!-- jQuery Notify -->
-<script src="<?php echo STATICS_JS?>layouts/top.js"></script> <!-- jQuery Notify -->
-<!-- jQuery Notification ends -->
-<script src="<?php echo STATICS_JS?>sparklines.js"></script> <!-- Sparklines -->
-<script src="<?php echo STATICS_JS?>jquery.cleditor.min.js"></script> <!-- CLEditor -->
-<script src="<?php echo STATICS_JS?>bootstrap-datetimepicker.min.js"></script> <!-- Date picker -->
-<script src="<?php echo STATICS_JS?>bootstrap-switch.min.js"></script> <!-- Bootstrap Toggle -->
-<script src="<?php echo STATICS_JS?>filter.js"></script> <!-- Filter for support page -->
-<script src="<?php echo STATICS_JS?>custom.js"></script> <!-- Custom codes -->
-<script src="<?php echo STATICS_JS?>charts.js"></script> <!-- Charts & Graphs -->
-
 <!-- Script for this page -->
 <script type="text/javascript">
     // 切换顶部菜单
-    function changeNav(mid) {
+    $(document).on('click', "#topmenu .top-menu", function () {
+        var  mid = $(this).find('a').eq(0).attr('data-mid');
+        $('#topmenu .top-menu').removeClass('active');
+        $('#topmenu .top-menu').each(function (i, e) {
+            if ($(e).find('a').eq(0).attr('data-mid') == mid) {
+                $(e).addClass('active');
+            }
+        });
         var show = true;
         $('#nav li.has_sub').each(function (i, e) {
             if ($(e).attr('data-pid') == mid) {
@@ -172,43 +154,37 @@
                 $(e).hide();
             }
         });
-    }
-    // 计算iframe高
-    function initiframe() {
-        $(".iframe").css({height: $(window).height() - 139});
-    }
-    // 点击菜单
-    $(".menu-link").click(function(){
+    });
+    // 点击左侧菜单
+    $(document).on('click', "#nav .menu-link", function(){
         var href = $(this).find('a').attr("href");
-        var mid = $(this).attr("mid");
+        var mid = $(this).attr("data-mid");
         var title = $(this).text();
-        var sta = false;
-        var $ifrmae;
+        var exists = false;
+        var _ifrmae;
         $(".iframe iframe").each(function(){
-            if($(this).attr("mid") == mid){
-                $iframe = $(this);
-                sta = true;
+            if($(this).attr("data-mid") == mid){
+                _ifrmae = $(this);
+                exists = true;
             }
         });
-
         // 检查现在有多少标签了, 超过10个, 自动关闭第一个
         if ($('li.iframe-title').size() >= 10) {
             $('li.iframe-title:first').find(".close").trigger('click');
         }
-
-        if(sta) {
+        if(exists) {
             //如果存在这个标签
-            $iframe.attr("src",href);
-            $(".iframe iframe:visible").each(function(){$(this).css({"display":"none"})});//hide other iframe
-            $(".iframe iframe[mid='"+mid+"']").css({"display":"inline-block"});
+            _ifrmae.attr("src",href);
+            $(".iframe iframe:visible").each(function(){$(this).css({"display":"none"})});
+            $(".iframe iframe[data-mid='"+mid+"']").css({"display":"inline-block"});
             focusTitle(mid);
         } else {
             //如果不存在，则新建一个
-            $(".iframe iframe:visible").each(function(){$(this).css({"display":"none"})});//hide other iframe
-            var html = '<iframe onload="initIframeModalContent(this)" name="iframe-'+mid+'" class="iframe-content" height="100%" width="100%" border="0" frameborder="0" src="'+href+'" mid="'+mid+'"></iframe>';
-            $(".iframe").append(html);//insert iframe
-            html = $('<li role="presentation" class="active iframe-title" mid="'+mid+'"><a href="javascript://">'+title+'</a><div class="close">&times;</div></li>');
-            $(".iframe-nav ul").append(html);//insert title
+            $(".iframe iframe:visible").each(function(){$(this).css({"display":"none"})});
+            var html = '<iframe name="iframe-'+mid+'" data-mid="'+mid+'" height="100%" width="100%" border="0" frameborder="0" src="'+href+'"></iframe>';
+            $(".iframe").append(html);
+            html = $('<li role="presentation" class="active iframe-title" data-mid="'+mid+'"><a href="javascript:void(0)">'+title+'</a><div class="close">&times;</div></li>');
+            $(".iframe-nav ul").append(html);
             focusTitle(mid);
 
             if ($('.iframe-title').length > 1) {
@@ -218,52 +194,46 @@
         initiframe();
         return false;
     });
-
-    //关闭按钮事件
+    //关闭已打开的菜单事件
     $(document).on('click', ".iframe-title .close", function(){
-        var mid = $(this).parent().attr("mid");
+        if ($(this).parent().is(".none-close")) {
+            sweetAlert('不能全部关闭！');
+            return false;
+        }
+        var mid = $(this).parent().attr("data-mid");
         if ($(this).parent().is(".active")){
-            var pmid = $(".iframe-title[mid='"+mid+"']").next().attr('mid');
+            var pmid = $(".iframe-title[data-mid='"+mid+"']").next().attr('data-mid');
             if (pmid == undefined){
-                pmid = $(".iframe-title[mid='"+mid+"']").prev().attr('mid');
-                $(".iframe iframe[mid='"+mid+"']").prev().css({"display":"inline-block"});//show prev
+                //show prev
+                pmid = $(".iframe-title[data-mid='"+mid+"']").prev().attr('data-mid');
+                $(".iframe iframe[data-mid='"+mid+"']").prev().css({"display":"inline-block"});
             }else{
-                $(".iframe iframe[mid='"+pmid+"']").css({"display":"inline-block"});//show next
+                //show next
+                $(".iframe iframe[data-mid='"+pmid+"']").css({"display":"inline-block"});
             }
             focusTitle(pmid);
         }
-
-        $(".iframe iframe[mid='"+mid+"']").remove();//remove iframe
+        $(".iframe iframe[data-mid='"+mid+"']").remove();//remove iframe
         $(this).parent().remove();//remove title
         //不能都关掉
         if ($('.iframe-title').length == 1){
             $('.iframe-title').addClass('none-close');
         }
         return false;
-
     });
-
-    //点击菜单事件
+    //点击已打开的菜单事件
     $(document).on('click', ".iframe-title a", function(){
-        var mid = $(this).parent().attr("mid");
-        $(".iframe iframe:visible").each(function(){$(this).css({"display":"none"})});//hide other iframe
-        $(".iframe iframe[mid='"+mid+"']").css({"display":"inline-block"});
-        focusTitle($(this).parent().attr('mid'));
+        var mid = $(this).parent().attr("data-mid");
+        $(".iframe iframe:visible").each(function(){$(this).css({"display":"none"})});
+        $(".iframe iframe[data-mid='"+mid+"']").css({"display":"inline-block"});
+        focusTitle($(this).parent().attr('data-mid'));
     });
-
-    $(".menu-group").click(function(){
-        $(".menu-group").removeClass("active");
-        $(this).addClass("active");
-        menutoggle($(this).attr("pid"));
-        return false;
-    });
-
-    //让obj标签高亮
+    //让上面与左侧菜单高亮
     function focusTitle(mid){
         $(".iframe-title").removeClass('active');
-        $(".iframe-title[mid='"+mid+"']").addClass('active');
+        $(".iframe-title[data-mid='"+mid+"']").addClass('active');
         $(".menu-link").removeClass("active");
-        $(".menu-link[mid='"+mid+"']").addClass('active');
+        $(".menu-link[data-mid='"+mid+"']").addClass('active');
     }
     // 刷新页面
     function refresh()
@@ -289,8 +259,13 @@
         });
         return false;
     }
-
-    changeNav($('#topmenu li:eq(1)').find('a').eq(0).attr('data-mid'));
+    // 计算iframe高
+    function initiframe() {
+        $(".iframe").css({height: $(window).height() - 175});
+    }
+    // 初始化
+    $('#topmenu .top-menu').eq(0).click();
+    $('#nav ul:visible li:first').click();
     initiframe();
 </script>
 

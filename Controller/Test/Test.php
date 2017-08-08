@@ -82,7 +82,7 @@ class Test extends Controller
             [
                 'AdminMenuId' => 9,
                 'ParentId' => 7,
-                'Name' => '服务器信息',
+                'Name' => '登录信息',
                 'Url' => 'Admin/Info/info',
             ],
             [

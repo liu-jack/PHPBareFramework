@@ -801,7 +801,7 @@ header .header-data .hdata em{
 
 .sidebar #nav li ul { display: none; background: #efefef url("../images/cream.png") repeat; }
 
-.sidebar #nav li ul li a { 
+.sidebar #nav li ul li a {
   display: block; 
   background: none;
   padding: 10px 0px;
@@ -812,7 +812,7 @@ header .header-data .hdata em{
   box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.1);
 }
 
-.sidebar #nav li ul li a:hover {
+.sidebar #nav li ul li a:hover, .sidebar #nav li ul li.active a , #topmenu li.active a {
   background: #eee;
   border-bottom: 1px solid #ddd;
 }
@@ -827,7 +827,7 @@ header .header-data .hdata em{
 	background:#eee url("../images/main-back.png") repeat;
 	border-left: 1px solid #ccc;
 	z-index: 50;
-	min-height: 800px;
+	min-height: 450px;
 }
 
 .mainbar .container{
