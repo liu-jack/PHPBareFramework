@@ -12,8 +12,8 @@
 <body>
     <?php if ($type == 'error'):?>
         <script type="text/javascript">
-            var url = '<?php echo $url?>';
-            <?php echo $target?>.swal({
+            var url = '{$url}';
+            {$target}.swal({
                 title: "<?php echo $msg?>",
                 text: "<?php echo $desc?>",
                 type: "warning",
@@ -34,7 +34,7 @@
     <?php else:?>
         <script type="text/javascript">
             var url = '<?php echo $url?>';
-            <?php echo $target?>.swal({
+            {$target}.swal({
                 title: "<?php echo $msg?>",
                 text: "<?php echo $desc?>",
                 type: "success",

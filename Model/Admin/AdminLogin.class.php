@@ -183,24 +183,24 @@ class AdminLogin
                     if ($level == 3) {
                         if (!empty($mlist[$vv['AdminMenuId']])) {
                             foreach ($mlist[$vv['AdminMenuId']] as $k3 => $v3) {
-                                if (!isset($auth_list[$v3['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id) {
+                                if (!isset($auth_list[$v3['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id && $pid != -2) {
                                     unset($mlist[$vv['AdminMenuId']][$k3]);
                                 }
                             }
-                            if (empty($mlist[$vv['AdminMenuId']])) {
+                            if (empty($mlist[$vv['AdminMenuId']]) && $pid != -2) {
                                 unset($mlist[$v['AdminMenuId']][$kk]);
                             }
-                        } else {
+                        } elseif ($pid != -2) {
                             unset($mlist[$vv['AdminMenuId']]);
 
                         }
                     } else {
-                        if (!isset($auth_list[$vv['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id) {
+                        if (!isset($auth_list[$vv['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id && $pid != -2) {
                             unset($mlist[$v['AdminMenuId']][$kk]);
                         }
                     }
                 }
-                if (empty($mlist[$v['AdminMenuId']])) {
+                if (empty($mlist[$v['AdminMenuId']]) && $pid != -2) {
                     unset($mlist[0][$k]);
                 }
             }

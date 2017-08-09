@@ -104,13 +104,17 @@ class AdminMenu extends Model
     /**
      * 查询
      * @param int $pid
+     * @param string $name
      * @return array
      */
-    public static function getMenusByParentId($pid = 0)
+    public static function getMenusByParentId($pid = 0, $name = '')
     {
         $where = [
             'ParentId' => $pid
         ];
+        if (!empty($name)) {
+            $where['Name'] = $name;
+        }
         $extra = [
             'fields' => '*',
             'offset' => '0',
@@ -119,6 +123,25 @@ class AdminMenu extends Model
         ];
         $ret = parent::getDataByFields($where, $extra);
         return !empty($ret['data']) ? $ret['data'] : [];
+    }
+
+    /**
+     * 查询
+     * @param string $url
+     * @return array
+     */
+    public static function getMenuByUrl($url)
+    {
+        $where = [
+            'Url' => $url
+        ];
+        $extra = [
+            'fields' => '*',
+            'offset' => '0',
+            'limit' => '1',
+        ];
+        $ret = parent::getDataByFields($where, $extra);
+        return !empty($ret['data']) ? current($ret['data']) : [];
     }
 
     /**

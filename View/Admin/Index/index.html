@@ -1,22 +1,5 @@
 <?php $this->view('Admin/Public/header')?>
 
-<!-- jQuery UI -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>jquery-ui.css">
-<!-- Calendar -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>fullcalendar.css">
-<!-- prettyPhoto -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>prettyPhoto.css">
-<!-- Star rating -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>rateit.css">
-<!-- Date picker -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>bootstrap-datetimepicker.min.css">
-<!-- CLEditor -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>jquery.cleditor.css">
-<!-- Bootstrap toggle -->
-<link rel="stylesheet" href="<?php echo STATICS_CSS?>bootstrap-switch.css">
-<!-- Widgets stylesheet -->
-<link href="<?php echo STATICS_CSS?>widgets.css" rel="stylesheet">
-
 
 <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
 
@@ -268,6 +251,25 @@
     $('#nav ul:visible li:first').click();
     $('.iframe-title').addClass('none-close');
     initiframe();
+
+    //以下为公用函数
+    function __confirm(msg, desc, url, obj){
+        swal({
+            title: msg,
+            text: desc,
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            closeOnConfirm: true
+        }, function(){
+            //如果下个页面马上调用swal会导致提示无法显示，故延迟100ms
+            setTimeout(function(){
+                obj.location.href = url;
+            },100);
+        });
+    }
 </script>
 
 <?php view('Admin/Public/footer')?>

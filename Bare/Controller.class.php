@@ -10,6 +10,7 @@ namespace Bare;
 use Model\Account\User as AUser;
 use Model\Passport\PassportApi;
 use Model\Admin\AdminLogin;
+use function Sodium\compare;
 
 Class Controller
 {
@@ -57,12 +58,51 @@ Class Controller
      */
     public function view($path = '', $ext = VEXT)
     {
-        extract($this->_var);
         if ($path) {
-            include(VIEW_PATH . $path . $ext);
+            $view_path = VIEW_PATH . $path . $ext;
         } else {
-            include(VIEW_PATH . $GLOBALS['_PATH'] . $ext);
+            $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
         }
+        if (defined('PARSE_TEMPLATE') && PARSE_TEMPLATE) {
+            $view_path = $this->parseTemplate($view_path);
+        }
+        extract($this->_var);
+        include_once $view_path;
+    }
+
+    /**
+     * 简单的模板解析
+     *
+     * @param $path
+     * @return string
+     */
+    public function parseTemplate($path)
+    {
+        $cmp = md5_file($path);
+        $cache_path = CACHE_PATH . md5($path) . EXT;
+        $cmp_path = CACHE_PATH . md5($path);
+        if (file_exists($cache_path) && file_exists($cmp_path)) {
+            $cmp_cache = file_get_contents($cmp_path);
+            if (strcmp($cmp, $cmp_cache) === 0) {
+                return $cache_path;
+            }
+        }
+        $pattern = [
+            '@\{(\$[\w]+)\}@isU',              // {$a}
+            '@\{(\$[\w]+)\.([\w]+)\}@isU',     // {$a.b}
+            '@\{([\w]+\([\w"\',\s]*\))\}@isU', // {url('add')}
+        ];
+        $replace = [
+            '<?php echo $1?>',
+            "<?php echo $1['$2']?>",
+            "<?php echo $1?>",
+        ];
+        $content = file_get_contents($path);
+        $content = preg_replace($pattern, $replace, $content);
+        file_put_contents($cache_path, $content);
+        file_put_contents($cmp_path, $cmp);
+        unset($content);
+        return $cache_path;
     }
 
     /**

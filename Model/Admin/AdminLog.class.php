@@ -65,6 +65,31 @@ class AdminLog extends Model
     ];
 
     /**
+     * 后台日志
+     *
+     * @param $title
+     * @param $option
+     * @param int $itemid
+     * @param array $data
+     * @param string $itemname
+     * @return bool|int|string
+     */
+    public static function log($title, $option, $itemid = 0, $data = [], $itemname = '')
+    {
+        $data = [
+            'UserId' => $_SESSION['AdminUserId'],
+            'UserName' => $_SESSION['AdminRealName'],
+            'ItemId' => $itemid,
+            'ItemName' => $itemname,
+            'MenuKey' => $GLOBALS['_PATH'],
+            'MenuName' => $title,
+            'LogFlag' => $option,
+            'Log' => $data,
+        ];
+        return self::addLog($data);
+    }
+
+    /**
      * 新增
      * @param $data
      * @param bool $ignore
