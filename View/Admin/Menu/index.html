@@ -1,0 +1,247 @@
+<?php $this->view('Admin/Public/header')?>
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <h3>新增菜单</h3>
+        <table class="table table-striped table-bordered" align="center">
+            <tbody>
+            <tr>
+                <td>名称</td>
+                <td>URL</td>
+                <td>位置</td>
+                <td>排序</td>
+                <td>操作</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2"><input type="text" id="menu_name" class="form-control" placeholder="名称"></td>
+                <td class="col-xs-2"><input type="text" id="menu_url" class="form-control" placeholder="URL"></td>
+                <td class="col-xs-4">
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2" onchange="changeMenu(this);">
+                            <?php echo $onemenu?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select id="menu_parent" class="form-control col-xs-2 menu_parent">
+                            <option value="0">主菜单</option>
+                        </select>
+                    </div>
+                </td>
+                <td class="col-xs-1"><input type="text" id="menu_order" class="form-control" placeholder="排序"></td>
+                <td class="col-xs-2">
+                    <button class="btn btn-success" id="add_menu"><i class="icon-ok"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>菜单列表</h3>
+        <table class="table table-bordered" align="center" id="list">
+            <tbody>
+            <tr>
+                <td></td>
+                <td colspan="3" style="min-width: 150px">名称</td>
+                <td>URL</td>
+                <td>位置</td>
+                <td>排序</td>
+                <td>操作</td>
+            </tr>
+            <!-- 一级菜单 -->
+            <?php foreach ($menu[0] as $k => $v):?>
+            <tr class="">
+                <td style="width:50px">
+                    <button class="btn btn-info toggle-list" data-mid="<?php echo $v['AdminMenuId']?>">+</button>
+                </td>
+                <td class="col-xs-2" colspan="3"><input type="text" class="form-control menu_name" placeholder="名称"
+                                                        value="<?php echo $v['Name']?>"></td>
+                <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL"
+                                            value="<?php echo $v['Url']?>"></td>
+                <td class="col-xs-4">
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2" onchange="changeMenu(this);">
+                            <?php echo $onemenu?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2 menu_parent">
+                            <option value="0">主菜单</option>
+                        </select>
+                    </div>
+                </td>
+                <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序"
+                                            value="<?php echo $v['DisplayOrder']?>"></td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="..." style="width:100px">
+                        <button class="btn btn-success update_menu" data-mid="<?php echo $v['AdminMenuId']?>"><i class="icon-ok"></i></button>
+                        <a class="btn btn-danger delete" href="<?php echo url('delete', ['id' =>$v['AdminMenuId']])?>"><i class="icon-remove"></i></a>
+                    </div>
+                </td>
+                <input type="hidden" class="menu_one" value="0">
+                <input type="hidden" class="menu_two" value="0">
+            </tr>
+            <!-- 二级菜单 -->
+            <?php if (!empty($menu[$k])):?>
+            <?php foreach ($menu[$k] as $k2 => $v2):?>
+            <tr class="warning list_group_<?php echo $v['AdminMenuId']?>" style="display:none">
+                <td style="width:50px"></td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class="col-xs-2" colspan="2"><input type="text" class="form-control menu_name" placeholder="名称"
+                                                        value="<?php echo $v2['Name']?>"></td>
+                <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL"
+                                            value="<?php echo $v2['Url']?>"></td>
+                <td class="col-xs-4">
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2" onchange="changeMenu(this);">
+                            <?php echo $onemenu?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2 menu_parent">
+                            <option value="0">主菜单</option>
+                        </select>
+                    </div>
+                </td>
+                <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序"
+                                            value="<?php echo $v2['DisplayOrder']?>"></td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="..." style="width:100px">
+                        <button class="btn btn-success update_menu" data-mid="<?php echo $v2['AdminMenuId']?>"><i class="icon-ok"></i></button>
+                        <a class="btn btn-danger delete" href="<?php echo url('delete', ['id' =>$v2['AdminMenuId']])?>"><i class="icon-remove"></i></a>
+                    </div>
+                </td>
+                <input type="hidden" class="menu_one" value="<?php echo $v2['ParentId']?>">
+                <input type="hidden" class="menu_two" value="<?php echo $v2['ParentId']?>">
+            </tr>
+            <!-- 三级菜单 -->
+            <?php if (!empty($menu[$k2])):?>
+            <?php foreach ($menu[$k2] as $k3 => $v3):?>
+            <tr class="success list_group_<?php echo $v['AdminMenuId']?>" style="display:none">
+                <td style="width:50px"></td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td class="col-xs-2"><input type="text" class="form-control menu_name" placeholder="名称"
+                                            value="<?php echo $v3['Name']?>"></td>
+                <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL"
+                                            value="<?php echo $v3['Url']?>"></td>
+                <td class="col-xs-4">
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2" onchange="changeMenu(this);">
+                            <?php echo $onemenu?>
+                        </select>
+                    </div>
+                    <div class="col-xs-6">
+                        <select class="form-control col-xs-2 menu_parent">
+                            <option value="0">主菜单</option>
+                        </select>
+                    </div>
+                </td>
+                <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序"
+                                            value="<?php echo $v3['DisplayOrder']?>"></td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="..." style="width:100px">
+                        <button class="btn btn-success update_menu" data-mid="<?php echo $v3['AdminMenuId']?>"><i class="icon-ok"></i></button>
+                        <a class="btn btn-danger delete" href="<?php echo url('delete', ['id' =>$v3['AdminMenuId']])?>"><i class="icon-remove"></i></a>
+                    </div>
+                </td>
+                <input type="hidden" class="menu_one" value="<?php echo $v2['ParentId']?>">
+                <input type="hidden" class="menu_two" value="<?php echo $v3['ParentId']?>">
+            </tr>
+            <?php endforeach?>
+            <?php endif?>
+            <?php endforeach?>
+            <?php endif?>
+            <?php endforeach?>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            var menu = {$twomenu};
+            //菜单列表位置选项框初始化
+            $("#list tr").each(function () {
+                var one = $(this).find(".menu_one").val();
+                var two = $(this).find(".menu_two").val();
+                $(this).find("select:first").val(one);
+                $(this).find("select:last").html(menu[one]).val(two);
+            });
+            //菜单位置选项联动
+            function changeMenu(obj) {
+                var id = $(obj).val();
+                $(obj).parent().next().find(".menu_parent").html(menu[id]);
+            }
+            //展开/隐藏列表
+            $(".toggle-list").click(function () {
+                $(".list_group_" + $(this).attr("data-mid")).toggle();
+                if ($(this).text() == '+') {
+                    $(this).text("-");
+                } else {
+                    $(this).text("+");
+                }
+            });
+            //添加菜单
+            $("#add_menu").click(function () {
+                var name = $("#menu_name").val();
+                var url = $("#menu_url").val();
+                var parent = $("#menu_parent").val();
+                var order = $("#menu_order").val();
+                if (name == '' || url == '' || parent == '') {
+                    top.swal('出错了', '请将信息填写完整', 'error');
+                } else {
+                    $.ajax({
+                        url: "{url('update')}",
+                        type: "post",
+                        data: {name: name, url: url, parent: parent, order: order},
+                        dataType: 'json',
+                        success: function (re) {
+                            top.swal(re.msg);
+                            if (re.code == '200') {
+                                self.location.reload();
+                            }
+                        }
+                    })
+                }
+
+            });
+            //更新菜单
+            $(".update_menu").click(function () {
+                var obj = $(this).parent().parent().parent();
+                var name = obj.find(".menu_name").val();
+                var url = obj.find(".menu_url").val();
+                var parent = obj.find(".menu_parent").val();
+                var order = obj.find(".menu_order").val();
+                var id = $(this).attr("data-mid");
+                if (name == '' || url == '' || parent == '') {
+                    top.swal('出错了', '请将信息填写完整', '', 'error');
+                } else {
+                    $.ajax({
+                        url: "{url('update')}",
+                        type: "post",
+                        data: {name: name, url: url, parent: parent, order: order, id: id},
+                        dataType: 'json',
+                        success: function (re) {
+                            top.swal(re.msg);
+                            if (re.type == '200') {
+                                self.location.reload();
+                            }
+                        }
+                    })
+                }
+
+            });
+            //删除
+            $(".delete").click(function () {
+                var url = $(this).attr("href");
+                top.__confirm('确定要删除吗？', '删除后不可恢复！', url, self);
+                return false;
+            });
+        </script>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+
+
+<?php view('Admin/Public/footer')?>
