@@ -88,7 +88,7 @@ Class Controller
             }
         }
         $pattern = [
-            '@\{(\$[\w]+)\}@isU',              // {$a}
+            '@\{(\$[\w"\'\[\]]+)\}@isU',       // {$a} {$a['b']}
             '@\{(\$[\w]+)\.([\w]+)\}@isU',     // {$a.b}
             '@\{([\w]+\([\w"\',\s]*\))\}@isU', // {url('add')}
         ];
@@ -255,6 +255,52 @@ Class Controller
         $this->value('button', $opt['button']);
         $this->view('Public/msg');
         exit();
+    }
+
+    /**
+     * 分页函数，返回html
+     *
+     * @param int $count 总数量
+     * @param int $per 每页数量
+     * @param int $now 当前页数
+     * @return void
+     */
+    public function pagination($count, $per, $now)
+    {
+        $page_key = 'p'; //分页传值的key
+        $_GET[$page_key] = '%d';
+        $urls = url($GLOBALS['_PATH'], $_GET);
+        unset($_GET[$page_key]);
+        $burl = url($GLOBALS['_PATH'], $_GET);
+        $now = max(1, $now);
+        $pages = intval(ceil($count / $per));
+        $min = 1;
+        $max = $pages >= 10 ? 10 : $pages;
+        if ($pages > 10 && $now > 5) {
+            $min = $now - 5;
+            $max = $now + 5;
+        }
+        $max = min($max, $pages);
+
+        $html = '<li><a href="' . sprintf($urls, 1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+        for ($n = $min; $n <= $max; $n++) {
+            $url = sprintf($urls, $n);
+            if ($n == $now) {
+                $html .= '<li class="active"><span>' . $n . '</span></li>';
+            } else {
+                $html .= '<li><a href="' . $url . '">' . $n . '</a></li>';
+            }
+        }
+
+        $url = sprintf($urls, $pages);
+        if ($max < $pages) {
+            $html .= '<li><a><input type="text" style="height: 17px; width: 40px;font-size:10px;padding:0 3px;" class="form-control" onkeydown="if(event.keyCode==13){var pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+pagesize+\')\';location.href=url}"></li></a><li><a href="' . $url . '">' . $pages . '</a></li>';
+        }
+        $html .= '<li> <a href="' . $url . '" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+        if ($pages == 1) {
+            $html = '';
+        }
+        $this->value('pages', $html);
     }
 
     /**

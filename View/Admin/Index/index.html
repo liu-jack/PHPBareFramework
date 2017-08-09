@@ -31,10 +31,8 @@
                     </a>
                     <!-- Dropdown menu -->
                     <ul class="dropdown-menu">
-                        <li><a href="javascript:void(0)"><i class="icon-user"></i> 资料</a></li>
-                        <li><a href="javascript:void(0)"><i class="icon-cogs"></i> 设置</a></li>
-                        <li><a href="javascript:void(0)"><i class="icon-refresh"></i> 刷新权限</a></li>
-                        <li><a href="javascript:void(0)"><i class="icon-refresh"></i> 刷新页面</a></li>
+                        <li><a href="javascript:void(0)" onclick="refreshPower()"><i class="icon-refresh"></i> 刷新权限</a></li>
+                        <li><a href="javascript:void(0)" onclick="refresh()"><i class="icon-refresh"></i> 刷新页面</a></li>
                         <li><a href="<?php echo url('admin/index/logout')?>"><i class="icon-off"></i> 退出</a></li>
                     </ul>
                 </li>
@@ -229,7 +227,7 @@
     }
     //刷新权限
     function refreshPower(){
-        $.get('admin.php?do=refresh',function(){
+        $.get('{url("admin/index/refresh")}',function(){
             window.location.reload();
         });
     }

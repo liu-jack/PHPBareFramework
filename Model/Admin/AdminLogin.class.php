@@ -99,14 +99,16 @@ class AdminLogin
     }
 
     /**
-     * 是否登录
+     * 是否登录 刷新登录
      *
-     * @return bool
+     * @param int $uid
+     * @return int|mixed
      */
-    public static function isLogin()
+    public static function isLogin($uid = 0)
     {
-        $uid = 0;
-        if (empty($_SESSION['AdminUserId'])) {
+        if ($uid > 0) {
+            $_SESSION['AdminUserId'] = intval($uid);
+        } elseif (empty($_SESSION['AdminUserId'])) {
             if (!empty($_COOKIE['_admin_auth'])) {
                 $uid = cookie_decode($_COOKIE['_admin_auth']);
                 if (!empty($uid)) {
