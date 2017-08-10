@@ -1,0 +1,49 @@
+<?php $this->view('Admin/Public/header')?>
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <form action="{url('admin/auth/add')}" method="POST">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td colspan="6">添加管理组</td>
+                </tr>
+                <tr>
+                    <td class="col-xs-1">管理组名称</td>
+                    <td class="col-xs-2"><input type="text" class="form-control" name="group_name" placeholder=""></td>
+                    <td class="col-xs-9"><button type="submit" class="btn btn-success"><i class="icon-ok"></i></button></td>
+                </tr>
+            </table>
+        </form>
+        <div class="page-header">
+            <h3>管理组列表</h3>
+        </div>
+        <table class="table table-bordered table-striped" align="center">
+            {foreach ($group as $v)}
+            <tr>
+                <td style="width:160px;">{$v.GroupName}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a href="{url('admin/auth/edit', ['id' => $v['GroupId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
+                        <a href="{url('admin/auth/delete', ['id' => $v['GroupId']])}" class="btn btn-danger delete"><i class="icon-remove"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {/foreach}
+        </table>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $(".delete").click(function () {
+        var url = $(this).attr("href");
+        top.__confirm('确定要删除吗？', '删除后不可恢复！', url, self);
+        return false;
+    });
+</script>
+
+<?php view('Admin/Public/footer')?>

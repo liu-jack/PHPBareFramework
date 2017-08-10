@@ -5,6 +5,7 @@
 $GLOBALS['_M'] = 'Book';
 $GLOBALS['_C'] = 'Index';
 $GLOBALS['_A'] = 'index';
+define('PAGE_SIZE', 15);
 
 // 接口配置
 define('API_VERSION', 'v1.0.0'); // 接口版本

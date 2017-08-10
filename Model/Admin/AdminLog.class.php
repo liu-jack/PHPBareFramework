@@ -76,7 +76,7 @@ class AdminLog extends Model
      */
     public static function log($title, $option, $itemid = 0, $data = [], $itemname = '')
     {
-        $data = [
+        $adddata = [
             'UserId' => $_SESSION['AdminUserId'],
             'UserName' => $_SESSION['AdminRealName'],
             'ItemId' => $itemid,
@@ -84,9 +84,9 @@ class AdminLog extends Model
             'MenuKey' => $GLOBALS['_PATH'],
             'MenuName' => $title,
             'LogFlag' => $option,
-            'Log' => $data,
+            'Log' => is_array($data) ? serialize($data) : $data,
         ];
-        return self::addLog($data);
+        return self::addLog($adddata);
     }
 
     /**

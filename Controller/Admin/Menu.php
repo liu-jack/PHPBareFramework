@@ -67,7 +67,7 @@ class Menu extends Controller
             }
             $ret = AdminMenu::addMenu($data);
             if ($ret) {
-                AdminLog::log('添加菜单', 'add', $ret, serialize($data));
+                AdminLog::log('添加菜单', 'add', $ret, $data, 'AdminMenu');
                 //将此菜单权限加入当前登录管理员所在的权限组
                 $group = AdminGroup::getGroupByIds($_SESSION['AdminUserGroup']);
                 $group_auth = unserialize($group['AdminAuth']);
@@ -77,7 +77,7 @@ class Menu extends Controller
         } else {
             $ret = AdminMenu::updateMenu($id, $data);
             if ($ret) {
-                AdminLog::log('更新菜单', 'update', $id, serialize($data));
+                AdminLog::log('更新菜单', 'update', $id, $data, 'AdminMenu');
             }
 
         }

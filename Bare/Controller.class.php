@@ -79,8 +79,8 @@ Class Controller
     public function parseTemplate($path)
     {
         $cmp = md5_file($path);
-        $cache_path = CACHE_PATH . md5($path) . EXT;
-        $cmp_path = CACHE_PATH . md5($path);
+        $cache_path = CACHE_TEMPLATE_PATH . md5($path) . EXT;
+        $cmp_path = CACHE_TEMPLATE_PATH . md5($path);
         if (file_exists($cache_path) && file_exists($cmp_path)) {
             $cmp_cache = file_get_contents($cmp_path);
             if (strcmp($cmp, $cmp_cache) === 0) {
@@ -90,12 +90,20 @@ Class Controller
         $pattern = [
             '@\{(\$[\w"\'\[\]]+)\}@isU',       // {$a} {$a['b']}
             '@\{(\$[\w]+)\.([\w]+)\}@isU',     // {$a.b}
-            '@\{([\w]+\([\w"\',\s]*\))\}@isU', // {url('add')}
+            '@\{([A-Z_]+)\}@isU',     // {STATICS_JS}
+            '@\{([\w]+\([\w/_"\',\[\]=>\$\s]*\))\}@isU', // {url('add')}
+            '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$]*\))\}@isU', // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
+            '@\{(else)\}@isU', // {else}
+            '@\{/(foreach|if)\}@isU', // {/foreach}{/if}
         ];
         $replace = [
             '<?php echo $1?>',
             "<?php echo $1['$2']?>",
+            '<?php echo $1?>',
             "<?php echo $1?>",
+            "<?php $1$2:?>",
+            "<?php $1:?>",
+            "<?php end$1?>",
         ];
         $content = file_get_contents($path);
         $content = preg_replace($pattern, $replace, $content);
@@ -263,9 +271,10 @@ Class Controller
      * @param int $count 总数量
      * @param int $per 每页数量
      * @param int $now 当前页数
-     * @return void
+     * @param bool $return 是否返回
+     * @return mixed
      */
-    public function pagination($count, $per, $now)
+    public function pagination($count, $per, $now, $return = false)
     {
         $page_key = 'p'; //分页传值的key
         $_GET[$page_key] = '%d';
@@ -275,7 +284,7 @@ Class Controller
         $now = max(1, $now);
         $pages = intval(ceil($count / $per));
         $min = 1;
-        $max = $pages >= 10 ? 10 : $pages;
+        $max = min(10, $pages);
         if ($pages > 10 && $now > 5) {
             $min = $now - 5;
             $max = $now + 5;
@@ -300,6 +309,14 @@ Class Controller
         if ($pages == 1) {
             $html = '';
         }
+        if ($return) {
+            return $html;
+        }
+        $pages_total = '';
+        if ($count > 0) {
+            $pages_total = "<span>一共 {$count} 条, 共 {$pages} 页</span>";
+        }
+        $this->value('pages_total', $pages_total);
         $this->value('pages', $html);
     }
 
