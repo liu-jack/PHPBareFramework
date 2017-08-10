@@ -1,4 +1,4 @@
-<?php $this->view('Admin/Public/header')?>
+{:view('Admin/Public/header')}
 
 <script type="text/javascript" src="{JS_PATH}DatePicker/WdatePicker.js"></script>
 
@@ -6,70 +6,74 @@
 <div class="content">
     <div class="matter">
 
-        <form action="" method="get" name="searchForm" id="searchForm">
-            <table class="table table-bordered table-striped" align="center">
-                <tr>
-                    <td colspan="5">查询</td>
-                </tr>
-                <tr>
-                    <td class="form-group col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon">管理员ID</div>
-                            <input type="text" class="form-control" name="user_id" placeholder="管理员ID" value="{if ($user_id)}{$user_id}{/if}">
-                        </div>
-                    </td>
-                    <td class="form-group col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon">用户名</div>
-                            <input type="text" class="form-control" name="user_name" placeholder="用户名" value="{$user_name}">
-                        </div>
-                    </td>
-                    <td class="form-group col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon">项目ID</div>
-                            <input type="text" class="form-control" name="item_id" placeholder="项目ID" value="{if ($item_id)}{$item_id}{/if}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
-                        </div>
-                    </td>
-                    <td class="form-group col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon">项目名称</div>
-                            <input type="text" class="form-control" name="item_name" placeholder="项目名称" value="{$item_name}">
-                        </div>
-                    </td>
-                    <td class="form-group col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon">Url</div>
-                            <input type="text" class="form-control" name="menu_url" placeholder="Url" value="{$menu_url}">
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="form-inline">
-                        <div class="input-group">
-                            <div class="input-group-addon">开始时间</div>
-                            <input class="form-control" id="start_time" name="start_time" type="text" onFocus="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_time\')}'});" value="{$start_time}" readonly="readonly">
-                        </div>
-                    </td>
-                    <td class="form-inline">
-                        <div class="input-group">
-                            <div class="input-group-addon">结束时间</div>
-                            <input class="form-control" id="end_time" name="end_time" type="text" onFocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_time\')}'});" value="{$end_time}" readonly="readonly">
-                        </div>
-                    </td>
-                    <td class="form-group col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-addon">细分</div>
-                            <input type="text" class="form-control" name="log_flag" placeholder="细分" value="{$log_flag}">
-                        </div>
-                    </td>
-                    <td class="form-group col-xs-2" colspan="3">
-                        <button type="submit" class="btn btn-success"><i class="icon-ok"></i></button>
-                        <button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button>
-                    </td>
-                </tr>
-            </table>
-        </form>
-
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">查询</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <form action="" method="get" name="searchForm" id="searchForm">
+                    <table class="table table-bordered table-striped" align="center">
+                        <tr>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">管理员ID</div>
+                                    <input type="text" class="form-control" name="user_id" placeholder="管理员ID" value="{if ($user_id)}{$user_id}{/if}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">用户名</div>
+                                    <input type="text" class="form-control" name="user_name" placeholder="用户名" value="{$user_name}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">项目ID</div>
+                                    <input type="text" class="form-control" name="item_id" placeholder="项目ID" value="{if ($item_id)}{$item_id}{/if}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">项目名称</div>
+                                    <input type="text" class="form-control" name="item_name" placeholder="项目名称" value="{$item_name}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">Url</div>
+                                    <input type="text" class="form-control" name="menu_url" placeholder="Url" value="{$menu_url}">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form-inline">
+                                <div class="input-group">
+                                    <div class="input-group-addon">开始时间</div>
+                                    <input class="form-control" id="start_time" name="start_time" type="text" onFocus="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_time\')}'});" value="{$start_time}" readonly="readonly">
+                                </div>
+                            </td>
+                            <td class="form-inline">
+                                <div class="input-group">
+                                    <div class="input-group-addon">结束时间</div>
+                                    <input class="form-control" id="end_time" name="end_time" type="text" onFocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_time\')}'});" value="{$end_time}" readonly="readonly">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">细分</div>
+                                    <input type="text" class="form-control" name="log_flag" placeholder="细分" value="{$log_flag}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2" colspan="3">
+                                <button type="submit" class="btn btn-success"><i class="icon-ok"></i></button>
+                                <button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
 
         <div class="widget">
             <div class="widget-head">
@@ -135,4 +139,4 @@
     });
 </script>
 
-<?php view('Admin/Public/footer')?>
+{view('Admin/Public/footer')}

@@ -99,6 +99,25 @@ class AdminGroup extends Model
 
     /**
      * 查询
+     * @param string $name
+     * @return array
+     */
+    public static function getGroupByName($name)
+    {
+        $where = [
+            'GroupName' => $name
+        ];
+        $extra = [
+            'fields' => '*',
+            'offset' => 0,
+            'limit' => 1,
+        ];
+        $ret = parent::getDataByFields($where, $extra);
+        return !empty($ret['data']) ? current($ret['data']) : [];
+    }
+
+    /**
+     * 查询
      * @param array $where
      * @param int $offset
      * @param int $limit

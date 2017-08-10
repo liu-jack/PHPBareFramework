@@ -1,4 +1,4 @@
-<?php $this->view('Admin/Public/header')?>
+{:view('Admin/Public/header')}
 
 <!-- Main content starts -->
 <div class="content">
@@ -32,12 +32,12 @@
                         <td>服务器时间:</td>
                         <td>{$date}</td>
                     </tr>
-                    <?php if ($server_addr == '127.0.0.1' || strpos($server_addr, '192.168.') === 0):?>
+                    {if ($server_addr == '127.0.0.1' || strpos($server_addr, '192.168.') === 0)}
                     <tr>
                         <td>服务器文档路径:</td>
                         <td>{$ddir}</td>
                     </tr>
-                    <?php endif?>
+                    {/if}
                     </tbody>
                 </table>
             </div>
@@ -50,4 +50,4 @@
 <!-- Content ends -->
 
 
-<?php view('Admin/Public/footer')?>
+{view('Admin/Public/footer')}

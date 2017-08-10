@@ -1,4 +1,4 @@
-<?php $this->view('Admin/Public/header')?>
+{:view('Admin/Public/header')}
 
 
 <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
@@ -9,17 +9,16 @@
         <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 
             <ul class="nav navbar-nav" id="topmenu">
-                <li class="dropdown dropdown-big">
-                    <a href="<?php echo url('admin/index/index')?>" class="dropdown-toggle"><span
-                            class="label label-success"><i class="icon-home"></i></span> &nbsp; </a>
+                <li>
+                    <a href="{url('admin/index/index')}"><span class="label label-success"><i class="icon-home"></i></span> &nbsp; </a>
                 </li>
 
-                <?php foreach($menu[0] as $k => $v):?>
+                {foreach($menu[0] as $k => $v)}
                 <li class="top-menu">
-                    <a href="javascript:void(0)" data-mid="<?php echo $v['AdminMenuId']?>">
-                        <h3><?php echo $v['Name']?></h3></a>
+                    <a href="javascript:void(0)" data-mid="{$v['AdminMenuId']}">
+                        <h3>{$v['Name']}</h3></a>
                 </li>
-                <?php endforeach;?>
+                {/foreach}
 
             </ul>
 
@@ -27,13 +26,13 @@
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown pull-right">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:void(0)">
-                        <i class="icon-user"></i> <?php echo $_SESSION['AdminRealName']?> <b class="caret"></b>
+                        <i class="icon-user"></i> {$_SESSION['AdminRealName']} <b class="caret"></b>
                     </a>
                     <!-- Dropdown menu -->
                     <ul class="dropdown-menu">
                         <li><a href="javascript:void(0)" onclick="refreshPower()"><i class="icon-refresh"></i> 刷新权限</a></li>
                         <li><a href="javascript:void(0)" onclick="refresh()"><i class="icon-refresh"></i> 刷新页面</a></li>
-                        <li><a href="<?php echo url('admin/index/logout')?>"><i class="icon-off"></i> 退出</a></li>
+                        <li><a href="{url('admin/index/logout')}"><i class="icon-off"></i> 退出</a></li>
                     </ul>
                 </li>
             </ul>
@@ -50,18 +49,18 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <ul id="nav">
-            <?php foreach($menu[0] as $k => $v):?>
-            <?php foreach($menu[$v['AdminMenuId']] as $kk => $vv):?>
-            <li class="has_sub" style="display: none" data-pid="<?php echo $vv['ParentId']?>"><a href="javascript:void(0)"><i
-                    class="icon-table"></i> <?php echo $vv['Name']?>  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
+            {foreach($menu[0] as $k => $v)}
+            {foreach($menu[$v['AdminMenuId']] as $kk => $vv)}
+            <li class="has_sub" style="display: none" data-pid="{$vv['ParentId']}"><a href="javascript:void(0)"><i
+                    class="icon-table"></i> {$vv['Name']}  <span class="pull-right"><i class="icon-chevron-right"></i></span></a>
                 <ul>
-                    <?php foreach($menu[$vv['AdminMenuId']] as $k3 => $v3):?>
-                    <li class="menu-link" data-mid="<?php echo $v3['AdminMenuId']?>"><a href="<?php echo url($v3['Url'])?>" target="iframe-<?php echo $v3['AdminMenuId']?>"><?php echo $v3['Name']?></a></li>
-                    <?php endforeach;?>
+                    {foreach($menu[$vv['AdminMenuId']] as $k3 => $v3)}
+                    <li class="menu-link" data-mid="{$v3['AdminMenuId']}"><a href="{url($v3['Url'])}" target="iframe-{$v3['AdminMenuId']}">{$v3['Name']}</a></li>
+                   {/foreach}
                 </ul>
             </li>
-            <?php endforeach;?>
-            <?php endforeach;?>
+            {/foreach}
+            {/foreach}
         </ul>
     </div>
 
@@ -82,7 +81,7 @@
                 </div>
                 <div class="iframe">
                     <!--
-                    <iframe name="iframe-0" data-mid="0" height="100%" width="100%" border="0" frameborder="0" src="<?php echo url('admin/info/index')?>"></iframe>
+                    <iframe name="iframe-0" data-mid="0" height="100%" width="100%" border="0" frameborder="0" src="{url('admin/info/index')}"></iframe>
                     -->
                 </div>
             </div>
@@ -102,7 +101,7 @@
         <div class="row">
             <div class="col-md-12">
                 <!-- Copyright info -->
-                <p class="copy">Copyright &copy; <?php echo date('Y')?> | <a href="http://www.29fh.com" target="_blank">www.29fh.com</a>
+                <p class="copy">Copyright &copy; {date('Y')} | <a href="http://www.29fh.com" target="_blank">www.29fh.com</a>
                 </p>
             </div>
         </div>
@@ -270,4 +269,4 @@
     }
 </script>
 
-<?php view('Admin/Public/footer')?>
+{view('Admin/Public/footer')}

@@ -29,7 +29,7 @@ abstract class Model
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
         'mckey' => '',
         // 可选, 超时时间, 默认不过期
-        'mctime' => 0
+        'mctime' => 86400
     ];
 
     // 主键/字段类型

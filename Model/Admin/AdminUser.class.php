@@ -108,17 +108,39 @@ class AdminUser extends Model
      */
     public static function getUserByName($name)
     {
+        $name = trim($name);
         if (empty($name)) {
             return false;
         }
-        $where = ['UserName' => trim($name)];
+        $where = ['UserName' => $name];
         $extra = [
             'fields' => '*',
             'limit' => 1,
         ];
         $ret = parent::getDataByFields($where, $extra);
         return !empty(current($ret['data'])) ? current($ret['data']) : [];
+    }
 
+    /**
+     * 根据用户分组获取详细信息
+     * @param int $group
+     * @param int $offset
+     * @param int $limit
+     * @return array|bool
+     */
+    public static function getUsersByGroupId($group, $offset = 0, $limit = 0)
+    {
+        $group = intval($group);
+        if (empty($group)) {
+            return false;
+        }
+        $where = ['UserGroup' => $group];
+        $extra = [
+            'fields' => '*',
+            'offset' => $offset,
+            'limit' => $limit,
+        ];
+        return parent::getDataByFields($where, $extra);
     }
 
     /**

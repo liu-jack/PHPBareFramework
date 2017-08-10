@@ -30,7 +30,6 @@ define('VEXT', '.html');
 
 define('URL_MODE', 1); //0 一般模式 1 rewrite模式
 define('API_PATH', 'Api'); // Api路径名
-define('PARSE_TEMPLATE', true); // 是否启用模板解析
 
 if (php_sapi_name() !== 'cli') {
     define('PATH_INFO', trim(str_replace(['/index.php', VEXT], '', $_SERVER['DOCUMENT_URI']), '/'));

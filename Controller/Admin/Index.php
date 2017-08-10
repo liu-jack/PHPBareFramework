@@ -99,7 +99,7 @@ class Index extends Controller
     public function addAdminUser()
     {
         need_cli();
-        $groupid = 29;
+        $groupid = defined('SUPER_ADMIN_GROUP') ? SUPER_ADMIN_GROUP : 29;
         $username = 'camfee';
         $user = AdminUser::getUserByName($username);
         if (empty($user)) {

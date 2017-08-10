@@ -53,10 +53,57 @@ spl_autoload_register(function ($class) {
 function view($path = '', $ext = VEXT)
 {
     if ($path) {
-        include(VIEW_PATH . $path . $ext);
+        $view_path = VIEW_PATH . $path . $ext;
     } else {
-        include(VIEW_PATH . $GLOBALS['_PATH'] . $ext);
+        $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
     }
+    $view_path = parseTemplate($view_path);
+    include_once $view_path;
+}
+
+/**
+ * 简单的模板解析
+ *
+ * @param $path
+ * @return string
+ */
+function parseTemplate($path)
+{
+    $cmp = md5_file($path);
+    $cache_path = CACHE_TEMPLATE_PATH . md5($path) . EXT;
+    $cmp_path = CACHE_TEMPLATE_PATH . md5($path);
+    if (file_exists($cache_path) && file_exists($cmp_path)) {
+        $cmp_cache = file_get_contents($cmp_path);
+        if (strcmp($cmp, $cmp_cache) === 0) {
+            return $cache_path;
+        }
+    }
+    $pattern = [
+        '@\{:([\w]+\([\w/_"\',\[\]=>\$\s]*\))\}@isU', // {:view('admin/public/header')}
+        '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$,\."\'\|\(\)\[\]]*\))\}@isU', // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
+        '@\{(else)\}@isU', // {else}
+        '@\{/(foreach|if)\}@isU', // {/foreach}{/if}
+        '@\{(\$[\w_"\'\[\]\$]+)\}@isU',       // {$a} {$a['b']} {$a[$b['c']]}
+        '@\{(\$[\w]+)\.([\w]+)\}@isU',     // {$a.b}
+        '@\{([A-Z_]+)\}@isU',     // {STATICS_JS}
+        '@\{([\w]+\([\w/_"\',\[\]=>\$\s]*\))\}@isU', // {url('add')}
+    ];
+    $replace = [
+        '<?php $this->$1?>',
+        "<?php $1$2:?>",
+        "<?php $1:?>",
+        "<?php end$1?>",
+        '<?php echo $1?>',
+        "<?php echo $1['$2']?>",
+        '<?php echo $1?>',
+        "<?php echo $1?>",
+    ];
+    $content = file_get_contents($path);
+    $content = preg_replace($pattern, $replace, $content);
+    file_put_contents($cache_path, $content);
+    file_put_contents($cmp_path, $cmp);
+    unset($content);
+    return $cache_path;
 }
 
 /**
