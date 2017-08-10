@@ -37,13 +37,13 @@
 <body style="background-color: #007900;">
 <div>
     <div class="container">
-        <span>恭喜，提交成功！<span id="time"> 3 </span>秒后跳转至添加页。<a id="new" href="{($success)?$success:'?do=Add'}">立即跳转</a></span>
+        <span>恭喜，提交成功！<span id="time"> 3 </span>秒后跳转至添加页。<a id="new" href="{$success}">立即跳转</a></span>
     </div>
 </div>
 
 <script>
     var time = 3;
-    var url =  "{($success)?$success:'?do=Add'}";
+    var url =  "{$success}";
     var timer = setInterval(function () {
         time--;
         document.getElementById("time").innerHTML = time;

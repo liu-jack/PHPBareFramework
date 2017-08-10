@@ -1,4 +1,4 @@
-<?php $this->view('Tool/Public/apidoc_header');?>
+{:view('Tool/Public/apidoc_header')}
 
 <div class="ui text container" style="max-width: none !important;margin-top: 50px;">
     <div class="ui floating message">
@@ -11,20 +11,18 @@
             </tr>
             </thead>
             <tbody>
-            <?php
-                if (!empty($files)) {
-                    $num = 1;
-                    foreach ($files as $k => $v) {
-                        echo '<tr>';
-                        echo '<td>'.$num.'</td>';
-                        echo '<td><a href="'. uri('apidoc/methods', $_GET['module'].'_'.$v) .'">'.$_GET['module'] .'/'.$v.'</a></td>';
-                        echo '</tr>';
-                        $num++;
-                    }
-                }
-            ?>
+            {if (!empty($files))}
+            <?php $num = 1?>
+            {foreach ($files as $v)}
+            <tr>
+                <td>{$num}</td>
+                <td><a href="{uri('apidoc/methods', $_GET['module'].'_'.$v)}">{$v}</a></td>
+            </tr>
+            <?php $num++?>
+            {/foreach}
+            {/if}
             </tbody>
         </table>
     </div>
 
-<?php $this->view('Tool/Public/apidoc_footer');?>
+{view('Tool/Public/apidoc_footer')}

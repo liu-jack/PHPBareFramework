@@ -9,16 +9,14 @@
 <div class="ui large top fixed menu transition visible" style="display: flex !important;">
     <div class="ui container">
         <div class="header item">ApiDoc<code>1.0</code></div>
-        <?php
-            if (!empty($_GET['method'])) {
-                echo "<a href='".uri('apidoc','index')."' class='item'>模块列表</a><a href='".uri('apidoc/lists', $_GET['module'])."' class='item'>类列表</a><a href='".uri('apidoc/methods', $_GET['module'].'_'.$_GET['class'])."' class='item'>接口列表</a><a class='active item'>{$seo_title}</a>";
-            } elseif (!empty($_GET['class'])) {
-                echo "<a href='".uri('apidoc','index')."' class='item'>模块列表</a><a href='".uri('apidoc/lists', $_GET['module'])."' class='item'>类列表</a><a class='active item'>{$seo_title}</a>";
-            } elseif (!empty($_GET['module'])) {
-                echo "<a href='".uri('apidoc','index')."' class='item'>模块列表</a><a class='active item'>{$seo_title}</a>";
-            } else {
-                echo '<a class="active item">'.$seo_title.'</a>';
-            }
-        ?>
+        {if (!empty($_GET['method']))}
+        <a href="{uri('apidoc','index')}" class='item'>模块列表</a><a href="{uri('apidoc/lists', $_GET['module'])}" class='item'>类列表</a><a href="{uri('apidoc/methods', $_GET['module'].'_'.$_GET['class'])}" class='item'>接口列表</a><a class='active item'>{$seo_title}</a>
+        {elseif (!empty($_GET['class']))}
+        <a href="{uri('apidoc','index')}" class='item'>模块列表</a><a href="{uri('apidoc/lists', $_GET['module'])}" class='item'>类列表</a><a class='active item'>{$seo_title}</a>
+        {elseif (!empty($_GET['module']))}
+            <a href="{uri('apidoc','index')}" class='item'>模块列表</a><a class='active item'>{$seo_title}</a>
+        {else}
+            <a class="active item">{$seo_title}</a>
+        {/if}
     </div>
 </div>

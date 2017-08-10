@@ -2,16 +2,16 @@
 
 <div class="ui text container" style="max-width: none !important;margin-top: 50px;">
     <div class="ui floating message">
-        <h1 class="ui header">接口列表 (<span <?php if (!empty($deprecated)):?>style="text-decoration: line-through"<?php endif;?>><?php echo ($class ? '<a href="'.uri('apidoc/methods', $module.'_'.$class).'">'.$module.'/'.$class.'</a>' : '--'); ?></span>)</h1>
-        <?php if (!empty($class_desc) || !empty($class_docs)):?>
+        <h1 class="ui header">接口列表 (<span {if (!empty($deprecated))}style="text-decoration: line-through"{/if}>{if(!empty($class))}<a href="{uri('apidoc/methods', $module.'_'.$class)}">{$module}/{$class}</a>{else}--{/if}</span>)</h1>
+        {if (!empty($class_desc) || !empty($class_docs))}
         <div class="ui raised segment">
             <span class="ui red ribbon label">类说明</span>
             <div class="ui message">
-                <?php if(!empty($class_desc)){ echo '<p>'. $class_desc .'</p>';}?>
-                <?php if(!empty($class_docs)){ echo '<p>'. $class_docs .'</p>';}?>
+                {if(!empty($class_desc))}<p>{$class_desc}</p>{/if}
+                {if(!empty($class_docs))}<p>{$class_docs}</p>{/if}
             </div>
         </div>
-        <?php endif;?>
+        {/if}
         <table class="ui black celled striped table">
             <thead>
             <tr>
@@ -21,19 +21,17 @@
             </tr>
             </thead>
             <tbody>
-            <?php
-                if (!empty($methods)) {
-                    $num = 1;
-                    foreach ($methods as $k => $v) {
-                        echo '<tr>';
-                        echo '<td>'.$num.'</td>';
-                        echo '<td><a href="'. uri('apidoc/info', $_GET['module'].'_'.$_GET['class'].'_'.$v['method']) .'">'.$_GET['module'] .'/'.$_GET['class'] .'/'. $v['method'].'</a></td>';
-                        echo '<td>'.$v['desc'].'</td>';
-                        echo "</tr>";
-                        $num++;
-                    }
-                }
-            ?>
+            {if (!empty($methods))}
+            <?php $num = 1?>
+            {foreach ($methods as $v)}
+            <tr>
+                <td>{$num}</td>
+                <td><a href="{uri('apidoc/info', $_GET['module'].'_'.$_GET['class'].'_'.$v['method'])}">{$_GET['module']}/{$_GET['class']}/{$v['method']}</a></td>
+                <td>{$v['desc']}</td>
+            </tr>
+            <?php $num++?>
+            {/foreach}
+            {/if}
             </tbody>
         </table>
     </div>
