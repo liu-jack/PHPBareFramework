@@ -70,8 +70,9 @@ function view($path = '', $ext = VEXT)
 function parseTemplate($path)
 {
     $cmp = md5_file($path);
-    $cache_path = CACHE_TEMPLATE_PATH . md5($path) . EXT;
-    $cmp_path = CACHE_TEMPLATE_PATH . md5($path);
+    $md5 = md5($path);
+    $cache_path = CACHE_TEMPLATE_PATH . $md5 . EXT;
+    $cmp_path = CACHE_TEMPLATE_PATH . $md5;
     if (file_exists($cache_path) && file_exists($cmp_path)) {
         $cmp_cache = file_get_contents($cmp_path);
         if (strcmp($cmp, $cmp_cache) === 0) {
@@ -80,13 +81,13 @@ function parseTemplate($path)
     }
     $pattern = [
         '@\{:([\w]+\([\w/_"\',\[\]=>\$\s]*\))\}@isU', // {:view('admin/public/header')}
-        '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$,\."\'\|\(\)\[\]]*\))\}@isU', // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
+        '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$,\."\'\|\(\)\[\]\x{4e00}-\x{9fa5}]*\))\}@isuU', // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
         '@\{(else)\}@isU', // {else}
         '@\{/(foreach|if)\}@isU', // {/foreach}{/if}
-        '@\{(\$[\w_"\'\[\]\$]+)\}@isU',       // {$a} {$a['b']} {$a[$b['c']]}
+        '@\{(\$[\w_"\'\[\]\$\x{4e00}-\x{9fa5}]+)\}@isuU',       // {$a} {$a['b']} {$a[$b['c']]}
         '@\{(\$[\w]+)\.([\w]+)\}@isU',     // {$a.b}
         '@\{([A-Z_]+)\}@isU',     // {STATICS_JS}
-        '@\{([\w]+\([\w/_"\',\[\]=>\$\s\.]*\))\}@isU', // {url('add')}
+        '@\{([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU', // {url('add')}
     ];
     $replace = [
         '<?php $this->$1?>',

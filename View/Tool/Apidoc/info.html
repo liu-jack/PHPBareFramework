@@ -32,7 +32,7 @@
                     {foreach ($params as $v)}
                         <tr>
                             <td>{$v['name']}</td>
-                            <td><?php if (strpos($v['require'], '必') !== false):?><span style="color:red">必选</span>{else}可选{/if}</td>
+                            <td>{if (strpos($v['require'], '必') !== false)}<span style="color:red">必选</span>{else}可选{/if}</td>
                             <td>{if (isset($v['desc']))}{trim($v['desc'])}{/if}</td>
                         </tr>
                     {/foreach}
