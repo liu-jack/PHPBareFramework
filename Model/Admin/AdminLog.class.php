@@ -67,7 +67,7 @@ class AdminLog extends Model
     ];
 
     /**
-     * 后台日志
+     * 记录后台日志
      *
      * @param string $title    操作名称
      * @param string $option   操作细分
@@ -79,8 +79,8 @@ class AdminLog extends Model
     public static function log($title, $option, $itemid = 0, $data = [], $itemname = '')
     {
         $adddata = [
-            'UserId' => $_SESSION['AdminUserId'],
-            'UserName' => $_SESSION['AdminRealName'],
+            'UserId' => $_SESSION['_admin_info']['AdminUserId'],
+            'UserName' => $_SESSION['_admin_info']['AdminRealName'],
             'ItemId' => $itemid,
             'ItemName' => $itemname,
             'MenuKey' => $GLOBALS['_PATH'],

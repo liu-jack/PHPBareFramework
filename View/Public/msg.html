@@ -25,9 +25,9 @@
                 closeOnCancel: true
             },function(){
                 if(url != ''){
-                    self.location.href = "{$url}";
+                    {$to}.location.href = "{$url}";
                 }else{
-                    self.history.go(-1);
+                    {$to}.history.go(-1);
                 }
             });
         </script>
@@ -46,9 +46,9 @@
                 closeOnCancel: true
             },function(){
                 if(url != ''){
-                    self.location.href = "{$url}";
+                    {$to}.location.href = "{$url}";
                 }else{
-                    self.history.go(-1);
+                    {$to}.history.go(-1);
                 }
             });
         </script>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Auth.php
+ * Auth.php 权限组管理
  *
  * @author: camfee <camfee@foxmail.com>
  * @date  : 17-8-10 下午12:30

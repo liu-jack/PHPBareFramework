@@ -274,9 +274,10 @@ class AdminLogin
                 $auth_list = $_SESSION['_admin_auth_list'];
             } else {
                 $auth_list = AdminGroup::getGroupByIds($_SESSION['_admin_info']['AdminUserGroup']);
+                $auth_list = $auth_list['AdminAuth'];
                 $user = AdminUser::getUserByIds($uid);
                 if (!empty($user['SpecialGroups'])) {
-                    $auth_list = array_merge($auth_list['AdminAuth'], $user['SpecialGroups']);
+                    $auth_list = array_merge($auth_list, $user['SpecialGroups']);
                 }
                 $auth_list = array_flip($auth_list);
                 $_SESSION['_admin_auth_list'] = $auth_list;

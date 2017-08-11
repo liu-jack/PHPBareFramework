@@ -13,6 +13,7 @@ use Classes\Image\Securimage;
 use Model\Admin\AdminGroup;
 use Model\Admin\AdminLogin;
 use Model\Admin\AdminUser;
+use Model\Admin\AdminLog;
 
 class Index extends Controller
 {
@@ -46,6 +47,44 @@ class Index extends Controller
     }
 
     /**
+     * 修改密码
+     */
+    public function updatePwd()
+    {
+        $uid = $this->isLogin(2);
+        if ($uid < 1) {
+            $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
+        }
+        if (!empty($_POST['user_pwd'])) {
+            $pwd = strval($_POST['user_pwd']);
+            $pwd2 = strval($_POST['user_pwd2']);
+            if (empty($pwd) || empty($pwd2)) {
+                output(201, '数据填写有误');
+            }
+            $pwd = Rsa::private_decode($pwd);
+            $pwd2 = Rsa::private_decode($pwd2);
+            if ($pwd2 != $pwd) {
+                output(202, '密码填写不一致');
+            }
+
+            $data['Password'] = $pwd;
+            $ret = AdminUser::updateUser($uid, $data);
+
+            if ($ret) {
+                AdminLog::log('修改密码', 'updatePwd', $uid, '', 'AdminUser');
+                output(200, '修改成功');
+            }
+            output(203, '修改失败');
+        }
+        $user = AdminUser::getUserByIds($uid);
+        $group = AdminGroup::getGroupByIds($user['UserGroup']);
+        $user['GroupName'] = $group['GroupName'];
+
+        $this->value('user', $user);
+        $this->view();
+    }
+
+    /**
      * 登录
      */
     public function login()
@@ -61,6 +100,7 @@ class Index extends Controller
             }
             $userinfo = AdminLogin::doLogin($login, $pwd);
             if (!empty($userinfo['UserId'])) {
+                AdminLog::log('登录', 'login', $userinfo['UserId'], '', 'AdminUser');
                 output(200, ['url' => url('admin/index/index')]);
             } else {
                 $code = !empty($userinfo['code']) ? $userinfo['code'] : 205;

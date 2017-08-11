@@ -11,7 +11,6 @@ namespace Bare;
 use Model\Account\User as AUser;
 use Model\Passport\PassportApi;
 use Model\Admin\AdminLogin;
-use function Sodium\compare;
 
 Class Controller
 {
@@ -36,7 +35,7 @@ Class Controller
                 if (!self::isLogin(2)) {
                     $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
                 } elseif (!AdminLogin::isHasAuth()) {
-                    $this->alertMsg('没有权限', ['url' => url('admin/index/login')]);
+                    $this->alertMsg('没有权限', ['url' => url('admin/index/index'), 'to' => 'top']);
                 }
             }
         }
@@ -201,7 +200,8 @@ Class Controller
      * @param array  $options 都是可选参数
      *                        url     确定后跳转URL或失败返回的URL,不设置将返回上一页
      *                        desc    详细描述
-     *                        target  top或者self，默认 top
+     *                        to   top或者self，默认 self url target
+     *                        target  top或者self，默认 top alert target
      *                        type    消息类型：0：失败；1：成功,默认成功
      *                        button  按钮显示的文字，默认：确定
      * @return void
@@ -211,6 +211,7 @@ Class Controller
         $opt = [
             'url' => '',
             'desc' => '',
+            'to' => 'self',
             'target' => 'top',
             'type' => 'success',
             'button' => '确定',
@@ -219,6 +220,7 @@ Class Controller
 
         $this->value('msg', $msg);
         $this->value('url', $opt['url']);
+        $this->value('to', $opt['to']);
         $this->value('type', $opt['type']);
         $this->value('desc', $opt['desc']);
         $this->value('target', $opt['target']);
