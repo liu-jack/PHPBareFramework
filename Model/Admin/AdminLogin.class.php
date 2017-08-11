@@ -3,7 +3,7 @@
  * AdminLogin.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/7/29 12:25
+ * @date   2017/7/29 12:25
  *
  */
 
@@ -16,8 +16,8 @@ class AdminLogin
      * 登录
      *
      * @param string $login_name 登录账号
-     * @param string $pwd 原始密码
-     * @param bool $auto_login 自动登录
+     * @param string $pwd        原始密码
+     * @param bool   $auto_login 自动登录
      * @return array      成功返回用户信息, 错误返回['code' => 失败代码, 'msg' => 失败原因]
      */
     public static function doLogin($login_name, $pwd, $auto_login = true)
@@ -49,6 +49,7 @@ class AdminLogin
             self::initCookie($userid, $auto_login);
         }
         unset($userinfo['Password'], $userinfo['SpecialGroups']);
+
         return $userinfo;
     }
 
@@ -60,17 +61,18 @@ class AdminLogin
      */
     public static function initSession($userinfo)
     {
-        $_SESSION['AdminUserId'] = $userinfo['UserId'];
-        $_SESSION['AdminUserName'] = $userinfo['UserName'];
-        $_SESSION['AdminRealName'] = $userinfo['RealName'];
-        $_SESSION['AdminUserGroup'] = $userinfo['UserGroup'];
-        $_SESSION['AdminSpecialGroups'] = $userinfo['SpecialGroups'];
+        $_SESSION['_admin_info'] = [
+            'AdminUserId' => $userinfo['UserId'],
+            'AdminUserName' => $userinfo['UserName'],
+            'AdminRealName' => $userinfo['RealName'],
+            'AdminUserGroup' => $userinfo['UserGroup']
+        ];
     }
 
     /**
      * 初始化cookie
      *
-     * @param int $uid 用户ID
+     * @param int  $uid        用户ID
      * @param bool $auto_login 是否保持登录
      */
     public static function initCookie($uid, $auto_login = true)
@@ -87,13 +89,7 @@ class AdminLogin
      */
     public static function logout()
     {
-        unset(
-            $_SESSION['AdminUserId'],
-            $_SESSION['AdminUserName'],
-            $_SESSION['AdminRealName'],
-            $_SESSION['AdminUserGroup'],
-            $_SESSION['AdminSpecialGroups']
-        );
+        unset($_SESSION['_admin_info']);
         session_destroy();
         setcookie('_admin_auth', '', 1, '/');
     }
@@ -107,32 +103,34 @@ class AdminLogin
     public static function isLogin($uid = 0)
     {
         if ($uid > 0) {
-            $_SESSION['AdminUserId'] = intval($uid);
-        } elseif (empty($_SESSION['AdminUserId'])) {
+            $_SESSION['_admin_info']['AdminUserId'] = intval($uid);
+        } elseif (empty($_SESSION['_admin_info']['AdminUserId'])) {
             if (!empty($_COOKIE['_admin_auth'])) {
                 $uid = cookie_decode($_COOKIE['_admin_auth']);
                 if (!empty($uid)) {
-                    $_SESSION['AdminUserId'] = intval($uid);
+                    $_SESSION['_admin_info']['AdminUserId'] = intval($uid);
                 }
             }
         }
-        if (!empty($_SESSION['AdminUserId'])) {
-            if (!isset($_SESSION['AdminUserName']) || !isset($_SESSION['AdminRealName']) || !isset($_SESSION['AdminUserGroup']) || !isset($_SESSION['AdminSpecialGroups'])) {
-                $userinfo = AdminUser::getUserByIds($_SESSION['AdminUserId']);
+        if (!empty($_SESSION['_admin_info']['AdminUserId'])) {
+            if (!isset($_SESSION['_admin_info']['AdminUserName']) || !isset($_SESSION['_admin_info']['AdminRealName']) || !isset($_SESSION['_admin_info']['AdminUserGroup'])) {
+                $userinfo = AdminUser::getUserByIds($_SESSION['_admin_info']['AdminUserId']);
                 if (!empty($userinfo['UserId'])) {
-                    $_SESSION['AdminUserId'] = $userinfo['UserId'];
-                    $_SESSION['AdminUserName'] = $userinfo['UserName'];
-                    $_SESSION['AdminRealName'] = $userinfo['RealName'];
-                    $_SESSION['AdminUserGroup'] = $userinfo['UserGroup'];
-                    $_SESSION['AdminSpecialGroups'] = $userinfo['SpecialGroups'];
-                    $uid = (int)$_SESSION['AdminUserId'];
+                    $_SESSION['_admin_info'] = [
+                        'AdminUserId' => $userinfo['UserId'],
+                        'AdminUserName' => $userinfo['UserName'],
+                        'AdminRealName' => $userinfo['RealName'],
+                        'AdminUserGroup' => $userinfo['UserGroup']
+                    ];
+                    $uid = (int)$_SESSION['_admin_info']['AdminUserId'];
                 } else {
                     $uid = 0;
                 }
             } else {
-                $uid = (int)$_SESSION['AdminUserId'];
+                $uid = (int)$_SESSION['_admin_info']['AdminUserId'];
             }
         }
+
         return $uid;
     }
 
@@ -145,7 +143,7 @@ class AdminLogin
     {
         $admin_group_id = 29;
         $auth_list = self::getAuthList();
-        if (isset($auth_list[$GLOBALS['_PATH']]) || $_SESSION['AdminUserGroup'] == $admin_group_id) {
+        if (isset($auth_list[$GLOBALS['_PATH']]) || $_SESSION['_admin_info']['AdminUserGroup'] == $admin_group_id) {
             return true;
         } else {
             return false;
@@ -185,7 +183,7 @@ class AdminLogin
                     if ($level == 3) {
                         if (!empty($mlist[$vv['AdminMenuId']])) {
                             foreach ($mlist[$vv['AdminMenuId']] as $k3 => $v3) {
-                                if (!isset($auth_list[$v3['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id && $pid != -2) {
+                                if (!isset($auth_list[$v3['Url']]) && $_SESSION['_admin_info']['AdminUserGroup'] != $admin_group_id && $pid != -2) {
                                     unset($mlist[$vv['AdminMenuId']][$k3]);
                                 }
                             }
@@ -197,7 +195,7 @@ class AdminLogin
 
                         }
                     } else {
-                        if (!isset($auth_list[$vv['Url']]) && $_SESSION['AdminUserGroup'] != $admin_group_id && $pid != -2) {
+                        if (!isset($auth_list[$vv['Url']]) && $_SESSION['_admin_info']['AdminUserGroup'] != $admin_group_id && $pid != -2) {
                             unset($mlist[$v['AdminMenuId']][$kk]);
                         }
                     }
@@ -214,7 +212,53 @@ class AdminLogin
         } elseif (!empty($mlist[$pid])) {
             $list = $mlist[$pid];
         }
+
         return $list;
+    }
+
+    /**
+     * 获取所有可访问的菜单
+     */
+    public static function getAllAuthMenu()
+    {
+        $menu = self::getAuthMenu(-2);
+
+        $methods_name = $methods_pos = $methods_hash = $methods_exist = [];
+        $methods_exist = [];
+        foreach ($menu[0] as $k => $v) {
+            foreach ($menu[$k] as $kk => $vv) {
+                foreach ($menu[$kk] as $k3 => $v3) {
+                    $methods_exist[$v3['Url']] = $v3['Url'];
+                    $str = substr($v3['Url'], 0, strrpos($v3['Url'], '/'));
+                    if (!empty($str) && empty($methods_hash[$str])) {
+                        $methods_name[$str] = $v3['Name'];
+                        $methods_pos[$str] = $kk . '|' . $k3;
+                        $methods_hash[$str] = $str;
+                    }
+                }
+            }
+        }
+        foreach ($methods_hash as $v) {
+            $path = CONTROLLER_PATH . $v . EXT;
+            if (file_exists($path)) {
+                $class = 'Controller\\' . str_replace('/', '\\', $v);
+                $method = getMethods($class, 'public');
+                foreach ($method as $mk => $mv) {
+                    $url = $v . '/' . $mk;
+                    if (!isset($methods_exist[$url])) {
+                        $key = explode('|', $methods_pos[$v], 2)[0];
+                        $mid = $methods_pos[$v] . '|' . $mk;
+                        $menu[$key][$mid] = [
+                            'AdminMenuId' => $mid,
+                            'Name' => $methods_name[$v] . ' - ' . $mk,
+                            'Url' => $url
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $menu;
     }
 
     /**
@@ -225,13 +269,20 @@ class AdminLogin
     public static function getAuthList()
     {
         $auth_list = [];
-        if (self::isLogin()) {
-            $auth_list = AdminGroup::getGroupByIds($_SESSION['AdminUserGroup']);
-            if (!empty($_SESSION['AdminSpecialGroups'])) {
-                $auth_list = array_merge($auth_list, $_SESSION['AdminSpecialGroups']);
+        if ($uid = self::isLogin()) {
+            if (!empty($_SESSION['_admin_auth_list'])) {
+                $auth_list = $_SESSION['_admin_auth_list'];
+            } else {
+                $auth_list = AdminGroup::getGroupByIds($_SESSION['_admin_info']['AdminUserGroup']);
+                $user = AdminUser::getUserByIds($uid);
+                if (!empty($user['SpecialGroups'])) {
+                    $auth_list = array_merge($auth_list['AdminAuth'], $user['SpecialGroups']);
+                }
+                $auth_list = array_flip($auth_list);
+                $_SESSION['_admin_auth_list'] = $auth_list;
             }
-            $auth_list = array_flip($auth_list);
         }
+
         return $auth_list;
     }
 }

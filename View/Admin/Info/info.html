@@ -1,0 +1,96 @@
+{:view('Admin/Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <style type="text/css">
+            .true{
+                border-radius:2px;
+                color:green;
+            }
+            .false{
+                border-radius:2px;
+                color:red;
+            }
+            blockquote{
+                background: #eee;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 0;
+            }
+            dl,dd{
+                padding: 2px 0;
+            }
+            dl{
+                margin: 10px 0 0 10px;
+            }
+            dt{
+                margin-bottom: 10px;
+            }
+            dd{
+                margin-left: 10px;
+            }
+        </style>
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">登录信息</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <table class="table table-bordered table-striped" align="center" id="list">
+                    <tr>
+                        <td style="width:200px">用户ID：</td>
+                        <td>{$user.AdminUserId}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px">用户名：</td>
+                        <td>{$user.AdminUserName}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px">真实姓名：</td>
+                        <td>{$user.AdminRealName}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px">管理组：</td>
+                        <td>{$user.GroupName}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">拥有权限列表 ( <span class="glyphicon icon-ok true"></span> 表示已拥有权限，<span class="glyphicon icon-remove false"></span> 表示不具有权限 )</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="background:#fff">
+                            {foreach ($menu[0] as $k => $v)}
+                            <div class="col-xs-2">
+                                <blockquote>{$v.Name}</blockquote>
+                                {foreach ($menu[$k] as $k2 => $v2)}
+                                <dl>
+                                    <dt>{$v2.Name}</dt>
+                                    {foreach ($menu[$k2] as  $k3 => $v3)}
+                                    <dd>
+                                        {if (isset($auth[$v3['Url']]))}
+                                        <span class="glyphicon icon-ok true"></span>
+                                        {else}
+                                        <span class="glyphicon icon-remove false"></span>
+                                        {/if}
+                                        {$v3.Name}
+                                    </dd>
+                                    {/foreach}
+                                </dl>
+                                {/foreach}
+                            </div>
+                            {/foreach}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+
+
+{@view('Admin/Public/footer')}

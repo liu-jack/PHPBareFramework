@@ -1,8 +1,9 @@
 <?php
 /**
  * 基类控制器
+ *
  * @author camfee<camfee@yeah.net>
- * @since v1.0 2016.09.12
+ * @since  v1.0 2016.09.12
  */
 
 namespace Bare;
@@ -53,8 +54,9 @@ Class Controller
 
     /**
      * 自动html模板加载函数
+     *
      * @param string $path 模板的路径 默认为
-     *      ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)
+     *                     ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)
      */
     public function view($path = '', $ext = VEXT)
     {
@@ -70,8 +72,9 @@ Class Controller
 
     /**
      * 赋值到模板
+     *
      * @param string $name 保存到前端模板的变量名
-     * @param mixed $data 要保存到前端模板的数据
+     * @param mixed  $data 要保存到前端模板的数据
      */
     public function value($name, $data)
     {
@@ -80,7 +83,8 @@ Class Controller
 
     /**
      * 接口数据输出
-     * @param int $code 返回码 200：成功
+     *
+     * @param int          $code 返回码 200：成功
      * @param array|string $data 接口输出的数据
      */
     public static function output($code = 200, $data = [])
@@ -106,7 +110,8 @@ Class Controller
 
     /**
      * 登录状态验证
-     * @param int $type 0:web/wap 1:api 2:admin
+     *
+     * @param int  $type 0:web/wap 1:api 2:admin
      * @param bool $auto 接口未登录是否退出程序
      * @return int
      */
@@ -122,6 +127,7 @@ Class Controller
                         }
                     }
                 }
+
                 return !empty($_SESSION['UserId']) ? $_SESSION['UserId'] : 0;
                 break;
             case 1:  // 接口登录验证
@@ -167,6 +173,7 @@ Class Controller
                     $msg = '登录已经失效, 请重新登录';
                     goto fail;
                 }
+
                 return $_SESSION['uid'];
                 break;
             case 2: // 网站后台登录验证
@@ -190,8 +197,8 @@ Class Controller
     /**
      * 全局提示函数
      *
-     * @param string $msg 消息
-     * @param array $options 都是可选参数
+     * @param string $msg     消息
+     * @param array  $options 都是可选参数
      *                        url     确定后跳转URL或失败返回的URL,不设置将返回上一页
      *                        desc    详细描述
      *                        target  top或者self，默认 top
@@ -223,9 +230,9 @@ Class Controller
     /**
      * 分页函数，返回html
      *
-     * @param int $count 总数量
-     * @param int $per 每页数量
-     * @param int $now 当前页数
+     * @param int  $count  总数量
+     * @param int  $per    每页数量
+     * @param int  $now    当前页数
      * @param bool $return 是否返回
      * @return mixed
      */
@@ -246,7 +253,8 @@ Class Controller
         }
         $max = min($max, $pages);
 
-        $html = '<li><a href="' . sprintf($urls, 1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+        $html = '<li><a href="' . sprintf($urls,
+                1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
         for ($n = $min; $n <= $max; $n++) {
             $url = sprintf($urls, $n);
             if ($n == $now) {
@@ -279,7 +287,7 @@ Class Controller
      * 记录错误的调用方式
      *
      * @param string $method 方法
-     * @param array $args 参数
+     * @param array  $args   参数
      * @return void
      */
     public function __call($method, $args)

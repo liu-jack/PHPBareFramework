@@ -3,7 +3,7 @@
  * AdminGroup.class.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/5/24 12:33
+ * @date   2017/5/24 12:33
  *
  */
 
@@ -15,6 +15,7 @@ use Bare\DB;
 /**
  * 后台权限组模型
  * Class AdminGroup
+ *
  * @package Model\Admin
  */
 class AdminGroup extends Model
@@ -50,6 +51,7 @@ class AdminGroup extends Model
 
     /**
      * 新增必须字段
+     *
      * @var array
      */
     private static $_add_must_fields = [
@@ -58,7 +60,8 @@ class AdminGroup extends Model
 
     /**
      * 新增
-     * @param $data
+     *
+     * @param      $data
      * @param bool $ignore
      * @return bool|int|string
      */
@@ -67,11 +70,13 @@ class AdminGroup extends Model
         if (count(array_diff_key(self::$_add_must_fields, $data)) > 0) {
             return false;
         }
+
         return parent::addData($data, $ignore);
     }
 
     /**
      * 更新
+     *
      * @param $id
      * @param $data
      * @return bool
@@ -81,11 +86,13 @@ class AdminGroup extends Model
         if ($id > 0 && !empty($data)) {
             return parent::updateData($id, $data);
         }
+
         return false;
     }
 
     /**
      * 根据id获取详细信息
+     *
      * @param int|array $ids
      * @return array
      */
@@ -94,11 +101,13 @@ class AdminGroup extends Model
         if (empty($ids)) {
             return [];
         }
+
         return parent::getDataById($ids);
     }
 
     /**
      * 查询
+     *
      * @param string $name
      * @return array
      */
@@ -113,31 +122,35 @@ class AdminGroup extends Model
             'limit' => 1,
         ];
         $ret = parent::getDataByFields($where, $extra);
+
         return !empty($ret['data']) ? current($ret['data']) : [];
     }
 
     /**
      * 查询
-     * @param array $where
-     * @param int $offset
-     * @param int $limit
+     *
+     * @param array  $where
+     * @param int    $offset
+     * @param int    $limit
      * @param string $order
      * @param string $fields
      * @return array
      */
-    public static function getGroups($where = [], $offset = 0, $limit = 0, $order = '', $fields = '*')
+    public static function getGroups($where = [], $offset = 0, $limit = 0, $order = '', $fields = '')
     {
         $extra = [
-            'fields' => $fields,
+            'fields' => empty($fields) ? 'GroupId,GroupName,Status' : $fields,
             'offset' => $offset,
             'limit' => $limit,
             'order' => $order,
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
     /**
      * 删除
+     *
      * @param $id
      * @return bool
      */
@@ -146,6 +159,7 @@ class AdminGroup extends Model
         if ($id > 0) {
             return parent::delData($id);
         }
+
         return false;
     }
 }

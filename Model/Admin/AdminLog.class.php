@@ -3,7 +3,7 @@
  * AdminLog.class.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/5/24 12:33
+ * @date   2017/5/24 12:33
  *
  */
 
@@ -15,6 +15,7 @@ use Bare\DB;
 /**
  * 后台操作日志模型
  * Class AdminLog
+ *
  * @package Model\Admin
  */
 class AdminLog extends Model
@@ -56,6 +57,7 @@ class AdminLog extends Model
 
     /**
      * 新增必须字段
+     *
      * @var array
      */
     private static $_add_must_fields = [
@@ -67,11 +69,11 @@ class AdminLog extends Model
     /**
      * 后台日志
      *
-     * @param $title
-     * @param $option
-     * @param int $itemid
-     * @param array $data
-     * @param string $itemname
+     * @param string $title    操作名称
+     * @param string $option   操作细分
+     * @param int    $itemid   操作项目id
+     * @param array  $data     操作数据
+     * @param string $itemname 项目名称（数据表名）
      * @return bool|int|string
      */
     public static function log($title, $option, $itemid = 0, $data = [], $itemname = '')
@@ -86,12 +88,14 @@ class AdminLog extends Model
             'LogFlag' => $option,
             'Log' => is_array($data) ? serialize($data) : $data,
         ];
+
         return self::addLog($adddata);
     }
 
     /**
      * 新增
-     * @param $data
+     *
+     * @param      $data
      * @param bool $ignore
      * @return bool|int|string
      */
@@ -103,11 +107,13 @@ class AdminLog extends Model
         if (empty($data['CreateTime'])) {
             $data['CreateTime'] = date('Y-m-d H:i:s');
         }
+
         return parent::addData($data, $ignore);
     }
 
     /**
      * 更新
+     *
      * @param $id
      * @param $data
      * @return bool
@@ -117,11 +123,13 @@ class AdminLog extends Model
         if ($id > 0 && !empty($data)) {
             return parent::updateData($id, $data);
         }
+
         return false;
     }
 
     /**
      * 根据id获取详细信息
+     *
      * @param int|array $ids
      * @return array
      */
@@ -130,14 +138,16 @@ class AdminLog extends Model
         if (empty($ids)) {
             return [];
         }
+
         return parent::getDataById($ids);
     }
 
     /**
      * 查询
-     * @param array $where
-     * @param int $offset
-     * @param int $limit
+     *
+     * @param array  $where
+     * @param int    $offset
+     * @param int    $limit
      * @param string $order
      * @param string $fields
      * @return array
@@ -150,11 +160,13 @@ class AdminLog extends Model
             'limit' => $limit,
             'order' => $order,
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
     /**
      * 删除
+     *
      * @param $id
      * @return bool
      */
@@ -163,6 +175,7 @@ class AdminLog extends Model
         if ($id > 0) {
             //return parent::delData($id);
         }
+
         return false;
     }
 }

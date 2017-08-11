@@ -33,11 +33,12 @@ class Index extends Controller
     /**
      * 刷新权限
      */
-    public function resfresh()
+    public function refresh()
     {
-        $uid = $_SESSION['AdminUserId'];
+        $uid = $_SESSION['_admin_info']['AdminUserId'];
+        unset($_SESSION['_admin_auth_list'], $_SESSION['_admin_info']);
+        session_destroy();
         if (empty($uid)) {
-            session_destroy();
             redirect(url('admin/index/login'));
         }
         AdminLogin::isLogin($uid);

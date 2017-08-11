@@ -3,7 +3,7 @@
  * Log.php
  *
  * @author camfee <camfee@foxmail.com>
- * @date 17-8-9 下午9:14
+ * @date   17-8-9 下午9:14
  *
  */
 

@@ -1,13 +1,15 @@
 <?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * 系统函数库
+ *
  * @package Bare
- * @author camfee <camfee@yeah.net>
- * @since v1.0 2016.09.12
+ * @author  camfee <camfee@yeah.net>
+ * @since   v1.0 2016.09.12
  */
 
 /**
  * [自动加载函数]
+ *
  * @param  [string] $class [命名空间 + 类名 如：\Controller\Home\Index ]
  */
 spl_autoload_register(function ($class) {
@@ -46,9 +48,10 @@ spl_autoload_register(function ($class) {
 
 /**
  * html模板include其他模板函数 模板页面使用
+ *
  * @param string $path [模板的路径 默认为
- *      ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)]
- * @param string $ext 后缀名
+ *                     ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)]
+ * @param string $ext  后缀名
  */
 function view($path = '', $ext = VEXT)
 {
@@ -80,39 +83,58 @@ function parseTemplate($path)
         }
     }
     $pattern = [
-        '@\{:([\w]+\([\w/_"\',\[\]=>\$\s]*\))\}@isU', // {:view('admin/public/header')}
-        '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$,\."\'\|\(\)\[\]\x{4e00}-\x{9fa5}]*\))\}@isuU', // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
-        '@\{(else)\}@isU', // {else}
-        '@\{/(foreach|if)\}@isU', // {/foreach}{/if}
-        '@\{(\$[\w_"\'\[\]\$\x{4e00}-\x{9fa5}]+)\}@isuU',       // {$a} {$a['b']} {$a[$b['c']]}
-        '@\{(\$[\w]+)\.([\w]+)\}@isU',     // {$a.b}
-        '@\{([A-Z_]+)\}@isU',     // {STATICS_JS}
-        '@\{([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU', // {url('add')}
+        // {:view('add')}
+        '@\{:([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        // {@view('admin/public/header')}
+        '@\{\@([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
+        '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$,\."\'\|\(\)\[\]\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        // {else}
+        '@\{(else)\}@isU',
+        // {/foreach}{/if}
+        '@\{/(foreach|if)\}@isU',
+        // {$a} {$a['b']} {$a[$b['c']]}
+        '@\{(\$[\w_"\'\[\]\$\x{4e00}-\x{9fa5}]+)\}@isuU',
+        // {$a.b.c}
+        '@\{(\$[\w_]+)\.([\w_]+)\.([\w_]+)\}@isU',
+        // {$a.b}
+        '@\{(\$[\w_]+)\.([\w_]+)\}@isU',
+        // {STATICS_JS}
+        '@\{([A-Z_]+)\}@isU',
+        // {url('add')}
+        '@\{([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
     ];
     $replace = [
         '<?php $this->$1?>',
+        '<?php $1?>',
         "<?php $1$2:?>",
         "<?php $1:?>",
         "<?php end$1?>",
         '<?php echo $1?>',
+        "<?php echo $1['$2']['$3']?>",
         "<?php echo $1['$2']?>",
         '<?php echo $1?>',
         "<?php echo $1?>",
     ];
     $content = file_get_contents($path);
     $content = preg_replace($pattern, $replace, $content);
+    if (!is_dir(dirname($cache_path))) {
+        mkdir(dirname($cache_path), 0777, true);
+    }
     file_put_contents($cache_path, $content);
     file_put_contents($cmp_path, $cmp);
     unset($content);
+
     return $cache_path;
 }
 
 /**
  * url生成函数
- * @param string $url module/controller/action
- * @param array|string $vars get参数 id/55
+ *
+ * @param string       $url    module/controller/action
+ * @param array|string $vars   get参数 id/55
  * @param  string|bool $domain 网站域名
- * @param  string $suffix 静态后缀
+ * @param  string      $suffix 静态后缀
  * @return  string url地址
  */
 function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
@@ -145,13 +167,15 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
             $params .= '/' . $k . '/' . $v;
         }
     }
+
     return $domain . $url . $params . $suffix;
 }
 
 /**
  * 列表页及详细页url映射（重写）地址生成
- * @param string $module 模块名称
- * @param string|int $itemid 项目id
+ *
+ * @param string     $module   模块名称
+ * @param string|int $itemid   项目id
  * @param string|int $columnid 内容id
  * @return bool|string
  */
@@ -166,13 +190,15 @@ function uri($module, $itemid, $columnid = 0)
     } else {
         $uri .= VEXT;
     }
+
     return $uri;
 }
 
 /**
  * 读取配置文件
+ *
  * @param string $path 路径, 如 mobileapi/base
- * @param string $ext 扩展名, 默认 .php
+ * @param string $ext  扩展名, 默认 .php
  * @return array       不存在时返回空数组
  */
 function config($path, $ext = '.php')
@@ -193,9 +219,10 @@ function config($path, $ext = '.php')
 
 /**
  * 文件日志
- * @param string|array $content 内容
- * @param string $name 文件名
- * @param string $log_path 路径
+ *
+ * @param string|array $content  内容
+ * @param string       $name     文件名
+ * @param string       $log_path 路径
  */
 function logs($content, $name = '', $log_path = LOG_PATH)
 {
@@ -237,9 +264,10 @@ function logs($content, $name = '', $log_path = LOG_PATH)
 
 /**
  * 必须cli模式运行
- * @param string $msg 退出信息
- * @param int $memory 程序运行内存
- * @param int $timeout 程序超时时间
+ *
+ * @param string $msg     退出信息
+ * @param int    $memory  程序运行内存
+ * @param int    $timeout 程序超时时间
  */
 function need_cli($msg = 'Must CLI Mode', $memory = 0, $timeout = 0)
 {
@@ -253,6 +281,7 @@ function need_cli($msg = 'Must CLI Mode', $memory = 0, $timeout = 0)
 
 /**
  * 输出带PRE的调试信息
+ *
  * @param mixed $extra 多个变量
  * @return void
  */
@@ -269,6 +298,7 @@ function pre(...$extra)
 
 /**
  * 返回客户端IP
+ *
  * @return string
  */
 function ip()
@@ -287,18 +317,19 @@ function ip()
     if (!preg_match('/[\d\.]{7,15}/', $ip)) {
         $ip = '0.0.0.0';
     }
+
     return $ip;
 }
 
 /**
  * 页面重定向
  *
- * @param string $url 重定向目标URL
- * @param int $mode 重定向模式, 值意义如下:
+ * @param string $url     重定向目标URL
+ * @param int    $mode    重定向模式, 值意义如下:
  *                        0 通过PHP的header()函数实现
  *                        1 通过JavaScript的Location实现
  *                        2 通过JavaScript的Location.replace实现
- * return void
+ *                        return void
  */
 function redirect($url = '', $mode = 1)
 {
@@ -354,6 +385,7 @@ function cookie_encode($data)
 {
     $checksum = sprintf("%u", crc32($_SERVER['HTTP_USER_AGENT']));
     $serialized = $checksum . '|' . json_encode($data);
+
     return \Classes\Encrypt\Blowfish::encode($serialized);
 }
 
@@ -378,12 +410,14 @@ function cookie_decode($encoded_hex)
     if ($checksum != $arr[0]) {
         return false;
     }
+
     return json_decode($arr[1], true);
 }
 
 /**
  * 数据输出
- * @param int $code 返回码 200：成功
+ *
+ * @param int          $code 返回码 200：成功
  * @param array|string $data 接口输出的数据
  */
 function output($code = 200, $data = [])

@@ -1,5 +1,6 @@
 .iframe-title .close{margin-right: 2px; position: absolute; top:7px; right: 1px;}
 .iframe-nav a{color: #555;}
 .iframe-nav li {margin: 0 1px; background: #efefef;}
+#user_menu li.active a{color: #777; background: none}
 .sidebar #nav li ul li.active a, #topmenu li.active a {background: #eee;border-bottom: 1px solid #ddd;}
 table.table tr td{vertical-align: middle}

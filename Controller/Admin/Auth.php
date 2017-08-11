@@ -3,7 +3,7 @@
  * Auth.php
  *
  * @author: camfee <camfee@foxmail.com>
- * @date: 17-8-10 下午12:30
+ * @date  : 17-8-10 下午12:30
  *
  */
 
@@ -13,7 +13,6 @@ use Bare\Controller;
 use Model\Admin\AdminGroup;
 use Model\Admin\AdminLog;
 use Model\Admin\AdminLogin;
-use Model\Admin\AdminMenu;
 use Model\Admin\AdminUser;
 
 class Auth extends Controller
@@ -52,22 +51,20 @@ class Auth extends Controller
         if (empty($group)) {
             $this->alertMsg('权限组不存在', ['type' => 'error']);
         }
-
         if (isset($_POST['menu'])) {
-            $dbw = Bridge::pdo(Bridge::DB_ADMIN_W);
-
-            $re = $dbw->update('AdminGroup', ['AdminAuth' => serialize($_POST['menu'])], ['AdminGroupId' => $id]);
-            if ($re !== false) {
-                $this->adminLog('编辑权限组', $id, 'update', serialize($_POST['menu']));
-                HDshowMsg('保存成功', ['url' => ADMIN_MODULES . 'admin/auth.php']);
+            $ret = AdminGroup::updateGroup($id, ['AdminAuth' => $_POST['menu']]);
+            if ($ret !== false) {
+                AdminLog::log('编辑权限组', 'update', $id, $_POST['menu'], 'AdminGroup');
+                $this->alertMsg('保存成功', ['url' => url('index')]);
             } else {
-                HDshowMsg('保存失败', ['type' => 'error']);
+                $this->alertMsg('保存失败', ['type' => 'error']);
             }
         }
 
         $auth = $group['AdminAuth'];
         $auth = array_combine((array)$auth, (array)$auth);
-        $menu = AdminLogin::getAuthMenu(-2);
+        $menu = AdminLogin::getAllAuthMenu();
+
 
         $this->value('group', $group);
         $this->value('auth', $auth);

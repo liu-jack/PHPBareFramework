@@ -5,7 +5,8 @@
 
 /**
  * 获取分表名称
- * @param int $id 项目id
+ *
+ * @param int    $id    项目id
  * @param string $table 共用表名
  * @return bool|string
  */
@@ -14,13 +15,15 @@ function table($id, $table = '')
     if ($id > 0) {
         return $table . sprintf('%02x', $id % 256);
     }
+
     return $table;
 }
 
 /**
  * 获取|保存 封面
- * @param int $id 项目id
- * @param int $ver 图片版本号
+ *
+ * @param int    $id  项目id
+ * @param int    $ver 图片版本号
  * @param string $ext 图片保持扩展名
  * @return mixed|string
  */
@@ -37,10 +40,11 @@ function cover($id, $ver = -1, $ext = '.jpg')
 
 /**
  * 获取|保存 内容图片
- * @param int $id 项目id
- * @param int $fid 上级项目id
+ *
+ * @param int    $id  项目id
+ * @param int    $fid 上级项目id
  * @param string $ext 图片保存扩展名
- * @param int $ver 图片版本号
+ * @param int    $ver 图片版本号
  * @return mixed|string
  */
 function contentImg($id, $fid, $ver = -1, $ext = '.gif')
@@ -58,8 +62,8 @@ function contentImg($id, $fid, $ver = -1, $ext = '.gif')
  * 根据用户ID 获取头像
  *
  * @param integer $userid 用户ID
- * @param integer $size 头像尺寸 180/100
- * @param integer $ver 头像版本, >1 才体现
+ * @param integer $size   头像尺寸 180/100
+ * @param integer $ver    头像版本, >1 才体现
  * @return string         返回头像地址
  */
 function head($userid, $size = 100, $ver = 0)
@@ -69,6 +73,7 @@ function head($userid, $size = 100, $ver = 0)
     $hash2 = sprintf("%02x", $userid / 256 % 256);
     $size = isset($allow_size[$size]) ? $size : '100';
     $ver = $ver > 0 ? '?v=' . $ver : '';
+
     return "http://{$_SERVER['HTTP_HOST']}/Public/upload/head/{$hash1}/{$hash2}/{$userid}_{$size}.jpg{$ver}";
 }
 
@@ -85,6 +90,7 @@ function getDeviceId($type = 0)
 
 /**
  * 转换设备字ID符串为整数
+ *
  * @param $deviceid
  * @return int
  */
@@ -99,5 +105,56 @@ function intDeviceId($deviceid)
         }
         $sum += $temp;
     }
+
     return intval($sum);
+}
+
+/**
+ * 获取类中非继承方法和重写方法
+ * 只获取在本类中声明的方法，包含重写的父类方法，其他继承自父类但未重写的，不获取
+ *
+ * @param string $classname 类名
+ * @param string $access    public or protected  or private or final 方法的访问权限
+ * @return array(methodname=>access)  or array(methodname)
+ */
+function getMethods($classname, $access = null)
+{
+    $class = new \ReflectionClass($classname);
+    $methods = $class->getMethods();
+    $returnArr = [];
+    foreach ($methods as $value) {
+        if ($value->class == $classname) {
+            if ($access != null) {
+                $methodAccess = new \ReflectionMethod($classname, $value->name);
+                switch ($access) {
+                    case 'public':
+                        if ($methodAccess->isPublic()) {
+                            $returnArr[$value->name] = 'public';
+                        }
+                        break;
+                    case 'protected':
+                        if ($methodAccess->isProtected()) {
+                            $returnArr[$value->name] = 'protected';
+                        }
+                        break;
+                    case 'private':
+                        if ($methodAccess->isPrivate()) {
+                            $returnArr[$value->name] = 'private';
+                        }
+                        break;
+                    case 'final':
+                        if ($methodAccess->isFinal()) {
+                            $returnArr[$value->name] = 'final';
+                        }
+                        break;
+                }
+            } else {
+                array_push($returnArr, $value->name);
+            }
+
+        }
+    }
+    unset($class, $methods, $methodAccess);
+
+    return $returnArr;
 }

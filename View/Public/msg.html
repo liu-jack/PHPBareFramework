@@ -10,7 +10,7 @@
     <script type="text/javascript" src="{JS_PATH}sweetalert.min.js"></script>
 </head>
 <body>
-    <?php if ($type == 'error'):}
+    {if ($type == 'error')}
         <script type="text/javascript">
             var url = '{$url}';
             {$target}.swal({
@@ -31,7 +31,7 @@
                 }
             });
         </script>
-    <?php else:}
+    {else}
         <script type="text/javascript">
             var url = '{$url}';
             {$target}.swal({
@@ -52,6 +52,6 @@
                 }
             });
         </script>
-    <?php endif}
+    {/if}
 </body>
 </html>

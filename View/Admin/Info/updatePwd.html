@@ -1,0 +1,111 @@
+{:view('Admin/Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+
+                <div class="widget wred">
+                    <div class="widget-head">
+                        <div class="pull-left">修改密码</div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="widget-content">
+                        <div class="padd">
+
+                            <!-- Profile form -->
+                            <div class="form profile">
+                                <form class="form-horizontal">
+                                    <!-- UserId -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3" for="UserId">用户ID</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" class="form-control" value="{$user.UserId}" id="UserId" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <!-- UserName -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3" for="UserName">用户名</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" class="form-control" value="{$user.UserName}" id="UserName" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <!-- RealName -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3" for="RealName">姓名</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" class="form-control" value="{$user.RealName}" id="RealName" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <!-- GroupName -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3" for="GroupName">管理组</label>
+                                        <div class="col-lg-3">
+                                            <input type="text" class="form-control" value="{$user.GroupName}" id="GroupName" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <!-- Password -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3" for="user_pwd">修改密码</label>
+                                        <div class="col-lg-3">
+                                            <input type="password" class="form-control" id="user_pwd">
+                                        </div>
+                                    </div>
+                                    <!-- Password -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3" for="user_pwd2">确认密码</label>
+                                        <div class="col-lg-3">
+                                            <input type="password" class="form-control" id="user_pwd2">
+                                        </div>
+                                    </div>
+
+                                    <!-- Buttons -->
+                                    <div class="form-group">
+                                        <!-- Buttons -->
+                                        <div class="col-lg-3 col-lg-offset-1">
+                                            <button class="btn btn-success updatePwd"><i class="icon-ok"></i></button>
+                                            <button type="reset" class="btn btn-warning"><i class="icon-refresh"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script src="{JS_PATH}jsencrypt.min.js"></script>
+<script src="{JS_PATH}login.js"></script>
+<script type="text/javascript">
+    $(".updatePwd").click(function(){
+        var user_pwd = $('#user_pwd').val();
+        var user_pwd2 = $('#user_pwd2').val();
+        if (user_pwd == '' || user_pwd2 == ''){
+            top.swal('出错了','请填写密码','error');
+        } else if(user_pwd != user_pwd2) {
+            top.swal('出错了','密码不一致','error');
+        }else {
+            $.ajax({
+                url:'{url("updatePwd")}',
+                type:"post",
+                data:{user_pwd: encode_pwd(user_pwd),user_pwd2:encode_pwd(user_pwd2)},
+                dataType:"json",
+                success:function(re){
+                    top.swal(re.msg);
+                    if(re.code == 200){
+                        self.location.reload();
+                    }
+                }
+            })
+        }
+    });
+</script>
+
+{@view('Admin/Public/footer')}

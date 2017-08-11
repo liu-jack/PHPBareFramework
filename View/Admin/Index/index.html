@@ -1,4 +1,4 @@
-{:view('Admin/Public/header')}
+{:view('Admin/Public/header2')}
 
 
 <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
@@ -26,13 +26,14 @@
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown pull-right">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:void(0)">
-                        <i class="icon-user"></i> {$_SESSION['AdminRealName']} <b class="caret"></b>
+                        <i class="icon-user"></i> {$_SESSION._admin_info.AdminRealName} <b class="caret"></b>
                     </a>
                     <!-- Dropdown menu -->
-                    <ul class="dropdown-menu">
-                        <li><a href="javascript:void(0)" onclick="refreshPower()"><i class="icon-refresh"></i> 刷新权限</a></li>
-                        <li><a href="javascript:void(0)" onclick="refresh()"><i class="icon-refresh"></i> 刷新页面</a></li>
-                        <li><a href="{url('admin/index/logout')}"><i class="icon-off"></i> 退出</a></li>
+                    <ul class="dropdown-menu" id="user_menu">
+                        <li  class="menu-link" data-mid="updatePwd"><a target="iframe-updatePwd" href="{url('admin/info/updatePwd')}"><i class="icon-edit"></i> 修改密码 </a></li>
+                        <li><a href="javascript:void(0)" onclick="refreshPower()"><i class="icon-refresh"></i> 刷新权限 </a></li>
+                        <li><a href="javascript:void(0)" onclick="refresh()"><i class="icon-refresh"></i> 刷新页面 </a></li>
+                        <li><a href="{url('admin/index/logout')}"><i class="icon-off"></i> 退出 </a></li>
                     </ul>
                 </li>
             </ul>
@@ -136,7 +137,7 @@
         });
     });
     // 点击左侧菜单
-    $(document).on('click', "#nav .menu-link", function(){
+    $(document).on('click', "#nav .menu-link, #user_menu .menu-link", function(){
         var href = $(this).find('a').attr("href");
         var mid = $(this).attr("data-mid");
         var title = $(this).text();
@@ -241,7 +242,7 @@
     }
     // 计算iframe高
     function initiframe() {
-        $(".iframe").css({height: $(window).height() - 175});
+        $(".iframe").css({height: $(window).height() - 177});
     }
     // 初始化
     $('#topmenu .top-menu').eq(0).click();
@@ -269,4 +270,4 @@
     }
 </script>
 
-{view('Admin/Public/footer')}
+{@view('Admin/Public/footer2')}

@@ -1,8 +1,9 @@
 <?php
 /**
  * 基类数据模型
+ *
  * @author camfee<camfee@yeah.net>
- * @since v1.0 2016.09.25
+ * @since  v1.0 2016.09.25
  */
 
 namespace Bare;
@@ -52,9 +53,9 @@ abstract class Model
     /**
      * 添加一条或多条数据
      *
-     * @param array $rows 要写入的数组(支持多行写入), 单个[data], 多个[[data1],[data2],...]
-     * @param bool $ignore 是否使用IGNORE, 默认不使用
-     * @param string $suff 分表后缀名称
+     * @param array  $rows   要写入的数组(支持多行写入), 单个[data], 多个[[data1],[data2],...]
+     * @param bool   $ignore 是否使用IGNORE, 默认不使用
+     * @param string $suff   分表后缀名称
      * @return bool|int|string 成功返回LastInsertId, 未插入数据返回0, 插入失败返回false
      * @throws \Exception
      */
@@ -84,9 +85,9 @@ abstract class Model
     /**
      * 获得一条或多条数据
      *
-     * @param int|array $id 主键ID
-     * @param array $extra 见 self::EXTRA_*
-     * @param string $suff 分表后缀名称
+     * @param int|array $id    主键ID
+     * @param array     $extra 见 self::EXTRA_*
+     * @param string    $suff  分表后缀名称
      * @return array 单条返回['feild1'=>'value1',..], 多条返回['主键ID1' => [...],]
      * @throws \Exception
      */
@@ -141,11 +142,7 @@ abstract class Model
             if (count($nocache_ids) > 0) {
                 $data = static::getFromDb($nocache_ids, $db, $suff);
                 foreach ($data as $v) {
-                    $mc->set(
-                        sprintf(static::$_conf['mckey'], $v[static::$_conf['_primary_key']]),
-                        $v,
-                        static::$_conf['mctime']
-                    );
+                    $mc->set(sprintf(static::$_conf['mckey'], $v[static::$_conf['_primary_key']]), $v, static::$_conf['mctime']);
                     $data_cache[$v[static::$_conf['_primary_key']]] = $v;
                 }
             }
@@ -170,8 +167,8 @@ abstract class Model
     /**
      * 更新一条数据
      *
-     * @param int $id
-     * @param array $rows 见static::$_conf['_fields_array'], 不支持修改主键ID
+     * @param int    $id
+     * @param array  $rows 见static::$_conf['_fields_array'], 不支持修改主键ID
      * @param string $suff 分表后缀名称
      * @return bool
      * @throws \Exception
@@ -206,7 +203,7 @@ abstract class Model
     /**
      * 物理删除一条数据
      *
-     * @param int $id 主键ID
+     * @param int    $id   主键ID
      * @param string $suff 分表后缀名称
      * @return bool
      * @throws \Exception
@@ -240,8 +237,8 @@ abstract class Model
     /**
      * 根据条件查询数据集合 (支持普通分页查询或者MC查询, 但只能用其中一种)
      *
-     * @param array $where 一个或多个查询条件, 支持格式参考 PDOQuery 中的where支持
-     * @param array $extra 可选额外参数, 分页查询和MC不能同时使用, 优先使用分页停用MC
+     * @param array  $where 一个或多个查询条件, 支持格式参考 PDOQuery 中的where支持
+     * @param array  $extra 可选额外参数, 分页查询和MC不能同时使用, 优先使用分页停用MC
      *
      *                     MC模式:
      *                     type: static::MOD_TYPE_MEMCACHE, MC模式, 只返回主键ID
@@ -261,7 +258,7 @@ abstract class Model
      *                     limit:  可选, 每页数 ,默认0, 表示返回所有数据
      *                     order:  可选, 排序, 默认按主键降序
      *
-     * @param string $suff 分表后缀名称
+     * @param string $suff  分表后缀名称
      * @return array ['count' => 总数, 'data' => [查询的数据]]
      * @throws \Exception
      */
@@ -328,10 +325,7 @@ abstract class Model
             $pdo = DB::pdo($extra['db']);
             $count = -1;
             if ($extra['get_count'] == 1) {
-                $count = $pdo->select('COUNT(' . static::$_conf['_primary_key'] . ')')
-                    ->from(static::$_conf['table'] . $suff)
-                    ->where($where)
-                    ->getValue();
+                $count = $pdo->select('COUNT(' . static::$_conf['_primary_key'] . ')')->from(static::$_conf['table'] . $suff)->where($where)->getValue();
             }
 
             if ($extra['get_result'] == 1 && ($count == -1 || $count > 0)) {
@@ -386,12 +380,11 @@ abstract class Model
                 if ($v == static::VAR_TYPE_KEY) {
                     $conf['_primary_key'] = $k;
                     $flag = false;
-                    break;
                 } elseif ($v == static::VAR_TYPE_ARRAY) {
                     $conf['_fields_array'][$k] = $k;
                 }
             }
-
+            
             $conf['_use_memcache'] = !empty($conf['mc']) && !empty($conf['mckey']);
 
             if ($flag) {

@@ -1,0 +1,150 @@
+{:view('Admin/Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <form method="post">
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">编辑管理员 -- {$user.RealName}</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <table class="table table-bordered " align="center">
+                    <tbody>
+                    <tr>
+                        <td class="col-xs-2">
+                            <div class="input-group">
+                                <div class="input-group-addon">用户ID</div>
+                                <input type="text" class="form-control" name="user_name" placeholder="" value="{$user.UserId}" readonly>
+                            </div>
+                        </td>
+                        <td class="col-xs-2">
+                            <div class="input-group">
+                                <div class="input-group-addon">用户名</div>
+                                <input type="text" class="form-control" name="user_name" placeholder="" value="{$user.UserName}" readonly>
+                            </div>
+                        </td>
+                        <td class="col-xs-2">
+                            <div class="input-group">
+                                <div class="input-group-addon">管理组</div>
+                                <select name="auth_group" class="form-control">
+                                    {$groupselect}
+                                </select>
+                            </div>
+                        </td>
+                        <td class="col-xs-2">
+                            <div class="input-group">
+                                <div class="input-group-addon">真实姓名</div>
+                                <input type="text" class="form-control" name="real_name" placeholder="" value="{$user.RealName}">
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">权限设置</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <table class="table table-bordered " align="center">
+                    <!-- 一级菜单 -->
+                    {foreach ($menu[0] as $k => $v)}
+                    <tr>
+                        <td colspan="3" class="col-xs-12">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" {if (isset($auth[$v['Url']]))}checked="checked"{/if} value="{$v.Url}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
+                                    {if (isset($auth[$v['Url']]))}
+                                    <span class="label label-primary">个人</span>
+                                    {/if}
+                                    {if (isset($group_auth[$v['Url']]))}
+                                    <span class="label label-success">管理组</span>
+                                    {/if}
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- 二级菜单 -->
+                    {foreach ($menu[$k] as $k2 => $v2)}
+                    <tr>
+                        <td><div style="width:20px;"></div></td>
+                        <td colspan="2" class="col-xs-12">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" {if (isset($auth[$v2['Url']]))}checked="checked"{/if} value="{$v2.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
+                                    {if (isset($auth[$v2['Url']]))}
+                                    <span class="label label-primary">个人</span>
+                                    {/if}
+                                    {if (isset($group_auth[$v2['Url']]))}
+                                    <span class="label label-success">管理组</span>
+                                    {/if}
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- 三级菜单 -->
+                    {foreach ($menu[$k2] as $k3 => $v3)}
+                    <tr>
+                        <td><div style="width:20px;"></div></td>
+                        <td><div style="width:20px;"></div></td>
+                        <td colspan="1" class="col-xs-12">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" {if (isset($auth[$v3['Url']]))}checked="checked"{/if} value="{$v3.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
+                                    {if (isset($auth[$v3['Url']]))}
+                                    <span class="label label-primary">个人</span>
+                                    {/if}
+                                    {if (isset($group_auth[$v3['Url']]))}
+                                    <span class="label label-success">管理组</span>
+                                    {/if}
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    {/foreach}
+                    {/foreach}
+                    <tr>
+                        <td colspan="4">
+                            <button type="submit" class="btn btn-success"><i class="icon-ok"></i></button>
+                            <button onclick="history.back()"  class="btn btn-danger"><i class="icon-remove"></i></button>
+                            <button class="btn btn-warning" onclick="location.reload();return false;"><i class="icon-refresh"></i></button>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </form>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $(".checkbox").on('click', 'input:checkbox', function(){
+        var exist = $(this).prop("checked");
+        var mid = $(this).attr("id").split("_");
+        var id = $(this).attr("id");
+        if (exist){
+            if (mid.length == 4){
+                $("#g_" + mid[1]).prop("checked", true);
+                $("#g_" + mid[1] + "_" + mid[2]).prop("checked", true);
+            }else if(mid.length == 3){
+                $("#g_" + mid[1]).prop("checked", true);
+            }
+        }else{
+            $("input:checkbox[id^='"+id+"']").prop("checked", false);
+        }
+    });
+</script>
+
+{@view('Admin/Public/footer')}
