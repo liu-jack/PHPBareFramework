@@ -10,7 +10,7 @@ namespace Bare;
 
 use Model\Account\User as AUser;
 use Model\Passport\PassportApi;
-use Model\Admin\AdminLogin;
+use Model\Admin\Admin\AdminLogin;
 
 Class Controller
 {
@@ -33,9 +33,9 @@ Class Controller
         if ($GLOBALS['_M'] == 'Admin') {
             if ($GLOBALS['_C'] != 'Index') {
                 if (!self::isLogin(2)) {
-                    $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
+                    $this->alert('请先登录', url('admin/index/login'));
                 } elseif (!AdminLogin::isHasAuth()) {
-                    $this->alertMsg('没有权限', ['url' => url('admin/index/index'), 'to' => 'top']);
+                    $this->alertErr('没有权限', url('admin/index/index'), '', 'top');
                 }
             }
         }
@@ -200,7 +200,7 @@ Class Controller
      * @param array  $options 都是可选参数
      *                        url     确定后跳转URL或失败返回的URL,不设置将返回上一页
      *                        desc    详细描述
-     *                        to   top或者self，默认 self url target
+     *                        to      top或者self，默认 self url target
      *                        target  top或者self，默认 top alert target
      *                        type    消息类型：0：失败；1：成功,默认成功
      *                        button  按钮显示的文字，默认：确定
@@ -230,6 +230,48 @@ Class Controller
     }
 
     /**
+     * 出错提示弹窗
+     *
+     * @param        $msg
+     * @param string $url
+     * @param string $desc
+     * @param string $to
+     */
+    public function alertErr($msg, $url = '', $desc = '', $to = 'self')
+    {
+        $opt = [
+            'url' => $url,
+            'desc' => $desc,
+            'to' => $to,
+            'target' => 'top',
+            'type' => 'error',
+            'button' => '确定',
+        ];
+        $this->alertMsg($msg, $opt);
+    }
+
+    /**
+     * 成功提示弹窗
+     *
+     * @param        $msg
+     * @param string $url
+     * @param string $desc
+     * @param string $to
+     */
+    public function alert($msg, $url = '', $desc = '', $to = 'self')
+    {
+        $opt = [
+            'url' => $url,
+            'desc' => $desc,
+            'to' => $to,
+            'target' => 'top',
+            'type' => 'success',
+            'button' => '确定',
+        ];
+        $this->alertMsg($msg, $opt);
+    }
+
+    /**
      * 分页函数，返回html
      *
      * @param int  $count  总数量
@@ -240,11 +282,11 @@ Class Controller
      */
     public function pagination($count, $per, $now, $return = false)
     {
-        $page_key = 'p'; //分页传值的key
+        $page_key = defined('PAGE_VAR') ? PAGE_VAR : 'p'; //分页传值的key
         $_GET[$page_key] = '%d';
-        $urls = url($GLOBALS['_PATH'], $_GET);
+        $urls = url($GLOBALS['_URL'], $_GET);
         unset($_GET[$page_key]);
-        $burl = url($GLOBALS['_PATH'], $_GET);
+        $burl = url($GLOBALS['_URL'], $_GET);
         $now = max(1, $now);
         $pages = intval(ceil($count / $per));
         $min = 1;
@@ -255,8 +297,11 @@ Class Controller
         }
         $max = min($max, $pages);
 
-        $html = '<li><a href="' . sprintf($urls,
-                1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+        $html = '<li><a href="' . sprintf($urls, 1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+        $url = sprintf($urls, 1);
+        if ($max == $pages && $min > 1) {
+            $html .= '<li><a href="' . $url . '">1</a></li><li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li>';
+        }
         for ($n = $min; $n <= $max; $n++) {
             $url = sprintf($urls, $n);
             if ($n == $now) {
@@ -268,7 +313,7 @@ Class Controller
 
         $url = sprintf($urls, $pages);
         if ($max < $pages) {
-            $html .= '<li><a><input type="text" style="height: 17px; width: 40px;font-size:10px;padding:0 3px;" class="form-control" onkeydown="if(event.keyCode==13){var pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+pagesize+\')\';location.href=url}"></li></a><li><a href="' . $url . '">' . $pages . '</a></li>';
+            $html .= '<li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li><li><a href="' . $url . '">' . $pages . '</a></li>';
         }
         $html .= '<li> <a href="' . $url . '" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
         if ($pages == 1) {

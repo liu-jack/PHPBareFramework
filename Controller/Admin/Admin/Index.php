@@ -5,15 +5,15 @@
  * Time: 19:30
  */
 
-namespace Controller\Admin;
+namespace Controller\Admin\Admin;
 
 use Bare\Controller;
 use Classes\Encrypt\Rsa;
 use Classes\Image\Securimage;
-use Model\Admin\AdminGroup;
-use Model\Admin\AdminLogin;
-use Model\Admin\AdminUser;
-use Model\Admin\AdminLog;
+use Model\Admin\Admin\AdminGroup;
+use Model\Admin\Admin\AdminLogin;
+use Model\Admin\Admin\AdminUser;
+use Model\Admin\Admin\AdminLog;
 
 class Index extends Controller
 {
@@ -23,7 +23,7 @@ class Index extends Controller
     public function index()
     {
         if (!AdminLogin::isLogin()) {
-            $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
+            $this->alert('请先登录', url('admin/index/login'), '', 'top');
         }
 
         $menu = AdminLogin::getAuthMenu();
@@ -53,7 +53,7 @@ class Index extends Controller
     {
         $uid = $this->isLogin(2);
         if ($uid < 1) {
-            $this->alertMsg('请先登录', ['url' => url('admin/index/login')]);
+            $this->alert('请先登录', url('admin/index/login'));
         }
         if (!empty($_POST['user_pwd'])) {
             $pwd = strval($_POST['user_pwd']);

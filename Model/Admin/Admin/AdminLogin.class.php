@@ -7,7 +7,7 @@
  *
  */
 
-namespace Model\Admin;
+namespace Model\Admin\Admin;
 
 
 class AdminLogin
@@ -143,7 +143,7 @@ class AdminLogin
     {
         $admin_group_id = 29;
         $auth_list = self::getAuthList();
-        if (isset($auth_list[$GLOBALS['_PATH']]) || $_SESSION['_admin_info']['AdminUserGroup'] == $admin_group_id) {
+        if (isset($auth_list[$GLOBALS['_URL']]) || $_SESSION['_admin_info']['AdminUserGroup'] == $admin_group_id) {
             return true;
         } else {
             return false;
@@ -239,9 +239,9 @@ class AdminLogin
             }
         }
         foreach ($methods_hash as $v) {
-            $path = CONTROLLER_PATH . $v . EXT;
+            $path = CONTROLLER_PATH . ADMIN_PATH . '/' . $v . EXT;
             if (file_exists($path)) {
-                $class = 'Controller\\' . str_replace('/', '\\', $v);
+                $class = 'Controller\\' . ADMIN_PATH . '\\' . str_replace('/', '\\', $v);
                 $method = getMethods($class, 'public');
                 foreach ($method as $mk => $mv) {
                     $url = $v . '/' . $mk;

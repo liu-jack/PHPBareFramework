@@ -27,9 +27,7 @@ define('STATICS_URI', '/Public/statics/');
 define('EXT', '.php');
 define('CEXT', '.class.php');
 define('VEXT', '.html');
-
 define('URL_MODE', 1); //0 一般模式 1 rewrite模式
-define('API_PATH', 'Api'); // Api路径名
 
 if (php_sapi_name() !== 'cli') {
     define('PATH_INFO', trim(str_replace(['/index.php', VEXT], '', $_SERVER['DOCUMENT_URI']), '/'));

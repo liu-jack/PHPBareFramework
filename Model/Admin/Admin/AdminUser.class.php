@@ -7,7 +7,7 @@
  *
  */
 
-namespace Model\Admin;
+namespace Model\Admin\Admin;
 
 use Bare\Model;
 use Bare\DB;

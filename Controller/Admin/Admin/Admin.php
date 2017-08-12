@@ -7,20 +7,20 @@
  *
  */
 
-namespace Controller\Admin;
+namespace Controller\Admin\Admin;
 
 use Bare\Controller;
-use Model\Admin\AdminGroup;
-use Model\Admin\AdminLog;
-use Model\Admin\AdminLogin;
-use Model\Admin\AdminUser;
+use Model\Admin\Admin\AdminGroup;
+use Model\Admin\Admin\AdminLog;
+use Model\Admin\Admin\AdminLogin;
+use Model\Admin\Admin\AdminUser;
 use Classes\Encrypt\Rsa;
 
 class Admin extends Controller
 {
     public function index()
     {
-        $now = intval($_GET['p']) > 0 ? intval($_GET['p']) : 1;
+        $now = intval($_GET[PAGE_VAR]) > 0 ? intval($_GET[PAGE_VAR]) : 1;
         $per = PAGE_SIZE;
         $offset = ($now - 1) * $per;
         $where = [];
@@ -59,7 +59,11 @@ class Admin extends Controller
         if (!empty($exist)) {
             output(202, '此用户已经是管理员');
         }
-
+        if ($groupid == SUPER_ADMIN_GROUP) {
+            if ($_SESSION['_admin_info']['AdminUserGroup'] != SUPER_ADMIN_GROUP) {
+                $this->alertErr('不能新增超级管理员');
+            }
+        }
         $data['UserName'] = $user_name;
         $data['Password'] = $pwd;
         $data['UserGroup'] = $groupid;
@@ -76,8 +80,14 @@ class Admin extends Controller
     public function edit()
     {
         $uid = intval($_GET['id']);
+        $user = AdminUser::getUserByIds($uid);
 
         if (isset($_POST['user_name'])) {
+            if ($user['UserGroup'] == SUPER_ADMIN_GROUP) {
+                if ($_SESSION['_admin_info']['AdminUserGroup'] != SUPER_ADMIN_GROUP) {
+                    $this->alertErr('不能修改超级管理员');
+                }
+            }
             $data = [
                 'UserGroup' => intval($_POST['auth_group']),
                 'UserName' => strval($_POST['user_name']),
@@ -88,13 +98,12 @@ class Admin extends Controller
             $ret = AdminUser::updateUser($uid, $data);
             if ($ret !== false) {
                 AdminLog::log('编辑管理员', 'update', $uid, $data, 'AdminUser');
-                $this->alertMsg('保存成功', ['url' => url('index')]);
+                $this->alert('保存成功', url('index'));
             }
-            $this->alertMsg('保存失败', ['type' => 'error']);
+            $this->alertErr('保存失败');
         }
 
         $menu = AdminLogin::getAllAuthMenu();
-        $user = AdminUser::getUserByIds($uid);
         $auth = $user['SpecialGroups'];
         $auth = array_combine((array)$auth, (array)$auth);
         $group_info = AdminGroup::getGroupByIds($user['UserGroup']);
@@ -124,9 +133,12 @@ class Admin extends Controller
         $uid = intval($_GET['id']);
         $user = AdminUser::getUserByIds($uid);
         if ($user['UserGroup'] == SUPER_ADMIN_GROUP) {
+            if ($_SESSION['_admin_info']['AdminUserGroup'] != SUPER_ADMIN_GROUP) {
+                $this->alertErr('不能删除超级管理员');
+            }
             $supers = AdminUser::getUsersByGroupId(SUPER_ADMIN_GROUP);
             if ($supers['count'] <= 1) {
-                $this->alertMsg('不能删除全部的超级管理员');
+                $this->alertErr('不能删除全部的超级管理员');
             }
         }
         $ret = AdminUser::delUser($uid);
@@ -134,6 +146,6 @@ class Admin extends Controller
             AdminLog::log('删除管理员', 'del', $uid, $uid, 'AdminUser');
             $this->alertMsg('删除成功');
         }
-        $this->alertMsg('删除失败，请重试', ['type' => 'error']);
+        $this->alertErr('删除失败，请重试');
     }
 }

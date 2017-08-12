@@ -7,21 +7,16 @@ use Model\Book\{
     Book, Collect, Column, Content
 };
 
-class CollectBook83
+class CollectBook83 extends CollectBookBase
 {
-    const BASE_URL = 'http://m.83zw.com';
-
     const ALL_VISIT_URL = 'http://m.83zw.com/bookinfo/topallvisit_%d.html';
-
     const ALL_VOTE_URL = 'http://m.83zw.com/bookinfo/topallvote_%d.html';
-
     const TOP_GOODNUM_URL = 'http://m.83zw.com/bookinfo/topgoodnum_%d.html';
-
-    const FROM_ID = 83;
 
     /**
      * 采集整站
-     * @param array $page
+     *
+     * @param array  $page
      * @param string $curl
      */
     public static function book($page = [], $curl = self::ALL_VISIT_URL)
@@ -41,20 +36,20 @@ class CollectBook83
 
     /**
      * 采集整页
-     * @param int $p
+     *
+     * @param int    $p
      * @param string $curl
      * @return int|mixed
      */
     public static function getBookList($p = 1, $curl = self::ALL_VISIT_URL)
     {
-        $log_path = 'collect/book/book' . self::FROM_ID;
-        $log_path2 = 'collect/book/book_err' . self::FROM_ID;
+        $log_path = self::$log_book_path . self::FROM_ID_83;
+        $log_path2 = self::$log_book_err_path . self::FROM_ID_83;
         $cc = new Collects();
         $n = 0;
         $total = 0;
         while ($n < 3 && empty($total)) {
-            $total = $cc->get(sprintf($curl,
-                $p))->match(['total' => '@<a href="[^"]*" class="last">(\d+)</a>@'])->getMatch(); // @todo
+            $total = $cc->get(sprintf($curl, $p))->match(['total' => '@<a href="[^"]*" class="last">(\d+)</a>@'])->getMatch(); // @todo
             $total = $total['total'] ?? 0;
             $n++;
             usleep(500000);
@@ -89,13 +84,13 @@ class CollectBook83
                                     $data['TypeName'] = '其它小说';
                                 }
                                 $data['Words'] = 0;
-                                $data['UpdateTime'] = time();
-                                $data['CreateTime'] = time();
+                                $data['UpdateTime'] = date('Y-m-d H:i:s');
+                                $data['CreateTime'] = date('Y-m-d H:i:s');
                                 $res = Book::addBook($data);
                             }
                             if (!empty($res)) {
                                 $cdata['BookId'] = $res;
-                                $cdata['FromId'] = self::FROM_ID;
+                                $cdata['FromId'] = self::FROM_ID_83;
                                 $res = Collect::getCollects($cdata);
                                 $cdata['Url'] = trim($url[$k]);
                                 if (empty($res['data'][0]['CollectId'])) {
@@ -130,7 +125,7 @@ class CollectBook83
      */
     public static function getBookColumn($bookid, $url, $book = [])
     {
-        $log_path = 'collect/book/column_err' . self::FROM_ID;
+        $log_path = self::$log_column_path . self::FROM_ID_83;
         $cc = new Collects();
         $n = 0;
         $name = '';
@@ -151,14 +146,14 @@ class CollectBook83
         $desc = $cc->match($regs)->strip()->getMatch();
         $data['BookDesc'] = preg_replace('@((&?nbsp;?)|(&?amp;?))+@', ' ', trim(strip_tags($desc['desc'])));
         if ((empty($book['BookDesc']) && !empty($data['BookDesc']))) {
-            //Book::updateBook($bookid, $data); // 简介
+            Book::updateBook($bookid, $data); // 简介
         }
 
         $column = $cc->matchAll('@<dd><a href="(.*)">(.*)</a></dd>@isU')->getMatch();
 
         // @todo end
         if (!empty($column[1]) && count($column[1]) < 10000) {
-            $count = Column::getColumnCount($bookid, self::FROM_ID);
+            $count = Column::getColumnCount($bookid, self::FROM_ID_83);
             if ($count < count($column[1])) {
                 $offset = $count - 5 >= 0 ? $count - 5 : 0;
                 $column[1] = array_slice($column[1], $offset);
@@ -167,13 +162,13 @@ class CollectBook83
                     if (!empty($column[2][$k]) && $v) {
                         $cdata = [];
                         $cdata['Url'] = $url . $v;
-                        $res = Column::getColumnByUrl($bookid, self::FROM_ID, $cdata['Url']);
+                        $res = Column::getColumnByUrl($bookid, self::FROM_ID_83, $cdata['Url']);
                         if (!empty($res['ChapterId'])) {
                             $res = $res['ChapterId'];
                         } else {
                             $cdata['ChapterName'] = $column[2][$k];
                             $cdata['BookId'] = $bookid;
-                            $cdata['FromId'] = self::FROM_ID;
+                            $cdata['FromId'] = self::FROM_ID_83;
                             $res = Column::addColumn($bookid, $cdata);
                         }
                         if ($res && $res > 0) {
@@ -204,7 +199,7 @@ class CollectBook83
      */
     public static function getBookContent($chapterid, $url, $bookid)
     {
-        $log_path = 'collect/book/content_err' . self::FROM_ID;
+        $log_path = self::$log_content_err_path . self::FROM_ID_83;
         $cc = new Collects();
         $n = 0;
         $name = '';

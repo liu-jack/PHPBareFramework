@@ -7,7 +7,7 @@
  *
  */
 
-namespace Model\Admin;
+namespace Model\Admin\Admin;
 
 use Bare\Model;
 use Bare\DB;
@@ -78,6 +78,9 @@ class AdminLog extends Model
      */
     public static function log($title, $option, $itemid = 0, $data = [], $itemname = '')
     {
+        if (isset($data['Password'])) {
+            unset($data['Password']);
+        }
         $adddata = [
             'UserId' => $_SESSION['_admin_info']['AdminUserId'],
             'UserName' => $_SESSION['_admin_info']['AdminRealName'],

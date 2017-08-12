@@ -1,24 +1,23 @@
 <?php
 /**
- * AdminMenu.class.php
+ * SmsLog.class.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/5/24 12:33
+ * @date  2017/5/24 14:18
  *
  */
 
-namespace Model\Admin;
+namespace Model\Admin\Admin;
 
-
+use Bare\DB;
 use Bare\Model;
-Use Bare\DB;
 
 /**
- * 后台菜单模型
- * Class AdminMenu
+ * 发送短信模型
+ * Class SmsLog
  * @package Model\Admin
  */
-class AdminMenu extends Model
+class SmsLog extends Model
 {
     /**
      * 配置文件
@@ -32,15 +31,18 @@ class AdminMenu extends Model
             'r' => DB::DB_ADMIN_R
         ],
         // 必选, 数据表名
-        'table' => 'AdminMenu',
+        'table' => 'SmsLog',
         // 必选, 字段信息
         'fields' => [
-            'AdminMenuId' => self::VAR_TYPE_KEY,
-            'Name' => self::VAR_TYPE_STRING,
-            'Key' => self::VAR_TYPE_STRING,
-            'Url' => self::VAR_TYPE_STRING,
-            'ParentId' => self::VAR_TYPE_INT,
-            'DisplayOrder' => self::VAR_TYPE_INT,
+            'SmsId' => self::VAR_TYPE_KEY,
+            'Mobile' => self::VAR_TYPE_STRING,
+            'Content' => self::VAR_TYPE_STRING,
+            'Type' => self::VAR_TYPE_INT,
+            'Flag' => self::VAR_TYPE_STRING,
+            'Ip' => self::VAR_TYPE_STRING,
+            'Used' => self::VAR_TYPE_INT,
+            'Status' => self::VAR_TYPE_INT,
+            'CreateTime' => self::VAR_TYPE_STRING,
         ],
         // 可选, MC连接参数
         'mc' => '',
@@ -56,8 +58,8 @@ class AdminMenu extends Model
      * @var array
      */
     private static $_add_must_fields = [
-        'Name' => 1,
-        'Url' => 1,
+        'Mobile' => 1,
+        'Content' => 1,
     ];
 
     /**
@@ -66,10 +68,16 @@ class AdminMenu extends Model
      * @param bool $ignore
      * @return bool|int|string
      */
-    public static function addMenu($data, $ignore = true)
+    public static function addSmsLog($data, $ignore = true)
     {
         if (count(array_diff_key(self::$_add_must_fields, $data)) > 0) {
             return false;
+        }
+        if (empty($data['Ip'])) {
+            $data['Ip'] = ip();
+        }
+        if (empty($data['CreateTime'])) {
+            $data['CreateTime'] = date('Y-m-d H:i:s');
         }
         return parent::addData($data, $ignore);
     }
@@ -80,7 +88,7 @@ class AdminMenu extends Model
      * @param $data
      * @return bool
      */
-    public static function updateMenu($id, $data)
+    public static function updateSmsLog($id, $data)
     {
         if ($id > 0 && !empty($data)) {
             return parent::updateData($id, $data);
@@ -93,7 +101,7 @@ class AdminMenu extends Model
      * @param int|array $ids
      * @return array
      */
-    public static function geMenuByIds($ids)
+    public static function geSmsLogByIds($ids)
     {
         if (empty($ids)) {
             return [];
@@ -102,46 +110,23 @@ class AdminMenu extends Model
     }
 
     /**
-     * 查询
-     * @param int $pid
-     * @param string $name
+     * @param $mobile
+     * @param $type
      * @return array
      */
-    public static function getMenusByParentId($pid = 0, $name = '')
+    public static function getSmsLogByMobile($mobile, $type = 0)
     {
         $where = [
-            'ParentId' => $pid
-        ];
-        if (!empty($name)) {
-            $where['Name'] = $name;
-        }
-        $extra = [
-            'fields' => '*',
-            'offset' => '0',
-            'limit' => '0',
-            'order' => 'DisplayOrder DESC',
-        ];
-        $ret = parent::getDataByFields($where, $extra);
-        return !empty($ret['data']) ? $ret['data'] : [];
-    }
-
-    /**
-     * 查询
-     * @param string $url
-     * @return array
-     */
-    public static function getMenuByUrl($url)
-    {
-        $where = [
-            'Url' => $url
+            'Mobile' => $mobile,
+            'Type' => (int)$type
         ];
         $extra = [
             'fields' => '*',
-            'offset' => '0',
-            'limit' => '1',
+            'offset' => 0,
+            'limit' => 1,
         ];
         $ret = parent::getDataByFields($where, $extra);
-        return !empty($ret['data']) ? current($ret['data']) : [];
+        return !empty($ret['data'][0]) ? $ret['data'][0] : [];
     }
 
     /**
@@ -153,13 +138,13 @@ class AdminMenu extends Model
      * @param string $fields
      * @return array
      */
-    public static function getMenus($where = [], $offset = 0, $limit = 0, $order = '', $fields = '*')
+    public static function getSmsLogs($where = [], $offset = 0, $limit = 0, $order = '', $fields = '*')
     {
         $extra = [
             'fields' => $fields,
             'offset' => $offset,
             'limit' => $limit,
-            'order' => !empty($order) ? $order : 'ParentId ASC,DisplayOrder DESC',
+            'order' => $order,
         ];
         return parent::getDataByFields($where, $extra);
     }
@@ -169,7 +154,7 @@ class AdminMenu extends Model
      * @param $id
      * @return bool
      */
-    public static function delMenu($id)
+    public static function delSmsLog($id)
     {
         if ($id > 0) {
             return parent::delData($id);

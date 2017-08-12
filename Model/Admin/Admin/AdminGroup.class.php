@@ -1,23 +1,24 @@
 <?php
 /**
- * SmsLog.class.php
+ * AdminGroup.class.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date  2017/5/24 14:18
+ * @date   2017/5/24 12:33
  *
  */
 
-namespace Model\Admin;
+namespace Model\Admin\Admin;
 
-use Bare\DB;
 use Bare\Model;
+use Bare\DB;
 
 /**
- * 发送短信模型
- * Class SmsLog
+ * 后台权限组模型
+ * Class AdminGroup
+ *
  * @package Model\Admin
  */
-class SmsLog extends Model
+class AdminGroup extends Model
 {
     /**
      * 配置文件
@@ -31,18 +32,13 @@ class SmsLog extends Model
             'r' => DB::DB_ADMIN_R
         ],
         // 必选, 数据表名
-        'table' => 'SmsLog',
+        'table' => 'AdminGroup',
         // 必选, 字段信息
         'fields' => [
-            'SmsId' => self::VAR_TYPE_KEY,
-            'Mobile' => self::VAR_TYPE_STRING,
-            'Content' => self::VAR_TYPE_STRING,
-            'Type' => self::VAR_TYPE_INT,
-            'Flag' => self::VAR_TYPE_STRING,
-            'Ip' => self::VAR_TYPE_STRING,
-            'Used' => self::VAR_TYPE_INT,
+            'GroupId' => self::VAR_TYPE_KEY,
+            'GroupName' => self::VAR_TYPE_STRING,
+            'AdminAuth' => self::VAR_TYPE_ARRAY,
             'Status' => self::VAR_TYPE_INT,
-            'CreateTime' => self::VAR_TYPE_STRING,
         ],
         // 可选, MC连接参数
         'mc' => '',
@@ -55,70 +51,70 @@ class SmsLog extends Model
 
     /**
      * 新增必须字段
+     *
      * @var array
      */
     private static $_add_must_fields = [
-        'Mobile' => 1,
-        'Content' => 1,
+        'GroupName' => 1,
     ];
 
     /**
      * 新增
-     * @param $data
+     *
+     * @param      $data
      * @param bool $ignore
      * @return bool|int|string
      */
-    public static function addSmsLog($data, $ignore = true)
+    public static function addGroup($data, $ignore = true)
     {
         if (count(array_diff_key(self::$_add_must_fields, $data)) > 0) {
             return false;
         }
-        if (empty($data['Ip'])) {
-            $data['Ip'] = ip();
-        }
-        if (empty($data['CreateTime'])) {
-            $data['CreateTime'] = date('Y-m-d H:i:s');
-        }
+
         return parent::addData($data, $ignore);
     }
 
     /**
      * 更新
+     *
      * @param $id
      * @param $data
      * @return bool
      */
-    public static function updateSmsLog($id, $data)
+    public static function updateGroup($id, $data)
     {
         if ($id > 0 && !empty($data)) {
             return parent::updateData($id, $data);
         }
+
         return false;
     }
 
     /**
      * 根据id获取详细信息
+     *
      * @param int|array $ids
      * @return array
      */
-    public static function geSmsLogByIds($ids)
+    public static function getGroupByIds($ids)
     {
         if (empty($ids)) {
             return [];
         }
+
         return parent::getDataById($ids);
     }
 
     /**
-     * @param $mobile
-     * @param $type
+     * 查询
+     *
+     * @param string $name
      * @return array
      */
-    public static function getSmsLogByMobile($mobile, $type = 0)
+    public static function getGroupByName($name)
     {
         $where = [
-            'Mobile' => $mobile,
-            'Type' => (int)$type
+            'GroupName' => $name
         ];
         $extra = [
             'fields' => '*',
@@ -126,39 +122,44 @@ class SmsLog extends Model
             'limit' => 1,
         ];
         $ret = parent::getDataByFields($where, $extra);
-        return !empty($ret['data'][0]) ? $ret['data'][0] : [];
+
+        return !empty($ret['data']) ? current($ret['data']) : [];
     }
 
     /**
      * 查询
-     * @param array $where
-     * @param int $offset
-     * @param int $limit
+     *
+     * @param array  $where
+     * @param int    $offset
+     * @param int    $limit
      * @param string $order
      * @param string $fields
      * @return array
      */
-    public static function getSmsLogs($where = [], $offset = 0, $limit = 0, $order = '', $fields = '*')
+    public static function getGroups($where = [], $offset = 0, $limit = 0, $order = '', $fields = '')
     {
         $extra = [
-            'fields' => $fields,
+            'fields' => empty($fields) ? 'GroupId,GroupName,Status' : $fields,
             'offset' => $offset,
             'limit' => $limit,
             'order' => $order,
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
     /**
      * 删除
+     *
      * @param $id
      * @return bool
      */
-    public static function delSmsLog($id)
+    public static function delGroup($id)
     {
         if ($id > 0) {
             return parent::delData($id);
         }
+
         return false;
     }
 }

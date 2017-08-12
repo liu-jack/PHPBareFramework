@@ -97,7 +97,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach($list as $v):?>
+                    {foreach($list as $v)}
                     <tr>
                         <td>{$v.LogId}</td>
                         <td>{$v.UserId}</td>
@@ -110,7 +110,7 @@
                         <td><a title="{$v['Log']}">{$v['LogSub']}</a></td>
                         <td>{$v.CreateTime}</td>
                     </tr>
-                    <?php endforeach?>
+                    {/foreach}
                     </tbody>
                 </table>
                 {if (!empty($pages))}
@@ -139,4 +139,4 @@
     });
 </script>
 
-{view('Admin/Public/footer')}
+{@view('Admin/Public/footer')}

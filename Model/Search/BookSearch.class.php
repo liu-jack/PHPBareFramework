@@ -40,8 +40,8 @@ class BookSearch
         'ViewCount' => ['int', 'viewcount'],
         'LikeCount' => ['int', 'likecount'],
         'FavoriteCount' => ['int', 'favoritecount'],
-        'CreateTime' => ['int', 'createtime'],
-        'UpdateTime' => ['int', 'updatetime'],
+        'CreateTime' => ['string', 'createtime'],
+        'UpdateTime' => ['string', 'updatetime'],
         'Status' => ['int', 'status'],
         'IsFinish' => ['int', 'finish'],
     ];
@@ -50,8 +50,8 @@ class BookSearch
      * 搜索书本
      *
      * @param string $keywords 搜索词
-     * @param int $offset 偏移量
-     * @param int $limit 每页数量
+     * @param int    $offset   偏移量
+     * @param int    $limit    每页数量
      * @return array ['total' => 总数, 'data' => [书本ID, ...]]
      */
     public static function searchBook(string $keywords, int $offset = 0, int $limit = 10): array
@@ -120,9 +120,9 @@ class BookSearch
     /**
      * 查询书本阅读、推荐排行
      *
-     * @param string $type 查询类型
-     * @param int $offset 偏移量
-     * @param int $limit 每页数量
+     * @param string $type   查询类型
+     * @param int    $offset 偏移量
+     * @param int    $limit  每页数量
      * @return array ['total' => 总数, 'data' => [书本ID, ...]]
      */
     public static function getBookTop(string $type = self::TOP_VIEW, int $offset = 0, int $limit = 10): array
@@ -184,6 +184,7 @@ class BookSearch
                 $ids[$v['_id']] = $v['_id'];
             }
         }
+
         return ['total' => $total, 'data' => $ids];
     }
 
@@ -191,8 +192,8 @@ class BookSearch
      * 通过标签查询书本
      *
      * @param string $typename 标签ID
-     * @param int $offset 偏移量
-     * @param int $limit 每页数量
+     * @param int    $offset   偏移量
+     * @param int    $limit    每页数量
      * @return array ['total' => 总数, 'data' => [书本ID, ...]]
      */
     public static function getBookByTypeName(string $typename, int $offset = 0, int $limit = 10): array
@@ -236,6 +237,7 @@ class BookSearch
                 $ids[$v['_id']] = $v['_id'];
             }
         }
+
         return ['total' => $total, 'data' => $ids];
     }
 
@@ -277,8 +279,8 @@ class BookSearch
     /**
      * 书本更新时, 同步数据 （队列）
      *
-     * @param int $book_id 书本ID
-     * @param array $row 任选至少一个数据, 见 self::SEARCH_FIELDS 定义
+     * @param int   $book_id 书本ID
+     * @param array $row     任选至少一个数据, 见 self::SEARCH_FIELDS 定义
      * @return bool
      */
     public static function updateBook(int $book_id, array $row): bool
@@ -328,6 +330,7 @@ class BookSearch
             $data['num'] = $num;
             $ret = Queue::add("UpdateCount", $data);
         }
+
         return $ret;
     }
 
@@ -348,11 +351,13 @@ class BookSearch
             $data['num'] = $num;
             $ret = Queue::add("UpdateCount", $data);
         }
+
         return $ret;
     }
 
     /**
      * 导入搜索数据
+     *
      * @param $data
      */
     public static function insertSearch($data)
@@ -399,11 +404,13 @@ class BookSearch
     public static function query($query)
     {
         $es = DB::search(DB::SEARCH_DEFAULT);
+
         return $es->query(self::BOOK_SEARCH . '_search', $es::HTTP_POST, $query);
     }
 
     /**
      * 添加
+     *
      * @param $data
      */
     public static function add($data)
@@ -424,6 +431,7 @@ class BookSearch
 
     /**
      * 更新
+     *
      * @param $data
      */
     public static function update($data)
@@ -444,12 +452,14 @@ class BookSearch
 
     /**
      * 删除
+     *
      * @return mixed
      */
     public static function delete()
     {
         $query = self::BOOK_SEARCH_INDEX;
         $es = DB::search(DB::SEARCH_DEFAULT);
+
         return $es->query($query, $es::HTTP_DELETE);
     }
 }

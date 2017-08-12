@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS `Book` (
   `ViewCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '阅读量',
   `LikeCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '推荐数',
   `FavoriteCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收藏数',
-  `CreateTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `UpdateTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  `CreateTime` datetime NOT NULL COMMENT '创建时间',
+  `UpdateTime` datetime NOT NULL COMMENT '更新时间',
   `Status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '书本状态 1：正常 2：隐藏',
   `IsFinish` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否完本 0:否 1：采集完结 2：确认完本',
   `FromSite` varchar(255) NOT NULL DEFAULT '77' COMMENT '来源网站id 多个用逗号'',''分隔',
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `BookCollect` (
 `BookId` int(11) unsigned NOT NULL COMMENT '书id',
 `FromId` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '来源id',
 `Url` varchar(255) NOT NULL COMMENT '采集url',
-`CollectTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '采集时间',
+`CollectTime` datetime NOT NULL COMMENT '采集时间',
 PRIMARY KEY (`CollectId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `book` AUTO_INCREMENT=30;

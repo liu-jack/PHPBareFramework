@@ -7,25 +7,19 @@ use Model\Book\{
     Book, Collect, Column, Content
 };
 
-class CollectBook77
+class CollectBook77 extends CollectBookBase
 {
-    const BASE_URL = 'http://www.xiaoshuo77.com';
 
     const ALL_VISIT_URL = 'http://www.xiaoshuo77.com/page_allvisit_%d.html';
-
     const ALL_VOTE_URL = 'http://www.xiaoshuo77.com/page_allvote_%d.html';
-
     const MONTH_VISIT_URL = 'http://www.xiaoshuo77.com/page_monthvisit_%d.html';
-
     const MONTH_VOTE_URL = 'http://www.xiaoshuo77.com/page_monthvote_%d.html';
-
     const TOP_TIME_URL = 'http://www.xiaoshuo77.com/page_toptime_%d.html';
-
-    const FROM_ID = 77;
 
     /**
      * 采集整站
-     * @param array $page
+     *
+     * @param array  $page
      * @param string $curl
      */
     public static function book($page = [], $curl = self::ALL_VISIT_URL)
@@ -48,15 +42,16 @@ class CollectBook77
     }
 
     /**
-     * 采集整页
-     * @param int $p
+     * 采集整页列表
+     *
+     * @param int    $p
      * @param string $curl
      * @return int|mixed
      */
     public static function getBookList($p = 1, $curl = self::ALL_VISIT_URL)
     {
-        $log_path = 'collect/book/book' . self::FROM_ID;
-        $log_path2 = 'collect/book/book_err' . self::FROM_ID;
+        $log_path = self::$log_book_path . self::FROM_ID_77;
+        $log_path2 = self::$log_book_err_path . self::FROM_ID_77;
         $cc = new Collects();
         $n = 0;
         $total = 0;
@@ -109,12 +104,12 @@ class CollectBook77
                                 } else {
                                     $data['UpdateTime'] = strtotime((date('Y') - 1) . '-' . $time[$k]);
                                 }
-                                $data['CreateTime'] = time();
+                                $data['CreateTime'] = date('Y-m-d H:i:s');
                                 $res = Book::addBook($data);
                             }
                             if (!empty($res)) {
                                 $cdata['BookId'] = $res;
-                                $cdata['FromId'] = self::FROM_ID;
+                                $cdata['FromId'] = self::FROM_ID_77;
                                 $res = Collect::getCollects($cdata);
                                 $cdata['Url'] = trim($url[$k]);
                                 if (empty($res['data'][0]['CollectId'])) {
@@ -143,11 +138,14 @@ class CollectBook77
     }
 
     /**
-     * 采集内容
+     * 采集章节内容
+     *
+     * @param int $collectid
+     * @param int $step
      */
     public static function column($collectid = 0, $step = 8)
     {
-        $log_path = 'collect/book/column' . self::FROM_ID;
+        $log_path = self::$log_column_path . self::FROM_ID_77;
 
         if ($collectid > 0) {
             $res = Collect::getCollects([], 0, 1);
@@ -158,11 +156,11 @@ class CollectBook77
                     logs("start collect book {$res['BookId']}", $log_path);
                     echo "start collect book {$res['BookId']}" . PHP_EOL;
 
-                    Collect::updateCollect($res['CollectId'], ['CollectTime' => time()]);
+                    Collect::updateCollect($res['CollectId'], ['CollectTime' => date('Y-m-d H:i:s')]);
                     $book = Book::getBookByIds($res['BookId']);
                     if ($book['IsFinish'] != 2) {
                         switch ($res['FromId']) {
-                            case self::FROM_ID:
+                            case self::FROM_ID_77:
                                 self::getBookColumn($res['BookId'], $res['Url'], $book);
                                 break;
                             case 83:
@@ -183,7 +181,7 @@ class CollectBook77
                     logs("start collect book {$v['BookId']}", $log_path);
                     echo "start collect book {$v['BookId']}" . PHP_EOL;
 
-                    Collect::updateCollect($v['CollectId'], ['CollectTime' => time()]);
+                    Collect::updateCollect($v['CollectId'], ['CollectTime' => date('Y-m-d H:i:s')]);
                     $book = Book::getBookByIds($v['BookId']);
                     if ($book['IsFinish'] != 2) {
                         self::getBookColumn($v['BookId'], $v['Url'], $book);
@@ -197,13 +195,15 @@ class CollectBook77
     }
 
     /**
+     * 采集章节
+     *
      * @param $bookid
      * @param $url
      * @param $book
      */
     public static function getBookColumn($bookid, $url, $book = [])
     {
-        $log_path = 'collect/book/column_err' . self::FROM_ID;
+        $log_path = self::$log_column_err_path . self::FROM_ID_77;
         $cc = new Collects();
         $n = 0;
         $name = '';
@@ -243,7 +243,7 @@ class CollectBook77
         }
         // @todo end
         if (!empty($column[1]) && count($column[1]) < 10000) {
-            $count = Column::getColumnCount($bookid, self::FROM_ID);
+            $count = Column::getColumnCount($bookid, self::FROM_ID_77);
             if ($count < count($column[1])) {
                 $offset = $count - 5 >= 0 ? $count - 5 : 0;
                 $column[1] = array_slice($column[1], $offset);
@@ -251,14 +251,14 @@ class CollectBook77
                 foreach ($column[1] as $k => $v) {
                     if (!empty($column[2][$k]) && $v) {
                         $cdata = [];
-                        $cdata['Url'] = self::BASE_URL . $v;
-                        $res = Column::getColumnByUrl($bookid, self::FROM_ID, $cdata['Url']);
+                        $cdata['Url'] = self::BASE_URL_77 . $v;
+                        $res = Column::getColumnByUrl($bookid, self::FROM_ID_77, $cdata['Url']);
                         if (!empty($res['ChapterId'])) {
                             $res = $res['ChapterId'];
                         } else {
                             $cdata['ChapterName'] = $column[2][$k];
                             $cdata['BookId'] = $bookid;
-                            $cdata['FromId'] = self::FROM_ID;
+                            $cdata['FromId'] = self::FROM_ID_77;
                             $res = Column::addColumn($bookid, $cdata);
                         }
                         if ($res && $res > 0) {
@@ -283,13 +283,15 @@ class CollectBook77
     }
 
     /**
+     * 采集内容
+     *
      * @param $chapterid
      * @param $url
      * @param $bookid
      */
     public static function getBookContent($chapterid, $url, $bookid)
     {
-        $log_path = 'collect/book/content_err' . self::FROM_ID;
+        $log_path = self::$log_content_err_path . self::FROM_ID_77;
         $cc = new Collects();
         $n = 0;
         $name = '';

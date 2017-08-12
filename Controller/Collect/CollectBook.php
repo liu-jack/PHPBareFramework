@@ -8,16 +8,58 @@ namespace Controller\Collect;
 use Bare\DB;
 use Bare\Controller;
 use Model\Book\{
-    Column, Book
+    Book, Collect, Column
 };
 use Model\Collect\CollectBook77 as Collect77;
+use Model\Collect\CollectBook83 as Collect83;
 
 class CollectBook extends Controller
 {
     /**
-     * 书本采集 php index.php Collect/CollectBook/index
+     * 书本单本整本采集 php index.php Collect/CollectBook/index
      */
     public function index()
+    {
+        need_cli();
+        $id = intval($_GET['id']);
+        $step = intval($_GET['step']);
+
+        if ($id > 0) {
+            $res = Collect::getCollects([], 0, 1);
+            $max = max(1, $res['data'][0]['CollectId']);
+            while ($id <= $max) {
+                $res = Collect::getCollectById($id);
+                if (!empty($res)) {
+                    logs("start collect book {$res['BookId']}");
+                    echo "start collect book {$res['BookId']}" . PHP_EOL;
+
+                    Collect::updateCollect($res['CollectId'], ['CollectTime' => date('Y-m-d H:i:s')]);
+                    $book = Book::getBookByIds($res['BookId']);
+                    if ($book['IsFinish'] != 2) {
+                        switch ($res['FromId']) {
+                            case Collect77::FROM_ID_77:
+                                Collect77::getBookColumn($res['BookId'], $res['Url'], $book);
+                                break;
+                            case Collect83::FROM_ID_83:
+                                Collect83::getBookColumn($res['BookId'], $res['Url'], $book);
+                                break;
+                        }
+                    }
+                }
+                if ($step <= 0) {
+                    break;
+                }
+                $id += $step;
+            }
+        }
+        logs("collect finished");
+        echo "collect finished" . PHP_EOL;
+    }
+
+    /**
+     * 书本列表采集 php index.php Collect/CollectBook/book
+     */
+    public function book()
     {
         need_cli();
         $page = [];
@@ -48,6 +90,7 @@ class CollectBook extends Controller
 
     /**
      * 内容错误日志重新采集 php index.php Collect/CollectBook/collectLog 77_20170108.log
+     *
      * @return bool
      */
     public function collectLog()
@@ -71,6 +114,7 @@ class CollectBook extends Controller
             }
         }
         fclose($fp);
+
         return true;
     }
 

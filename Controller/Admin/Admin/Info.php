@@ -7,11 +7,11 @@
  *
  */
 
-namespace Controller\Admin;
+namespace Controller\Admin\Admin;
 
 use Bare\Controller;
-use Model\Admin\AdminGroup;
-use Model\Admin\AdminLogin;
+use Model\Admin\Admin\AdminGroup;
+use Model\Admin\Admin\AdminLogin;
 
 class Info extends Controller
 {

@@ -7,13 +7,13 @@
  *
  */
 
-namespace Controller\Admin;
+namespace Controller\Admin\Admin;
 
 use Bare\Controller;
-use Model\Admin\AdminGroup;
-use Model\Admin\AdminLog;
-use Model\Admin\AdminLogin;
-use Model\Admin\AdminMenu;
+use Model\Admin\Admin\AdminGroup;
+use Model\Admin\Admin\AdminLog;
+use Model\Admin\Admin\AdminLogin;
+use Model\Admin\Admin\AdminMenu;
 
 class Menu extends Controller
 {
@@ -70,9 +70,9 @@ class Menu extends Controller
                 AdminLog::log('添加菜单', 'add', $ret, $data, 'AdminMenu');
                 //将此菜单权限加入当前登录管理员所在的权限组
                 $group = AdminGroup::getGroupByIds($_SESSION['AdminUserGroup']);
-                $group_auth = unserialize($group['AdminAuth']);
+                $group_auth = $group['AdminAuth'];
                 $group_auth[] = $data['Url'];
-                AdminGroup::updateGroup($group['GroupId'], ['AdminAuth' => serialize($group_auth)]);
+                AdminGroup::updateGroup($group['GroupId'], ['AdminAuth' => $group_auth]);
             }
         } else {
             $ret = AdminMenu::updateMenu($id, $data);
@@ -93,7 +93,7 @@ class Menu extends Controller
 
         $data = AdminMenu::getMenusByParentId($id);
         if (count($data) > 0) {
-            $this->alertMsg('删除失败', ['type' => 'error', 'desc' => '该菜单下还有其他菜单，不可删除！']);
+            $this->alertErr('删除失败', '', '该菜单下还有其他菜单，不可删除！');
         }
 
         $ret = AdminMenu::delMenu($id);
@@ -101,6 +101,6 @@ class Menu extends Controller
             AdminLog::log('删除菜单', 'del', $id, $id);
             $this->alertMsg('已删除');
         }
-        $this->alertMsg('删除失败', ['type' => 'error']);
+        $this->alertErr('删除失败');
     }
 }

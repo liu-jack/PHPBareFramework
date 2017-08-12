@@ -7,10 +7,10 @@
  *
  */
 
-namespace Controller\Admin;
+namespace Controller\Admin\Admin;
 
 use Bare\Controller;
-use Model\Admin\AdminLog;
+use Model\Admin\Admin\AdminLog;
 
 class Log extends Controller
 {
@@ -24,8 +24,8 @@ class Log extends Controller
         $log_flag = trim($_GET['log_flag']);
         $start_time = trim($_GET['start_time']);
         $end_time = trim($_GET['end_time']);
-        $page = max(1, intval($_GET['p']));
-        $limit = PAGE_SIZE;
+        $page = max(1, intval($_GET[PAGE_VAR]));
+
         $where = [];
         if (!empty($user_id)) {
             $where['UserId'] = $user_id;
@@ -52,6 +52,7 @@ class Log extends Controller
             $where['CreateTime <='] = $end_time;
         }
 
+        $limit = PAGE_SIZE;
         $offset = ($page - 1) * $limit;
         $list_info = AdminLog::getLogs($where, $offset, $limit);
 

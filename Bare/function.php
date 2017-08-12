@@ -72,11 +72,11 @@ function view($path = '', $ext = VEXT)
  */
 function parseTemplate($path)
 {
-    $cmp = md5_file($path);
+    $cmp = filemtime($path); // filectime($path) md5_file($path)
     $md5 = md5($path);
     $cache_path = CACHE_TEMPLATE_PATH . $md5 . EXT;
     $cmp_path = CACHE_TEMPLATE_PATH . $md5;
-    if (file_exists($cache_path) && file_exists($cmp_path)) {
+    if (is_file($cache_path) && is_file($cmp_path)) {
         $cmp_cache = file_get_contents($cmp_path);
         if (strcmp($cmp, $cmp_cache) === 0) {
             return $cache_path;
@@ -161,14 +161,31 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
     } elseif (substr_count($url, '/') == 1) {
         $url = lcfirst($GLOBALS['_M']) . '/' . $url;
     }
-    $params = '';
-    if ($vars && is_array($vars)) {
-        foreach ($vars as $k => $v) {
-            $params .= '/' . $k . '/' . $v;
+    $params = $query = '';
+    if (!empty($vars)) {
+        if (is_array($vars)) {
+            if (isset($vars[ADMIN_VAR])) {
+                unset($vars[ADMIN_VAR]);
+            }
+            foreach ($vars as $k => $v) {
+                $params .= '/' . $k . '/' . $v;
+
+            }
+        } else {
+            $query = $vars;
         }
     }
+    $urls = $domain . $url . $params . $suffix;
+    if (isset($_GET[ADMIN_VAR])) {
+        $urls .= '?' . ADMIN_VAR . '=' . $_GET[ADMIN_VAR];
+        if (!empty($query)) {
+            $urls .= '&' . $query;
+        }
+    } elseif (!empty($query)) {
+        $urls .= '?' . $query;
+    }
 
-    return $domain . $url . $params . $suffix;
+    return $urls;
 }
 
 /**

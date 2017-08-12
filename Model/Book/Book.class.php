@@ -51,31 +51,37 @@ class Book extends Model
     ];
 
     /**
-     * @param $data
+     * @param      $data
      * @param bool $ignore
      * @return bool|int|string
      */
     public static function addBook($data, $ignore = true)
     {
+        $ret = false;
         if (!empty($data)) {
             $ret = parent::addData($data, $ignore);
             if (!empty($ret)) {
                 $data['BookId'] = $ret;
-                $data['Type'] = isset($data['IsFinish']) ? $data['IsFinish'] : 0;
-                $data['BookDesc'] = isset($data['BookDesc']) ? $data['BookDesc'] : '';
-                $data['ViewCount'] = isset($data['ViewCount']) ? $data['ViewCount'] : 0;
-                $data['LikeCount'] = isset($data['LikeCount']) ? $data['LikeCount'] : 0;
-                $data['FavoriteCount'] = isset($data['FavoriteCount']) ? $data['FavoriteCount'] : 0;
-                $data['Status'] = isset($data['Status']) ? $data['Status'] : 0;
-                $data['IsFinish'] = isset($data['IsFinish']) ? $data['IsFinish'] : 0;
+                $sdata = [
+                    'Type' => 0,
+                    'BookDesc' => '',
+                    'ViewCount' => 0,
+                    'LikeCount' => 0,
+                    'FavoriteCount' => 0,
+                    'Status' => 0,
+                    'IsFinish' => 0
+                ];
+                $data = array_merge($data, $sdata);
                 SBook::addBook($data);
             }
-            return $ret;
         }
+
+        return $ret;
     }
 
     /**
      * 更新
+     *
      * @param $id
      * @param $data
      * @return bool
@@ -87,15 +93,18 @@ class Book extends Model
             if (!empty($ret)) {
                 SBook::updateBook($id, $data);
             }
+
             return $ret;
         }
+
         return false;
     }
 
     /**
      * 根据id获取书本信息
+     *
      * @param int|array $ids
-     * @param array $extra
+     * @param array     $extra
      * @return array
      */
     public static function getBookByIds($ids, $extra = [])
@@ -113,14 +122,15 @@ class Book extends Model
                 $ret['Cover'] = cover($ret['BookId'], $ret['Cover']);
             }
         }
+
         return $ret;
     }
 
     /**
-     * @param array $where
+     * @param array  $where
      * @param string $fields
-     * @param int $offset
-     * @param int $limit
+     * @param int    $offset
+     * @param int    $limit
      * @param string $order
      * @return array
      */
@@ -132,6 +142,7 @@ class Book extends Model
             'limit' => $limit,
             'order' => $order,
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
