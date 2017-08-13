@@ -1,0 +1,137 @@
+{:view('Public/header')}
+
+<script type="text/javascript" src="{JS_PATH}DatePicker/WdatePicker.js"></script>
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">查询</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <form action="" method="get" name="searchForm" id="searchForm">
+                    <table class="table table-bordered table-striped" align="center">
+                        <tr>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">书本ID</div>
+                                    <input type="text" class="form-control" name="book_id" placeholder="书本ID" value="{$book_id}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">书名</div>
+                                    <input type="text" class="form-control" name="book_name" placeholder="书名" value="{$book_name}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">作者</div>
+                                    <input type="text" class="form-control" name="author" placeholder="作者" value="{$author}" >
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">是否完本</div>
+                                    <select class="form-control" name="isfinish">
+                                        <option value="">全部</option>
+                                        <option value="1">采集完本</option>
+                                        <option value="2">确认完本</option>
+                                        <option value="0">连载</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">状态</div>
+                                    <select class="form-control" name="status">
+                                        <option value="">全部</option>
+                                        <option value="1">显示</option>
+                                        <option value="2">隐藏</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2" colspan="3">
+                                <button type="submit" class="btn btn-success"><i class="icon-ok"></i></button>
+                                <button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">后台操作日志</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>书名</th>
+                        <th>作者</th>
+                        <th>类型</th>
+                        <th>阅读量</th>
+                        <th>推荐数</th>
+                        <th>收藏数</th>
+                        <th>默认来源</th>
+                        <th>是否完本</th>
+                        <th>状态</th>
+                        <th>更新时间</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach($list as $v)}
+                    <tr>
+                        <td>{$v.BookId}</td>
+                        <td>{$v.BookName}</td>
+                        <td>{$v.Author}</td>
+                        <td>{$v.TypeName}</td>
+                        <td>{$v.ViewCount}</td>
+                        <td>{$v.LikeCount}</td>
+                        <td>{$v.FavoriteCount}</td>
+                        <td>{$v.DefaultFromSiteName}</td>
+                        <td>{$v.IsFinish}</td>
+                        <td>{$v.Status}</td>
+                        <td>{$v.UpdateTime}</td>
+                        <td>{$v.CreateTime}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                {if (!empty($pages))}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $("#clearSearchForm").click(function(){
+        $("#searchForm input, #searchForm select").each(function(){
+            $(this).val('');
+            $(this).attr('value','');
+        });
+    });
+</script>
+
+{@view('Public/footer')}

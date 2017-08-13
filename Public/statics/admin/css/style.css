@@ -1565,10 +1565,10 @@ footer {
 	background: -ms-linear-gradient(top, #f8f8f8, #f2f2f2);
 	background: -o-linear-gradient(top, #f8f8f8, #f2f2f2);
 	background: linear-gradient(top, #f8f8f8, #f2f2f2);
-	padding: 10px 0px;
+	padding: 0;
 	color: #777;
 	font-size: 12px;
-	border-top: 3px solid #ddd;
+	border-top: 2px solid #ddd;
 }
 
 footer .container {

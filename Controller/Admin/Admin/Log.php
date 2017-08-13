@@ -56,7 +56,7 @@ class Log extends Controller
         $offset = ($page - 1) * $limit;
         $list_info = AdminLog::getLogs($where, $offset, $limit);
 
-        $this->pagination(intval($list_info['count']), $limit, $page);
+        $this->page(intval($list_info['count']), $limit, $page);
         $list = [];
         if (!empty($list_info['data'])) {
             foreach ($list_info['data'] as $k => $v) {

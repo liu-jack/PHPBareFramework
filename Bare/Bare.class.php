@@ -65,6 +65,10 @@ class Bare
             //网站访问
             self::visitWeb();
         }
+
+        $GLOBALS['_URL'] = $GLOBALS['_M'] . '/' . $GLOBALS['_C'] . '/' . $GLOBALS['_A'];
+        $GLOBALS['_MURL'] = $GLOBALS['_M'] . '/' . $GLOBALS['_C'];
+
         // 开始访问
         if (!empty($GLOBALS['_ADAPTER_NAMESPACE'])) {
             $controller = '\\Controller' . $GLOBALS['_ADAPTER_NAMESPACE'];
@@ -129,7 +133,6 @@ class Bare
      */
     private static function visitWebAdmin()
     {
-        $GLOBALS['_URL'] = $GLOBALS['_M'] . '/' . $GLOBALS['_C'] . '/' . $GLOBALS['_A']; // 后台权限
         $GLOBALS['_PATH'] = ADMIN_PATH . '/' . $GLOBALS['_M'] . '/' . $GLOBALS['_C'] . '/' . $GLOBALS['_A'];
         $GLOBALS['_MPATH'] = ADMIN_PATH . '/' . $GLOBALS['_M'] . '/' . $GLOBALS['_C'];
         $GLOBALS['_NAMESPACE'] = '\\' . ADMIN_PATH . '\\' . $GLOBALS['_M'] . '\\' . $GLOBALS['_C'];

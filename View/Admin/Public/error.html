@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>错误</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- 确保适当的绘制和触屏缩放 -->
+    <style type="text/css">
+        .container{ text-align: center;}
+        ul{
+            display: inline-block;
+            list-style: none;
+            text-align: left;
+        }
+        .li1{
+            font-size: 50px;
+        }
+        .li2{
+            font-size: 30px;
+        }
+        #time{
+            color: #FEAC01;
+            font-size: 60px;
+        }
+
+    </style>
+</head>
+<body style="background-color: #990000;">
+<div>
+    <div class="container">
+        <ul>
+            <li class="li1">失败！{$error}</li>
+            <li class="li2"><span id="time">3</span>秒后跳转至上一页。</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    var time = 3;
+    var timer = setInterval(function () {
+        time--;
+        document.getElementById("time").innerHTML = time;
+        if (time < 1) {
+            window.history.back();
+            clearInterval(timer);
+        }
+    }, 1000);
+
+</script>
+</body>
+<html>

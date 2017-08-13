@@ -59,7 +59,10 @@ Class Controller
      */
     public function view($path = '', $ext = VEXT)
     {
-        if ($path) {
+        if (!empty($path)) {
+            if (isset($_GET[ADMIN_VAR])) {
+                $path = ADMIN_PATH . '/' . $path;
+            }
             $view_path = VIEW_PATH . $path . $ext;
         } else {
             $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
@@ -280,7 +283,7 @@ Class Controller
      * @param bool $return 是否返回
      * @return mixed
      */
-    public function pagination($count, $per, $now, $return = false)
+    public function page($count, $per, $now, $return = false)
     {
         $page_key = defined('PAGE_VAR') ? PAGE_VAR : 'p'; //分页传值的key
         $_GET[$page_key] = '%d';
@@ -297,7 +300,8 @@ Class Controller
         }
         $max = min($max, $pages);
 
-        $html = '<li><a href="' . sprintf($urls, 1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+        $html = '<li><a href="' . sprintf($urls,
+                1) . '" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
         $url = sprintf($urls, 1);
         if ($max == $pages && $min > 1) {
             $html .= '<li><a href="' . $url . '">1</a></li><li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li>';
@@ -315,8 +319,8 @@ Class Controller
         if ($max < $pages) {
             $html .= '<li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li><li><a href="' . $url . '">' . $pages . '</a></li>';
         }
-        $html .= '<li> <a href="' . $url . '" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
-        if ($pages == 1) {
+        $html .= '<li><a href="' . $url . '" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+        if ($pages <= 1) {
             $html = '';
         }
         if ($return) {

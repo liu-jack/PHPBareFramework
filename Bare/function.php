@@ -40,6 +40,8 @@ spl_autoload_register(function ($class) {
             include($class_file);
         } elseif (!empty($class_file2) && is_file($class_file2)) {
             include($class_file2);
+        } else {
+            throw new Exception("include file {$class_file} error");
         }
         // 无论成功失败, 自动加载只进行一次
         $class_map[$class] = $class;
@@ -55,7 +57,10 @@ spl_autoload_register(function ($class) {
  */
 function view($path = '', $ext = VEXT)
 {
-    if ($path) {
+    if (!empty($path)) {
+        if (isset($_GET[ADMIN_VAR])) {
+            $path = ADMIN_PATH . '/' . $path;
+        }
         $view_path = VIEW_PATH . $path . $ext;
     } else {
         $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
@@ -72,10 +77,16 @@ function view($path = '', $ext = VEXT)
  */
 function parseTemplate($path)
 {
-    $cmp = filemtime($path); // filectime($path) md5_file($path)
+    $cmp = filemtime($path); // md5_file($path)
     $md5 = md5($path);
-    $cache_path = CACHE_TEMPLATE_PATH . $md5 . EXT;
-    $cmp_path = CACHE_TEMPLATE_PATH . $md5;
+    $c_path = CACHE_TEMPLATE_PATH;
+    if (isset($_GET[ADMIN_VAR])) {
+        $c_path .= strtolower(ADMIN_PATH) . '/';
+    } else {
+        $c_path .= strtolower($GLOBALS['_M']) . '/';
+    }
+    $cache_path = $c_path . $md5 . EXT;
+    $cmp_path = $c_path . $md5;
     if (is_file($cache_path) && is_file($cmp_path)) {
         $cmp_cache = file_get_contents($cmp_path);
         if (strcmp($cmp, $cmp_cache) === 0) {
@@ -151,11 +162,11 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
         $domain .= '/index.php/';
     }
     if (empty($url)) {
-        $temp = explode('/', $GLOBALS['_PATH']);
+        $temp = explode('/', $GLOBALS['_URL']);
         $temp = array_map('lcfirst', $temp);
         $url = implode('/', $temp);
     } elseif (substr_count($url, '/') == 0) {
-        $temp = explode('/', $GLOBALS['_MPATH']);
+        $temp = explode('/', $GLOBALS['_MURL']);
         $temp = array_map('lcfirst', $temp);
         $url = implode('/', $temp) . '/' . $url;
     } elseif (substr_count($url, '/') == 1) {

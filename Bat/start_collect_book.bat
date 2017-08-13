@@ -1,2 +1,2 @@
 cd ..
-php index.php Book/Collect/index
+php index.php Collect/CollectBook/book

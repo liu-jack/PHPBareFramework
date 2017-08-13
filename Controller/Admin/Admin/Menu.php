@@ -49,7 +49,7 @@ class Menu extends Controller
         $id = intval($_POST['id']);
 
         if ($data['ParentId'] != 0) {
-            $parent_menu = AdminMenu::geMenuByIds($data['ParentId']);
+            $parent_menu = AdminMenu::getMenuByIds($data['ParentId']);
             if (empty($parent_menu)) {
                 output(201, '上级菜单不存在');
             }
@@ -69,9 +69,9 @@ class Menu extends Controller
             if ($ret) {
                 AdminLog::log('添加菜单', 'add', $ret, $data, 'AdminMenu');
                 //将此菜单权限加入当前登录管理员所在的权限组
-                $group = AdminGroup::getGroupByIds($_SESSION['AdminUserGroup']);
+                $group = AdminGroup::getGroupByIds($_SESSION['_admin_info']['AdminUserGroup']);
                 $group_auth = $group['AdminAuth'];
-                $group_auth[] = $data['Url'];
+                $group_auth[] = $ret;
                 AdminGroup::updateGroup($group['GroupId'], ['AdminAuth' => $group_auth]);
             }
         } else {

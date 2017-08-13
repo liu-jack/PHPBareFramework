@@ -3,7 +3,7 @@
  * AdminMenu.class.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/5/24 12:33
+ * @date   2017/5/24 12:33
  *
  */
 
@@ -16,6 +16,7 @@ Use Bare\DB;
 /**
  * 后台菜单模型
  * Class AdminMenu
+ *
  * @package Model\Admin
  */
 class AdminMenu extends Model
@@ -53,6 +54,7 @@ class AdminMenu extends Model
 
     /**
      * 新增必须字段
+     *
      * @var array
      */
     private static $_add_must_fields = [
@@ -62,7 +64,8 @@ class AdminMenu extends Model
 
     /**
      * 新增
-     * @param $data
+     *
+     * @param      $data
      * @param bool $ignore
      * @return bool|int|string
      */
@@ -71,11 +74,13 @@ class AdminMenu extends Model
         if (count(array_diff_key(self::$_add_must_fields, $data)) > 0) {
             return false;
         }
+
         return parent::addData($data, $ignore);
     }
 
     /**
      * 更新
+     *
      * @param $id
      * @param $data
      * @return bool
@@ -85,25 +90,29 @@ class AdminMenu extends Model
         if ($id > 0 && !empty($data)) {
             return parent::updateData($id, $data);
         }
+
         return false;
     }
 
     /**
      * 根据id获取详细信息
+     *
      * @param int|array $ids
      * @return array
      */
-    public static function geMenuByIds($ids)
+    public static function getMenuByIds($ids)
     {
         if (empty($ids)) {
             return [];
         }
+
         return parent::getDataById($ids);
     }
 
     /**
      * 查询
-     * @param int $pid
+     *
+     * @param int    $pid
      * @param string $name
      * @return array
      */
@@ -122,11 +131,13 @@ class AdminMenu extends Model
             'order' => 'DisplayOrder DESC',
         ];
         $ret = parent::getDataByFields($where, $extra);
+
         return !empty($ret['data']) ? $ret['data'] : [];
     }
 
     /**
      * 查询
+     *
      * @param string $url
      * @return array
      */
@@ -141,14 +152,16 @@ class AdminMenu extends Model
             'limit' => '1',
         ];
         $ret = parent::getDataByFields($where, $extra);
+
         return !empty($ret['data']) ? current($ret['data']) : [];
     }
 
     /**
      * 查询
-     * @param array $where
-     * @param int $offset
-     * @param int $limit
+     *
+     * @param array  $where
+     * @param int    $offset
+     * @param int    $limit
      * @param string $order
      * @param string $fields
      * @return array
@@ -161,11 +174,13 @@ class AdminMenu extends Model
             'limit' => $limit,
             'order' => !empty($order) ? $order : 'ParentId ASC,DisplayOrder DESC',
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
     /**
      * 删除
+     *
      * @param $id
      * @return bool
      */
@@ -174,6 +189,7 @@ class AdminMenu extends Model
         if ($id > 0) {
             return parent::delData($id);
         }
+
         return false;
     }
 }

@@ -14,8 +14,8 @@ use Model\Search\BookSearch as SBook;
 
 class BuildBookSearch extends Controller
 {
-    const TABLE = 'book';
-    const PAGE_SIZE = 100;
+    const TABLE = 'Book';
+    const PAGE_SIZE = 1000;
 
     /**
      * 重建书本搜索 php index.php Crontab/BuildBookSearch/index

@@ -19,6 +19,7 @@ use Model\Admin\AdminGroup;
 use Model\Admin\AdminMenu;
 use Bare\MongoModel;
 use Model\Admin\AdminLogin;
+use Model\Collect\CollectBook77 as Collect77;
 
 /**
  * 测试用控制器
@@ -180,7 +181,7 @@ class Test extends Controller
 //            AdminMenu::addMenu($v);
 //        }
 
-        pre(AdminLogin::getAuthMenu());
+//        pre(AdminLogin::getAuthMenu());
 
 //        $data = [
 //            'UserId' => 1,
@@ -199,6 +200,8 @@ class Test extends Controller
 //        UserData::userReadBook(1, [1,2,3,4]);
 //        var_dump(UserData::getUserData(1));
 //        logs('test');
+        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
+        pre($info);die;
     }
 
     /**

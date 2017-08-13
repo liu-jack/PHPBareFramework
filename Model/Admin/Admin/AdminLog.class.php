@@ -86,7 +86,7 @@ class AdminLog extends Model
             'UserName' => $_SESSION['_admin_info']['AdminRealName'],
             'ItemId' => $itemid,
             'ItemName' => $itemname,
-            'MenuKey' => $GLOBALS['_PATH'],
+            'MenuKey' => $GLOBALS['_URL'],
             'MenuName' => $title,
             'LogFlag' => $option,
             'Log' => is_array($data) ? serialize($data) : $data,

@@ -1,0 +1,116 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+
+                <div class="widget wgreen">
+
+                    <div class="widget-head">
+                        <div class="pull-left">添加书本</div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="widget-content">
+                        <div class="padd">
+
+                            <!-- Form starts.  -->
+                            <form action="{url('update')}" method="post" class="form-horizontal" role="form">
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">来源地址</label>
+                                    <div class="col-lg-8 input-group">
+                                        <input type="text" class="form-control" name="Url" id="Url" value="{$info.Url}" placeholder="来源地址">
+                                        <div class="input-group-addon"><button id="getBook"><i class="icon-download-alt"></i></button></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">书名</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" name="BookName" id="BookName" value="{$info.BookName}" placeholder="书名">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">作者</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" name="Author" id="Author" value="{$info.Author}" placeholder="作者">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">类型</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" name="TypeName" id="TypeName" value="{$info.TypeName}" placeholder="类型">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">简介</label>
+                                    <div class="col-lg-8">
+                                        <textarea class="form-control" name="BookDesc" id="BookDesc" rows="5" placeholder="简介">{$info.BookDesc}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">状态</label>
+                                    <div class="col-lg-8">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="Status" id="Status1" value="1" checked> 显示
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="Status" id="Status2" value="2"> 隐藏
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <div class="form-group">
+                                    <div class="col-lg-offset-1 col-lg-9">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"></i></button>
+                                        <button type="reset" class="btn btn-warning"><i class="icon-refresh"></i></button>
+                                        <button type="button" class="btn btn-danger"><i class="icon-remove"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="widget-foot">
+                        <!-- Footer goes here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $('#getBook').on('click', function () {
+        var url = $('#Url').val();
+        if (url) {
+            $.getJSON('',{book_url:url},function (dat) {
+                if(dat.code == 200) {
+                    var data = dat.data;
+                    $('#BookName').val(data.BookName);
+                    $('#Author').val(data.Author);
+                    $('#TypeName').val(data.TypeName);
+                    $('#BookDesc').val(data.BookDesc);
+                } else {
+                    top.sweetAlert(dat.msg);
+                }
+            });
+        }
+        return false;
+    });
+</script>
+
+{@view('Public/footer')}

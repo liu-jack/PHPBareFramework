@@ -249,8 +249,8 @@ class AdminLogin
                         $key = explode('|', $methods_pos[$v], 2)[0];
                         $mid = $methods_pos[$v] . '|' . $mk;
                         $menu[$key][$mid] = [
-                            'AdminMenuId' => $mid,
-                            'Name' => $methods_name[$v] . ' - ' . $mk,
+                            'AdminMenuId' => $url,
+                            'Name' => $methods_name[$v] . '-' . $mk,
                             'Url' => $url
                         ];
                     }
@@ -279,10 +279,33 @@ class AdminLogin
                 if (!empty($user['SpecialGroups'])) {
                     $auth_list = array_merge($auth_list, $user['SpecialGroups']);
                 }
-                $auth_list = array_flip($auth_list);
+                $auth_list = self::getMenuByAuth($auth_list);
                 $_SESSION['_admin_auth_list'] = $auth_list;
             }
         }
+
+        return $auth_list;
+    }
+
+    /**
+     * 根据授权id获取授权url
+     * @param $auth_list
+     * @return array
+     */
+    public static function getMenuByAuth($auth_list)
+    {
+        $mids = [];
+        foreach ($auth_list as $k => $v) {
+            if (is_numeric($v)) {
+                $mids[] = $v;
+                unset($auth_list[$k]);
+            }
+        }
+        $menu = AdminMenu::getMenuByIds($mids);
+        foreach ($menu as $v) {
+            $auth_list[$v['Url']] = $v['Url'];
+        }
+        $auth_list = array_combine($auth_list, $auth_list);
 
         return $auth_list;
     }

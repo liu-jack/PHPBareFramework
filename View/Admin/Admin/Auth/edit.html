@@ -1,4 +1,4 @@
-{:view('Admin/Public/header')}
+{:view('Public/header')}
 
 <!-- Main content starts -->
 <div class="content">
@@ -19,7 +19,7 @@
                             <td colspan="3" class="col-xs-12">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" {if (isset($auth[$v['Url']]))}checked="checked"{/if} value="{$v.Url}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
+                                        <input type="checkbox" {if (isset($auth[$v['Url']]))}checked="checked"{/if} value="{$v.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
                                     </label>
                                 </div>
                             </td>
@@ -31,7 +31,7 @@
                             <td colspan="2" class="col-xs-12">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" {if (isset($auth[$v2['Url']]))}checked="checked"{/if} value="{$v2.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
+                                        <input type="checkbox" {if (isset($auth[$v2['Url']]))}checked="checked"{/if} value="{$v2.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
                                     </label>
                                 </div>
                             </td>
@@ -44,7 +44,7 @@
                             <td colspan="1" class="col-xs-12">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" {if (isset($auth[$v3['Url']]))}checked="checked"{/if} value="{$v3.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
+                                        <input type="checkbox" {if (isset($auth[$v3['Url']]))}checked="checked"{/if} value="{$v3.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
                                     </label>
                                 </div>
                             </td>
@@ -88,4 +88,4 @@
     });
 </script>
 
-{@view('Admin/Public/footer')}
+{@view('Public/footer')}

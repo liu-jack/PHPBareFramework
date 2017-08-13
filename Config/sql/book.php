@@ -23,10 +23,10 @@ CREATE TABLE IF NOT EXISTS `Book` (
   `FavoriteCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收藏数',
   `CreateTime` datetime NOT NULL COMMENT '创建时间',
   `UpdateTime` datetime NOT NULL COMMENT '更新时间',
-  `Status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '书本状态 1：正常 2：隐藏',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '书本状态 1：正常 2：隐藏',
   `IsFinish` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否完本 0:否 1：采集完结 2：确认完本',
   `FromSite` varchar(255) NOT NULL DEFAULT '77' COMMENT '来源网站id 多个用逗号'',''分隔',
-  `DefaultFromId` tinyint(4) unsigned NOT NULL DEFAULT '77' COMMENT '默认来源',
+  `DefaultFromSite` tinyint(4) unsigned NOT NULL DEFAULT '77' COMMENT '默认来源',
 PRIMARY KEY (`BookId`),
 UNIQUE KEY `BookName_Author` (`BookName`,`Author`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -37,7 +37,7 @@ EOT
 CREATE TABLE IF NOT EXISTS `BookCollect` (
 `CollectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
 `BookId` int(11) unsigned NOT NULL COMMENT '书id',
-`FromId` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '来源id',
+`FromSite` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '来源id',
 `Url` varchar(255) NOT NULL COMMENT '采集url',
 `CollectTime` datetime NOT NULL COMMENT '采集时间',
 PRIMARY KEY (`CollectId`)

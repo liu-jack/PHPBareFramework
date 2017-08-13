@@ -1,4 +1,4 @@
-{:view('Admin/Public/header_index')}
+{:view('Public/header_index')}
 
 
 <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
@@ -10,7 +10,7 @@
 
             <ul class="nav navbar-nav" id="topmenu">
                 <li>
-                    <a href="{url('admin/index/index')}"><span class="label label-success"><i class="icon-home"></i></span> &nbsp; </a>
+                    <a href="{url('admin/index/index')}"><h3>&nbsp;<span class="label label-success"><i class="icon-home"></i></span>&nbsp;</h3></a>
                 </li>
 
                 {foreach($menu[0] as $k => $v)}
@@ -242,7 +242,7 @@
     }
     // 计算iframe高
     function initiframe() {
-        $(".iframe").css({height: $(window).height() - 177});
+        $(".iframe").css({height: $(window).height() - 160});
     }
     // 初始化
     $('#topmenu .top-menu').eq(0).click();
@@ -270,4 +270,4 @@
     }
 </script>
 
-{@view('Admin/Public/footer2')}
+{@view('Public/footer2')}

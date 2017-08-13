@@ -1,4 +1,4 @@
-{:view('Admin/Public/header')}
+{:view('Public/header')}
 
 <!-- Main content starts -->
 <div class="content">
@@ -68,8 +68,7 @@
                         </td>
                         <td class="col-xs-2" colspan="3"><input type="text" class="form-control menu_name" placeholder="名称"
                                                                 value="{$v['Name']}"></td>
-                        <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL"
-                                                    value="{$v['Url']}"></td>
+                        <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL" value="{$v['Url']}"></td>
                         <td class="col-xs-4">
                             <div class="col-xs-6">
                                 <select class="form-control col-xs-2" onchange="changeMenu(this);">
@@ -82,8 +81,7 @@
                                 </select>
                             </div>
                         </td>
-                        <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序"
-                                                    value="{$v['DisplayOrder']}"></td>
+                        <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序" value="{$v['DisplayOrder']}"></td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="..." style="width:100px">
                                 <button class="btn btn-success update_menu" data-mid="{$v['AdminMenuId']}"><i class="icon-ok"></i></button>
@@ -99,10 +97,8 @@
                     <tr class="warning list_group_{$v['AdminMenuId']}" style="display:none">
                         <td style="width:50px"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td class="col-xs-2" colspan="2"><input type="text" class="form-control menu_name" placeholder="名称"
-                                                                value="{$v2['Name']}"></td>
-                        <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL"
-                                                    value="{$v2['Url']}"></td>
+                        <td class="col-xs-2" colspan="2"><input type="text" class="form-control menu_name" placeholder="名称" value="{$v2['Name']}"></td>
+                        <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL" value="{$v2['Url']}"></td>
                         <td class="col-xs-4">
                             <div class="col-xs-6">
                                 <select class="form-control col-xs-2" onchange="changeMenu(this);">
@@ -115,8 +111,7 @@
                                 </select>
                             </div>
                         </td>
-                        <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序"
-                                                    value="{$v2['DisplayOrder']}"></td>
+                        <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序" value="{$v2['DisplayOrder']}"></td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="..." style="width:100px">
                                 <button class="btn btn-success update_menu" data-mid="{$v2['AdminMenuId']}"><i class="icon-ok"></i></button>
@@ -133,10 +128,8 @@
                         <td style="width:50px"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        <td class="col-xs-2"><input type="text" class="form-control menu_name" placeholder="名称"
-                                                    value="{$v3['Name']}"></td>
-                        <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL"
-                                                    value="{$v3['Url']}"></td>
+                        <td class="col-xs-2"><input type="text" class="form-control menu_name" placeholder="名称" value="{$v3['Name']}"></td>
+                        <td class="col-xs-2"><input type="text" class="form-control menu_url" placeholder="URL" value="{$v3['Url']}"></td>
                         <td class="col-xs-4">
                             <div class="col-xs-6">
                                 <select class="form-control col-xs-2" onchange="changeMenu(this);">
@@ -149,8 +142,7 @@
                                 </select>
                             </div>
                         </td>
-                        <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序"
-                                                    value="{$v3['DisplayOrder']}"></td>
+                        <td class="col-xs-1"><input type="text" class="form-control menu_order" placeholder="排序" value="{$v3['DisplayOrder']}"></td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="..." style="width:100px">
                                 <button class="btn btn-success update_menu" data-mid="{$v3['AdminMenuId']}"><i class="icon-ok"></i></button>
@@ -240,8 +232,8 @@
                 dataType: 'json',
                 success: function (re) {
                     top.swal(re.msg);
-                    if (re.type == '200') {
-                        self.location.reload();
+                    if (re.code == 200) {
+                        //self.location.reload();
                     }
                 }
             })
@@ -256,4 +248,4 @@
     });
 </script>
 
-{view('Admin/Public/footer')}
+{view('Public/footer')}

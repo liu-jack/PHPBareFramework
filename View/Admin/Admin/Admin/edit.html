@@ -1,4 +1,4 @@
-{:view('Admin/Public/header')}
+{:view('Public/header')}
 
 <!-- Main content starts -->
 <div class="content">
@@ -38,6 +38,12 @@
                             <div class="input-group">
                                 <div class="input-group-addon">真实姓名</div>
                                 <input type="text" class="form-control" name="real_name" placeholder="" value="{$user.RealName}">
+                            </div>
+                        </td>
+                        <td class="col-xs-2">
+                            <div class="input-group">
+                                <div class="input-group-addon">修改密码</div>
+                                <input type="text" class="form-control" name="user_pwd">
                             </div>
                         </td>
                     </tr>
@@ -147,4 +153,4 @@
     });
 </script>
 
-{@view('Admin/Public/footer')}
+{@view('Public/footer')}

@@ -16,6 +16,23 @@ class CollectBook77 extends CollectBookBase
     const MONTH_VOTE_URL = 'http://www.xiaoshuo77.com/page_monthvote_%d.html';
     const TOP_TIME_URL = 'http://www.xiaoshuo77.com/page_toptime_%d.html';
 
+    public static function getBook($url)
+    {
+        $cc = new Collects();
+        $regs = [
+            'BookDesc' => '@<div class="introCon">(.*)</div>@isU',
+            'BookName' => '@<h1>(.+)</h1>@isU',
+            'Author' => '@作者：([^ <]*) \|\|@isU',
+            'TypeName' => '@类别：([^|]*) \|\|@isU',
+        ];
+        $data = $cc->get($url)->match($regs)->strip()->getMatch();
+        if (!empty($data['BookName']) && empty($data['TypeName'])) {
+            $data['TypeName'] = '其他';
+        }
+
+        return $data;
+    }
+
     /**
      * 采集整站
      *

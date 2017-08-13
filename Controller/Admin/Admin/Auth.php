@@ -62,7 +62,7 @@ class Auth extends Controller
         }
 
         $auth = $group['AdminAuth'];
-        $auth = array_combine((array)$auth, (array)$auth);
+        $auth = AdminLogin::getMenuByAuth($auth);
         $menu = AdminLogin::getAllAuthMenu();
 
 

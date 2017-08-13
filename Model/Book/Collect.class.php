@@ -24,7 +24,7 @@ class Collect extends Model
         'fields' => [
             'CollectId' => self::VAR_TYPE_KEY,
             'BookId' => self::VAR_TYPE_INT,
-            'FromId' => self::VAR_TYPE_INT,
+            'FromSite' => self::VAR_TYPE_INT,
             'Url' => self::VAR_TYPE_STRING,
             'CollectTime' => self::VAR_TYPE_STRING,
         ],

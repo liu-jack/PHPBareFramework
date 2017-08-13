@@ -38,7 +38,7 @@ class Admin extends Controller
             $user['data'][$k]['GroupName'] = $group_hash[$v['UserGroup']];
         }
 
-        $this->pagination($user['count'], $per, $now);
+        $this->page($user['count'], $per, $now);
         $this->value("groupselect", $groupselect);
         $this->value("user", $user['data']);
         $this->view();
@@ -94,6 +94,9 @@ class Admin extends Controller
                 'RealName' => strval($_POST['real_name']),
                 'SpecialGroups' => $_POST['menu']
             ];
+            if (!empty($_POST['user_pwd'])) {
+                $data['Password'] = trim($_POST['user_pwd']);
+            }
 
             $ret = AdminUser::updateUser($uid, $data);
             if ($ret !== false) {
@@ -105,10 +108,10 @@ class Admin extends Controller
 
         $menu = AdminLogin::getAllAuthMenu();
         $auth = $user['SpecialGroups'];
-        $auth = array_combine((array)$auth, (array)$auth);
+        $auth = AdminLogin::getMenuByAuth($auth);
         $group_info = AdminGroup::getGroupByIds($user['UserGroup']);
         $group_auth = $group_info['AdminAuth'];
-        $group_auth = array_combine((array)$group_auth, (array)$group_auth);
+        $group_auth = AdminLogin::getMenuByAuth($group_auth);
 
         $group = AdminGroup::getGroups();
         $groupselect = '';

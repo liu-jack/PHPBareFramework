@@ -15,8 +15,13 @@ use Model\Collect\CollectBook83 as Collect83;
 
 class CollectBook extends Controller
 {
+    public static function getBookByUrl(string $url, int $from_site = Collect77::FROM_ID_77)
+    {
+
+    }
+
     /**
-     * 书本单本整本采集 php index.php Collect/CollectBook/index
+     * 书本单本整本采集 php index.php Collect/CollectBook/index/id/2
      */
     public function index()
     {
@@ -36,7 +41,7 @@ class CollectBook extends Controller
                     Collect::updateCollect($res['CollectId'], ['CollectTime' => date('Y-m-d H:i:s')]);
                     $book = Book::getBookByIds($res['BookId']);
                     if ($book['IsFinish'] != 2) {
-                        switch ($res['FromId']) {
+                        switch ($res['FromSite']) {
                             case Collect77::FROM_ID_77:
                                 Collect77::getBookColumn($res['BookId'], $res['Url'], $book);
                                 break;

@@ -40,7 +40,7 @@ class Book extends Model
             'Status' => self::VAR_TYPE_INT,
             'IsFinish' => self::VAR_TYPE_INT,
             'FromSite' => self::VAR_TYPE_STRING,
-            'DefaultFromId' => self::VAR_TYPE_INT,
+            'DefaultFromSite' => self::VAR_TYPE_INT,
         ],
         // 可选, MC连接参数
         'mc' => DB::MEMCACHE_DEFAULT,
@@ -65,6 +65,7 @@ class Book extends Model
                 $sdata = [
                     'Type' => 0,
                     'BookDesc' => '',
+                    'Words' => 0,
                     'ViewCount' => 0,
                     'LikeCount' => 0,
                     'FavoriteCount' => 0,
