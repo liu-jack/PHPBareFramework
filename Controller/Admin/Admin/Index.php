@@ -63,6 +63,9 @@ class Index extends Controller
             }
             $pwd = Rsa::private_decode($pwd);
             $pwd2 = Rsa::private_decode($pwd2);
+            if (empty($pwd)) {
+                output(204, '密码数据错误');
+            }
             if ($pwd2 != $pwd) {
                 output(202, '密码填写不一致');
             }
