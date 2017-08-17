@@ -391,7 +391,7 @@ class BookSearch
         $es = DB::search(DB::SEARCH_DEFAULT);
         $ret = $es->query("_bulk", $es::HTTP_POST, $query);
         if ($ret === false) {
-            echo $es->getLastError() . "\n";
+            echo json_encode($es->getLastError()) . "\n";
         }
     }
 
