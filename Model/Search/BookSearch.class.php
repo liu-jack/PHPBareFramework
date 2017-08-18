@@ -8,7 +8,7 @@ namespace Model\Search;
 use Bare\DB;
 use Bare\Queue;
 
-class BookSearch
+class BookSearch extends SearchBase
 {
     /**
      * 搜索位置
@@ -22,28 +22,28 @@ class BookSearch
     /**
      * 排行类型
      */
-    const TOP_VIEW = 'viewcount';
-    const TOP_LIKE = 'likecount';
+    const TOP_VIEW = 'view_count';
+    const TOP_LIKE = 'like_count';
     const TOP_FINISH = 'finish';
-    const TOP_FAVORITE = 'favoritecount';
+    const TOP_FAVORITE = 'favorite_count';
     /**
      * 搜索字段
      */
-    const SEARCH_FIELDS = [
-        'BookId' => ['int', 'id'],
-        'BookName' => ['string', 'bookname'],
-        'Author' => ['string', 'author'],
-        'Type' => ['int', 'type'],
-        'TypeName' => ['string', 'typename'],
-        'BookDesc' => ['string', 'description'],
-        'Words' => ['int', 'words'],
-        'ViewCount' => ['int', 'viewcount'],
-        'LikeCount' => ['int', 'likecount'],
-        'FavoriteCount' => ['int', 'favoritecount'],
-        'CreateTime' => ['string', 'createtime'],
-        'UpdateTime' => ['string', 'updatetime'],
-        'Status' => ['int', 'status'],
-        'IsFinish' => ['int', 'finish'],
+    public static $_search_fields = [
+        'BookId' => [self::FIELD_TYPE_INT, 'id'],
+        'BookName' => [self::FIELD_TYPE_STRING, 'book_name'],
+        'Author' => [self::FIELD_TYPE_STRING, 'author'],
+        'Type' => [self::FIELD_TYPE_INT, 'type'],
+        'TypeName' => [self::FIELD_TYPE_STRING, 'typename'],
+        'BookDesc' => [self::FIELD_TYPE_STRING, 'description'],
+        'Words' => [self::FIELD_TYPE_INT, 'words'],
+        'ViewCount' => [self::FIELD_TYPE_INT, 'view_count'],
+        'LikeCount' => [self::FIELD_TYPE_INT, 'like_count'],
+        'FavoriteCount' => [self::FIELD_TYPE_INT, 'favorite_count'],
+        'CreateTime' => [self::FIELD_TYPE_STRTOTIME, 'create_time'],
+        'UpdateTime' => [self::FIELD_TYPE_STRTOTIME, 'update_time'],
+        'Status' => [self::FIELD_TYPE_INT, 'status'],
+        'IsFinish' => [self::FIELD_TYPE_INT, 'finish'],
     ];
 
     /**
@@ -58,21 +58,17 @@ class BookSearch
     {
         $query = [
             "query" => [
-                "filtered" => [
-                    "query" => [
-                        "bool" => [
-                            "must" => [
-                                [
-                                    "multi_match" => [
-                                        "query" => $keywords,
-                                        "type" => "best_fields",
-                                        "fields" => [
-                                            "bookname^2",
-                                            "author^1",
-                                            "typename^0.2",
-                                            "description^0.2"
-                                        ]
-                                    ]
+                "bool" => [
+                    "must" => [
+                        [
+                            "multi_match" => [
+                                "query" => $keywords,
+                                "type" => "best_fields",
+                                "fields" => [
+                                    "book_name^2",
+                                    "author^1",
+                                    "typename^0.2",
+                                    "description^0.2"
                                 ]
                             ]
                         ]
@@ -93,7 +89,7 @@ class BookSearch
                     ]
                 ],
                 [
-                    "updatetime" => [
+                    "update_time" => [
                         "order" => "desc"
                     ]
                 ]
@@ -129,16 +125,12 @@ class BookSearch
     {
         $query = [
             "query" => [
-                "filtered" => [
-                    'filter' => [
-                        "bool" => [
-                            "must" => [
-                                [
-                                    "term" => [
-                                        "status" => [
-                                            "value" => 1
-                                        ]
-                                    ]
+                "bool" => [
+                    "must" => [
+                        [
+                            "term" => [
+                                "status" => [
+                                    "value" => 1
                                 ]
                             ]
                         ]
@@ -148,12 +140,11 @@ class BookSearch
             "sort" => [
                 [
                     "{$type}" => [
-                        "order" => "desc",
-                        "mode" => "max"
+                        "order" => "desc"
                     ]
                 ],
                 [
-                    "updatetime" => [
+                    "update_time" => [
                         "order" => "desc"
                     ]
                 ]
@@ -165,7 +156,7 @@ class BookSearch
 
         switch ($type) {
             case 'finish':
-                $query['query']['filtered']['filter']['bool']['must'][] = [
+                $query['query']['bool']['must'][] = [
                     "range" => [
                         "finish" => [
                             "gte" => 1
@@ -219,7 +210,7 @@ class BookSearch
             ],
             "sort" => [
                 [
-                    "updatetime" => [
+                    "update_time" => [
                         "order" => "desc"
                     ]
                 ]
@@ -244,29 +235,13 @@ class BookSearch
     /**
      * 新增一条书本时, 同步数据 （队列）
      *
-     * @param array $row 所有字段必选, 见 self::SEARCH_FIELDS 定义
+     * @param array $row 所有字段必选, 见 self::$_search_fields 定义
      * @throws \Exception
      * @return bool
      */
     public static function addBook(array $row): bool
     {
-        if (count(array_diff_key(self::SEARCH_FIELDS, $row)) > 0) {
-            throw new \Exception('Fields miss');
-        }
-
-        $data = [];
-        foreach (self::SEARCH_FIELDS as $k => $v) {
-            $t = $row[$k];
-            switch ($v[0]) {
-                case 'int':
-                    $t = (int)$t;
-                    break;
-                case 'string':
-                    $t = (string)$t;
-                    break;
-            }
-            $data[$v[1]] = $t;
-        }
+        $data = self::checkFields($row, true);
 
         $ret = Queue::add("SearchBook", [
             'type' => 'add',
@@ -280,26 +255,12 @@ class BookSearch
      * 书本更新时, 同步数据 （队列）
      *
      * @param int   $book_id 书本ID
-     * @param array $row     任选至少一个数据, 见 self::SEARCH_FIELDS 定义
+     * @param array $row     任选至少一个数据, 见 self::$_search_fields 定义
      * @return bool
      */
     public static function updateBook(int $book_id, array $row): bool
     {
-        $data = [];
-        foreach (self::SEARCH_FIELDS as $k => $v) {
-            if (isset($row[$k])) {
-                $t = $row[$k];
-                switch ($v[0]) {
-                    case 'int':
-                        $t = (int)$t;
-                        break;
-                    case 'string':
-                        $t = (string)$t;
-                        break;
-                }
-                $data[$v[1]] = $t;
-            }
-        }
+        $data = self::checkFields($row);
 
         $ret = true;
         if (count($data) > 0) {
@@ -367,23 +328,10 @@ class BookSearch
         foreach ($data as $row) {
             $t_head = str_replace('{id}', $row['BookId'], $head);
             $query .= $t_head . "\n";
-
-            $t_body = [];
-            foreach (self::SEARCH_FIELDS as $k => $v) {
-                if ($k == 'BookId') {
-                    continue;
-                }
-                $t = $row[$k];
-                switch ($v[0]) {
-                    case 'int':
-                        $t = (int)$t;
-                        break;
-                    case 'string':
-                        $t = (string)$t;
-                        break;
-                }
-                $t_body[$v[1]] = $t;
+            if (strtotime($row['UpdateTime']) <= 0) {
+                $row['UpdateTime'] = $row['CreateTime'];
             }
+            $t_body = self::checkFields($row);
 
             $query .= json_encode($t_body) . "\n";
         }

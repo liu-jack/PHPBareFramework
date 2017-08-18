@@ -11,7 +11,7 @@
                 <ul id="search_list">
                     <?php foreach($tlist as $v):?>
                     <li>
-                        <a href="<?php echo uri('book', $v['DefaultFromId'].'_'.$v['BookId']);?>">
+                        <a href="<?php echo uri('book', $v['DefaultFromSite'].'_'.$v['BookId']);?>">
                             <div class="bcover fl">
                                 <img src="<?php echo $v['Cover']?>" height="130" width="85" />
                             </div>

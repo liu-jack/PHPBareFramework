@@ -1,4 +1,4 @@
-<?php $this->view('Book/Public/header')?>
+{:view('Book/Public/header')}
 
 <body>
     <div class="header"> <span class="nav_left"><a href="javascript:history.back()">返回</a></span><span class="nav_right"><a rel="internal" href="<?php echo uri('book', 'type_'.$rtypes[$book['TypeName']])?>"><?php echo $book['TypeName']?></a></span>
@@ -26,9 +26,9 @@
                         </div>
                         <div class="blink gyb bl3 mt5">
                             <?php if ($rdbk):?>
-                            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $rdbk)?>" class="cur">继续阅读</a>
+                            <a href="<?php echo uri('book', $fromsite.'_'.$bookid, $rdbk)?>" class="cur">继续阅读</a>
                             <?php else:?>
-                            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $column[0]['ChapterId'])?>" class="cur">立即阅读</a>
+                            <a href="<?php echo uri('book', $fromsite.'_'.$bookid, $column[0]['ChapterId'])?>" class="cur">立即阅读</a>
                             <?php endif;?>
                             
                             <a href="javascript:void(0);" class="favBook" data-bid="<?php echo $book['BookId']?>" ><?php if ($isfav):?>取消收藏<?php else:?>收藏本书<?php endif;?></a>
@@ -50,7 +50,7 @@
                 <a href="javascript:void(0)">
                     <select onchange="location.href=this.value" class="siteselect">
                         <?php foreach($fromsites as $k => $v):?>
-                        <option <?php if($k == $fromid):?>selected="selected"<?php endif;?> value="<?php echo uri('book', $k.'_'.$bookid)?>"><?php echo $v?></option>
+                        <option <?php if($k == $fromsite):?>selected="selected"<?php endif;?> value="<?php echo uri('book', $k.'_'.$bookid)?>"><?php echo $v?></option>
                         <?php endforeach;?>
                     </select>
                 </a>
@@ -59,11 +59,11 @@
             <div class="dir_list">
                 <ul class="blist">
                     <?php foreach($column as $v):?>
-                        <li><span class="bname"><a href="<?php echo uri('book', $fromid.'_'.$bookid, $v['ChapterId'])?>"><?php echo $v['ChapterName']?></a></span></li>
+                        <li><span class="bname"><a href="<?php echo uri('book', $fromsite.'_'.$bookid, $v['ChapterId'])?>"><?php echo $v['ChapterName']?></a></span></li>
                     <?php endforeach;?>
                 </ul>
             </div>
         </div>
     </div>
 
-    <?php $this->view('Book/Public/footer')?>
+    {:view('Book/Public/footer')}

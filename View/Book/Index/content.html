@@ -1,38 +1,38 @@
-<?php $this->view('Book/Public/header')?>
+{:view('Book/Public/header')}
 
 <body>
     <div class="wrap">
         <!--导航区-->
         <div class="t-nav" id="t-nav">
             <span class="nav_left"><a href="/">首页</a></span>
-            <span class="nav_right"><a href="<?php echo uri('book', $fromid.'_'.$bookid)?>">目录</a></span> 
+            <span class="nav_right"><a href="{uri('book', $fromsite.'_'.$bookid)}">目录</a></span>
             <h1><?php echo $book['BookName']?></h1>
         </div>
         <!--翻页-->
         <div class="t-page t-prev" id="t-prev">
             <?php if($prev):?>
-            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $prev)?>" id="t-b-p" >上一章</a>
+            <a href="{uri('book', $fromsite.'_'.$bookid, $prev)}" id="t-b-p" >上一章</a>
             <?php endif;?>   
         </div>
         <div class="t-page t-next" id="t-next">
             <?php if($next):?>
-            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $next)?>" id="t-b-n">下一章</a>
+            <a href="{uri('book', $fromsite.'_'.$bookid, $next)}" id="t-b-n">下一章</a>
             <?php endif;?>
         </div>
 
         <div class="chapter" id="chapter">
             <div class="chapter-inner">
-                <p class="chapname"><span class="bname" id="chaptitle"><?php echo $column['ChapterName'] . " ({$percent})"?></span><!--<span class="binfo" id="chapbname"><?php echo $book['BookName']?></span>-->
+                <p class="chapname"><span class="bname" id="chaptitle">{$column['ChapterName']} ({$percent})</span><!--<span class="binfo" id="chapbname"><?php echo $book['BookName']?></span>-->
                 </p>
                 <p id="chapcont"><?php echo $content['Content']?></p>
             </div>
         </div>
         <div class="chaplink">
             <?php if($prev):?>
-            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $prev)?>" class="prevchap bggy" id="btn_prev">上一章</a>
+            <a href="<{uri('book', $fromsite.'_'.$bookid, $prev)}" class="prevchap bggy" id="btn_prev">上一章</a>
             <?php endif;?>
             <?php if($next):?>
-            <a href="<?php echo uri('book', $fromid.'_'.$bookid, $next)?>" class="nextchap bgye" id="btn_next">下一章</a>
+            <a href="{uri('book', $fromsite.'_'.$bookid, $next)}" class="nextchap bgye" id="btn_next">下一章</a>
             <?php endif;?>
         </div>
     </div>
@@ -62,4 +62,4 @@
     <script src="<?php echo STATICS_JS?>rtools.js"></script>
 
 
-    <?php $this->view('Book/Public/footer')?>
+    {:view('Book/Public/footer')}

@@ -16,7 +16,7 @@ use Model\Search\BookSearch as SBook;
  */
 class Index extends Controller
 {
-    const FROM_ID = 77;
+    const FROM_SITE = 77;
     const LIST_LIMIT = 1000;
     const CK_TIME = 31536000;
     // 阅读记录 cookie
@@ -56,7 +56,7 @@ class Index extends Controller
         $this->value('wblist', $wblist);
         $this->value('sclist', $sclist);
         $this->value('typelist', $typelist);
-        $this->value('fromid', self::FROM_ID);
+        $this->value('fromsite', self::FROM_SITE);
         $this->view();
     }
 
@@ -93,7 +93,7 @@ class Index extends Controller
         $this->value('seo', $seo);
         $this->value('tlist', $tlist);
         $this->value('typename', $typename);
-        $this->value('fromid', self::FROM_ID);
+        $this->value('fromsite', self::FROM_SITE);
         $this->view();
     }
 
@@ -142,7 +142,7 @@ class Index extends Controller
         ];
         $this->value('seo', $seo);
         $this->value('bookid', $bid);
-        $this->value('fromid', $fid);
+        $this->value('fromsite', $fid);
         $this->value('fromsites', $fromsites);
         $this->value('rtypes', $rtypes);
         $this->value('rdbk', $rdbk);
@@ -186,7 +186,7 @@ class Index extends Controller
         $this->value('next', $next);
         $this->value('percent', $percent);
         $this->value('bookid', $bid);
-        $this->value('fromid', $fid);
+        $this->value('fromsite', $fid);
         $this->value('book', $book);
         $this->value('column', $column);
         $this->value('content', $content);
@@ -223,7 +223,7 @@ class Index extends Controller
         $this->value('seo', $seo);
         $this->value('str', $str);
         $this->value('list', $list_info);
-        $this->value('fromid', self::FROM_ID);
+        $this->value('fromsite', self::FROM_SITE);
         $this->view();
     }
 
@@ -285,7 +285,7 @@ class Index extends Controller
         $this->value('list', $list);
         $this->value('total', $total);
         $this->value('typelist', $typelist);
-        $this->value('fromid', self::FROM_ID);
+        $this->value('fromsite', self::FROM_SITE);
         $this->view();
     }
 
@@ -332,7 +332,7 @@ class Index extends Controller
         $this->value('list', $list);
         $this->value('total', $total);
         $this->value('typelist', $typelist);
-        $this->value('fromid', self::FROM_ID);
+        $this->value('fromsite', self::FROM_SITE);
         $this->view();
     }
 
