@@ -47,7 +47,7 @@ class Column extends Model
 
     /**
      * @param int $bookid
-     * @param $data
+     * @param     $data
      * @return bool|int|string
      */
     public static function addColumn(int $bookid, $data)
@@ -61,16 +61,18 @@ class Column extends Model
                 $mkeypn = sprintf(self::MC_BOOK_PREV_NEXT, $data['FromId'], $bookid);
                 $mc->delete($mkeypn);
             }
+
             return $ret;
 
         }
+
         return false;
     }
 
     /**
      * @param int $bookid
-     * @param $id
-     * @param $data
+     * @param     $id
+     * @param     $data
      * @return bool
      */
     public static function updateColumn(int $bookid, $id, $data)
@@ -87,14 +89,16 @@ class Column extends Model
                     $mc->delete($mkeypn);
                 }
             }
+
             return $ret;
         }
+
         return false;
     }
 
     /**
      * @param int $bookid
-     * @param $id
+     * @param     $id
      * @return array
      */
     public static function getColumnById(int $bookid, $id)
@@ -102,12 +106,13 @@ class Column extends Model
         if ($id > 0 && $bookid > 0) {
             return parent::getDataById($id, [], table($bookid));
         }
+
         return [];
     }
 
     /**
-     * @param $bookid
-     * @param $fromid
+     * @param     $bookid
+     * @param     $fromid
      * @param int $offset
      * @param int $limit
      * @return array
@@ -125,13 +130,14 @@ class Column extends Model
             $extra = [
                 'fields' => '`ChapterId`,`ChapterName`',
                 'order' => 'ChapterId ASC',
-                'offset' => $offset,
-                'limit' => $limit,
             ];
             $list = parent::getDataByFields($where, $extra, table($bookid));
             if (!empty($list)) {
                 $mc->set($mkey, $list, self::MC_TIME);
             }
+        }
+        if ($limit > 0) {
+            $list['data'] = array_slice($list['data'], $offset, $limit);
         }
 
         return $list;
@@ -155,6 +161,7 @@ class Column extends Model
             'get_count' => 0,
         ];
         $data = parent::getDataByFields($where, $extra, table($bookid));
+
         return !empty($data['data']) ? current($data['data']) : [];
     }
 
@@ -174,12 +181,13 @@ class Column extends Model
             'get_result' => 0,
         ];
         $data = parent::getDataByFields($where, $extra, table($bookid));
+
         return $data['count'] ?? 0;
     }
 
     /**
      * @param int $bookid
-     * @param $id
+     * @param     $id
      * @return bool
      */
     public static function delColumn($bookid, $id)
@@ -196,13 +204,16 @@ class Column extends Model
                     $mc->delete($mkeypn);
                 }
             }
+
             return $ret;
         }
+
         return false;
     }
 
     /**
      * 获取上下章
+     *
      * @param $fid
      * @param $bid
      * @param $cid
@@ -231,11 +242,13 @@ class Column extends Model
         $next = !empty($rcolumn[$cur + 1]) ? $rcolumn[$cur + 1] : 0;
         $count = max(1, count($column));
         $percent = sprintf("%.2f%%", ($cur / $count) * 100);
+
         return ['prev' => $prev, 'next' => $next, 'percent' => $percent];
     }
 
     /**
      * 获取用户阅读记录
+     *
      * @param $uid
      * @param $fid
      * @param $bid
@@ -246,11 +259,13 @@ class Column extends Model
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $fid, $bid);
         $redis = DB::redis(DB::REDIS_DEFAULT_R, self::RD_DB_INDEX);
         $ret = $redis->get($key);
+
         return $ret;
     }
 
     /**
      * 设置用户阅读记录
+     *
      * @param $uid
      * @param $fid
      * @param $bid
@@ -261,11 +276,13 @@ class Column extends Model
     {
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $fid, $bid);
         $redis = DB::redis(DB::REDIS_DEFAULT_W, self::RD_DB_INDEX);
+
         return $redis->set($key, $cid, self::RD_TIME);
     }
 
     /**
      * 获取用户推荐记录
+     *
      * @param $uid
      * @param $bid
      * @return mixed
@@ -275,11 +292,13 @@ class Column extends Model
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $bid);
         $redis = DB::redis(DB::REDIS_DEFAULT_R);
         $ret = $redis->get($key);
+
         return $ret;
     }
 
     /**
      * 设置用户推荐记录
+     *
      * @param $uid
      * @param $bid
      * @return mixed
@@ -288,6 +307,7 @@ class Column extends Model
     {
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $bid);
         $redis = DB::redis(DB::REDIS_DEFAULT_W);
+
         return $redis->set($key, 1, strtotime(date('Y-m-d 23:59:59')) - time());
     }
 }

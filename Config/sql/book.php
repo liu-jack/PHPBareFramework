@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `BookCollect` (
 `FromSite` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '来源id',
 `Url` varchar(255) NOT NULL COMMENT '采集url',
 `CollectTime` datetime NOT NULL COMMENT '采集时间',
+`Status` tinyint(4) unsigned NOT NULL DEFAULT '2' COMMENT '1 : 采集内容  2：不采集内容 ',
 PRIMARY KEY (`CollectId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `book` AUTO_INCREMENT=30;

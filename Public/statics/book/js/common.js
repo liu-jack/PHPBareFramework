@@ -45,6 +45,8 @@ $(document).ready(function () {
                         $(".favBook").html('取消收藏');
                     } else if (ret.code === 201) {
                         $(".favBook").html('收藏本书');
+                    } else if (ret.code === 551) {
+                        location.href = ret.url;
                     }
                     if (ret.msg) {
                         sweetAlert(ret.msg);
@@ -71,7 +73,7 @@ function getAjaxList() {
                     var html = '', list = data.list;
                     for(var i=0,j=list.length; i<j; i++){
                         html +='<li>';
-                        html +='    <a href="/book/'+data.list[i].DefaultFromId +'_'+list[i].BookId+'.html">';
+                        html +='    <a href="/book/'+data.list[i].DefaultFromSite +'_'+list[i].BookId+'.html">';
                         html +='        <div class="bcover fl">';
                         html +='            <img src="'+list[i].Cover+'" alt="'+list[i].BookName+'" height="130" width="85" />';
                         html +='        </div>';

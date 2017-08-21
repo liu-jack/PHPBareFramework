@@ -343,7 +343,7 @@ class Index extends Controller
     {
         $uid = $this->isLogin();
         if (empty($uid)) {
-            redirect(url('account/user/login', '', true));
+            output(551, ['url' => url('account/user/login', '', true)]);
         }
         $bid = intval($_POST['bid']);
         if (BookFavorite::isFavorite($uid, $bid)) {

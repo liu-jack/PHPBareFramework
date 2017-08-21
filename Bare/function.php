@@ -95,25 +95,25 @@ function parseTemplate($path)
     }
     $pattern = [
         // {:view('add')}
-        '@\{:([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{:([\w_]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
         // {@view('admin/public/header')}
-        '@\{\@([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{\@([\w_]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
         // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
-        '@\{(foreach|if|elseif)\s*(\([\w\s>=<!\$,\."\'\|\(\)\[\]\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{(foreach|if|elseif)\s*(\([^}]*\))\}@isU',
         // {else}
         '@\{(else)\}@isU',
         // {/foreach}{/if}
         '@\{/(foreach|if)\}@isU',
-        // {$a} {$a['b']} {$a[$b['c']]}
-        '@\{(\$[\w_"\'\[\]\$\x{4e00}-\x{9fa5}]+)\}@isuU',
         // {$a.b.c}
         '@\{(\$[\w_]+)\.([\w_]+)\.([\w_]+)\}@isU',
         // {$a.b}
         '@\{(\$[\w_]+)\.([\w_]+)\}@isU',
+        // {$a} {$a['b']} {$a[$b['c']]}
+        '@\{(\$[^}]+)\}@isU',
         // {STATICS_JS}
         '@\{([A-Z_]+)\}@isU',
         // {url('add')}
-        '@\{([\w]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{([\w_]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
     ];
     $replace = [
         '<?php $this->$1?>',
@@ -121,9 +121,9 @@ function parseTemplate($path)
         "<?php $1$2:?>",
         "<?php $1:?>",
         "<?php end$1?>",
-        '<?php echo $1?>',
         "<?php echo $1['$2']['$3']?>",
         "<?php echo $1['$2']?>",
+        '<?php echo $1?>',
         '<?php echo $1?>',
         "<?php echo $1?>",
     ];

@@ -18,13 +18,13 @@
                             <td class="form-group col-xs-2">
                                 <div class="input-group">
                                     <div class="input-group-addon">书本ID</div>
-                                    <input type="text" class="form-control" name="book_id" placeholder="书本ID" value="{$book_id}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+                                    <input type="text" class="form-control" name="book_id" placeholder="书本ID" value="{$book_id}" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"/>
                                 </div>
                             </td>
                             <td class="form-group col-xs-2">
                                 <div class="input-group">
                                     <div class="input-group-addon">书名</div>
-                                    <input type="text" class="form-control" name="book_name" placeholder="书名" value="{$book_name}">
+                                    <input type="text" class="form-control" name="book_name" placeholder="书名" value="{$book_name}"/>
                                 </div>
                             </td>
                             <td class="form-group col-xs-2">
@@ -37,10 +37,10 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">是否完本</div>
                                     <select class="form-control" name="isfinish">
-                                        <option value="">全部</option>
-                                        <option value="1">采集完本</option>
-                                        <option value="2">确认完本</option>
-                                        <option value="0">连载</option>
+                                        <option value="" {if(!is_numeric($isfinish))}selected{/if}>全部</option>
+                                        <option value="1" {if($isfinish == 1)}selected{/if}>采集完本</option>
+                                        <option value="2" {if($isfinish == 2)}selected{/if}>确认完本</option>
+                                        <option value="0" {if($isfinish === 0)}selected{/if}>连载</option>
                                     </select>
                                 </div>
                             </td>
@@ -50,9 +50,9 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">状态</div>
                                     <select class="form-control" name="status">
-                                        <option value="">全部</option>
-                                        <option value="1">显示</option>
-                                        <option value="2">隐藏</option>
+                                        <option value="" {if($status == 0)}selected{/if}>全部</option>
+                                        <option value="1" {if($status == 1)}selected{/if}>显示</option>
+                                        <option value="2" {if($status == 2)}selected{/if}>隐藏</option>
                                     </select>
                                 </div>
                             </td>
@@ -68,7 +68,7 @@
 
         <div class="widget">
             <div class="widget-head">
-                <div class="pull-left">后台操作日志</div>
+                <div class="pull-left">书本管理</div>
                 <div class="clearfix"></div>
             </div>
             <div class="widget-content">
@@ -87,6 +87,7 @@
                         <th>状态</th>
                         <th>更新时间</th>
                         <th>创建时间</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -104,6 +105,9 @@
                         <td>{$v.Status}</td>
                         <td>{$v.UpdateTime}</td>
                         <td>{$v.CreateTime}</td>
+                        <td>
+                            <a href="{url('column')}" class="btn btn-info"><i class="icon-list"></i></a>
+                        </td>
                     </tr>
                     {/foreach}
                     </tbody>
