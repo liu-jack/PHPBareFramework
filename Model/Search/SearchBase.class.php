@@ -11,9 +11,9 @@ namespace Model\Search;
 
 class SearchBase
 {
-    const FIELD_TYPE_INT = 'int';
-    const FIELD_TYPE_STRING = 'string';
-    const FIELD_TYPE_STRTOTIME = 'strtotime';
+    const T_INT = 'int';
+    const T_STRING = 'string';
+    const T_STRTOTIME = 'strtotime';
     /**
      * 搜索字段
      */
@@ -38,13 +38,13 @@ class SearchBase
         foreach (static::$_search_fields as $k => $v) {
             $t = $data[$k];
             switch ($v[0]) {
-                case (self::FIELD_TYPE_INT):
+                case (self::T_INT):
                     $t = (int)$t;
                     break;
-                case (self::FIELD_TYPE_STRING):
+                case (self::T_STRING):
                     $t = (string)$t;
                     break;
-                case (self::FIELD_TYPE_STRTOTIME):
+                case (self::T_STRTOTIME):
                     $t = strtotime($t);
                     break;
             }

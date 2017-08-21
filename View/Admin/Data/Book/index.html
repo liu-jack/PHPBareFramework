@@ -106,7 +106,8 @@
                         <td>{$v.UpdateTime}</td>
                         <td>{$v.CreateTime}</td>
                         <td>
-                            <a href="{url('column')}" class="btn btn-info"><i class="icon-list"></i></a>
+                            <a href="{url('edit', ['id'=>$v['BookId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
+                            <a href="{url('column', ['bid'=>$v['BookId'], 'fid'=>$v['DefaultFromSite']])}" class="btn btn-info"><i class="icon-list"></i></a>
                         </td>
                     </tr>
                     {/foreach}

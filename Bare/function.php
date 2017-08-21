@@ -95,9 +95,9 @@ function parseTemplate($path)
     }
     $pattern = [
         // {:view('add')}
-        '@\{:([\w_]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{:([\w_]+\([^}]*\))\}@isU',
         // {@view('admin/public/header')}
-        '@\{\@([\w_]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{\@([\w_]+\([^}]*\))\}@isU',
         // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
         '@\{(foreach|if|elseif)\s*(\([^}]*\))\}@isU',
         // {else}
@@ -113,7 +113,7 @@ function parseTemplate($path)
         // {STATICS_JS}
         '@\{([A-Z_]+)\}@isU',
         // {url('add')}
-        '@\{([\w_]+\([\w/_"\',\[\]=>\$\s\.\x{4e00}-\x{9fa5}]*\))\}@isuU',
+        '@\{([\w_]+\([^}]*\))\}@isU',
     ];
     $replace = [
         '<?php $this->$1?>',

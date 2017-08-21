@@ -30,20 +30,20 @@ class BookSearch extends SearchBase
      * 搜索字段
      */
     public static $_search_fields = [
-        'BookId' => [self::FIELD_TYPE_INT, 'id'],
-        'BookName' => [self::FIELD_TYPE_STRING, 'book_name'],
-        'Author' => [self::FIELD_TYPE_STRING, 'author'],
-        'Type' => [self::FIELD_TYPE_INT, 'type'],
-        'TypeName' => [self::FIELD_TYPE_STRING, 'typename'],
-        'BookDesc' => [self::FIELD_TYPE_STRING, 'description'],
-        'Words' => [self::FIELD_TYPE_INT, 'words'],
-        'ViewCount' => [self::FIELD_TYPE_INT, 'view_count'],
-        'LikeCount' => [self::FIELD_TYPE_INT, 'like_count'],
-        'FavoriteCount' => [self::FIELD_TYPE_INT, 'favorite_count'],
-        'CreateTime' => [self::FIELD_TYPE_STRTOTIME, 'create_time'],
-        'UpdateTime' => [self::FIELD_TYPE_STRTOTIME, 'update_time'],
-        'Status' => [self::FIELD_TYPE_INT, 'status'],
-        'IsFinish' => [self::FIELD_TYPE_INT, 'finish'],
+        'BookId' => [self::T_INT, 'id'],
+        'BookName' => [self::T_STRING, 'book_name'],
+        'Author' => [self::T_STRING, 'author'],
+        'Type' => [self::T_INT, 'type'],
+        'TypeName' => [self::T_STRING, 'typename'],
+        'BookDesc' => [self::T_STRING, 'description'],
+        'Words' => [self::T_INT, 'words'],
+        'ViewCount' => [self::T_INT, 'view_count'],
+        'LikeCount' => [self::T_INT, 'like_count'],
+        'FavoriteCount' => [self::T_INT, 'favorite_count'],
+        'CreateTime' => [self::T_STRTOTIME, 'create_time'],
+        'UpdateTime' => [self::T_STRTOTIME, 'update_time'],
+        'Status' => [self::T_INT, 'status'],
+        'IsFinish' => [self::T_INT, 'finish'],
     ];
 
     /**
