@@ -12,13 +12,13 @@
             </thead>
             <tbody>
             {if (!empty($dirs))}
-            <?php $num = 1?>
+            {@$num = 1}
             {foreach ($dirs as $v)}
             <tr>
                 <td>{$num}</td>
                 <td><a href="{uri('apidoc/lists', $v)}">{$v}</a></td>
             </tr>
-            <?php $num++?>
+            {@$num++}
             {/foreach}
             {/if}
             </tbody>

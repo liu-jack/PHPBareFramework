@@ -12,17 +12,17 @@
             </thead>
             <tbody>
             {if (!empty($files))}
-            <?php $num = 1?>
+            {@$num = 1}
             {foreach ($files as $v)}
             <tr>
                 <td>{$num}</td>
                 <td><a href="{uri('apidoc/methods', $_GET['module'].'_'.$v)}">{$v}</a></td>
             </tr>
-            <?php $num++?>
+            {@$num++}
             {/foreach}
             {/if}
             </tbody>
         </table>
     </div>
 
-{view('Tool/Public/apidoc_footer')}
+{@view('Tool/Public/apidoc_footer')}

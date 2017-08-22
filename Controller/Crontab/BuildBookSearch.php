@@ -18,7 +18,7 @@ class BuildBookSearch extends Controller
     const PAGE_SIZE = 1000;
 
     /**
-     * 重建书本搜索 php index.php Crontab/BuildBookSearch/index
+     * 重建书本搜索 php index.php Crontab/BuildBookSearch/index _v1
      */
     public function index()
     {
@@ -43,7 +43,7 @@ class BuildBookSearch extends Controller
                 $pdo = null;
 
                 if (count($data) > 0) {
-                    SBook::insertSearch($data);
+                    SBook::insertSearch($data, (string)$_GET['argv'][1]);
                 }
 
                 echo "Process: {$i}/{$page}\r";

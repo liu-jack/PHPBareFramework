@@ -22,14 +22,14 @@
             </thead>
             <tbody>
             {if (!empty($methods))}
-            <?php $num = 1?>
+            {@$num = 1}
             {foreach ($methods as $v)}
             <tr>
                 <td>{$num}</td>
                 <td><a href="{uri('apidoc/info', $_GET['module'].'_'.$_GET['class'].'_'.$v['method'])}">{$_GET['module']}/{$_GET['class']}/{$v['method']}</a></td>
                 <td>{$v['desc']}</td>
             </tr>
-            <?php $num++?>
+            {@$num++}
             {/foreach}
             {/if}
             </tbody>

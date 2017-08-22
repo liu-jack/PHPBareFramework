@@ -94,26 +94,28 @@ function parseTemplate($path)
         }
     }
     $pattern = [
-        // {:view('add')}
+        // 1. {:view('add')}
         '@\{:([\w_]+\([^}]*\))\}@isU',
-        // {@view('admin/public/header')}
+        // 2. {@view('admin/public/header')}
         '@\{\@([\w_]+\([^}]*\))\}@isU',
-        // {foreach ($group as $v)}{if(xx)}{elseif(xx)}
+        // 3. {foreach ($group as $v)}{if(xx)}{elseif(xx)}
         '@\{(foreach|if|elseif)\s*(\([^}]*\))\}@isU',
-        // {else}
+        // 4. {else}
         '@\{(else)\}@isU',
-        // {/foreach}{/if}
+        // 5. {/foreach}{/if}
         '@\{/(foreach|if)\}@isU',
-        // {$a.b.c}
+        // 6. {$a.b.c}
         '@\{(\$[\w_]+)\.([\w_]+)\.([\w_]+)\}@isU',
-        // {$a.b}
+        // 7. {$a.b}
         '@\{(\$[\w_]+)\.([\w_]+)\}@isU',
-        // {$a} {$a['b']} {$a[$b['c']]}
+        // 8. {$a} {$a['b']} {$a[$b['c']]}
         '@\{(\$[^}]+)\}@isU',
-        // {STATICS_JS}
+        // 9. {STATICS_JS}
         '@\{([A-Z_]+)\}@isU',
-        // {url('add')}
+        // 10. {url('add')}
         '@\{([\w_]+\([^}]*\))\}@isU',
+        // 11. {@$i = 1}{@$i++}
+        '@\{\@(\$[^}]+)\}@isU',
     ];
     $replace = [
         '<?php $this->$1?>',
@@ -126,6 +128,7 @@ function parseTemplate($path)
         '<?php echo $1?>',
         '<?php echo $1?>',
         "<?php echo $1?>",
+        "<?php $1?>",
     ];
     $content = file_get_contents($path);
     $content = preg_replace($pattern, $replace, $content);

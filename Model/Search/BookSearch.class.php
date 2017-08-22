@@ -22,26 +22,26 @@ class BookSearch extends SearchBase
     /**
      * 排行类型
      */
-    const TOP_VIEW = 'view_count';
-    const TOP_LIKE = 'like_count';
+    const TOP_VIEW = 'viewcount';
+    const TOP_LIKE = 'likecount';
     const TOP_FINISH = 'finish';
-    const TOP_FAVORITE = 'favorite_count';
+    const TOP_FAVORITE = 'favoritecount';
     /**
      * 搜索字段
      */
     public static $_search_fields = [
         'BookId' => [self::T_INT, 'id'],
-        'BookName' => [self::T_STRING, 'book_name'],
+        'BookName' => [self::T_STRING, 'bookname'],
         'Author' => [self::T_STRING, 'author'],
         'Type' => [self::T_INT, 'type'],
         'TypeName' => [self::T_STRING, 'typename'],
         'BookDesc' => [self::T_STRING, 'description'],
         'Words' => [self::T_INT, 'words'],
-        'ViewCount' => [self::T_INT, 'view_count'],
-        'LikeCount' => [self::T_INT, 'like_count'],
-        'FavoriteCount' => [self::T_INT, 'favorite_count'],
-        'CreateTime' => [self::T_STRTOTIME, 'create_time'],
-        'UpdateTime' => [self::T_STRTOTIME, 'update_time'],
+        'ViewCount' => [self::T_INT, 'viewcount'],
+        'LikeCount' => [self::T_INT, 'likecount'],
+        'FavoriteCount' => [self::T_INT, 'favoritecount'],
+        'CreateTime' => [self::T_STRTOTIME, 'createtime'],
+        'UpdateTime' => [self::T_STRTOTIME, 'updatetime'],
         'Status' => [self::T_INT, 'status'],
         'IsFinish' => [self::T_INT, 'finish'],
     ];
@@ -65,7 +65,7 @@ class BookSearch extends SearchBase
                                 "query" => $keywords,
                                 "type" => "best_fields",
                                 "fields" => [
-                                    "book_name^2",
+                                    "bookname^2",
                                     "author^1",
                                     "typename^0.2",
                                     "description^0.2"
@@ -89,7 +89,7 @@ class BookSearch extends SearchBase
                     ]
                 ],
                 [
-                    "update_time" => [
+                    "updatetime" => [
                         "order" => "desc"
                     ]
                 ]
@@ -144,7 +144,7 @@ class BookSearch extends SearchBase
                     ]
                 ],
                 [
-                    "update_time" => [
+                    "updatetime" => [
                         "order" => "desc"
                     ]
                 ]
@@ -210,7 +210,7 @@ class BookSearch extends SearchBase
             ],
             "sort" => [
                 [
-                    "update_time" => [
+                    "updatetime" => [
                         "order" => "desc"
                     ]
                 ]
@@ -317,13 +317,14 @@ class BookSearch extends SearchBase
     }
 
     /**
-     * 导入搜索数据
+     * 新建搜索数据
      *
-     * @param $data
+     * @param        $data
+     * @param string $ver
      */
-    public static function insertSearch($data)
+    public static function insertSearch($data, $ver = '')
     {
-        $head = "{\"index\":{\"_index\":\"" . self::BOOK_SEARCH_INDEX . "\",\"_type\":\"list\",\"_id\":\"{id}\"}}";
+        $head = "{\"index\":{\"_index\":\"" . self::BOOK_SEARCH_INDEX . $ver . "\",\"_type\":\"list\",\"_id\":\"{id}\"}}";
         $query = "";
         foreach ($data as $row) {
             $t_head = str_replace('{id}', $row['BookId'], $head);

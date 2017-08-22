@@ -34,7 +34,7 @@ class CollectBook extends Controller
             $max = max(1, $res['data'][0]['CollectId']);
             while ($id <= $max) {
                 $res = Collect::getCollectById($id);
-                if (!empty($res)) {
+                if (!empty($res) && $res['Status'] == 1) {
                     logs("start collect book {$res['BookId']}");
                     echo "start collect book {$res['BookId']}" . PHP_EOL;
 
