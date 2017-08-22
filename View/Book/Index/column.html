@@ -1,45 +1,45 @@
 {:view('Book/Public/header')}
 
 <body>
-    <div class="header"> <span class="nav_left"><a href="javascript:history.back()">返回</a></span><span class="nav_right"><a rel="internal" href="<?php echo uri('book', 'type_'.$rtypes[$book['TypeName']])?>"><?php echo $book['TypeName']?></a></span>
+    <div class="header"> <span class="nav_left"><a href="javascript:history.back()">返回</a></span><span class="nav_right"><a rel="internal" href="{uri('book', 'type_'.$rtypes[$book['TypeName']])}">{$book['TypeName']}</a></span>
         <h1>目录</h1>
     </div>
     <div class="wrap">
        <div class="section bindex">
-            <div class="btitle"><a class="ye"><?php echo $book['BookName']?></a>
+            <div class="btitle"><a class="ye">{$book['BookName']}</a>
             </div>
             <div class="blist">
                 <ul>
                     <li>
                         <div class="bookwrap clearfix">
                             <div class="bcover fl">
-                                <img src="<?php echo $book['Cover']?>" height="110" width="75">
+                                <img src="{$book['Cover']}" height="110" width="75">
                             </div>
                             <div class="bintro b_i pl10">
-                                <p>类型: <b class="tname"><a href="{:U('search',array('t'=>$_info['tid']))}" class="ye"><?php echo $book['TypeName']?></a></b>
-                                    <br/>作者: <?php echo $book['Author']?>
-                                    <br/>推荐: <?php echo $book['LikeCount']?>
-                                    <br/>阅读: <?php echo $book['ViewCount']?>
-                                    <br/>状态: <?php echo $book['IsFinish'] >= 1 ? '完结' : '连载'?>
+                                <p>类型: <b class="tname"><a href="{url('search',['t'=>$_info['tid']])}" class="ye">{$book['TypeName']}</a></b>
+                                    <br/>作者: {$book['Author']}
+                                    <br/>推荐: {$book['LikeCount']}
+                                    <br/>阅读: {$book['ViewCount']}
+                                    <br/>状态: {$book['IsFinish'] >= 1 ? '完结' : '连载'}
                                     </p>
                             </div>
                         </div>
                         <div class="blink gyb bl3 mt5">
                             <?php if ($rdbk):?>
-                            <a href="<?php echo uri('book', $fromsite.'_'.$bookid, $rdbk)?>" class="cur">继续阅读</a>
+                            <a href="{uri('book', $fromsite.'_'.$bookid, $rdbk)}" class="cur">继续阅读</a>
                             <?php else:?>
-                            <a href="<?php echo uri('book', $fromsite.'_'.$bookid, $column[0]['ChapterId'])?>" class="cur">立即阅读</a>
+                            <a href="{uri('book', $fromsite.'_'.$bookid, $column[0]['ChapterId'])}" class="cur">立即阅读</a>
                             <?php endif;?>
                             
-                            <a href="javascript:void(0);" class="favBook" data-bid="<?php echo $book['BookId']?>" ><?php if ($isfav):?>取消收藏<?php else:?>收藏本书<?php endif;?></a>
+                            <a href="javascript:void(0);" class="favBook" data-bid="{$book['BookId']}" >{if ($isfav)}取消收藏{else}收藏本书{/if}</a>
                             
-                            <a href="javascript:void(0);" class="last recmBook" data-bid="<?php echo $book['BookId']?>" ><?php if ($isrec):?>已推荐<?php else:?>推荐本书<?php endif;?></a>
+                            <a href="javascript:void(0);" class="last recmBook" data-bid="{$book['BookId']}" >{if ($isrec)}已推荐{else}推荐本书{/if}</a>
                             
                         </div>
                     </li>
                     <li>
                         <div class="intro">
-                            <p><b>简介：</b><?php echo htmlspecialchars_decode($book['BookDesc'])?></p>
+                            <p><b>简介：</b>{htmlspecialchars_decode($book['BookDesc'])}</p>
                         </div>
                     </li>
                 </ul>
@@ -49,18 +49,18 @@
             <div class="tab-menu t2 mt15">
                 <a href="javascript:void(0)">
                     <select onchange="location.href=this.value" class="siteselect">
-                        <?php foreach($fromsites as $k => $v):?>
-                        <option <?php if($k == $fromsite):?>selected="selected"<?php endif;?> value="<?php echo uri('book', $k.'_'.$bookid)?>"><?php echo $v?></option>
-                        <?php endforeach;?>
+                        {foreach($fromsites as $k => $v)}
+                        <option {if($k == $fromsite)}selected="selected"{/if} value="{uri('book', $k.'_'.$bookid)}">{$v}</option>
+                        {/foreach}
                     </select>
                 </a>
                 <a href="javascript:void(0)" id="gobottom">直达底部</a>
             </div>
             <div class="dir_list">
                 <ul class="blist">
-                    <?php foreach($column as $v):?>
-                        <li><span class="bname"><a href="<?php echo uri('book', $fromsite.'_'.$bookid, $v['ChapterId'])?>"><?php echo $v['ChapterName']?></a></span></li>
-                    <?php endforeach;?>
+                    {foreach($column as $v)}
+                        <li><span class="bname"><a href="{uri('book', $fromsite.'_'.$bookid, $v['ChapterId'])}">{$v['ChapterName']}</a></span></li>
+                    {/foreach}
                 </ul>
             </div>
         </div>
