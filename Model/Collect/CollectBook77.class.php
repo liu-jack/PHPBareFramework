@@ -46,7 +46,7 @@ class CollectBook77 extends CollectBookBase
                 self::getBookList($i, self::ALL_VISIT_URL);
                 self::getBookList($i, self::ALL_VOTE_URL);
                 self::getBookList($i, self::TOP_TIME_URL);
-                if ($i <= 3) {
+                if ($i <= 1) {
                     self::getBookList($i, self::MONTH_VISIT_URL);
                     self::getBookList($i, self::MONTH_VOTE_URL);
                 }

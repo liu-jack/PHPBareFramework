@@ -33,10 +33,10 @@ class Book extends Controller
             $where['BookId'] = $book_id;
         }
         if (!empty($book_name)) {
-            $where['BookName LIKE'] = $book_name;
+            $where['BookName LIKE'] = "%{$book_name}%";
         }
         if (!empty($author)) {
-            $where['Author LIKE'] = $author;
+            $where['Author LIKE'] = "%$author%";
         }
         if ($book_id !== '') {
             $where['IsFinish'] = $isfinish;
@@ -56,7 +56,7 @@ class Book extends Controller
             }
         }
 
-        $this->value('book_id', $book_id);
+        $this->value('book_id', !empty($book_id) ? $book_id : '');
         $this->value('book_name', $book_name);
         $this->value('author', $author);
         $this->value('isfinish', $isfinish);
@@ -174,10 +174,10 @@ class Book extends Controller
             $data['ChapterName'] = trim($_POST['ChapterName']);
             $cdata['Content'] = trim($_POST['Content']);
             if (!empty($data['ChapterName'])) {
-               $ret = Column::updateColumn($bid, $cid, $data);
-               if (!$ret) {
-                   $this->alertErr('修改章节名称失败');
-               }
+                $ret = Column::updateColumn($bid, $cid, $data);
+                if (!$ret) {
+                    $this->alertErr('修改章节名称失败');
+                }
             }
             if (!empty($cdata['Content']) && $ccid > 0) {
                 $ret = Content::updateContent($bid, $ccid, $cdata);

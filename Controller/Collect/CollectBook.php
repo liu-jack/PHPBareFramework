@@ -21,7 +21,7 @@ class CollectBook extends Controller
     }
 
     /**
-     * 书本单本整本采集 php index.php Collect/CollectBook/index/id/2
+     * 书本单本整本采集 php index.php Collect/CollectBook/index/id/1/step/1
      */
     public function index()
     {

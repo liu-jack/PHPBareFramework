@@ -41,7 +41,7 @@ spl_autoload_register(function ($class) {
         } elseif (!empty($class_file2) && is_file($class_file2)) {
             include($class_file2);
         } else {
-            throw new Exception("include file {$class_file} error");
+            throw new \Exception("include file {$class_file} error");
         }
         // 无论成功失败, 自动加载只进行一次
         $class_map[$class] = $class;
@@ -74,6 +74,7 @@ function view($path = '', $ext = VEXT)
  *
  * @param $path
  * @return string
+ * @throws Exception
  */
 function parseTemplate($path)
 {
@@ -109,13 +110,13 @@ function parseTemplate($path)
         // 7. {$a.b}
         '@\{(\$[\w_]+)\.([\w_]+)\}@isU',
         // 8. {$a} {$a['b']} {$a[$b['c']]}
-        '@\{(\$[^}]+)\}@isU',
+        '@\{(\$[\w_][^.}]*)\}@isU',
         // 9. {STATICS_JS}
         '@\{([A-Z_]+)\}@isU',
         // 10. {url('add')}
         '@\{([\w_]+\([^}]*\))\}@isU',
         // 11. {@$i = 1}{@$i++}
-        '@\{\@(\$[^}]+)\}@isU',
+        '@\{\@(\$[\w_][^}]*)\}@isU',
     ];
     $replace = [
         '<?php $this->$1?>',
@@ -131,9 +132,13 @@ function parseTemplate($path)
         "<?php $1?>",
     ];
     $content = file_get_contents($path);
-    $content = preg_replace($pattern, $replace, $content);
+    try {
+        $content = preg_replace($pattern, $replace, $content);
+    } catch (\Exception $e) {
+        echo $e->getMessage() . "parse template {$path} error";
+    }
     if (!is_dir(dirname($cache_path))) {
-        mkdir(dirname($cache_path), 0777, true);
+        mkdir(dirname($cache_path), 0755, true);
     }
     file_put_contents($cache_path, $content);
     file_put_contents($cmp_path, $cmp);
