@@ -152,7 +152,7 @@ class CollectBook83 extends CollectBookBase
         $column = $cc->matchAll('@<dd><a href="(.*)">(.*)</a></dd>@isU')->getMatch();
 
         // @todo end
-        if (!empty($column[1]) && count($column[1]) < 10000) {
+        if (!empty($column[1]) && count($column[1]) < 50000) {
             $count = Column::getColumnCount($bookid, self::FROM_ID_83);
             if ($count < count($column[1])) {
                 $offset = $count - 5 >= 0 ? $count - 5 : 0;

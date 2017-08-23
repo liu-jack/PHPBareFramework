@@ -259,7 +259,7 @@ class CollectBook77 extends CollectBookBase
             Book::updateBook($bookid, $data); // 简介
         }
         // @todo end
-        if (!empty($column[1]) && count($column[1]) < 10000) {
+        if (!empty($column[1]) && count($column[1]) < 50000) {
             $count = Column::getColumnCount($bookid, self::FROM_ID_77);
             if ($count < count($column[1])) {
                 $offset = $count - 5 >= 0 ? $count - 5 : 0;
