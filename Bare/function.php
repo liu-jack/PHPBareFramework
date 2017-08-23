@@ -307,7 +307,7 @@ function logs($content, $name = '', $log_path = LOG_PATH)
  */
 function need_cli($msg = 'Must CLI Mode', $memory = 0, $timeout = 0)
 {
-    IS_CLI ?: exit($msg);
+    defined('IS_CLI') && IS_CLI ?: exit($msg);
     set_time_limit($timeout);
     if (!empty($memory)) {
         $memory = intval($memory);

@@ -156,6 +156,8 @@ class Book extends Model
         if ($id > 0) {
             return parent::delData($id);
         }
+
+        return false;
     }
 
 }
