@@ -126,7 +126,7 @@ class BookSearch extends SearchBase
         $query = [
             "query" => [
                 "bool" => [
-                    "must" => [
+                    "filter" => [
                         [
                             "term" => [
                                 "status" => [

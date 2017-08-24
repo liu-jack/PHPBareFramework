@@ -30,25 +30,28 @@ class SearchBase
     public static function checkFields($data, $must = false)
     {
         if ($must) {
-            if (count(array_diff_key(static::$_search_fields, $data)) > 0) {
-                throw new \Exception('Fields miss');
+            $diff = array_diff_key(static::$_search_fields, $data);
+            if (count($diff) > 0) {
+                throw new \Exception('Fields miss ' . implode(',', $diff));
             }
         }
         $return = [];
         foreach (static::$_search_fields as $k => $v) {
-            $t = $data[$k];
-            switch ($v[0]) {
-                case (self::T_INT):
-                    $t = (int)$t;
-                    break;
-                case (self::T_STRING):
-                    $t = (string)$t;
-                    break;
-                case (self::T_STRTOTIME):
-                    $t = strtotime($t);
-                    break;
+            if (isset($data[$k])) {
+                $t = $data[$k];
+                switch ($v[0]) {
+                    case self::T_INT:
+                        $t = (int)$t;
+                        break;
+                    case self::T_STRING:
+                        $t = (string)$t;
+                        break;
+                    case self::T_STRTOTIME:
+                        $t = strtotime($t);
+                        break;
+                }
+                $return[$v[1]] = $t;
             }
-            $return[$v[1]] = $t;
         }
 
         return $return;

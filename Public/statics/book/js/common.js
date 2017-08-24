@@ -46,7 +46,8 @@ $(document).ready(function () {
                     } else if (ret.code === 201) {
                         $(".favBook").html('收藏本书');
                     } else if (ret.code === 551) {
-                        location.href = ret.url;
+                        location.href = ret.data.url;
+                        return false;
                     }
                     if (ret.msg) {
                         sweetAlert(ret.msg);

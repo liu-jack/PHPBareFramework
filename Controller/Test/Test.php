@@ -200,8 +200,9 @@ class Test extends Controller
 //        UserData::userReadBook(1, [1,2,3,4]);
 //        var_dump(UserData::getUserData(1));
 //        logs('test');
-        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
-        pre($info);die;
+//        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
+//        pre($info);die;
+//        var_dump(Book::updateBook(285,['IsFinish' => 2]));
     }
 
     /**
