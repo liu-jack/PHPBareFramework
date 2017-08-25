@@ -27,6 +27,7 @@ class Collect extends Model
             'FromSite' => self::VAR_TYPE_INT,
             'Url' => self::VAR_TYPE_STRING,
             'CollectTime' => self::VAR_TYPE_STRING,
+            'Status' => self::VAR_TYPE_INT,
         ],
         // 可选, MC连接参数
         'mc' => '',

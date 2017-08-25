@@ -22,36 +22,12 @@
                             </td>
                             <td class="form-group col-xs-2">
                                 <div class="input-group">
-                                    <div class="input-group-addon">书名</div>
-                                    <input type="text" class="form-control" name="book_name" placeholder="书名" value="{$book_name}"/>
-                                </div>
-                            </td>
-                            <td class="form-group col-xs-2">
-                                <div class="input-group">
-                                    <div class="input-group-addon">作者</div>
-                                    <input type="text" class="form-control" name="author" placeholder="作者" value="{$author}" >
-                                </div>
-                            </td>
-                            <td class="form-group col-xs-2">
-                                <div class="input-group">
-                                    <div class="input-group-addon">是否完本</div>
-                                    <select class="form-control" name="isfinish">
-                                        <option value="" {if(!is_numeric($isfinish))}selected{/if}>全部</option>
-                                        <option value="1" {if($isfinish == 1)}selected{/if}>采集完本</option>
-                                        <option value="2" {if($isfinish == 2)}selected{/if}>确认完本</option>
-                                        <option value="0" {if($isfinish === '0')}selected{/if}>连载</option>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="form-group col-xs-2">
-                                <div class="input-group">
                                     <div class="input-group-addon">状态</div>
                                     <select class="form-control" name="status">
-                                        <option value="" {if($status == 0)}selected{/if}>全部</option>
-                                        <option value="1" {if($status == 1)}selected{/if}>显示</option>
-                                        <option value="2" {if($status == 2)}selected{/if}>隐藏</option>
+                                        <option value="" {if(empty($status))}selected{/if}>全部</option>
+                                        {foreach($status_list as $k => $v)}
+                                        <option value="{$k}" {if($status == $k)}selected{/if}>{$v}</option>
+                                        {/foreach}
                                     </select>
                                 </div>
                             </td>
@@ -67,7 +43,7 @@
 
         <div class="widget">
             <div class="widget-head">
-                <div class="pull-left">书本管理</div>
+                <div class="pull-left">书本采集管理</div>
                 <div class="clearfix"></div>
             </div>
             <div class="widget-content">
@@ -75,38 +51,27 @@
                     <thead>
                     <tr>
                         <th>#</th>
+                        <th>书本ID</th>
                         <th>书名</th>
-                        <th>作者</th>
-                        <th>类型</th>
-                        <th>阅读量</th>
-                        <th>推荐数</th>
-                        <th>收藏数</th>
-                        <th>默认来源</th>
-                        <th>是否完本</th>
-                        <th>状态</th>
-                        <th>更新时间</th>
-                        <th>创建时间</th>
+                        <th>来源名称</th>
+                        <th>来源地址</th>
+                        <th>采集状态</th>
+                        <th>采集时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     {foreach($list as $v)}
                     <tr>
+                        <td>{$v.CollectId}</td>
                         <td>{$v.BookId}</td>
                         <td>{$v.BookName}</td>
-                        <td>{$v.Author}</td>
-                        <td>{$v.TypeName}</td>
-                        <td>{$v.ViewCount}</td>
-                        <td>{$v.LikeCount}</td>
-                        <td>{$v.FavoriteCount}</td>
-                        <td>{$v.DefaultFromSiteName}</td>
-                        <td>{$v.IsFinish}</td>
-                        <td>{$v.Status}</td>
-                        <td>{$v.UpdateTime}</td>
-                        <td>{$v.CreateTime}</td>
+                        <td>{$v.FromSiteName}</td>
+                        <td>{$v.Url}</td>
+                        <td>{$v.StatusName}</td>
+                        <td>{$v.CollectTime}</td>
                         <td>
-                            <a href="{url('edit', ['id'=>$v['BookId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
-                            <a href="{url('column', ['bid'=>$v['BookId'], 'fid'=>$v['DefaultFromSite']])}" class="btn btn-info"><i class="icon-list"></i></a>
+                            <a href="{url('edit', ['id'=>$v['CollectId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
                         </td>
                     </tr>
                     {/foreach}

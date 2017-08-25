@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `Book` (
   `Type` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '类型id',
   `TypeName` varchar(50) NOT NULL COMMENT '类型名称',
   `Cover` smallint(5) NOT NULL DEFAULT '0' COMMENT '封面',
-  `BookDesc` tinytext NOT NULL COMMENT '描述',
+  `BookDesc` varchar(512) NOT NULL COMMENT '描述',
   `Words` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '字数',
   `ViewCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '阅读量',
   `LikeCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '推荐数',

@@ -25,7 +25,7 @@ class Book extends Controller
         $book_id = intval($_GET['book_id']);
         $book_name = trim($_GET['book_name']);
         $author = trim($_GET['author']);
-        $isfinish = intval($_GET['isfinish']);
+        $isfinish = trim($_GET['isfinish']);
         $status = intval($_GET['status']);
 
         $where = [];
@@ -38,7 +38,7 @@ class Book extends Controller
         if (!empty($author)) {
             $where['Author LIKE'] = "%$author%";
         }
-        if ($book_id !== '') {
+        if ($isfinish !== '') {
             $where['IsFinish'] = $isfinish;
         }
         if (!empty($status)) {
@@ -51,7 +51,9 @@ class Book extends Controller
         $this->page(intval($list_info['count']), $limit, $page);
         $list = [];
         if (!empty($list_info['data'])) {
+            $sites = config('book/sites');
             foreach ($list_info['data'] as $k => $v) {
+                $v['DefaultFromSiteName'] = $sites[$v['DefaultFromSite']];
                 $list[$k] = $v;
             }
         }
