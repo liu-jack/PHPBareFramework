@@ -158,3 +158,30 @@ function getMethods($classname, $access = null)
 
     return $returnArr;
 }
+
+/**
+ * 二维数组排序
+ *
+ * @param array  $arr
+ * @param string $field1 主排序字段
+ * @param int    $order1 排序方式 SORT_DESC|SORT_ASC
+ * @param string $field2 辅排序字段
+ * @param int    $order2 排序方式 SORT_DESC|SORT_ASC
+ * @return mixed
+ */
+function arraySort($arr, $field1, $order1 = SORT_DESC, $field2 = '', $order2 = SORT_DESC)
+{
+    foreach ($arr as $k => $v) {
+        $volume1[$k] = $v[$field1];
+        if (!empty($field2)) {
+            $volume2[$k] = $v[$field2];
+        }
+    }
+    if (!empty($volume2)) {
+        array_multisort($volume1, $order1, $volume2, $order2, $arr);
+    } else {
+        array_multisort($volume1, $order1, $arr);
+    }
+
+    return $arr;
+}

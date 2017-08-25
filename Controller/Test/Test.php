@@ -203,6 +203,7 @@ class Test extends Controller
 //        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
 //        pre($info);die;
 //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
+        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
     }
 
     /**
