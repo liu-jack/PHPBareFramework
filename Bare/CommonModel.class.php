@@ -76,6 +76,7 @@ class CommonModel
                 }
             }
         }
+
         return $rows;
     }
 
@@ -103,7 +104,7 @@ class CommonModel
     /**
      * 处理计数字段更新
      *
-     * @param mixed $info 要更新的数据
+     * @param mixed $info   要更新的数据
      * @param array $fields 计数字段schema
      * @return array
      */
@@ -135,6 +136,7 @@ class CommonModel
                 }
             }
         }
+
         return $data;
     }
 }
