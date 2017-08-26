@@ -66,6 +66,12 @@ class FormModel extends Model
         self::CF_MC_TIME => 86400
     ];
 
+    /**
+     * 创建form表单
+     *
+     * @param array $val
+     * @return string
+     */
     public static function createForm($val = [])
     {
         $form = '';
@@ -104,6 +110,12 @@ class FormModel extends Model
                             $form .= '<option value="' . $kk . '" ' . (isset($val[$k]) && $val[$k] === $kk ? 'selected' : '') . '>' . $vv . '</option>';
                         }
                         $form .= '</select></div></div>';
+                        break;
+                    case self::FORM_TEXTAREA:
+                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><textarea class="form-control" name="' . $k . '" id="' . $k . '" rows="5" placeholder="' . $v[self::FORM_FIELD_NAME] . '">' . (isset($val[$k]) ? $val[$k] : '') . '</textarea></div></div>';
+                        break;
+                    case self::FORM_EDITOR:
+                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><textarea class="cleditor" name="' . $k . '" id="' . $k . '">' . (isset($val[$k]) ? $val[$k] : '') . '</textarea></div></div>';
                         break;
                 }
             }
