@@ -20,6 +20,7 @@ use Model\Admin\AdminMenu;
 use Bare\MongoModel;
 use Model\Admin\AdminLogin;
 use Model\Collect\CollectBook77 as Collect77;
+use Bare\FormModel;
 
 /**
  * 测试用控制器
@@ -203,7 +204,8 @@ class Test extends Controller
 //        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
 //        pre($info);die;
 //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
-        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
+//        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
+        echo FormModel::createForm();
     }
 
     /**

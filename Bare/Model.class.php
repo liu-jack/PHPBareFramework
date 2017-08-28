@@ -10,18 +10,6 @@ namespace Bare;
 
 abstract class Model
 {
-    // 配置变量名称
-    const CF_DB = 'db';
-    const CF_DB_W = 'w';
-    const CF_DB_R = 'r';
-    const CF_TABLE = 'table';
-    const CF_FIELDS = 'fields';
-    const CF_MC = 'mc';
-    const CF_MC_KEY = 'mckey';
-    const CF_MC_TIME = 'mctime';
-    const CF_PRIMARY_KEY = '_primary_key';
-    const CF_FIELDS_ARRAY = '_fields_array';
-    const CF_USE_MC = '_use_memcache';
     /**
      * 基础配置文件
      *
@@ -45,9 +33,18 @@ abstract class Model
         self::CF_MC_TIME => 86400
     ];
 
-    // form 表单字段
-    const FIELD_VAR_TYPE = 'var_type';
-    const FIELD_FORM_TYPE = 'form_type';
+    // 配置变量名称
+    const CF_DB = 'db';
+    const CF_DB_W = 'w';
+    const CF_DB_R = 'r';
+    const CF_TABLE = 'table';
+    const CF_FIELDS = 'fields';
+    const CF_MC = 'mc';
+    const CF_MC_KEY = 'mckey';
+    const CF_MC_TIME = 'mctime';
+    const CF_PRIMARY_KEY = '_primary_key';
+    const CF_FIELDS_ARRAY = '_fields_array';
+    const CF_USE_MC = '_use_memcache';
 
     // 主键/字段类型
     const VAR_TYPE_KEY = 'PRIMARY KEY';

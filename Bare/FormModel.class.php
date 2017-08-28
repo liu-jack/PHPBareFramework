@@ -10,6 +10,12 @@ namespace Bare;
 
 class FormModel extends Model
 {
+    // form 表单字段
+    const FIELD_VAR_TYPE = 'var_type';
+    const FIELD_FORM_TYPE = 'form_type';
+    const FIELD_SEARCH_TYPE = 'search_type';
+    const FIELD_LIST_TYPE = 'list_type';
+
     const FORM_INPUT_TEXT = 'text';
     const FORM_INPUT_TIME = 'datetime';
     const FORM_INPUT_PASSWORD = 'password';
@@ -42,10 +48,13 @@ class FormModel extends Model
             'UserId' => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FORM_FIELD_NAME => '用户id',
             ],
             'Status' => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_RADIO,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_RADIO,
                 self::FORM_RADIO_OPTION => [
                     '1' => '显示',
                     '2' => '隐藏',
