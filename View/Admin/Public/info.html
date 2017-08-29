@@ -1,0 +1,53 @@
+{:view('Public/header2')}
+
+<script type="text/javascript" src="{JS_PATH}DatePicker/WdatePicker.js"></script>
+
+<!-- Main content starts -->
+<div class="content">
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+
+                <div class="widget wgreen">
+
+                    <div class="widget-head">
+                        <div class="pull-left">{$info_title}</div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="widget-content">
+                        <div class="padd">
+
+                            <!-- Form starts.  -->
+                            <form action="{url('update')}" method="post" class="form-horizontal" role="form">
+                                {$info_form}
+
+                                <hr />
+                                <div class="form-group">
+                                    <div class="col-lg-offset-1 col-lg-9">
+                                        <button type="submit" class="btn btn-success"><i class="icon-ok"></i></button>
+                                        <button type="reset" class="btn btn-warning"><i class="icon-refresh"></i></button>
+                                        <button type="button" class="btn btn-danger go-back"><i class="icon-remove"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="widget-foot">
+                        <!-- Footer goes here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $(".go-back").click(function(){
+        history.back();
+    });
+</script>
+
+{@view('Public/footer2')}

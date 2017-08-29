@@ -10,6 +10,8 @@ namespace Bare;
 
 abstract class Model
 {
+    const FIELD_VAR_TYPE = 'var_type';
+
     /**
      * 基础配置文件
      *
@@ -52,6 +54,7 @@ abstract class Model
     const VAR_TYPE_STRING = 'string';
     const VAR_TYPE_ARRAY = 'array';
     const VAR_TYPE_PASSWORD = 'password';
+    const VAR_TYPE_HIDDEN = 'hidden';
 
     // 强制不用缓存
     const EXTRA_NO_CACHE = 'no_cache';
@@ -456,6 +459,11 @@ abstract class Model
                             break;
                         case static::VAR_TYPE_PASSWORD:
                             $v = !empty($v) ? password_hash($v, PASSWORD_DEFAULT) : $v;
+                            break;
+                        case static::VAR_TYPE_HIDDEN:
+                            if (isset($rows[$k])) {
+                                unset($rows[$k]);
+                            }
                             break;
                         default:
                             break;

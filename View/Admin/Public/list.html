@@ -1,0 +1,62 @@
+{:view('Public/header')}
+
+<script type="text/javascript" src="{JS_PATH}DatePicker/WdatePicker.js"></script>
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        {if(!empty($list_search))}
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">查询</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <form action="" method="get" name="searchForm" id="searchForm">
+                    {$list_search}
+                </form>
+            </div>
+        </div>
+        {/if}
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">{$list_title}</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                {$list_list}
+
+                {if (!empty($pages))}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $("#clearSearchForm").click(function(){
+        $("#searchForm input, #searchForm select").each(function(){
+            $(this).val('');
+            $(this).attr('value','');
+        });
+    });
+    $(".delete").click(function(){
+        var url = $(this).attr("href");
+        top.__confirm('确定要删除吗？','删除后不可恢复！', url, self);
+        return false;
+    });
+</script>
+
+{@view('Public/footer')}
