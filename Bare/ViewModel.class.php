@@ -8,11 +8,13 @@
 
 namespace Bare;
 
-class FormModel extends Model
+class ViewModel extends Model
 {
-    // form 表单字段
+    const FIELD_VAR_TYPE = 'var_type';
     const FIELD_FORM_TYPE = 'form_type';
     const FIELD_SEARCH_TYPE = 'search_type';
+    const SEARCH_WHERE_OP = 'op';
+    const FIELD_MAP = 'field_map';
     const FIELD_LIST_TYPE = 'list_type';
     const LIST_VAL_SHOW = 1;
     const EXTRA_LIST_EDIT = 'edit';
@@ -45,21 +47,22 @@ class FormModel extends Model
         self::CF_FIELDS => [
             'Id' => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
-                self::FIELD_FORM_TYPE => self::FORM_INPUT_HIDDEN,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FIELD_FORM_TYPE => self::FORM_INPUT_HIDDEN,
+                self::FORM_FIELD_NAME => 'ID',
             ],
             'UserId' => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
-                self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
-                self::FORM_FIELD_NAME => '用户id',
+                self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
+                self::FORM_FIELD_NAME => '用户ID',
             ],
             'Status' => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
-                self::FIELD_FORM_TYPE => self::FORM_INPUT_RADIO,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_RADIO,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FIELD_FORM_TYPE => self::FORM_INPUT_RADIO,
                 self::FORM_RADIO_OPTION => [
                     '1' => '显示',
                     '2' => '隐藏',
@@ -68,9 +71,23 @@ class FormModel extends Model
             ],
             'CreateTime' => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
-                self::FIELD_FORM_TYPE => self::FORM_INPUT_TIME,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FIELD_FORM_TYPE => self::FORM_INPUT_TIME,
                 self::FORM_FIELD_NAME => '时间',
+            ],
+            'StartTime' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
+                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
+                self::SEARCH_WHERE_OP => '>=',
+                self::FORM_FIELD_NAME => '开始时间',
+            ],
+            'EndTime' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
+                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
+                self::SEARCH_WHERE_OP => '<=',
+                self::FORM_FIELD_NAME => '结束时间',
             ],
         ],
         // 可选, MC连接参数
@@ -80,6 +97,51 @@ class FormModel extends Model
         // 可选, 超时时间, 默认不过期
         self::CF_MC_TIME => 86400
     ];
+
+    /**
+     * 新增必须字段
+     *
+     * @var array
+     */
+    protected static $_add_must_fields;
+
+    /**
+     * 生成where条件
+     *
+     * @param array $val
+     * @return array
+     */
+    public static function createWhere($val = [])
+    {
+        if (empty($val)) {
+            $val = $_GET;
+        }
+        $where = [];
+        foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
+            if (isset($v[self::FIELD_SEARCH_TYPE]) && isset($val[$k])) {
+                $_val = trim($val[$k]);
+                if ($_val !== '') {
+                    if ($v[self::FIELD_VAR_TYPE] == self::VAR_TYPE_INT) {
+                        $_val = intval($_val);
+                    }
+                    if (!empty($v[self::FIELD_MAP])) {
+                        $k = trim($v[self::FIELD_MAP]);
+                    }
+                    if (empty($v[self::SEARCH_WHERE_OP])) {
+                        $where[$k] = $_val;
+                    } else {
+                        $op = strtoupper(trim($v[self::SEARCH_WHERE_OP]));
+                        if ($op == 'LIKE') {
+                            $_val = '%' . $_val . '%';
+                        }
+                        $where[$k . ' ' . $op] = $_val;
+                    }
+                }
+            }
+        }
+
+        return $where;
+    }
 
     /**
      * 生成搜索表单
@@ -97,22 +159,36 @@ class FormModel extends Model
         $i = 1;
         foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
             if (isset($v[self::FIELD_SEARCH_TYPE])) {
+                $_val = trim($val[$k]);
+                if ($_val !== '') {
+                    if ($v[self::FIELD_VAR_TYPE] == self::VAR_TYPE_INT) {
+                        $_val = intval($_val);
+                    }
+                }
                 if ($i % 5 == 1) {
                     $form .= '<tr>';
                 }
-                switch ($v[self::FIELD_FORM_TYPE]) {
+                switch ($v[self::FIELD_SEARCH_TYPE]) {
                     case self::FORM_INPUT_TEXT:
-                        $form .= '<td class="form-group col-xs-2"><div class="input-group"><div class="input-group-addon">' . $v[self::FORM_FIELD_NAME] . '</div><input type="text" class="form-control" name="' . $k . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '" value="' . (isset($val[$k]) ? $val[$k] : '') . '">
-                                </div>
-                            </td>';
+                        $form .= '<td class="form-group col-xs-2"><div class="input-group"><div class="input-group-addon">' . $v[self::FORM_FIELD_NAME] . '</div><input type="text" class="form-control" name="' . $k . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '" value="' . (isset($val[$k]) ? $val[$k] : '') . '"></div></td>';
                         break;
                     case self::FORM_SELECT:
-                        $form .= '<td class="col-xs-2 form-group"><div class="input-group"><div class="input-group-addon">' . $v[self::FORM_FIELD_NAME] . '</div><select name="' . $k . '" class="form-control">';
-                        $form .= '<option value="" ' . (!isset($val[$k]) ? 'selected' : '') . '>全部</option>';
-                        foreach ($v[self::FORM_SELECT_OPTION] as $kk => $vv) {
-                            $form .= '<option value="' . $kk . '" ' . (isset($val[$k]) && $val[$k] === $kk ? 'selected' : '') . '>' . $vv . '</option>';
+                        $form .= '<td class="form-group col-xs-2"><div class="input-group"><div class="input-group-addon">' . $v[self::FORM_FIELD_NAME] . '</div><select name="' . $k . '" class="form-control">';
+                        $form .= '<option value="" ' . (empty($_val) && $_val !== 0 ? 'selected' : '') . '>全部</option>';
+                        $option = !empty($v[self::FORM_SELECT_OPTION]) ? $v[self::FORM_SELECT_OPTION] : (!empty($v[self::FORM_RADIO_OPTION]) ? $v[self::FORM_RADIO_OPTION] : $v[self::FORM_CHECKBOX_OPTION]);
+                        foreach ($option as $kk => $vv) {
+                            $form .= '<option value="' . $kk . '" ' . ($_val === $kk ? 'selected' : '') . '>' . $vv . '</option>';
                         }
                         $form .= '</select></div></td>';
+                        break;
+                    case self::FORM_INPUT_TIME:
+                        $time = '%H:%m:%s';
+                        if (stripos($k, 'start') !== false) {
+                            $time = '00:00:00';
+                        } elseif (stripos($k, 'end') !== false) {
+                            $time = '23:59:59';
+                        }
+                        $form .= '<td class="form-inline col-xs-2"><div class="input-group"><div class="input-group-addon">' . $v[self::FORM_FIELD_NAME] . '</div><input class="form-control" name="' . $k . '" type="text" onFocus="WdatePicker({startDate:\'%y-%M-%d ' . $time . '\',dateFmt:\'yyyy-MM-dd HH:mm:ss\'});" value="' . (isset($val[$k]) ? $val[$k] : '') . '" readonly="readonly"></div></td>';
                         break;
                 }
                 if ($i % 5 == 0) {
@@ -121,8 +197,8 @@ class FormModel extends Model
                 $i++;
             }
         }
-        $sub = '<td class="form-group col-xs-2" colspan="2"><button type="submit" class="btn btn-success"><i class="icon-ok"></i></button><button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button></td>';
-        if ($i % 5 != 0) {
+        $sub = '<td class="form-group col-xs-2" colspan="2"><button type="submit" class="btn btn-success"><i class="icon-ok"></i></button> <button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button></td>';
+        if ($i % 5 != 1) {
             $form .= $sub;
             $form .= '</tr>';
         } else {
@@ -141,7 +217,7 @@ class FormModel extends Model
             if ($v[self::FIELD_VAR_TYPE] == self::VAR_TYPE_KEY) {
                 $primary_key = $k;
             }
-            if (empty($v[self::FIELD_LIST_TYPE])) {
+            if (!empty($v[self::FIELD_LIST_TYPE])) {
                 $form .= '<th>' . $v[self::FORM_FIELD_NAME] . '</th>';
             }
         }
@@ -152,7 +228,7 @@ class FormModel extends Model
         foreach ($list as $kk => $vv) {
             $form .= '<tr>';
             foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
-                if (empty($v[self::FIELD_LIST_TYPE])) {
+                if (!empty($v[self::FIELD_LIST_TYPE])) {
                     $form .= '<td>' . $vv[$k] . '</td>';
                 }
             }
@@ -244,6 +320,9 @@ class FormModel extends Model
      */
     public static function add($data, $ignore = true)
     {
+        if (!empty(static::$_add_must_fields) && count(array_diff_key(static::$_add_must_fields, $data)) > 0) {
+            return false;
+        }
         $ret = false;
         if (!empty($data)) {
             if (empty($data['CreateTime'])) {

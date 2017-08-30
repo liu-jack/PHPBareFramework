@@ -9,7 +9,7 @@
 
 namespace Model\Admin\Admin;
 
-use Bare\Model;
+use Bare\ViewModel;
 use Bare\DB;
 
 /**
@@ -18,7 +18,7 @@ use Bare\DB;
  *
  * @package Model\Admin
  */
-class AdminLog extends Model
+class AdminLog extends ViewModel
 {
     /**
      * 配置文件
@@ -27,31 +27,91 @@ class AdminLog extends Model
      */
     protected static $_conf = [
         // 必选, 数据库连接(来自DBConfig配置), w: 写, r: 读
-        'db' => [
-            'w' => DB::DB_ADMIN_W,
-            'r' => DB::DB_ADMIN_R
+        self::CF_DB => [
+            self::CF_DB_W => DB::DB_ADMIN_W,
+            self::CF_DB_R => DB::DB_ADMIN_R
         ],
         // 必选, 数据表名
-        'table' => 'AdminLog',
+        self::CF_TABLE => 'AdminLog',
         // 必选, 字段信息
-        'fields' => [
-            'LogId' => self::VAR_TYPE_KEY,
-            'UserId' => self::VAR_TYPE_INT,
-            'UserName' => self::VAR_TYPE_STRING,
-            'ItemId' => self::VAR_TYPE_INT,
-            'ItemName' => self::VAR_TYPE_STRING,
-            'MenuKey' => self::VAR_TYPE_STRING,
-            'MenuName' => self::VAR_TYPE_STRING,
-            'LogFlag' => self::VAR_TYPE_STRING,
-            'Log' => self::VAR_TYPE_STRING,
-            'CreateTime' => self::VAR_TYPE_STRING,
+        self::CF_FIELDS => [
+            'LogId' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '序号',
+            ],
+            'UserId' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '管理员ID',
+            ],
+            'UserName' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '用户名',
+            ],
+            'ItemId' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '项目ID',
+            ],
+            'ItemName' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '项目名称',
+            ],
+            'MenuKey' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '菜单URL',
+            ],
+            'MenuName' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '操作菜单',
+            ],
+            'LogFlag' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '操作细分',
+            ],
+            'Log' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '操作内容',
+            ],
+            'CreateTime' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_FIELD_NAME => '操作时间',
+            ],
+            'StartTime' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
+                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
+                self::SEARCH_WHERE_OP => '>=',
+                self::FORM_FIELD_NAME => '开始时间',
+            ],
+            'EndTime' => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
+                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
+                self::SEARCH_WHERE_OP => '<=',
+                self::FORM_FIELD_NAME => '结束时间',
+            ],
         ],
         // 可选, MC连接参数
-        'mc' => '',
+        self::CF_MC => '',
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
-        'mckey' => '',
+        self::CF_MC_KEY => '',
         // 可选, 超时时间, 默认不过期
-        'mctime' => 86400
+        self::CF_MC_TIME => 86400
     ];
 
 
@@ -60,7 +120,7 @@ class AdminLog extends Model
      *
      * @var array
      */
-    private static $_add_must_fields = [
+    protected static $_add_must_fields = [
         'UserId' => 1,
         'ItemId' => 1,
         'Log' => 1,
@@ -92,93 +152,7 @@ class AdminLog extends Model
             'Log' => is_array($data) ? serialize($data) : $data,
         ];
 
-        return self::addLog($adddata);
+        return self::add($adddata);
     }
 
-    /**
-     * 新增
-     *
-     * @param      $data
-     * @param bool $ignore
-     * @return bool|int|string
-     */
-    public static function addLog($data, $ignore = true)
-    {
-        if (count(array_diff_key(self::$_add_must_fields, $data)) > 0) {
-            return false;
-        }
-        if (empty($data['CreateTime'])) {
-            $data['CreateTime'] = date('Y-m-d H:i:s');
-        }
-
-        return parent::addData($data, $ignore);
-    }
-
-    /**
-     * 更新
-     *
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public static function updateLog($id, $data)
-    {
-        if ($id > 0 && !empty($data)) {
-            return parent::updateData($id, $data);
-        }
-
-        return false;
-    }
-
-    /**
-     * 根据id获取详细信息
-     *
-     * @param int|array $ids
-     * @return array
-     */
-    public static function geLogByIds($ids)
-    {
-        if (empty($ids)) {
-            return [];
-        }
-
-        return parent::getDataById($ids);
-    }
-
-    /**
-     * 查询
-     *
-     * @param array  $where
-     * @param int    $offset
-     * @param int    $limit
-     * @param string $order
-     * @param string $fields
-     * @return array
-     */
-    public static function getLogs($where = [], $offset = 0, $limit = 0, $order = '', $fields = '*')
-    {
-        $extra = [
-            'fields' => $fields,
-            'offset' => $offset,
-            'limit' => $limit,
-            'order' => $order,
-        ];
-
-        return parent::getDataByFields($where, $extra);
-    }
-
-    /**
-     * 删除
-     *
-     * @param $id
-     * @return bool
-     */
-    public static function delLog($id)
-    {
-        if ($id > 0) {
-            //return parent::delData($id);
-        }
-
-        return false;
-    }
 }

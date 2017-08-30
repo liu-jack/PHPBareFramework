@@ -289,7 +289,7 @@ Class Controller
         $_GET[$page_key] = '%d';
         $urls = url($GLOBALS['_URL'], $_GET);
         unset($_GET[$page_key]);
-        $burl = url($GLOBALS['_URL'], $_GET);
+        $burl = url($GLOBALS['_URL'], array_filter($_GET));
         $now = max(1, $now);
         $pages = intval(ceil($count / $per));
         $min = 1;

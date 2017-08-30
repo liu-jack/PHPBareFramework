@@ -187,8 +187,9 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
                 unset($vars[ADMIN_VAR]);
             }
             foreach ($vars as $k => $v) {
-                $params .= '/' . $k . '/' . $v;
-
+                if ($v !== '') {
+                    $params .= '/' . $k . '/' . $v;
+                }
             }
         } else {
             $query = $vars;
