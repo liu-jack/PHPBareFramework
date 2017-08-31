@@ -155,15 +155,21 @@ class BookSearch extends SearchBase
         ];
 
         switch ($type) {
-            case 'finish':
+            case self::TOP_FINISH:
                 $query['query']['bool']['must'][] = [
                     "range" => [
-                        "finish" => [
+                        self::TOP_FINISH => [
                             "gte" => 1
                         ]
                     ]
                 ];
-                unset($query['sort'][0]);
+                $query['sort'] = [
+                    [
+                        "updatetime" => [
+                            "order" => "desc"
+                        ]
+                    ]
+                ];
                 break;
         }
 
