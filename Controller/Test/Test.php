@@ -213,6 +213,7 @@ class Test extends Controller
      */
     public function test()
     {
+        var_dump(md5(md5(microtime(true)) . (time() % 256)));
 //        need_cli();
 //        while (true) {
 //            logs('test/test', $_GET['argv']);
