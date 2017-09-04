@@ -9,11 +9,11 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\Controller;
+use Bare\AdminController;
 use Model\Admin\Admin\AdminGroup;
 use Model\Admin\Admin\AdminLogin;
 
-class Info extends Controller
+class Info extends AdminController
 {
     public function index()
     {

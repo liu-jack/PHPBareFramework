@@ -121,9 +121,9 @@ function parseTemplate($path)
     $replace = [
         '<?php $this->$1?>',
         '<?php $1?>',
-        "<?php $1$2:?>",
-        "<?php $1:?>",
-        "<?php end$1?>",
+        "<?php $1$2{?>",
+        "<?php }$1{?>",
+        "<?php }?>",
         "<?php echo $1['$2']['$3']?>",
         "<?php echo $1['$2']?>",
         '<?php echo $1?>',
@@ -140,11 +140,57 @@ function parseTemplate($path)
     if (!is_dir(dirname($cache_path))) {
         mkdir(dirname($cache_path), 0755, true);
     }
-    file_put_contents($cache_path, $content);
+    file_put_contents($cache_path, compressAll($content));
     file_put_contents($cmp_path, $cmp);
     unset($content);
 
     return $cache_path;
+}
+
+/**
+ * [compress_all html+js+css+php混合代码压缩]
+ *
+ * @param  string  $content  [要压缩的内容]
+ * @param  boolean $del_note [是否删除注释]
+ * @return string
+ */
+function compressAll($content, $del_note = true)
+{
+    $pattern = [
+        "/(\s|;|\(|\{)\/\/(.*)[\\n|\\r\\n|\\r]/isU",/*0 //行注释*/
+        "/<!--.*-->/isU",/*1 html注释*/
+        "/\/\*.*\*\//isU", /*2 块注释*/
+        "/[\s]+/", /*3 任何空白字符*/
+        "/ +(,|;|\{) */", /*4 ,前后空格*/
+        "/ *(\/)* *>[\s ]*< *(\/)* */",/*5 ;标签中的空格*/
+        "/ +(\}) */", /*6 ,前后空格*/
+        "/ *(,|;|\{) +/", /*7 ,前后空格*/
+    ];
+    $replace = [
+        "$1/*$2*/",/*0 */
+        "",/*1 */
+        "",/*2 */
+        " ",/*3 */
+        "$1",/*4 */
+        "$1><$2",/*5 */
+        " $1",/*6 */
+        "$1",/*7 */
+    ];
+    if ($del_note) {
+        $replace[0] = "$1";//删除行注释
+    } else {
+        unset($pattern[2]);
+        unset($replace[2]);//块注释
+        unset($pattern[1]);
+        unset($replace[1]);//html注释
+    }
+    $content = preg_replace($pattern, $replace, $content);
+    $content = str_replace('	', '', $content);//清除tab空白
+    while (strpos($content, '  ') !== false) {
+        $content = str_replace('  ', ' ', $content);
+    }
+
+    return $content;
 }
 
 /**

@@ -9,12 +9,12 @@
 
 namespace Controller\Admin\Data;
 
-use Bare\Controller;
+use Bare\AdminController;
 use Model\Admin\Admin\AdminLog;
 use Model\Book\Book as MBook;
 use Model\Book\Collect as MCollect;
 
-class Collect extends Controller
+class Collect extends AdminController
 {
     private static $_status = [
         1 => '采集',

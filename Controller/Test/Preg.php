@@ -12,7 +12,7 @@ class Preg extends Controller
 
     public function index()
     {
-        $data = $this->m->test();
+        $data = $this->_m->test();
         var_dump($data);
         //$this->value('data',$data);
         //$this->view();

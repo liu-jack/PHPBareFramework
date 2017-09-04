@@ -24,6 +24,7 @@ class ViewModel extends Model
     const FORM_INPUT_TIME = 'datetime';
     const FORM_INPUT_PASSWORD = 'password';
     const FORM_INPUT_HIDDEN = 'hidden';
+    const FORM_INPUT_FILE = 'file';
     const FORM_INPUT_RADIO = 'radio';
     const FORM_RADIO_OPTION = 'radio_option';
     const FORM_INPUT_CHECKBOX = 'checkbox';

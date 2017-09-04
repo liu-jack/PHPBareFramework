@@ -36,7 +36,7 @@ class Content extends Model
 
     /**
      * @param int $bookid
-     * @param $data
+     * @param     $data
      * @return bool|int|string
      */
     public static function addContent(int $bookid, $data)
@@ -44,13 +44,14 @@ class Content extends Model
         if (!empty($data) || $bookid > 0) {
             return parent::addData($data, false, table($bookid));
         }
+
         return false;
     }
 
     /**
      * @param int $bookid
-     * @param $id
-     * @param $data
+     * @param     $id
+     * @param     $data
      * @return bool
      */
     public static function updateContent(int $bookid, $id, $data)
@@ -58,12 +59,13 @@ class Content extends Model
         if ($id > 0 && !empty($data) && $bookid > 0) {
             return parent::updateData($id, $data, table($bookid));
         }
+
         return false;
     }
 
     /**
      * @param int $bookid
-     * @param $id
+     * @param     $id
      * @return array
      */
     public static function getContentById(int $bookid, $id)
@@ -71,6 +73,7 @@ class Content extends Model
         if ($id > 0 && $bookid > 0) {
             return parent::getDataById($id, [], table($bookid));
         }
+
         return [];
     }
 
@@ -89,12 +92,13 @@ class Content extends Model
             'get_count' => 0,
         ];
         $data = parent::getDataByFields($where, $extra, table($bookid));
+
         return !empty($data['data']) ? current($data['data']) : [];
     }
 
     /**
      * @param int $bookid
-     * @param $id
+     * @param     $id
      * @return bool
      */
     public static function delContent($bookid, $id)
@@ -102,6 +106,7 @@ class Content extends Model
         if ($id > 0 && $bookid > 0) {
             return parent::delData($id, table($bookid));
         }
+
         return false;
     }
 

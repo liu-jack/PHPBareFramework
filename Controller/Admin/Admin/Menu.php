@@ -9,13 +9,13 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\Controller;
+use Bare\AdminController;
 use Model\Admin\Admin\AdminGroup;
 use Model\Admin\Admin\AdminLog;
 use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminMenu;
 
-class Menu extends Controller
+class Menu extends AdminController
 {
     public function index()
     {

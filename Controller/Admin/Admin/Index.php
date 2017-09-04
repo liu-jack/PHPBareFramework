@@ -7,7 +7,7 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\Controller;
+use Bare\AdminController;
 use Classes\Encrypt\Rsa;
 use Classes\Image\Securimage;
 use Model\Admin\Admin\AdminGroup;
@@ -15,7 +15,7 @@ use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminUser;
 use Model\Admin\Admin\AdminLog;
 
-class Index extends Controller
+class Index extends AdminController
 {
     /**
      * 首页

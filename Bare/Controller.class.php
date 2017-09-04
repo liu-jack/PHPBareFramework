@@ -29,16 +29,6 @@ Class Controller
         if (!defined('NO_SESSION') && !isset($_GET['_v'])) {
             session_start();
         }
-        // 后端访问设置
-        if ($GLOBALS['_M'] == 'Admin') {
-            if ($GLOBALS['_C'] != 'Index') {
-                if (!self::isLogin(2)) {
-                    $this->alert('请先登录', url('admin/index/login'));
-                } elseif (!AdminLogin::isHasAuth()) {
-                    $this->alertErr('没有权限', url('admin/index/index'), '', 'top');
-                }
-            }
-        }
     }
 
     /**
@@ -343,6 +333,7 @@ Class Controller
     public function __call($method, $args)
     {
         if (isset($_GET['_v'])) {
+            // 接口
             logs([
                 'API Error',
                 "API Class Name:{$args[0]}",

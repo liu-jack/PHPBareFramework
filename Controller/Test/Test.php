@@ -4,9 +4,10 @@ namespace Controller\Test;
 
 use Bare\Controller;
 use Bare\DB;
+use Bare\ViewModel;
 use Model\Account\UserData;
-use Model\Admin\AdminLog;
-use Model\Admin\SmsLog;
+use Model\Admin\Admin\AdminLog;
+use Model\Admin\Admin\SmsLog;
 use Model\Book\{
     Book, Column
 };
@@ -14,13 +15,12 @@ use Classes\Encrypt\Blowfish;
 use Classes\Encrypt\Rsa;
 use Model\Account\User as AUser;
 use Model\Favorite\BookFavorite;
-use Model\Admin\AdminUser;
-use Model\Admin\AdminGroup;
-use Model\Admin\AdminMenu;
+use Model\Admin\Admin\AdminUser;
+use Model\Admin\Admin\AdminGroup;
+use Model\Admin\Admin\AdminMenu;
 use Bare\MongoModel;
-use Model\Admin\AdminLogin;
+use Model\Admin\Admin\AdminLogin;
 use Model\Collect\CollectBook77 as Collect77;
-use Bare\FormModel;
 
 /**
  * 测试用控制器
@@ -205,7 +205,7 @@ class Test extends Controller
 //        pre($info);die;
 //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
 //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
-        echo FormModel::createForm();
+        echo ViewModel::createForm();
     }
 
     /**

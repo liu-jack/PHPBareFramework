@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Data;
 
-use Bare\Controller;
+use Bare\AdminController;
 use Model\Admin\Admin\AdminLog;
 use Model\Book\Book as MBook;
 use Model\Book\Column;
@@ -17,7 +17,7 @@ use Model\Book\Content;
 use Model\Book\Collect as MCollect;
 use Model\Collect\CollectBook77 as Collect77;
 
-class Book extends Controller
+class Book extends AdminController
 {
     public function index()
     {
@@ -172,7 +172,7 @@ class Book extends Controller
         $cid = !empty($_POST['cid']) ? intval($_POST['cid']) : intval($_GET['cid']);
 
         if (!empty($_POST['bid']) && !empty($_POST['cid'])) {
-            $ccid = intval($_POST['ccid']);
+            $coid = intval($_POST['coid']);
             $data['ChapterName'] = trim($_POST['ChapterName']);
             $cdata['Content'] = trim($_POST['Content']);
             if (!empty($data['ChapterName'])) {
@@ -180,14 +180,16 @@ class Book extends Controller
                 if (!$ret) {
                     $this->alertErr('修改章节名称失败');
                 }
+                AdminLog::log('修改书本章节内容', 'update', $cid, $data, 'BookColumn');
             }
-            if (!empty($cdata['Content']) && $ccid > 0) {
-                $ret = Content::updateContent($bid, $ccid, $cdata);
+            if (!empty($cdata['Content']) && $coid > 0) {
+                $ret = Content::updateContent($bid, $coid, $cdata);
                 if (!$ret) {
                     $this->alertErr('修改内容失败');
                 }
+                AdminLog::log('修改书本章节内容', 'update', $coid, $coid, 'BookContent');
             }
-            AdminLog::log('修改书本章节内容', 'update', $cid, $data, 'BookColumn');
+
             $this->alert('修改成功');
         }
 
