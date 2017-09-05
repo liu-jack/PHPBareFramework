@@ -160,6 +160,7 @@ class Book extends AdminController
         }
 
         $this->value('list', $list);
+        $this->value('bid', $bid);
         $this->view();
     }
 
