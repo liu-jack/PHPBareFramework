@@ -75,7 +75,7 @@ class Collect extends AdminController
         $info = MCollect::getCollectById($id);
         $sites = config('book/sites');
         $book = MBook::getBookByIds($info['BookId']);
-        $info = array_merge($info, $book);
+        $info = array_merge($book, $info);
 
         $this->value('sites', $sites);
         $this->value('info', $info);
