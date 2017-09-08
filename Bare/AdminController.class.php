@@ -17,12 +17,7 @@ Class AdminController extends Controller
      */
     public function __construct()
     {
-        // 模型加载
-        $model_path = MODEL_PATH . $GLOBALS['_MPATH'] . CEXT;
-        if (file_exists($model_path)) {
-            $model = '\\Model' . $GLOBALS['_NAMESPACE'];
-            $this->_m = new $model;
-        }
+        parent::__construct();
         if ($GLOBALS['_C'] != 'Index') {
             if (!self::isLogin(2)) {
                 $this->alert('请先登录', url('admin/index/login'));

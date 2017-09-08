@@ -20,11 +20,19 @@ use Bare\ViewModel;
  */
 class SmsLog extends ViewModel
 {
-    /**
-     * 配置文件
-     *
-     * @var array
-     */
+    const FD_SMS_ID = 'SmsId';
+    const FD_MOBILE = 'Mobile';
+    const FD_CONTENT = 'Content';
+    const FD_TYPE = 'Type';
+    const FD_FLAG = 'Flag';
+    const FD_IP = 'Ip';
+    const FD_USED = 'Used';
+    const FD_STATUS = 'Status';
+    const FD_CREATE_TIME = 'CreateTime';
+    const EX_FD_START_TIME = 'StartTime';
+    const EX_FD_END_TIME = 'EndTime';
+
+    // 配置文件
     protected static $_conf = [
         // 必选, 数据库连接(来自DBConfig配置), w: 写, r: 读
         self::CF_DB => [
@@ -35,26 +43,26 @@ class SmsLog extends ViewModel
         self::CF_TABLE => 'SmsLog',
         // 必选, 字段信息
         self::CF_FIELDS => [
-            'SmsId' => [
+            self::FD_SMS_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_HIDDEN,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '序号',
             ],
-            'Mobile' => [
+            self::FD_MOBILE => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
                 self::FORM_FIELD_NAME => '手机号',
             ],
-            'Content' => [
+            self::FD_CONTENT => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_TEXTAREA,
                 self::FORM_FIELD_NAME => '内容',
             ],
-            'Type' => [
+            self::FD_TYPE => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_SELECT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
@@ -67,20 +75,20 @@ class SmsLog extends ViewModel
                 ],
                 self::FORM_FIELD_NAME => '类别',
             ],
-            'Flag' => [
+            self::FD_FLAG => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
                 self::FORM_FIELD_NAME => '标识(验证码)',
             ],
-            'Ip' => [
+            self::FD_IP => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
                 self::FORM_FIELD_NAME => 'IP地址',
             ],
-            'Used' => [
+            self::FD_USED => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_SELECT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
@@ -91,7 +99,7 @@ class SmsLog extends ViewModel
                 ],
                 self::FORM_FIELD_NAME => '是否使用',
             ],
-            'Status' => [
+            self::FD_STATUS => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_SELECT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
@@ -102,22 +110,22 @@ class SmsLog extends ViewModel
                 ],
                 self::FORM_FIELD_NAME => '状态',
             ],
-            'CreateTime' => [
+            self::FD_CREATE_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TIME,
                 self::FORM_FIELD_NAME => '创建时间',
             ],
-            'StartTime' => [
+            self::EX_FD_START_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_MAP => self::FD_CREATE_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '>=',
                 self::FORM_FIELD_NAME => '开始时间',
             ],
-            'EndTime' => [
+            self::EX_FD_END_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_MAP => self::FD_CREATE_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '<=',
                 self::FORM_FIELD_NAME => '结束时间',
@@ -131,15 +139,14 @@ class SmsLog extends ViewModel
         self::CF_MC_TIME => 86400
     ];
 
-
     /**
      * 新增必须字段
      *
      * @var array
      */
     protected static $_add_must_fields = [
-        'Mobile' => 1,
-        'Content' => 1,
+        self::FD_MOBILE => 1,
+        self::FD_CONTENT => 1,
     ];
 
     /**
@@ -150,13 +157,13 @@ class SmsLog extends ViewModel
     public static function getSmsLogByMobile($mobile, $type = 0)
     {
         $where = [
-            'Mobile' => $mobile,
-            'Type' => (int)$type
+            self::FD_MOBILE => $mobile,
+            self::FD_TYPE => (int)$type
         ];
         $extra = [
-            'fields' => '*',
-            'offset' => 0,
-            'limit' => 1,
+            self::EXTRA_FIELDS => '*',
+            self::EXTRA_OFFSET => 0,
+            self::EXTRA_LIMIT => 1,
         ];
         $ret = parent::getDataByFields($where, $extra);
 

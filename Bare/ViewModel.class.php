@@ -10,6 +10,7 @@ namespace Bare;
 
 class ViewModel extends Model
 {
+    // 变量名称
     const FIELD_VAR_TYPE = 'var_type';
     const FIELD_FORM_TYPE = 'form_type';
     const FIELD_SEARCH_TYPE = 'search_type';
@@ -19,7 +20,7 @@ class ViewModel extends Model
     const LIST_VAL_SHOW = 1;
     const EXTRA_LIST_EDIT = 'edit';
     const EXTRA_LIST_DEL = 'delete';
-
+    // form表单
     const FORM_INPUT_TEXT = 'text';
     const FORM_INPUT_TIME = 'datetime';
     const FORM_INPUT_PASSWORD = 'password';
@@ -35,7 +36,15 @@ class ViewModel extends Model
     const FORM_EDITOR = 'editor';
     const FORM_FIELD_NAME = 'name';
     const FORM_FIELD_TIPS = 'tips';
-
+    // 字段
+    const FD_ID = 'Id';
+    const FD_USER_ID = 'UserId';
+    const FD_STATUS = 'Status';
+    const FD_UPDATE_TIME = 'UpdateTime';
+    const FD_CREATE_TIME = 'CreateTime';
+    const EX_FD_START_TIME = 'StartTime';
+    const EX_FD_END_TIME = 'EndTime';
+    // 配置
     protected static $_conf = [
         // 必选, 数据库代码 (来自Bridge配置), w: 写, r: 读
         self::CF_DB => [
@@ -46,20 +55,20 @@ class ViewModel extends Model
         self::CF_TABLE => 'Test',
         // 必选, 字段信息
         self::CF_FIELDS => [
-            'Id' => [
+            self::FD_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_HIDDEN,
                 self::FORM_FIELD_NAME => 'ID',
             ],
-            'UserId' => [
+            self::FD_USER_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
                 self::FORM_FIELD_NAME => '用户ID',
             ],
-            'Status' => [
+            self::FD_STATUS => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_RADIO,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
@@ -70,22 +79,22 @@ class ViewModel extends Model
                 ],
                 self::FORM_FIELD_NAME => '状态',
             ],
-            'CreateTime' => [
+            self::FD_CREATE_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TIME,
                 self::FORM_FIELD_NAME => '时间',
             ],
-            'StartTime' => [
+            self::EX_FD_START_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_MAP => self::FD_CREATE_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '>=',
                 self::FORM_FIELD_NAME => '开始时间',
             ],
-            'EndTime' => [
+            self::EX_FD_END_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_MAP => self::FD_CREATE_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '<=',
                 self::FORM_FIELD_NAME => '结束时间',
@@ -96,15 +105,28 @@ class ViewModel extends Model
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
         self::CF_MC_KEY => '',
         // 可选, 超时时间, 默认不过期
-        self::CF_MC_TIME => 86400
+        self::CF_MC_TIME => 86400,
+        // 可选, redis (来自DB配置), w: 写, r: 读 index: 0-15
+        self::CF_RD => [
+            self::CF_DB_W => '',
+            self::CF_DB_R => '',
+            self::CF_RD_INDEX => 0,
+            self::CF_RD_TIME => 0,
+        ],
     ];
 
-    /**
-     * 新增必须字段
-     *
-     * @var array
-     */
+    // 列表缓存数组 key => [type => 1, fields => [field]] 0:mc 1:redis 默认0
+    const CACHE_LIST_TYPE = 'type';
+    const CACHE_LIST_TYPE_MC = 0;
+    const CACHE_LIST_TYPE_REDIS = 1;
+    const CACHE_LIST_FIELDS = 'fields';
+    protected static $_cache_list_keys;
+    // 新增必须字段 field => 1
     protected static $_add_must_fields;
+    // 不可修改字段 field => 1
+    protected static $_un_modify_fields = [
+        'Id' => 1,
+    ];
 
     /**
      * 生成where条件
@@ -210,6 +232,13 @@ class ViewModel extends Model
         return $form;
     }
 
+    /**
+     * 生成列表
+     *
+     * @param array $list
+     * @param array $extra
+     * @return string
+     */
     public static function createList($list, $extra = [])
     {
         $primary_key = '';
@@ -315,6 +344,8 @@ class ViewModel extends Model
     }
 
     /**
+     * 添加
+     *
      * @param      $data
      * @param bool $ignore
      * @return bool|int|string
@@ -326,10 +357,13 @@ class ViewModel extends Model
         }
         $ret = false;
         if (!empty($data)) {
-            if (empty($data['CreateTime'])) {
-                $data['CreateTime'] = date('Y-m-d H:i:s');
+            if (!empty(static::FD_CREATE_TIME) && empty($data[static::FD_CREATE_TIME])) {
+                $data[static::FD_CREATE_TIME] = date('Y-m-d H:i:s');
             }
             $ret = parent::addData($data, $ignore);
+            if (!empty(static::$_cache_list_keys) && $ret !== false) {
+                self::delCache($data);
+            }
         }
 
         return $ret;
@@ -345,8 +379,17 @@ class ViewModel extends Model
     public static function update($id, $data)
     {
         $ret = false;
+        if (!empty(static::$_un_modify_fields)) {
+            $data = array_diff_key($data, static::$_un_modify_fields);
+        }
         if ($id > 0 && !empty($data)) {
             $ret = parent::updateData($id, $data);
+            if (!empty(static::$_cache_list_keys) && $ret !== false) {
+                $info = self::getInfoByIds($id);
+                if (!empty($info)) {
+                    static::delCache($info);
+                }
+            }
         }
 
         return $ret;
@@ -381,10 +424,10 @@ class ViewModel extends Model
     public static function getList($where = [], $offset = 0, $limit = 0, $fields = '*', $order = '')
     {
         $extra = [
-            'fields' => $fields,
-            'offset' => $offset,
-            'limit' => $limit,
-            'order' => $order,
+            static::EXTRA_FIELDS => $fields,
+            static::EXTRA_OFFSET => $offset,
+            static::EXTRA_LIMIT => $limit,
+            static::EXTRA_ORDER => $order,
         ];
 
         return parent::getDataByFields($where, $extra);
@@ -396,12 +439,59 @@ class ViewModel extends Model
      * @param $id
      * @return bool
      */
-    public static function del($id)
+    public static function delete($id)
     {
+        $ret = false;
         if ($id > 0) {
-            return parent::delData($id);
+            if (!empty(static::$_cache_list_keys)) {
+                $info = self::getInfoByIds($id);
+            }
+            $ret = parent::delData($id);
+            if ($ret !== false && !empty($info)) {
+                static::delCache($info);
+            }
         }
 
-        return false;
+        return $ret;
+    }
+
+    /**
+     * 清除缓存
+     *
+     * @param array $info
+     */
+    private static function delCache($info = [])
+    {
+        if (!empty(static::$_cache_list_keys)) {
+            $mc_key = $rd_key = [];
+            foreach (static::$_cache_list_keys as $k => $v) {
+                if (!is_array($v)) {
+                    $mc_key[] = $k;
+                } else {
+                    if (is_array($v[static::CACHE_LIST_FIELDS])) {
+                        $key = str_replace('{' . $v[static::CACHE_LIST_FIELDS] . '}',
+                            $info[$v[static::CACHE_LIST_FIELDS]], $k);
+                    } else {
+                        $search = $replace = [];
+                        foreach ($v[static::CACHE_LIST_FIELDS] as $vv) {
+                            $search[] = '{' . $vv . '}';
+                            $replace[] = $info[$vv];
+                        }
+                        $key = str_replace($search, $replace, $k);
+                    }
+                    if (empty($v[static::CACHE_LIST_TYPE])) {
+                        $mc_key[] = $key;
+                    } else {
+                        $rd_key[] = $key;
+                    }
+                }
+            }
+            if (!empty($mc_key)) {
+                static::getMC()->delete($mc_key);
+            }
+            if (!empty($rd_key)) {
+                static::getRedis(true)->delete($rd_key);
+            }
+        }
     }
 }

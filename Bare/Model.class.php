@@ -8,9 +8,27 @@
 
 namespace Bare;
 
+use Bare\DB\MemcacheDB;
+
 abstract class Model
 {
     const FIELD_VAR_TYPE = 'var_type';
+
+    // 配置变量名称
+    const CF_DB = 'db';
+    const CF_DB_W = 'w';
+    const CF_DB_R = 'r';
+    const CF_TABLE = 'table';
+    const CF_FIELDS = 'fields';
+    const CF_MC = 'mc';
+    const CF_MC_KEY = 'mc_key';
+    const CF_MC_TIME = 'mc_expire';
+    const CF_RD = 'redis_db';
+    const CF_RD_INDEX = 'redis_db_index';
+    const CF_RD_TIME = 'redis_expire';
+    const CF_PRIMARY_KEY = '_primary_key';
+    const CF_FIELDS_ARRAY = '_fields_array';
+    const CF_USE_MC = '_use_memcache';
 
     /**
      * 基础配置文件
@@ -32,21 +50,15 @@ abstract class Model
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
         self::CF_MC_KEY => '',
         // 可选, 超时时间, 默认不过期
-        self::CF_MC_TIME => 86400
+        self::CF_MC_TIME => 86400,
+        // 可选, redis (来自DB配置), w: 写, r: 读
+        self::CF_RD => [
+            self::CF_DB_W => '',
+            self::CF_DB_R => '',
+            self::CF_RD_INDEX => 0,
+            self::CF_RD_TIME => 0,
+        ],
     ];
-
-    // 配置变量名称
-    const CF_DB = 'db';
-    const CF_DB_W = 'w';
-    const CF_DB_R = 'r';
-    const CF_TABLE = 'table';
-    const CF_FIELDS = 'fields';
-    const CF_MC = 'mc';
-    const CF_MC_KEY = 'mckey';
-    const CF_MC_TIME = 'mctime';
-    const CF_PRIMARY_KEY = '_primary_key';
-    const CF_FIELDS_ARRAY = '_fields_array';
-    const CF_USE_MC = '_use_memcache';
 
     // 主键/字段类型
     const VAR_TYPE_KEY = 'PRIMARY KEY';
@@ -87,7 +99,7 @@ abstract class Model
      * @return bool|int|string 成功返回LastInsertId, 未插入数据返回0, 插入失败返回false
      * @throws \Exception
      */
-    public static function addData($rows, $ignore = false, $suffix = '')
+    protected static function addData($rows, $ignore = false, $suffix = '')
     {
         $rows = static::checkParams($rows);
         $options = $ignore ? ['ignore' => true] : [];
@@ -118,7 +130,7 @@ abstract class Model
      * @return array 单条返回['feild1'=>'value1',..], 多条返回['主键ID1' => [...],]
      * @throws \Exception
      */
-    public static function getDataById($id, $extra = [], $suffix = '')
+    protected static function getDataById($id, $extra = [], $suffix = '')
     {
         static::checkParams();
 
@@ -155,7 +167,7 @@ abstract class Model
                 $nocache_ids[$v] = $v;
             }
 
-            $mc = DB::memcache(static::$_conf[static::CF_MC]);
+            $mc = static::getMC();
             $data = $mc->get($mc_ids);
 
             $data_cache = [];
@@ -201,7 +213,7 @@ abstract class Model
      * @return bool
      * @throws \Exception
      */
-    public static function updateData($id, $rows = [], $suffix = '')
+    protected static function updateData($id, $rows = [], $suffix = '')
     {
         $id = (int)$id;
         $rows = static::checkParams($rows);
@@ -214,7 +226,7 @@ abstract class Model
                 static::$_conf[static::CF_PRIMARY_KEY] => $id
             ]);
             if ($ret !== false && !empty(static::$_conf[static::CF_MC_KEY])) {
-                $mc = DB::memcache(static::$_conf[static::CF_MC]);
+                $mc = static::getMC();
                 $mc->delete(sprintf(static::$_conf[static::CF_MC_KEY], $id));
             }
 
@@ -235,7 +247,7 @@ abstract class Model
      * @return bool
      * @throws \Exception
      */
-    public static function delData($id, $suffix = '')
+    protected static function delData($id, $suffix = '')
     {
         $id = (int)$id;
         static::checkParams();
@@ -247,7 +259,7 @@ abstract class Model
             ]);
 
             if ($ret !== false && !empty(static::$_conf[static::CF_MC_KEY])) {
-                $mc = DB::memcache(static::$_conf[static::CF_MC]);
+                $mc = static::getMC();
                 $mc->delete(sprintf(static::$_conf[static::CF_MC_KEY], $id));
             }
 
@@ -288,7 +300,7 @@ abstract class Model
      * @return array ['count' => 总数, 'data' => [查询的数据]]
      * @throws \Exception
      */
-    public static function getDataByFields($where, $extra = [], $suffix = '')
+    protected static function getDataByFields($where, $extra = [], $suffix = '')
     {
         static::checkParams();
 
@@ -323,7 +335,7 @@ abstract class Model
                 return $where_normal[$matchs[1]] ?? 0;
             }, $extra[static::EXTRA_MC_KEY]);
 
-            $mc = DB::memcache($extra[static::EXTRA_MC]);
+            $mc = static::getMC($extra[static::EXTRA_MC]);
             $data = $mc->get($key);
             if (!is_array($data)) {
                 $pdo = DB::pdo($extra[static::EXTRA_DB]);
@@ -368,6 +380,59 @@ abstract class Model
         return ['count' => $count, 'data' => $data];
     }
 
+    /**
+     * 获取redis实例
+     *
+     * @param bool $w
+     * @return \Redis
+     */
+    protected static function getRedis($w = false)
+    {
+        static $redis_w, $redis_r;
+        if ($w) {
+            if (empty($redis_w)) {
+                $redis_w = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_W],
+                    static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
+            }
+
+            return $redis_w;
+        } else {
+            if (empty($redis_r)) {
+                $redis_r = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_R],
+                    static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
+            }
+
+            return $redis_r;
+        }
+    }
+
+    /**
+     * 获取mc实例
+     *
+     * @param string $option
+     * @return MemcacheDB
+     */
+    protected static function getMC($option = null)
+    {
+        static $mc;
+        if (empty($mc)) {
+            if (empty($option)) {
+                $option = static::$_conf[static::CF_MC];
+            }
+            $mc = DB::memcache($option);
+        }
+
+        return $mc;
+    }
+
+    /**
+     * 从数据库查询
+     *
+     * @param        $ids
+     * @param        $db
+     * @param string $suffix
+     * @return array
+     */
     private static function getFromDb($ids, $db, $suffix = '')
     {
         $pdo = DB::pdo($db);
@@ -393,6 +458,13 @@ abstract class Model
         return [];
     }
 
+    /**
+     * 检查参数配置
+     *
+     * @param array $rows
+     * @return array
+     * @throws \Exception
+     */
     private static function checkParams($rows = [])
     {
         $conf = &static::$_conf;
@@ -435,6 +507,12 @@ abstract class Model
         return static::checkFields($rows);
     }
 
+    /**
+     * 字段类型验证
+     *
+     * @param array $rows
+     * @return array
+     */
     private static function checkFields($rows = [])
     {
         foreach ($rows as $k => &$v) {

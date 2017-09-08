@@ -220,7 +220,7 @@ class DB extends DBConfig
      *
      * @param mixed $params 连接参数
      * @param integer $timeout 超时时间
-     * @return \Memcache
+     * @return MemcacheDB
      */
     public static function memcache($params = self::MEMCACHE_DEFAULT, $timeout = 5)
     {

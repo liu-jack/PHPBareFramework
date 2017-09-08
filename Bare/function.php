@@ -40,8 +40,6 @@ spl_autoload_register(function ($class) {
             include($class_file);
         } elseif (!empty($class_file2) && is_file($class_file2)) {
             include($class_file2);
-        } else {
-            throw new \Exception("include file {$class_file} error");
         }
         // 无论成功失败, 自动加载只进行一次
         $class_map[$class] = $class;

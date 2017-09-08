@@ -20,11 +20,20 @@ use Bare\DB;
  */
 class AdminLog extends ViewModel
 {
-    /**
-     * 配置文件
-     *
-     * @var array
-     */
+    const FD_LOG_ID = 'LogId';
+    const FD_USER_ID = 'UserId';
+    const FD_USER_NAME = 'UserName';
+    const FD_ITEM_ID = 'ItemId';
+    const FD_ITEM_NAME = 'ItemName';
+    const FD_MENU_KEY = 'MenuKey';
+    const FD_MENU_NAME = 'MenuName';
+    const FD_LOG_FLAG = 'LogFlag';
+    const FD_LOG = 'Log';
+    const FD_CREATE_TIME = 'CreateTime';
+    const EX_FD_START_TIME = 'StartTime';
+    const EX_FD_END_TIME = 'EndTime';
+
+    // 配置文件
     protected static $_conf = [
         // 必选, 数据库连接(来自DBConfig配置), w: 写, r: 读
         self::CF_DB => [
@@ -35,72 +44,72 @@ class AdminLog extends ViewModel
         self::CF_TABLE => 'AdminLog',
         // 必选, 字段信息
         self::CF_FIELDS => [
-            'LogId' => [
+            self::FD_LOG_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '序号',
             ],
-            'UserId' => [
+            self::FD_USER_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '管理员ID',
             ],
-            'UserName' => [
+            self::FD_USER_NAME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '用户名',
             ],
-            'ItemId' => [
+            self::FD_ITEM_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_INT,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '项目ID',
             ],
-            'ItemName' => [
+            self::FD_ITEM_NAME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '项目名称',
             ],
-            'MenuKey' => [
+            self::FD_MENU_KEY => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '菜单URL',
             ],
-            'MenuName' => [
+            self::FD_MENU_NAME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '操作菜单',
             ],
-            'LogFlag' => [
+            self::FD_LOG_FLAG => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '操作细分',
             ],
-            'Log' => [
+            self::FD_LOG => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '操作内容',
             ],
-            'CreateTime' => [
+            self::FD_CREATE_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '操作时间',
             ],
-            'StartTime' => [
+            self::EX_FD_START_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_MAP => self::FD_CREATE_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '>=',
                 self::FORM_FIELD_NAME => '开始时间',
             ],
-            'EndTime' => [
+            self::EX_FD_END_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => 'CreateTime',
+                self::FIELD_MAP => self::FD_CREATE_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '<=',
                 self::FORM_FIELD_NAME => '结束时间',
@@ -115,15 +124,11 @@ class AdminLog extends ViewModel
     ];
 
 
-    /**
-     * 新增必须字段
-     *
-     * @var array
-     */
+    // 新增必须字段
     protected static $_add_must_fields = [
-        'UserId' => 1,
-        'ItemId' => 1,
-        'Log' => 1,
+        self::FD_USER_ID => 1,
+        self::FD_ITEM_ID => 1,
+        self::FD_LOG => 1,
     ];
 
     /**
@@ -142,17 +147,16 @@ class AdminLog extends ViewModel
             unset($data['Password']);
         }
         $adddata = [
-            'UserId' => $_SESSION['_admin_info']['AdminUserId'],
-            'UserName' => $_SESSION['_admin_info']['AdminRealName'],
-            'ItemId' => $itemid,
-            'ItemName' => $itemname,
-            'MenuKey' => $GLOBALS['_URL'],
-            'MenuName' => $title,
-            'LogFlag' => $option,
-            'Log' => is_array($data) ? serialize($data) : $data,
+            self::FD_USER_ID => $_SESSION['_admin_info']['AdminUserId'],
+            self::FD_USER_NAME => $_SESSION['_admin_info']['AdminRealName'],
+            self::FD_ITEM_ID => $itemid,
+            self::FD_ITEM_NAME => $itemname,
+            self::FD_MENU_KEY => $GLOBALS['_URL'],
+            self::FD_MENU_NAME => $title,
+            self::FD_LOG_FLAG => $option,
+            self::FD_LOG => is_array($data) ? serialize($data) : $data,
         ];
 
         return self::add($adddata);
     }
-
 }

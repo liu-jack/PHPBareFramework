@@ -14,7 +14,7 @@ use Model\Search\BookSearch as SBook;
  * 书本信息相关接口
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017-07-21 14:55
+ * @date   2017-07-21 14:55
  *
  */
 class Index extends Controller
@@ -50,7 +50,7 @@ class Index extends Controller
      *         "Type": "0",
      *         "TypeName": "玄幻魔法",
      *         "Cover": "/Public/upload/cover/1f/1f/31.jpg?v=0",
-     *         "BookDesc": "刚刚大学毕业的刘飞是个嚣张到骨子里的家伙，费尽周折考上了公务员，却在入职当天，将顶头上司暴打一顿…… 他这样的性格适合当官吗？不适合是吧！ 但",
+     *         "BookDesc": "刚刚大学毕业的刘飞是个嚣里的家伙……",
      *         "Words": "24915",
      *         "ViewCount": "4",
      *         "LikeCount": "2",
@@ -70,7 +70,7 @@ class Index extends Controller
      *         "Type": "0",
      *         "TypeName": "玄幻魔法",
      *         "Cover": "/Public/upload/cover/1f/1f/31.jpg?v=0",
-     *         "BookDesc": "刚刚大学毕业的刘飞是个嚣张到骨子里的家伙，费尽周折考上了公务员，却在入职当天，将顶头上司暴打一顿…… 他这样的性格适合当官吗？不适合是吧！ 但",
+     *         "BookDesc": "刚刚大学毕业的刘",
      *         "Words": "24915",
      *         "ViewCount": "4",
      *         "LikeCount": "2",
@@ -90,7 +90,7 @@ class Index extends Controller
      *         "Type": "0",
      *         "TypeName": "都市小说",
      *         "Cover": "/Public/upload/cover/14/18/1044.jpg?v=0",
-     *         "BookDesc": "       重回2001，聂唯要做娱乐圈最闪耀的那颗星。 &gt;/p&lt;",
+     *         "BookDesc": "    重回2001，聂唯要做娱乐圈最闪耀的那颗星。",
      *         "Words": "4351",
      *         "ViewCount": "0",
      *         "LikeCount": "0",
@@ -110,7 +110,7 @@ class Index extends Controller
      *         "Type": "0",
      *         "TypeName": "女生小说",
      *         "Cover": "/Public/upload/cover/29/29/41.jpg?v=0",
-     *         "BookDesc": "一个大山里走出来的绝世高手，一块能预知未来的神秘玉佩…… 林逸是一名普通的高三学生，不过，他还有身负另外一个重任，那就是泡校花！而且还是奉校花老爸之命！ 虽然林逸很不想跟这",
+     *         "BookDesc": "一个大山里走出来的绝世高手，一块能预知未来的神秘玉佩……",
      *         "Words": "35931",
      *         "ViewCount": "23",
      *         "LikeCount": "7",
@@ -186,7 +186,7 @@ class Index extends Controller
      *         "Type": "0",
      *         "TypeName": "都市小说",
      *         "Cover": "/Public/upload/cover/09/0a/265.jpg?v=0",
-     *         "BookDesc": "这是一本以重生为噱头的都市架空yy小说。好吧，理解成平行位面的相似世界也可以，希望读者们能够因此而找到似是而非的过去的人生，也只是似是而非而已！故事纯属虚构，如有现实雷同，",
+     *         "BookDesc": "这是一本以重生为噱头的都市架空yy小说",
      *         "Words": "96393",
      *         "ViewCount": "0",
      *         "LikeCount": "0",
@@ -257,7 +257,7 @@ class Index extends Controller
      *     "Type": 1,
      *     "TypeName": "都市小说",
      *     "Cover": "/Public/upload/cover/02/03/258.jpg?v=0",
-     *     "BookDesc": "重生到地球，叶默趁着下课的时候，急匆匆的跑进一个没人的小胡同，第一件事就是扒下自己的裤子，其实他只是想查看一下自己的小鸡鸡而已......",
+     *     "BookDesc": "重生到地球，叶默趁着下课的时候，",
      *     "Words": "12645",
      *     "ViewCount": "94",
      *     "LikeCount": "6",
@@ -355,7 +355,7 @@ class Index extends Controller
      *     "Type": "0",
      *     "TypeName": "都市小说",
      *     "Cover": "0",
-     *     "BookDesc": "重生到地球，叶默趁着下课的时候，急匆匆的跑进一个没人的小胡同，第一件事就是扒下自己的裤子，其实他只是想查看一下自己的小鸡鸡而已......",
+     *     "BookDesc": "重生到地球，叶默趁着下课的时候，急匆匆的跑进一个没人的小胡同，",
      *     "Words": "12645",
      *     "ViewCount": "98",
      *     "LikeCount": "6",
@@ -375,7 +375,7 @@ class Index extends Controller
      *     "Content": {
      *       "ContentId": "30",
      *       "ChapterId": "30",
-     *       "Content": "&nbsp;&nbsp;&nbsp;&nbsp;燕京，所有的人口加起来数千万，华夏的第一大都市。如果站在燕京的某一栋大厦顶端向下望去，全是看不到边的火柴盒，一栋栋或高或矮的高楼大厦密密麻麻的挤在一起。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;此时，燕京的宁氏药材总部大厦的顶端正站着两名女子，一个身穿白色的绒裙，脸上表情平静，如果仔细看去，就会发现这居然是一名绝美的少女。此时她的衣裙被微风带起，有一些波动，配合她那一副绝美的容颜，简直犹如九天仙子一般，让人只敢远观，哪怕走近了一点，都感觉到是在亵渎她。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;“轻雪，你真要嫁给那个，那个天……什么的叶默吗？”说话的是站在她身边的一名身穿红色衣裙的女子，虽然也是一个长相娇媚的女子，不过和那名白衣裙的女子比起来还是逊色不少。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;白色衣裙的少女眼睛盯着远方不计其数的高楼大厦，还有那些只有蚂蚁大小的汽车人流，默默无语。似乎一切都和她无关一般。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;红衣少女叹了口气说道：“轻雪，我知道你根本不想嫁给那个废人叶默，可以说这个世界又有谁可以配的上你呢。虽然我知道，你在那个聚会上说要嫁给叶默的话，也不过是个气话而已，或者说是拿那个废人做个挡箭牌而已。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;不过轻雪，像我们这种身份的女子，婚姻大事早就不是我们自己可以做主的了。挡了一次，还有许多次，如果每次都拿那个废人来挡住，以京城那几个公子的手段，说不定会让那个废人永远消失，这样你就再也没有借口了。”<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;白群女子皱了皱眉，说道：“我没有让别人去杀他，况且他的死活和我有何关系，从我和他定亲时，我就不知道他长的是圆的还是扁的。如果他真的被杀了，也只能怪他自己吧。慕枚，你不是说他现在连生活都很困难吗？<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;你拿个一百万给他吧，就当着我拿他当挡箭牌的报酬好了，以后不要再提起这个人了，我是我，他是他，我们没有任何关系。”<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;“轻雪，你拿一百万，你是让他死的快点，你知道他是个什么人吗？一个纨绔却没有资格去纨绔的世家弃子，有了一百万，还不立即嚣张的满大街都知道啊，我看还是拿个两万吧。”叫慕枚的女子连忙说道。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;“好吧，你去办吧，我不想再烦这些事情。”白衣裙的女子说完这句话后，再也懒得说一个字，只是愣愣的盯着远处的天空，不知道她在想些什么。<br />\r\n<br />\r\n&nbsp;&nbsp;&nbsp;&nbsp;（老五的都市新书《最强弃少》，已经发书了，求推荐票和收藏啊！！！拜托各位新老朋友了。）"
+     *       "Content": "燕京，所有的人口加起来数千万，华夏的第一大都市。"
      *     },
      *     "Prev": 0,
      *     "Next": 31,
@@ -450,7 +450,7 @@ class Index extends Controller
      *         "Type": "0",
      *         "TypeName": "武侠修真",
      *         "Cover": "http://29shu.iok.la/Public/upload/cover/1e/1e/30.jpg?v=0",
-     *         "BookDesc": "一个普通的山村穷小子，偶然之下，进入到当地的江湖小门派，成了一名记名弟子。他以这样的身份，如何在门派中立足？又如何以平庸的资质，进入到修仙者的行列？和其他巨枭魔头，仙宗仙",
+     *         "BookDesc": "一个普通的山村穷小子，偶然之下，进入到当地的江湖小门派",
      *         "Words": "10021",
      *         "ViewCount": "2",
      *         "LikeCount": "1",
@@ -498,8 +498,8 @@ class Index extends Controller
      *      bid:    必选，推荐书本ID
      * </pre>
      *
-     * @author camfee<camfee@foxmail.com>
-     * @date 2017-07-21 14:46
+     * @author     camfee<camfee@foxmail.com>
+     * @date       2017-07-21 14:46
      * @deprecated since v1.3.0
      * @return void|string 返回json数据
      *

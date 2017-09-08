@@ -38,10 +38,11 @@ class MemcacheDB
 
     /**
      * 构造函数
-     * @param string $host Memcached 服务器的主机名或IP地址或者为服务器组相关信息
-     * @param int $port 端口号
-     * @param int $timeout 超时时间
-     * @param string $key 唯一KEY
+     *
+     * @param string $host    Memcached 服务器的主机名或IP地址或者为服务器组相关信息
+     * @param int    $port    端口号
+     * @param int    $timeout 超时时间
+     * @param string $key     唯一KEY
      */
     public function __construct($host = 'localhost', $port = 11211, $timeout = 60, $key = '')
     {
@@ -68,10 +69,11 @@ class MemcacheDB
 
     /**
      * 在cache中设置键为$key的项的值，如果该项不存在，则新建一个项
-     * @param string $key 键值
-     * @param mixed $var 值
-     * @param int $expire 到期秒数
-     * @param int $flag 标志位
+     *
+     * @param string $key    键值
+     * @param mixed  $var    值
+     * @param int    $expire 到期秒数
+     * @param int    $flag   标志位
      * @return bool 如果成功则返回 TRUE，失败则返回 FALSE。
      * @access public
      */
@@ -86,6 +88,7 @@ class MemcacheDB
 
     /**
      * 在cache中获取键为$key的项的值
+     *
      * @param string $key 键值
      * @return string 如果该项不存在，则返回false
      * @access public
@@ -125,7 +128,7 @@ class MemcacheDB
     /**
      * 在MC中获取为$key的自增ID
      *
-     * @param string $key 自增$key键值
+     * @param string  $key   自增$key键值
      * @param integer $count 自增量,默认为1
      * @return int|bool                 成功返回自增后的数值,失败返回false
      */
@@ -136,6 +139,7 @@ class MemcacheDB
 
     /**
      * 清空cache中所有项
+     *
      * @return bool 如果成功则返回 TRUE，失败则返回 FALSE。
      * @access public
      */
@@ -146,7 +150,8 @@ class MemcacheDB
 
     /**
      * 删除在cache中键为$key的项的值
-     * @param string $key 键值
+     *
+     * @param string|array $key 键值
      * @return bool 如果成功则返回 TRUE，失败则返回 FALSE。
      * @access public
      */
@@ -159,6 +164,7 @@ class MemcacheDB
             }
             $this->memcache->delete($this->prefix . $key);
         }
+
         return true;
     }
 }

@@ -68,7 +68,7 @@
                                     <div class="col-lg-8">
                                         {foreach($sites as $k=>$v)}
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" {if(in_array($k,$info['FromSite']))}checked{/if} name="FromSite[]" value="{$k}"> {$v}
+                                            <input type="checkbox" {if(!empty($info['FromSite']) && in_array($k,$info['FromSite']))}checked{/if} name="FromSite[]" value="{$k}"> {$v}
                                         </label>
                                         {/foreach}
                                     </div>
