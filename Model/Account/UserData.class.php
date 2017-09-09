@@ -3,7 +3,7 @@
  * UserData.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/7/5 15:32
+ * @date   2017/7/5 15:32
  *
  */
 
@@ -35,6 +35,7 @@ class UserData extends MongoModel
 
     /**
      * 字段列表
+     *
      * @var array
      */
     private static $fields = [
@@ -44,8 +45,8 @@ class UserData extends MongoModel
     /**
      * 记录已读的book
      *
-     * @param int|string $uid 用户ID|设备ID
-     * @param int|array $bookid bookID，可多个
+     * @param int|string $uid    用户ID|设备ID
+     * @param int|array  $bookid bookID，可多个
      * @return bool
      */
     public static function userReadBook($uid, $bookid)
@@ -79,6 +80,7 @@ class UserData extends MongoModel
                         ]
                     ]
                 ]);
+
                 return true;
             }
         }
@@ -89,8 +91,8 @@ class UserData extends MongoModel
     /**
      * 获取用户数据
      *
-     * @param int|string $uid 用户ID|设备ID
-     * @param array $fields 字段,默认全部,可选[self::FIELD_UNLIKE, self::FIELD_READ, ...]
+     * @param int|string $uid    用户ID|设备ID
+     * @param array      $fields 字段,默认全部,可选[self::FIELD_UNLIKE, self::FIELD_READ, ...]
      * @return array     [self::FIELD_BOOK_READ => '', ....]
      */
     public static function getUserData($uid, array $fields = [])

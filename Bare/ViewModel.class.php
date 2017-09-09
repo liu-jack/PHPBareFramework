@@ -362,6 +362,7 @@ class ViewModel extends Model
             }
             $ret = parent::addData($data, $ignore);
             if (!empty(static::$_cache_list_keys) && $ret !== false) {
+                $data[key(static::$_conf[self::CF_FIELDS])] = $ret;
                 self::delCache($data);
             }
         }

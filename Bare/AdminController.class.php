@@ -19,7 +19,7 @@ Class AdminController extends Controller
     {
         parent::__construct();
         if ($GLOBALS['_C'] != 'Index') {
-            if (!self::isLogin(2)) {
+            if (!self::isLogin(VISIT_TYPE_ADMIN)) {
                 $this->alert('请先登录', url('admin/index/login'));
             } elseif (!AdminLogin::isHasAuth()) {
                 $this->alertErr('没有权限', url('admin/index/index'), '', 'top');

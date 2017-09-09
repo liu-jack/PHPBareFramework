@@ -141,7 +141,7 @@ class AdminLogin
      */
     public static function isHasAuth()
     {
-        $admin_group_id = 29;
+        $admin_group_id = SUPER_ADMIN_GROUP;
         $auth_list = self::getAuthList();
         if (isset($auth_list[$GLOBALS['_URL']]) || $_SESSION['_admin_info']['AdminUserGroup'] == $admin_group_id) {
             return true;
@@ -159,7 +159,7 @@ class AdminLogin
      */
     public static function getAuthMenu($pid = -1, $level = 3)
     {
-        $admin_group_id = 29;
+        $admin_group_id = SUPER_ADMIN_GROUP;
         $auth_list = self::getAuthList();
         $menu_list = AdminMenu::getMenus();
         $mlist = [];
@@ -289,6 +289,7 @@ class AdminLogin
 
     /**
      * 根据授权id获取授权url
+     *
      * @param $auth_list
      * @return array
      */

@@ -205,7 +205,7 @@ class Test extends Controller
 //        pre($info);die;
 //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
 //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
-        echo ViewModel::createForm();
+//        var_dump(ViewModel::add([]));
     }
 
     /**

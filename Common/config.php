@@ -3,9 +3,9 @@
  * 公共配置
  */
 // 默认访问方法
-$GLOBALS['_M'] = 'Book';
-$GLOBALS['_C'] = 'Index';
-$GLOBALS['_A'] = 'index';
+$GLOBALS['_M'] = $GLOBALS['_M'] ?? 'Book';
+$GLOBALS['_C'] = $GLOBALS['_C'] ?? 'Index';
+$GLOBALS['_A'] = $GLOBALS['_A'] ?? 'index';
 // 接口访问配置
 define('API_PATH', 'Api');       // Api路径名
 define('API_VAR', '_v');    // 接口访问区分变量名 $_GET['_v']
