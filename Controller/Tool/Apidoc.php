@@ -78,13 +78,13 @@ class Apidoc extends Controller
         $class_desc = $class_document['desc'];
         $class_docs = '';
         if (!empty($class_document['author'])) {
-            $class_docs .= 'Author: ' . htmlspecialchars($class_document['author']) . ' &nbsp; ';
+            $class_docs .= '<span style="color: darkblue">Author: </span>' . htmlspecialchars($class_document['author']) . '<br>';
         }
         if (!empty($class_document['date'])) {
-            $class_docs .= 'Date: ' . htmlspecialchars($class_document['date']) . ' &nbsp; ';
+            $class_docs .= '<span  style="color: darkblue">Date: </span>' . htmlspecialchars($class_document['date']) . '<br>';
         }
         if (!empty($class_document['deprecated'])) {
-            $class_docs .= 'Deprecated: ' . htmlspecialchars($class_document['deprecated']) . ' &nbsp; ';
+            $class_docs .= '<span  style="color: darkblue">Deprecated: </span>' . htmlspecialchars($class_document['deprecated']);
         }
 
         $this->value('class_desc', $class_desc);
@@ -174,6 +174,7 @@ class Apidoc extends Controller
 
     /**
      * 生成文件
+     *
      * @param string $path 文件名
      * @return array
      */
@@ -221,6 +222,7 @@ class Apidoc extends Controller
 
     /**
      * 获取类中的方法数据
+     *
      * @param string $class 类名
      * @return mixed
      */
@@ -266,6 +268,7 @@ class Apidoc extends Controller
                 ];
             }
         }
+
         return $arr_api;
     }
 
