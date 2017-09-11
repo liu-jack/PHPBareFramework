@@ -5,7 +5,7 @@ namespace Controller\Book;
 use Bare\Controller;
 use Model\Favorite\BookFavorite;
 use Model\Account\User as AUser;
-use Model\Account\UserData;
+use Model\Mongo\UserData;
 use Model\Book\{
     Book, Column, Content
 };
@@ -306,8 +306,8 @@ class Index extends Controller
         $list_info = UserData::getUserData($uid);
         $list_ids = [];
         $total = 0;
-        if (!empty($list_info['book_read'])) {
-            $list_ids = $list_info['book_read'];
+        if (!empty($list_info[UserData::FIELD_BOOK_READ_HISTORY])) {
+            $list_ids = $list_info[UserData::FIELD_BOOK_READ_HISTORY];
             $list_ids = array_reverse($list_ids);
             $total = count($list_ids);
             $list_ids = array_slice($list_ids, $offset, 10);

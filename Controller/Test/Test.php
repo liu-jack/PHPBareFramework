@@ -5,7 +5,7 @@ namespace Controller\Test;
 use Bare\Controller;
 use Bare\DB;
 use Bare\ViewModel;
-use Model\Account\UserData;
+use Model\Mongo\UserData;
 use Model\Admin\Admin\AdminLog;
 use Model\Admin\Admin\SmsLog;
 use Model\Book\{
@@ -21,6 +21,7 @@ use Model\Admin\Admin\AdminMenu;
 use Bare\MongoModel;
 use Model\Admin\Admin\AdminLogin;
 use Model\Collect\CollectBook77 as Collect77;
+use Model\Mongo\Test as MTest;
 
 /**
  * 测试用控制器
@@ -40,11 +41,11 @@ class Test extends Controller
         //pre(Book::updateBook(258, ['IsFinish' => 2]));
         //pre(table(258));
         //Collect83::getBookColumn(258, 'http://m.83zw.com/book/7/7447/');
-//        $data = [
-//            'UserId' => 1,
-//            'LoginName' => 'camfee',
-//            'UserNick' => 'camfee'
-//        ];
+        //        $data = [
+        //            'UserId' => 1,
+        //            'LoginName' => 'camfee',
+        //            'UserNick' => 'camfee'
+        //        ];
         //pre(AUser::addUser($data));
         //$obj = new BookFavorite(BookFavorite::TYPE_BOOK);
         //var_dump($obj->removeBook(1,258));
@@ -54,13 +55,13 @@ class Test extends Controller
         //if (getimagesize($cover) == false) {
         //unlink($cover);
         //}
-//        $data = [
-//            'UserName' => 'camfee',
-//            'Password' => 'camfee',
-//            'RealName' => 'camfee'
-//        ];
-//        pre(AdminUser::addUser($data));
-//        pre(AdminUser::getUserByName('camfee'));
+        //        $data = [
+        //            'UserName' => 'camfee',
+        //            'Password' => 'camfee',
+        //            'RealName' => 'camfee'
+        //        ];
+        //        pre(AdminUser::addUser($data));
+        //        pre(AdminUser::getUserByName('camfee'));
         //pre(AdminGroup::addGroup(['GroupName' => '测试组']));
         $data = [
             [
@@ -178,34 +179,42 @@ class Test extends Controller
                 'Url' => 'Admin/Admin/index',
             ],
         ];
-//        foreach ($data as $v) {
-//            AdminMenu::addMenu($v);
-//        }
+        //        foreach ($data as $v) {
+        //            AdminMenu::addMenu($v);
+        //        }
 
-//        pre(AdminLogin::getAuthMenu());
+        //        pre(AdminLogin::getAuthMenu());
 
-//        $data = [
-//            'UserId' => 1,
-//            'ItemId' => 1,
-//            'Log' => 'test text'
-//        ];
-//        pre(AdminLog::addLog($data));
-//        $data = [
-//            'Mobile' => '185746111486',
-//            'Content' => '验证码：123456',
-//        ];
-//        pre(SmsLog::addSmsLog($data));
-//        pre(AdminMenu::getMenusByParentId());
-//        logs('/test/test/', 'test');
-//        pre(dirname('/asdf/3234/'),basename('/asdf/3234/'));
-//        UserData::userReadBook(1, [1,2,3,4]);
-//        var_dump(UserData::getUserData(1));
-//        logs('test');
-//        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
-//        pre($info);die;
-//        var_dump(Book::updateBook(285,['IsFinish' => 2]));
-//        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
-//        var_dump(ViewModel::add([]));
+        //        $data = [
+        //            'UserId' => 1,
+        //            'ItemId' => 1,
+        //            'Log' => 'test text'
+        //        ];
+        //        pre(AdminLog::addLog($data));
+        //        $data = [
+        //            'Mobile' => '185746111486',
+        //            'Content' => '验证码：123456',
+        //        ];
+        //        pre(SmsLog::addSmsLog($data));
+        //        pre(AdminMenu::getMenusByParentId());
+        //        logs('/test/test/', 'test');
+        //        pre(dirname('/asdf/3234/'),basename('/asdf/3234/'));
+//        var_dump(UserData::userReadBook(1, rand(1, 100)));
+//        var_dump(UserData::delete(1));
+        var_dump(UserData::getUserData(1));
+//        var_dump(MTest::upsert(1, ['score' => rand(1, 100), 'date' => date('Y-m-d H:i:s')]));
+//        var_dump(MTest::delete(1));
+
+        var_dump(MTest::getInfo(1));
+        var_dump(MTest::updateUserCount(1));
+        var_dump(MTest::getUserCount(1));
+
+        //        logs('test');
+        //        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
+        //        pre($info);die;
+        //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
+        //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
+        //        var_dump(ViewModel::add([]));
     }
 
     /**
@@ -214,17 +223,17 @@ class Test extends Controller
     public function test()
     {
         var_dump(md5(md5(microtime(true)) . (time() % 256)));
-//        need_cli();
-//        while (true) {
-//            logs('test/test', $_GET['argv']);
-//            sleep(10);
-//        }
-//        $ret = Book::getBookByIds(31);
-//        $view_count = !empty($ret['ViewCount']) ? $ret['ViewCount'] : 0;
-//        pre(Book::updateBook(31, ['ViewCount' => $view_count + 1]));
-//        $ret = Book::getBookByIds(31);
-//        $view_count = !empty($ret['LikeCount']) ? $ret['LikeCount'] : 0;
-//        pre(Book::updateBook(31, ['LikeCount' => $view_count + 1]));
+        //        need_cli();
+        //        while (true) {
+        //            logs('test/test', $_GET['argv']);
+        //            sleep(10);
+        //        }
+        //        $ret = Book::getBookByIds(31);
+        //        $view_count = !empty($ret['ViewCount']) ? $ret['ViewCount'] : 0;
+        //        pre(Book::updateBook(31, ['ViewCount' => $view_count + 1]));
+        //        $ret = Book::getBookByIds(31);
+        //        $view_count = !empty($ret['LikeCount']) ? $ret['LikeCount'] : 0;
+        //        pre(Book::updateBook(31, ['LikeCount' => $view_count + 1]));
     }
 
     public function encrypt()
@@ -246,7 +255,7 @@ class Test extends Controller
 
         //RSA:
         //用openssl生成rsa密钥对(私钥/公钥):
-        //openssl genrsa -out rsa_private_key.pem 1024
+        //openssl genrsa -out rsa_private_key.pem 2048
         //openssl rsa -pubout -in rsa_private_key.pem -out rsa_public_key.pem
 
         /* $data = 'phpbest';

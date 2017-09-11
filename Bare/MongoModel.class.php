@@ -14,19 +14,21 @@ class MongoModel
     /**
      * 库名 继承修改
      */
-    protected static $_mongo_db = 'test';
+    protected static $_db = 'test';
 
     /**
      * 集合名  继承修改
      */
-    protected static $_mongo_collection = 'test';
+    protected static $_collection = 'test';
 
     /**
-     * mongodb 实例化类
-     *
-     * @var null
+     * mongodb 实例
      */
-    protected static $_mongo = null;
+    protected static $_mongo = [];
+    /**
+     * mongodb 配置
+     */
+    protected static $config = [];
 
     /**
      * 获取实例化类
@@ -34,15 +36,30 @@ class MongoModel
      * @param mixed $config
      * @return \MongoDB\Collection|null
      */
-    protected static function getMongodb($config = '')
+    protected static function getMongodb($config = [])
     {
-        if (empty(self::$_mongo)) {
-            $config = !empty($config) ? $config : DB::MONGODB_DEFAULT;
-            $conn = DB::mongodb($config);
-            self::$_mongo = $conn->selectCollection(self::$_mongo_db, self::$_mongo_collection);
+        $config = array_merge($config, static::$config);
+        $config['dns'] = !empty($config['dns']) ? $config['dns'] : DB::MONGODB_DEFAULT;
+        $config['db'] = !empty($config['db']) ? $config['db'] : static::$_db;
+        $config['col'] = !empty($config['col']) ? $config['col'] : static::$_collection;
+        $key = md5(implode('_', $config));
+        if (empty(static::$_mongo[$key])) {
+            $conn = DB::mongodb($config['dns']);
+            static::$_mongo[$key] = $conn->selectCollection($config['db'], $config['col']);
         }
 
-        return self::$_mongo;
+        return static::$_mongo[$key];
+    }
+
+    /**
+     * 切换配置
+     *
+     * @param $config
+     */
+    public static function change($config)
+    {
+        self::$config = $config;
+        static::getMongodb($config);
     }
 
     /**
@@ -55,7 +72,7 @@ class MongoModel
     public static function get($id, $options = [])
     {
         $id = is_numeric($id) ? (int)$id : (string)$id;
-        $ret = self::findOneData([
+        $ret = static::findOneData([
             '_id' => $id
         ], $options);
 
@@ -72,7 +89,7 @@ class MongoModel
     public static function count($id, $options = [])
     {
         $id = is_numeric($id) ? (int)$id : (string)$id;
-        $ret = self::getDataCount([
+        $ret = static::getDataCount([
             '_id' => $id
         ], $options);
 
@@ -90,7 +107,7 @@ class MongoModel
     {
         $id = is_numeric($id) ? (int)$id : (string)$id;
         $data['_id'] = $id;
-        $ret = self::insertOneData($data);
+        $ret = static::insertOneData($data);
 
         return $ret;
     }
@@ -107,7 +124,7 @@ class MongoModel
     {
         $id = is_numeric($id) ? (int)$id : (string)$id;
 
-        $ret = self::updateOneData([
+        $ret = static::updateOneData([
             '_id' => $id
         ], $data, [
             'upsert' => $upsert
@@ -126,7 +143,7 @@ class MongoModel
     {
         $id = is_numeric($id) ? (int)$id : (string)$id;
         $data['_id'] = $id;
-        $ret = self::deleteOneData(['_id' => $id]);
+        $ret = static::deleteOneData(['_id' => $id]);
 
         return $ret;
     }
@@ -139,7 +156,7 @@ class MongoModel
      */
     public static function createIndex($key)
     {
-        return self::getMongodb()->createIndex($key);
+        return static::getMongodb(static::$config)->createIndex($key);
     }
 
     /**
@@ -152,7 +169,7 @@ class MongoModel
     protected static function getDataCount($filter, $options = [])
     {
         try {
-            $ret = self::getMongodb()->count($filter, $options);
+            $ret = static::getMongodb(static::$config)->count($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
             $ret = 0;
@@ -171,7 +188,7 @@ class MongoModel
     protected static function findOneData($filter, $options = [])
     {
         try {
-            $ret = self::getMongodb()->findOne($filter, $options);
+            $ret = static::getMongodb(static::$config)->findOne($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
             $ret = false;
@@ -193,7 +210,7 @@ class MongoModel
     protected static function findData($filter, $options = [])
     {
         try {
-            $list = self::getMongodb()->find($filter, $options);
+            $list = static::getMongodb(static::$config)->find($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
 
@@ -213,7 +230,7 @@ class MongoModel
     protected static function deleteData($filter, $options = [])
     {
         try {
-            $ret = self::getMongodb()->deleteMany($filter, $options);
+            $ret = static::getMongodb(static::$config)->deleteMany($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
 
@@ -236,7 +253,7 @@ class MongoModel
     protected static function deleteOneData($filter, $options = [])
     {
         try {
-            $ret = self::getMongodb()->deleteOne($filter, $options);
+            $ret = static::getMongodb(static::$config)->deleteOne($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
 
@@ -259,7 +276,7 @@ class MongoModel
     protected static function insertOneData($document, $options = [])
     {
         try {
-            $ret = self::getMongodb()->insertOne($document, $options);
+            $ret = static::getMongodb(static::$config)->insertOne($document, $options);
         } catch (\Exception $e) {
             static::log($e, $document);
 
@@ -283,7 +300,7 @@ class MongoModel
     protected static function updateOneData($filter, $updates, $options = [])
     {
         try {
-            $ret = self::getMongodb()->updateOne($filter, $updates, $options);
+            $ret = static::getMongodb(static::$config)->updateOne($filter, $updates, $options);
         } catch (\Exception $e) {
             static::log($e, $updates);
 
