@@ -54,7 +54,7 @@ class AdminGroup extends Model
      *
      * @var array
      */
-    private static $_add_must_fields = [
+    protected static $_add_must_fields = [
         'GroupName' => 1,
     ];
 

@@ -63,125 +63,6 @@ class Test extends Controller
         //        pre(AdminUser::addUser($data));
         //        pre(AdminUser::getUserByName('camfee'));
         //pre(AdminGroup::addGroup(['GroupName' => '测试组']));
-        $data = [
-            [
-                'AdminMenuId' => 1,
-                'ParentId' => 0,
-                'Name' => '首页',
-                'Url' => 'Admin_Info',
-            ],
-            [
-                'AdminMenuId' => 7,
-                'ParentId' => 1,
-                'Name' => '首页',
-                'Url' => 'Admin/Info',
-            ],
-            [
-                'AdminMenuId' => 8,
-                'ParentId' => 7,
-                'Name' => '欢迎页',
-                'Url' => 'Admin/Info/index',
-            ],
-            [
-                'AdminMenuId' => 9,
-                'ParentId' => 7,
-                'Name' => '登录信息',
-                'Url' => 'Admin/Info/info',
-            ],
-            [
-                'AdminMenuId' => 2,
-                'ParentId' => 0,
-                'Name' => '用户',
-                'Url' => 'Admin_User'
-            ],
-            [
-                'AdminMenuId' => 10,
-                'ParentId' => 2,
-                'Name' => '用户管理',
-                'Url' => 'Admin/User',
-            ],
-            [
-                'AdminMenuId' => 11,
-                'ParentId' => 10,
-                'Name' => '用户列表',
-                'Url' => 'Admin/User/index',
-            ],
-            [
-                'AdminMenuId' => 3,
-                'ParentId' => 0,
-                'Name' => '数据',
-                'Url' => 'Admin_Data'
-            ],
-            [
-                'AdminMenuId' => 12,
-                'ParentId' => 3,
-                'Name' => '书本管理',
-                'Url' => 'Admin/Book',
-            ],
-            [
-                'AdminMenuId' => 13,
-                'ParentId' => 12,
-                'Name' => '书本列表',
-                'Url' => 'Admin/Book/index',
-            ],
-            [
-                'AdminMenuId' => 4,
-                'ParentId' => 0,
-                'Name' => '应用',
-                'Url' => 'Admin_App'
-            ],
-            [
-                'AdminMenuId' => 14,
-                'ParentId' => 4,
-                'Name' => '应用管理',
-                'Url' => 'Admin/App',
-            ],
-            [
-                'AdminMenuId' => 15,
-                'ParentId' => 14,
-                'Name' => '应用列表',
-                'Url' => 'Admin/App/index',
-            ],
-            [
-                'AdminMenuId' => 5,
-                'ParentId' => 0,
-                'Name' => '工具',
-                'Url' => 'Admin_Tool'
-            ],
-            [
-                'AdminMenuId' => 16,
-                'ParentId' => 5,
-                'Name' => '工具管理',
-                'Url' => 'Admin/Tool',
-            ],
-            [
-                'AdminMenuId' => 17,
-                'ParentId' => 16,
-                'Name' => '工具列表',
-                'Url' => 'Admin/Tool/index',
-            ],
-            [
-                'AdminMenuId' => 6,
-                'ParentId' => 0,
-                'Name' => '后台',
-                'Url' => 'Admin_Admin'
-            ],
-            [
-                'AdminMenuId' => 18,
-                'ParentId' => 6,
-                'Name' => '后台管理',
-                'Url' => 'Admin/Admin',
-            ],
-            [
-                'AdminMenuId' => 19,
-                'ParentId' => 18,
-                'Name' => '管理员列表',
-                'Url' => 'Admin/Admin/index',
-            ],
-        ];
-        //        foreach ($data as $v) {
-        //            AdminMenu::addMenu($v);
-        //        }
 
         //        pre(AdminLogin::getAuthMenu());
 
@@ -199,15 +80,15 @@ class Test extends Controller
         //        pre(AdminMenu::getMenusByParentId());
         //        logs('/test/test/', 'test');
         //        pre(dirname('/asdf/3234/'),basename('/asdf/3234/'));
-//        var_dump(UserData::userReadBook(1, rand(1, 100)));
-//        var_dump(UserData::delete(1));
-        var_dump(UserData::getUserData(1));
-//        var_dump(MTest::upsert(1, ['score' => rand(1, 100), 'date' => date('Y-m-d H:i:s')]));
-//        var_dump(MTest::delete(1));
+        //        var_dump(UserData::userReadBook(1, rand(1, 100)));
+        //        var_dump(UserData::delete(1));
+        //        var_dump(UserData::getUserData(1));
+        //        var_dump(MTest::upsert(1, ['score' => rand(1, 100), 'date' => date('Y-m-d H:i:s')]));
+        //        var_dump(MTest::delete(1));
 
-        var_dump(MTest::getInfo(1));
-        var_dump(MTest::updateUserCount(1));
-        var_dump(MTest::getUserCount(1));
+        //        var_dump(MTest::getInfo(1));
+        //        var_dump(MTest::updateUserCount(1));
+        //        var_dump(MTest::getUserCount(1));
 
         //        logs('test');
         //        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
@@ -215,6 +96,8 @@ class Test extends Controller
         //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
         //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
         //        var_dump(ViewModel::add([]));
+        test1::test();
+        test1::test1();
     }
 
     /**
@@ -268,5 +151,24 @@ class Test extends Controller
         openssl_private_decrypt($encrypted, $decrypted, file_get_contents(dirname(__FILE__).'/rsa_private_key.pem'));
         echo '私钥解密: '.$decrypted."\n"; */
 
+    }
+}
+
+class test1 extends test2
+{
+    public static function test1()
+    {
+        self::test();
+    }
+}
+
+class test2
+{
+    protected static $class;
+
+    public static function test()
+    {
+        static::$class = __CLASS__;
+        echo static::$class;
     }
 }

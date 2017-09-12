@@ -89,17 +89,16 @@ class MemcacheDB
     /**
      * 在cache中获取键为$key的项的值
      *
-     * @param string $key 键值
+     * @param string|array $key 键值
      * @return string 如果该项不存在，则返回false
      * @access public
      */
     public function get($key)
     {
-        $key = (empty($this->prefix)) ? $key : $this->prefix . $key;
-
         if (is_array($key)) {
             $v_data = $k_data = array();
             foreach ($key as $v) {
+                $v = (empty($this->prefix)) ? $v : $this->prefix . $v;
                 if (array_key_exists($v, self::$data[$this->key])) {
                     $v_data[$v] = self::$data[$this->key][$v];
                 } else {
@@ -117,6 +116,7 @@ class MemcacheDB
 
             return $v_data;
         } else {
+            $key = (empty($this->prefix)) ? $key : $this->prefix . $key;
             if (!array_key_exists($key, self::$data[$this->key])) {
                 self::$data[$this->key][$key] = $this->memcache->get($key);
             }

@@ -31,7 +31,6 @@ class SmsLog extends ViewModel
     const FD_CREATE_TIME = 'CreateTime';
     const EX_FD_START_TIME = 'StartTime';
     const EX_FD_END_TIME = 'EndTime';
-
     // 配置文件
     protected static $_conf = [
         // 必选, 数据库连接(来自DBConfig配置), w: 写, r: 读
@@ -138,16 +137,19 @@ class SmsLog extends ViewModel
         // 可选, 超时时间, 默认不过期
         self::CF_MC_TIME => 86400
     ];
-
-    /**
-     * 新增必须字段
-     *
-     * @var array
-     */
+    // 新增必须字段
     protected static $_add_must_fields = [
         self::FD_MOBILE => 1,
         self::FD_CONTENT => 1,
     ];
+
+    /**
+     * @see ViewModel::add() 新增
+     * @see ViewModel::update() 更新
+     * @see ViewModel::getInfoByIds() 按id查询
+     * @see ViewModel::getList() 条件查询
+     * @see ViewModel::delete() 删除
+     */
 
     /**
      * @param $mobile

@@ -73,7 +73,7 @@ class Book extends Model
                     'IsFinish' => 0
                 ];
                 $data = array_merge($data, $sdata);
-                SBook::addBook($data);
+                SBook::addSearch($data);
             }
         }
 
@@ -92,7 +92,7 @@ class Book extends Model
         if ($id > 0 && !empty($data)) {
             $ret = parent::updateData($id, $data);
             if (!empty($ret)) {
-                SBook::updateBook($id, $data);
+                SBook::updateSearch($id, $data);
             }
 
             return $ret;

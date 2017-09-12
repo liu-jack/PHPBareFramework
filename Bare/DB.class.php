@@ -19,7 +19,7 @@ class DB extends DBConfig
      *
      * @param mixed $params 连接参数
      * @param mixed $options 选项
-     * @return bool|\PDOStatement
+     * @return bool|PDODB
      */
     public static function pdo($params, $options = null)
     {

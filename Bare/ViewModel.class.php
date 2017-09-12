@@ -115,18 +115,15 @@ class ViewModel extends Model
         ],
     ];
 
-    // 列表缓存数组 key => [type => 1, fields => [field]] 0:mc 1:redis 默认0
-    const CACHE_LIST_TYPE = 'type';
-    const CACHE_LIST_TYPE_MC = 0;
-    const CACHE_LIST_TYPE_REDIS = 1;
-    const CACHE_LIST_FIELDS = 'fields';
-    protected static $_cache_list_keys;
-    // 新增必须字段 field => 1
-    protected static $_add_must_fields;
-    // 不可修改字段 field => 1
-    protected static $_un_modify_fields = [
-        'Id' => 1,
-    ];
+    /**
+     * CURD
+     *
+     * @see Model::add() 新增
+     * @see Model::update() 更新
+     * @see Model::getInfoByIds() 按id查询
+     * @see Model::getList() 条件查询
+     * @see Model::delete() 删除
+     */
 
     /**
      * 生成where条件
@@ -341,158 +338,5 @@ class ViewModel extends Model
         }
 
         return $form;
-    }
-
-    /**
-     * 添加
-     *
-     * @param      $data
-     * @param bool $ignore
-     * @return bool|int|string
-     */
-    public static function add($data, $ignore = true)
-    {
-        if (!empty(static::$_add_must_fields) && count(array_diff_key(static::$_add_must_fields, $data)) > 0) {
-            return false;
-        }
-        $ret = false;
-        if (!empty($data)) {
-            if (!empty(static::FD_CREATE_TIME) && empty($data[static::FD_CREATE_TIME])) {
-                $data[static::FD_CREATE_TIME] = date('Y-m-d H:i:s');
-            }
-            $ret = parent::addData($data, $ignore);
-            if (!empty(static::$_cache_list_keys) && $ret !== false) {
-                $data[key(static::$_conf[self::CF_FIELDS])] = $ret;
-                self::delCache($data);
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * 更新
-     *
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public static function update($id, $data)
-    {
-        $ret = false;
-        if (!empty(static::$_un_modify_fields)) {
-            $data = array_diff_key($data, static::$_un_modify_fields);
-        }
-        if ($id > 0 && !empty($data)) {
-            $ret = parent::updateData($id, $data);
-            if (!empty(static::$_cache_list_keys) && $ret !== false) {
-                $info = self::getInfoByIds($id);
-                if (!empty($info)) {
-                    static::delCache($info);
-                }
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * 根据id获取
-     *
-     * @param int|array $ids
-     * @return array
-     */
-    public static function getInfoByIds($ids)
-    {
-        if (empty($ids)) {
-            return [];
-        }
-        $ret = parent::getDataById($ids);
-
-        return $ret;
-    }
-
-    /**
-     * 获取列表
-     *
-     * @param array  $where
-     * @param int    $offset
-     * @param int    $limit
-     * @param string $fields
-     * @param string $order
-     * @return array
-     */
-    public static function getList($where = [], $offset = 0, $limit = 0, $fields = '*', $order = '')
-    {
-        $extra = [
-            static::EXTRA_FIELDS => $fields,
-            static::EXTRA_OFFSET => $offset,
-            static::EXTRA_LIMIT => $limit,
-            static::EXTRA_ORDER => $order,
-        ];
-
-        return parent::getDataByFields($where, $extra);
-    }
-
-    /**
-     * 删除
-     *
-     * @param $id
-     * @return bool
-     */
-    public static function delete($id)
-    {
-        $ret = false;
-        if ($id > 0) {
-            if (!empty(static::$_cache_list_keys)) {
-                $info = self::getInfoByIds($id);
-            }
-            $ret = parent::delData($id);
-            if ($ret !== false && !empty($info)) {
-                static::delCache($info);
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * 清除缓存
-     *
-     * @param array $info
-     */
-    private static function delCache($info = [])
-    {
-        if (!empty(static::$_cache_list_keys)) {
-            $mc_key = $rd_key = [];
-            foreach (static::$_cache_list_keys as $k => $v) {
-                if (!is_array($v)) {
-                    $mc_key[] = $k;
-                } else {
-                    if (is_array($v[static::CACHE_LIST_FIELDS])) {
-                        $key = str_replace('{' . $v[static::CACHE_LIST_FIELDS] . '}',
-                            $info[$v[static::CACHE_LIST_FIELDS]], $k);
-                    } else {
-                        $search = $replace = [];
-                        foreach ($v[static::CACHE_LIST_FIELDS] as $vv) {
-                            $search[] = '{' . $vv . '}';
-                            $replace[] = $info[$vv];
-                        }
-                        $key = str_replace($search, $replace, $k);
-                    }
-                    if (empty($v[static::CACHE_LIST_TYPE])) {
-                        $mc_key[] = $key;
-                    } else {
-                        $rd_key[] = $key;
-                    }
-                }
-            }
-            if (!empty($mc_key)) {
-                static::getMC()->delete($mc_key);
-            }
-            if (!empty($rd_key)) {
-                static::getRedis(true)->delete($rd_key);
-            }
-        }
     }
 }

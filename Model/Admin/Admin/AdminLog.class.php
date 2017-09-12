@@ -122,14 +122,20 @@ class AdminLog extends ViewModel
         // 可选, 超时时间, 默认不过期
         self::CF_MC_TIME => 86400
     ];
-
-
     // 新增必须字段
     protected static $_add_must_fields = [
         self::FD_USER_ID => 1,
         self::FD_ITEM_ID => 1,
         self::FD_LOG => 1,
     ];
+
+    /**
+     * @see ViewModel::add() 新增
+     * @see ViewModel::update() 更新
+     * @see ViewModel::getInfoByIds() 按id查询
+     * @see ViewModel::getList() 条件查询
+     * @see ViewModel::delete() 删除
+     */
 
     /**
      * 记录后台日志

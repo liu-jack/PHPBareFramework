@@ -3,7 +3,7 @@
  * AdminUser.class.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/5/24 12:33
+ * @date   2017/5/24 12:33
  *
  */
 
@@ -15,6 +15,7 @@ use Bare\DB;
 /**
  * 后台用户模型
  * Class AdminUser
+ *
  * @package Model\Admin
  */
 class AdminUser extends Model
@@ -52,9 +53,10 @@ class AdminUser extends Model
 
     /**
      * 新增必须字段
+     *
      * @var array
      */
-    private static $_add_must_fields = [
+    protected static $_add_must_fields = [
         'UserName' => 1,
         'Password' => 1,
         'RealName' => 1,
@@ -62,7 +64,8 @@ class AdminUser extends Model
 
     /**
      * 新增
-     * @param $data
+     *
+     * @param      $data
      * @param bool $ignore
      * @return bool|int|string
      */
@@ -71,11 +74,13 @@ class AdminUser extends Model
         if (count(array_diff_key(self::$_add_must_fields, $data)) > 0) {
             return false;
         }
+
         return parent::addData($data, $ignore);
     }
 
     /**
      * 更新
+     *
      * @param $uid
      * @param $data
      * @return bool
@@ -85,11 +90,13 @@ class AdminUser extends Model
         if ($uid > 0 && !empty($data)) {
             return parent::updateData($uid, $data);
         }
+
         return false;
     }
 
     /**
      * 根据id获取详细信息
+     *
      * @param int|array $uids
      * @return array
      */
@@ -98,11 +105,13 @@ class AdminUser extends Model
         if (empty($uids)) {
             return [];
         }
+
         return parent::getDataById($uids);
     }
 
     /**
      * 根据用户获取详细信息
+     *
      * @param string $name
      * @return array|bool
      */
@@ -118,11 +127,13 @@ class AdminUser extends Model
             'limit' => 1,
         ];
         $ret = parent::getDataByFields($where, $extra);
+
         return !empty(current($ret['data'])) ? current($ret['data']) : [];
     }
 
     /**
      * 根据用户分组获取详细信息
+     *
      * @param int $group
      * @param int $offset
      * @param int $limit
@@ -140,14 +151,16 @@ class AdminUser extends Model
             'offset' => $offset,
             'limit' => $limit,
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
     /**
      * 查询
-     * @param array $where
-     * @param int $offset
-     * @param int $limit
+     *
+     * @param array  $where
+     * @param int    $offset
+     * @param int    $limit
      * @param string $order
      * @param string $fields
      * @return array
@@ -160,11 +173,13 @@ class AdminUser extends Model
             'limit' => $limit,
             'order' => $order,
         ];
+
         return parent::getDataByFields($where, $extra);
     }
 
     /**
      * 删除
+     *
      * @param $uid
      * @return bool
      */
@@ -173,6 +188,7 @@ class AdminUser extends Model
         if ($uid > 0) {
             return parent::delData($uid);
         }
+
         return false;
     }
 }
