@@ -2,9 +2,9 @@
 
 namespace Bare\DB;
 
-use \PDO;
-use \PDOStatement;
-use \PDOException;
+use PDO;
+use PDOStatement;
+use PDOException;
 
 class PDODB extends PDO
 {
@@ -65,7 +65,7 @@ class PDODB extends PDO
     /**
      * 构造函数
      *
-     * @param array $params 配置信息
+     * @param array $params  配置信息
      * @param array $options 选项, @see self::$_opt
      */
     public function __construct($params, $options)
@@ -97,11 +97,10 @@ class PDODB extends PDO
     }
 
     /**
-     *
      * @see PDO::prepare()
      *
      * @param string $statement
-     * @param array $driver_options
+     * @param array  $driver_options
      * @return PDOStatement
      */
     public function prepare($statement, $driver_options = [])
@@ -116,11 +115,14 @@ class PDODB extends PDO
      * @see PDO::query()
      *
      * @param string $statement
+     * @param int    $mode
+     * @param null   $arg3
+     * @param array  $ctorargs
      * @return PDOStatement
      */
-    public function query($statement)
+    public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null, array $ctorargs = array())
     {
-        $this->statement = parent::query($statement);
+        $this->statement = parent::query($statement, $mode, $arg3, $ctorargs);
         $this->statement->setFetchMode($this->opt['fetchMode']);
 
         return $this->statement;
@@ -129,11 +131,11 @@ class PDODB extends PDO
     /**
      * SELECT 语句的快捷方式
      *
-     * @param string $tableName 表名
-     * @param array $where WHERE 条件数组，仅支持 AND 连接
-     * @param string $fields 要查询的字段，半角逗号分隔，如：field1, field2
-     * @param string $order 排序方法，如：someField DESC
-     * @param int|array $limit 限制条数，可以是单个数字或者 [$offset, $num] 格式的数组
+     * @param string    $tableName 表名
+     * @param array     $where     WHERE 条件数组，仅支持 AND 连接
+     * @param string    $fields    要查询的字段，半角逗号分隔，如：field1, field2
+     * @param string    $order     排序方法，如：someField DESC
+     * @param int|array $limit     限制条数，可以是单个数字或者 [$offset, $num] 格式的数组
      * @return mixed
      */
     public function find($tableName, $where = [], $fields = '*', $order = null, $limit = null)
@@ -243,8 +245,8 @@ class PDODB extends PDO
     /**
      * 链式查询 - 指定 LIMIT 参数
      *
-     * @param mixed $offset LIMIT 第一个参数，也可以写成 [$offset, $num] 以省略第二个参数
-     * @param integer $num LIMIT 第二个参数
+     * @param mixed   $offset LIMIT 第一个参数，也可以写成 [$offset, $num] 以省略第二个参数
+     * @param integer $num    LIMIT 第二个参数
      * @return $this
      */
     public function limit($offset, $num = null)
@@ -276,20 +278,15 @@ class PDODB extends PDO
      * 链式查询 - 获取结果集
      *
      * @param int $style 记录格式，PDO::FETCH_*
-     * @param int $arg 与 $style 对应的参数，目前只有 PDO::FETCH_COLUMN 需要
+     * @param int $arg   与 $style 对应的参数，目前只有 PDO::FETCH_COLUMN 需要
      * @return array|bool
      */
     public function getAll($style = PDO::FETCH_ASSOC, $arg = null)
     {
         $opt = $this->chained;
-        $sql = sprintf(
-            "SELECT %s FROM `%s` %s %s %s",
-            $opt['fields'],
-            $opt['table'],
-            $opt['where'],
+        $sql = sprintf("SELECT %s FROM `%s` %s %s %s", $opt['fields'], $opt['table'], $opt['where'],
             is_null($opt['order']) ? '' : 'ORDER BY ' . $opt['order'],
-            is_null($opt['limit']) ? '' : 'LIMIT ' . $opt['limit']
-        );
+            is_null($opt['limit']) ? '' : 'LIMIT ' . $opt['limit']);
         $query = $this->prepare($sql);
 
         if (!($query instanceof PDOStatement)) {
@@ -301,9 +298,7 @@ class PDODB extends PDO
         }
 
         $index = $opt['index'];
-        $data = ($style == PDO::FETCH_COLUMN)
-            ? $query->fetchAll($style, $arg)
-            : $query->fetchAll($style);
+        $data = ($style == PDO::FETCH_COLUMN) ? $query->fetchAll($style, $arg) : $query->fetchAll($style);
 
         if (empty($data)) {
             return [];
@@ -314,9 +309,7 @@ class PDODB extends PDO
         } else {
             $ret = [];
             if (is_int($index)) {
-                $fields = ($opt['fields'] == '*')
-                    ? array_keys($data[0])
-                    : explode(',', $opt['fields']);
+                $fields = ($opt['fields'] == '*') ? array_keys($data[0]) : explode(',', $opt['fields']);
                 $field = $fields[$index];
             } else {
                 $field = $index;
@@ -409,8 +402,8 @@ class PDODB extends PDO
      * INSERT 语句的快捷方式
      *
      * @param string $tableName 表名
-     * @param array $rows 要写入的数组(支持多行写入), 单个[data], 多个[[data1],[data2],...]
-     * @param array $options (可选) INSERT 选项，目前只支持 ignore
+     * @param array  $rows      要写入的数组(支持多行写入), 单个[data], 多个[[data1],[data2],...]
+     * @param array  $options   (可选) INSERT 选项，目前只支持 ignore
      * @return bool|int         成功则返回影响的行数，失败则返回 false
      */
     public function insert($tableName, $rows, $options = [])
@@ -447,13 +440,8 @@ class PDODB extends PDO
             $flag = false;
         }
 
-        $sql = sprintf(
-            "INSERT %s INTO  `%s` (%s) VALUES %s",
-            $option,
-            $tableName,
-            implode(', ', $fields),
-            implode(', ', $inserts)
-        );
+        $sql = sprintf("INSERT %s INTO  `%s` (%s) VALUES %s", $option, $tableName, implode(', ', $fields),
+            implode(', ', $inserts));
 
         $query = $this->prepare($sql);
         if (!($query instanceof PDOStatement)) {
@@ -475,8 +463,8 @@ class PDODB extends PDO
      * 唯一键不存在则插入, 存在则在原有数据基础上做更新操作
      *
      * @param string $tableName 表名
-     * @param array $rows 要写入的数组(支持一次性接入多行)
-     * @param array $updates 做更新操作时要更新的字段名列表
+     * @param array  $rows      要写入的数组(支持一次性接入多行)
+     * @param array  $updates   做更新操作时要更新的字段名列表
      * @return bool|int                 成功则返回影响的行数，失败则返回 false
      */
     public function upsert($tableName, $rows, $updates)
@@ -524,13 +512,8 @@ class PDODB extends PDO
             $ignore = '';
         }
 
-        $sql = sprintf(
-            "INSERT %s INTO `%s` (%s) VALUES %s {$update_clause}",
-            $ignore,
-            $tableName,
-            implode(', ', $fieldKeys),
-            implode(', ', $inserts)
-        );
+        $sql = sprintf("INSERT %s INTO `%s` (%s) VALUES %s {$update_clause}", $ignore, $tableName,
+            implode(', ', $fieldKeys), implode(', ', $inserts));
         $query = $this->prepare($sql);
         if (!($query instanceof PDOStatement)) {
             return false;
@@ -551,8 +534,8 @@ class PDODB extends PDO
      * UPDATE 语句的快捷方式
      *
      * @param string $tableName 表名
-     * @param array $where 一个 WHERE 条件数组，仅支持 AND
-     * @param array $row 要更新的字段及
+     * @param array  $where     一个 WHERE 条件数组，仅支持 AND
+     * @param array  $row       要更新的字段及
      * @return bool|int         成功执行则返回影响的行数，失败则返回 false
      */
     public function update($tableName, $row, $where)
@@ -599,7 +582,7 @@ class PDODB extends PDO
      * DELETE 语句的快捷方式
      *
      * @param string $tableName 表名
-     * @param array $where 一个 WHERE 条件数组，仅支持 AND 连接
+     * @param array  $where     一个 WHERE 条件数组，仅支持 AND 连接
      * @return bool|int         成功执行则返回影响的行数，失败则返回 false
      */
     public function delete($tableName, $where)
@@ -632,8 +615,8 @@ class PDODB extends PDO
     /**
      * 魔术call
      *
-     * @param string $name 方法名
-     * @param mixed $arguments 参数
+     * @param string $name      方法名
+     * @param mixed  $arguments 参数
      * @throws PDOException
      * @return mixed
      */

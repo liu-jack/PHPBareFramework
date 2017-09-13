@@ -23,17 +23,16 @@ EOT
     ,
     'create_device' => <<<EOT
 CREATE TABLE IF NOT EXISTS `Device` (
-  `Id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `AppType` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '设备类型 0：web 10:wap 20:andriod 30:ios',
+  `AppId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '应用id',
+  `AppType` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '设备类型 0：web 1:wap 2:andriod 3:ios',
   `DeviceId` varchar(64) NOT NULL COMMENT '设备ID',
   `Token` varchar(128) NOT NULL COMMENT '第三方推送ID',
   `OriginToken` varchar(128) NOT NULL COMMENT '原生推送令牌',
   `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '状态: 0:失效 1:正常',
   `CreateTime` datetime NOT NULL,
-  PRIMARY KEY (`Id`),
-  UNIQUE KEY `Idx_Device` (`DeviceId`) USING BTREE,
-  KEY `Idx_UserId` (`UserId`) USING BTREE
+  UNIQUE KEY `Idx_DeviceId` (`DeviceId`) USING BTREE,
+  KEY `Idx_UserId_AppId_Type` (`UserId`,`AppId`,`AppType`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 EOT
     ,

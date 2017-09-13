@@ -28,7 +28,7 @@ class Api
      * 组装请求接口的url
      *
      * @param string $api_method 要请求的方法名
-     * @param array $get get方式传输的参数数组
+     * @param array  $get        get方式传输的参数数组
      * @return string        请求地址
      */
     public static function getUrl($api_method, $get = [])
@@ -53,15 +53,16 @@ class Api
         $query['appid'] = self::$appid;
         $query['time'] = $time;
         $query['hash'] = $hash;
+
         return $url . '?' . http_build_query($query);
     }
 
     /**
      * 发送请求
      *
-     * @param string $url 请求的地址
-     * @param array $data 需要post的数组
-     * @param int $timeout 超时时间
+     * @param string $url     请求的地址
+     * @param array  $data    需要post的数组
+     * @param int    $timeout 超时时间
      * @return array       结果数组
      */
     public static function request($url, $data = [], $timeout = 15)
@@ -104,14 +105,15 @@ class Api
             }
             logs($log, 'Api/api_request_timeout');
         }
+
         return self::checkRes($res);
     }
 
     /**
      * 重新组装接口返回数据
      *
-     * @param string $res 接口返回的json数据
-     * @return array      重组后的数据
+     * @param array $res 接口返回的json数据
+     * @return array     重组后的数据
      */
     public static function checkRes($res)
     {
@@ -132,6 +134,7 @@ class Api
                 $return['data'] = $res['Data'];
             }
         }
+
         return $return;
     }
 
@@ -145,6 +148,7 @@ class Api
         if (empty(self::$verid)) {
             self::$verid = config('api/config' . self::$appid)['verid'];
         }
+
         return self::$verid;
     }
 
@@ -158,6 +162,7 @@ class Api
         if (empty(self::$appkey)) {
             self::$appkey = config('api/config' . self::$appid)['appkey'];
         }
+
         return self::$appkey;
     }
 
@@ -171,6 +176,7 @@ class Api
         if (empty(self::$rsakey)) {
             self::$rsakey = config('api/config' . self::$appid)['rsakey'];
         }
+
         return self::$rsakey;
     }
 }

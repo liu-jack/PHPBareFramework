@@ -24,6 +24,7 @@ define('APP_TYPE_WEB', 0);       // web
 define('APP_TYPE_WAP', 1);       // wap
 define('APP_TYPE_ADR', 2);       // android
 define('APP_TYPE_IOS', 3);       // ISO
+
 $GLOBALS['g_app_types'] = [
     APP_TYPE_WEB => APP_TYPE_WEB,
     APP_TYPE_WAP => APP_TYPE_WAP,

@@ -26,6 +26,7 @@ class ElasticSearch
 
     /**
      * 连接超时时间
+     *
      * @var integer
      */
     const CONNECT_TIMEOUT = 3;
@@ -65,15 +66,16 @@ class ElasticSearch
     /**
      * 请求并输出搜索结果
      *
-     * @param string $query_string 请求参数, 起始位置不要带/
-     * @param string $method 请求方法
-     * @param string|array $data 请求内容数据参数
+     * @param string       $query_string 请求参数, 起始位置不要带/
+     * @param string       $method       请求方法
+     * @param string|array $data         请求内容数据参数
      * @return bool|array                  失败false 用getLastError()获取错误, 成功结果array
      */
     public function query($query_string, $method = self::HTTP_GET, $data = '')
     {
         if (!isset(self::$method[$method])) {
             $this->_setError(1, 'Unsupported methods!');
+
             return false;
         }
 
@@ -83,15 +85,18 @@ class ElasticSearch
 
         if (!is_array($ret)) {
             $this->_setError(2, 'Response format error!');
+
             return false;
         } else {
             if (isset($ret['status']) && isset($ret['error'])) {
                 $this->_setError($ret['status'], $ret['error']);
+
                 return false;
             }
         }
 
         $this->_setError(0, '');
+
         return $ret;
     }
 

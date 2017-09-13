@@ -132,11 +132,11 @@ class Sql extends Controller
     public function application()
     {
         need_cli();
-//        $sql = '';
-//        for ($i = 0; $i < 256; $i++) {
-//            $this->_m->runApplication($sql);
-//            echo $i . PHP_EOL;
-//        }
+        //        $sql = '';
+        //        for ($i = 0; $i < 256; $i++) {
+        //            $this->_m->runApplication($sql);
+        //            echo $i . PHP_EOL;
+        //        }
     }
 
     /**
@@ -147,7 +147,6 @@ class Sql extends Controller
         need_cli();
         $sqls = config('sql/common');
         $create_sql = $sqls['create_device'];
-        $this->_m->runDevice($create_sql);
         for ($i = 0; $i < 256; $i++) {
             $suff = sprintf('%02x', $i);
             $sql = str_replace('`Device`', '`Device_' . $suff . '`', $create_sql);

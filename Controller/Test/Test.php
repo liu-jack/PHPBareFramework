@@ -96,8 +96,9 @@ class Test extends Controller
         //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
         //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
         //        var_dump(ViewModel::add([]));
-        test1::test();
+        test2::test();
         test1::test1();
+        var_dump(getImgExt('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
     }
 
     /**
@@ -168,7 +169,6 @@ class test2
 
     public static function test()
     {
-        static::$class = __CLASS__;
-        echo static::$class;
+        echo static::class;
     }
 }

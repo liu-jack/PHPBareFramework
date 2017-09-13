@@ -14,6 +14,7 @@ class FileDB
 
     /**
      * 构造函数
+     *
      * @param string $path 缓存文件目录
      */
     public function __construct($path = './')
@@ -25,9 +26,10 @@ class FileDB
 
     /**
      * 在cache中设置键为$key的项的值，如果该项不存在，则新建一个项
-     * @param string $key 键值
-     * @param mixed $var 值
-     * @param int $expire 到期秒数, 0 无限期, 也可以用标准日期时间描述(strtotime)到期时间, 由用户自己来维护, 到期时间不得超过1年，超过按无限期算
+     *
+     * @param string $key    键值
+     * @param mixed  $var    值
+     * @param int    $expire 到期秒数, 0 无限期, 到期时间不得超过1年，超过按无限期算
      * @return boolean 如果成功则返回 true，失败则返回 false。
      * @access public
      */
@@ -47,11 +49,13 @@ class FileDB
         $result = fwrite($fp, $value);
         flock($fp, LOCK_UN);
         fclose($fp);
+
         return $result;
     }
 
     /**
      * 在cache中获取键为$key的项的值
+     *
      * @param string $key 键值
      * @return mixed 如果该项不存在，则返回 NULL
      * @access public
@@ -71,6 +75,7 @@ class FileDB
                 }
             }
         }
+
         return $result;
     }
 
@@ -84,6 +89,7 @@ class FileDB
     {
         $fileList = FileSystem::ls($this->cachePath, array(), 'ASC', true);
         FileSystem::rm($fileList);
+
         return true;
     }
 
@@ -99,6 +105,7 @@ class FileDB
         $file = $this->makeFilename($key, 'del');
         if (file_exists($file)) {
             FileSystem::rm($file);
+
             return true;
         } else {
             return false;
@@ -108,7 +115,7 @@ class FileDB
     /**
      * 获取缓存文件路径及文件名
      *
-     * @param string $key 键名
+     * @param string $key  键名
      * @param string $type 类型(get/set/del)
      * @return string
      */
@@ -124,6 +131,7 @@ class FileDB
         if (!file_exists($cache_file) && $type == 'set') {
             (!is_dir($path)) && FileSystem::makeDir($path);
         }
+
         return $cache_file;
     }
 }

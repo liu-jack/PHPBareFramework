@@ -95,8 +95,8 @@ class DBConfig
         self::REDIS_PASSPORT_W => 'default',
         self::REDIS_ACCOUNT_R => 'default',
         self::REDIS_ACCOUNT_W => 'default',
-        self::REDIS_OTHER_R => 'other',
-        self::REDIS_OTHER_W => 'other',
+        self::REDIS_OTHER_R => 'default',
+        self::REDIS_OTHER_W => 'default',
     ];
 
     /**

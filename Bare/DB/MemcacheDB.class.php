@@ -2,7 +2,7 @@
 
 namespace Bare\DB;
 
-use \Memcache;
+use Memcache;
 
 class MemcacheDB
 {
@@ -27,7 +27,7 @@ class MemcacheDB
      *
      * @var array
      */
-    public static $querys = [];
+    public static $query = [];
 
     /**
      * 数据缓存沲
@@ -98,7 +98,7 @@ class MemcacheDB
         if (is_array($key)) {
             $v_data = $k_data = array();
             foreach ($key as $v) {
-                $v = (empty($this->prefix)) ? $v : $this->prefix . $v;
+                $v = $this->prefix . $v;
                 if (array_key_exists($v, self::$data[$this->key])) {
                     $v_data[$v] = self::$data[$this->key][$v];
                 } else {

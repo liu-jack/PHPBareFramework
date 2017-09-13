@@ -33,6 +33,8 @@ Class Controller
 
     /**
      * 数据模型
+     *
+     * @var \Model\Tool\Sql
      */
     protected $_m = null;
 

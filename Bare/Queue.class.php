@@ -2,8 +2,9 @@
 
 /**
  * 队列基类
+ *
  * @author camfee<camfee@yeah.net>
- * @since v1.0 2017.04.13
+ * @since  v1.0 2017.04.13
  */
 
 namespace Bare;
@@ -24,6 +25,7 @@ class Queue
 
     /**
      * 队列名称
+     *
      * @var string
      */
     protected $name;
@@ -73,7 +75,7 @@ class Queue
     /**
      * 设置队列值
      *
-     * @param string $name 队列名
+     * @param string       $name 队列名
      * @param string|array $data 队列数据
      * @return int
      */
@@ -90,8 +92,10 @@ class Queue
                 'data' => $data,
             ];
             logs($logs, "Queue/{$name}_Fail");
+
             return false;
         }
+
         return true;
     }
 
@@ -99,7 +103,7 @@ class Queue
      * 向队列中添加多条数据
      *
      * @param string $name 队列名
-     * @param array $data 队列数据数组
+     * @param array  $data 队列数据数组
      * @return boolean
      */
     public static function addMulti($name, array $data)
@@ -126,6 +130,7 @@ class Queue
                 'data' => $data,
             ];
             logs($logs, "Queue/{$name}_Fail");
+
             return false;
         }
 
@@ -136,7 +141,7 @@ class Queue
      * 向队列中添加多条数据［实际是按单条进行添加］
      *
      * @param string $name 队列名
-     * @param array $data 队列数据数组
+     * @param array  $data 队列数据数组
      * @return boolean
      */
     public static function addMultiByForeach($name, array $data)
@@ -163,8 +168,10 @@ class Queue
                 'data' => $data
             ];
             logs($logs, "Queue/{$name}_Fail");
+
             return false;
         }
+
         return true;
     }
 
@@ -183,12 +190,14 @@ class Queue
         $redis = self::getRedis(true);
         $result = [];
         $result['unread'] = $redis->lLen($name);
+
         return json_encode($result);
     }
 
     /**
      * 队列循环入口
-     * @param $class
+     *
+     * @param \Model\Queue\Queue $class
      */
     public function doLoop($class)
     {

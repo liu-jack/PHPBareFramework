@@ -105,6 +105,7 @@ abstract class Model
     protected static $_un_modify_fields = [
         'Id' => 1,
     ];
+    protected static $_suffix_field;
 
     /**
      * 添加
@@ -123,7 +124,7 @@ abstract class Model
             if (empty($data['CreateTime'])) {
                 $data['CreateTime'] = date('Y-m-d H:i:s');
             }
-            $ret = static::addData($data, $ignore);
+            $ret = static::addData($data, $ignore, table($data[static::$_suffix_field]));
             if (!empty(static::$_cache_list_keys) && $ret !== false) {
                 $data[key(static::$_conf[static::CF_FIELDS])] = $ret;
                 static::delListCache($data);
@@ -136,18 +137,27 @@ abstract class Model
     /**
      * 更新
      *
-     * @param $id
-     * @param $data
+     * @param      $id
+     * @param      $data
+     * @param bool $filter true：直接过滤不可修改字段 false：中断修改
      * @return bool
      */
-    public static function update($id, $data)
+    public static function update($id, $data, $filter = true)
     {
         $ret = false;
+        $suffix = table($data[static::$_suffix_field]);
         if (!empty(static::$_un_modify_fields)) {
-            $data = array_diff_key($data, static::$_un_modify_fields);
+            if ($filter) {
+                $data = array_diff_key($data, static::$_un_modify_fields);
+            } else {
+                $intersect_key = array_intersect_key($data, static::$_un_modify_fields);
+                if (count($intersect_key) > 0) {
+                    return false;
+                }
+            }
         }
         if ($id > 0 && !empty($data)) {
-            $ret = static::updateData($id, $data);
+            $ret = static::updateData($id, $data, $suffix);
             if (!empty(static::$_cache_list_keys) && $ret !== false && !empty(static::UPDATE_DEL_CACHE_LIST)) {
                 $info = static::getInfoByIds($id);
                 if (!empty($info)) {
@@ -162,15 +172,17 @@ abstract class Model
     /**
      * 根据id获取
      *
-     * @param int|array $ids
+     * @param        $ids
+     * @param array  $extra
+     * @param string $suffix
      * @return array
      */
-    public static function getInfoByIds($ids)
+    public static function getInfoByIds($ids, $extra = [], $suffix = '')
     {
         if (empty($ids)) {
             return [];
         }
-        $ret = static::getDataById($ids);
+        $ret = static::getDataById($ids, $extra, $suffix);
 
         return $ret;
     }
@@ -183,9 +195,10 @@ abstract class Model
      * @param int    $limit
      * @param string $fields
      * @param string $order
+     * @param string $suffix
      * @return array
      */
-    public static function getList($where = [], $offset = 0, $limit = 0, $fields = '*', $order = '')
+    public static function getList($where = [], $offset = 0, $limit = 0, $fields = '*', $order = '', $suffix = '')
     {
         $extra = [
             static::EXTRA_FIELDS => $fields,
@@ -194,23 +207,24 @@ abstract class Model
             static::EXTRA_ORDER => $order,
         ];
 
-        return static::getDataByFields($where, $extra);
+        return static::getDataByFields($where, $extra, $suffix);
     }
 
     /**
      * 删除
      *
-     * @param $id
+     * @param        $id
+     * @param string $suffix
      * @return bool
      */
-    public static function delete($id)
+    public static function delete($id, $suffix = '')
     {
         $ret = false;
         if ($id > 0) {
             if (!empty(static::$_cache_list_keys)) {
                 $info = static::getInfoByIds($id);
             }
-            $ret = static::delData($id);
+            $ret = static::delData($id, $suffix);
             if ($ret !== false && !empty($info)) {
                 static::delListCache($info);
             }

@@ -7,7 +7,8 @@ class FileSystem
 
     /**
      * 移动文件
-     * @param array $fileList
+     *
+     * @param array  $fileList
      * @param string $from
      * @param string $to
      * @param string $option
@@ -37,8 +38,9 @@ class FileSystem
 
     /**
      * 删除文件或文件夹（递归）
-     * @param array $fileList
-     * @param string $option
+     *
+     * @param array|string $fileList
+     * @param string       $option
      * @return void
      * @static
      */
@@ -65,8 +67,9 @@ class FileSystem
 
     /**
      * 取文件扩展名
+     *
      * @param string $fileName
-     * @param bool $withDot
+     * @param bool   $withDot
      * @return string
      * @static
      */
@@ -79,13 +82,15 @@ class FileSystem
         } else {
             $result = ($withDot) ? substr($fileName, $pos) : substr($fileName, $pos + 1);
         }
+
         return $result;
     }
 
     /**
      * 取文件名 (除去扩展名 )
+     *
      * @param string $fileName
-     * @param bool $withDot
+     * @param bool   $withDot
      * @return string
      * @static
      */
@@ -97,13 +102,15 @@ class FileSystem
         } else {
             $result = ($withDot) ? substr($fileName, 0, $pos + 1) : substr($fileName, 0, $pos);
         }
+
         return $result;
     }
 
     /**
      * 返回指定路径中符合条件的文件和文件夹列表
+     *
      * @param string $path
-     * @param array $condition
+     * @param array  $condition
      * @param string $sort
      * @return array
      * @static
@@ -158,11 +165,13 @@ class FileSystem
                 rsort($result);
                 break;
         }
+
         return $result;
     }
 
     /**
      * 返回指定路径中符合条件的文件列表
+     *
      * @param string $path
      * @param string $fileext
      * @param string $sort
@@ -173,11 +182,13 @@ class FileSystem
     {
         $condition = array('fileonly' => true, 'fileext' => $fileext);
         $result = FileSystem::ls($path, $condition, $sort, $withPath);
+
         return $result;
     }
 
     /**
      * 返回指定路径中符合条件的文件夹列表
+     *
      * @param string $path
      * @param string $sort
      * @return array
@@ -187,11 +198,13 @@ class FileSystem
     {
         $condition = array('folderonly' => true);
         $result = FileSystem::ls($path, $condition, $sort, $withPath);
+
         return $result;
     }
 
     /**
      * 自动创建目录
+     *
      * @param string $destFolder 服务器路径
      * @static
      */
@@ -206,7 +219,6 @@ class FileSystem
                     mkdir($dirname);
                 }
             }
-
             // chmod($destFolder,0777);
         }
     }

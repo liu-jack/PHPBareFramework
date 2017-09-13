@@ -151,7 +151,7 @@ class MongoModel
     /**
      * 创建索引
      *
-     * @param $key
+     * @param array $key
      * @return string
      */
     public static function createIndex($key)

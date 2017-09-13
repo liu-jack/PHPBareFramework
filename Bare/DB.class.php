@@ -4,20 +4,21 @@ namespace Bare;
 
 use Config\DBConfig;
 use Bare\DB\{
-    PDODB, MemcacheDB, RedisDB, ElasticSearch as ESDB, MongodbDB, FileDB
+    PDODB, MemcachedDB, MemcacheDB, RedisDB, ElasticSearch as ESDB, MongodbDB, FileDB
 };
 
 /**
  * 数据库操作基类
+ *
  * @author camfee<camfee@yeah.net>
- * @since v1.0 2016.09.25
+ * @since  v1.0 2016.09.25
  */
 class DB extends DBConfig
 {
     /**
      * 返回PDO数据库连接实例
      *
-     * @param mixed $params 连接参数
+     * @param mixed $params  连接参数
      * @param mixed $options 选项
      * @return bool|PDODB
      */
@@ -47,9 +48,7 @@ class DB extends DBConfig
 
             self::_checkConnectionParams([$params], 'mysql');
 
-            $_static[$key] = new PDODB($params, $options, function () use (&$_static, $key) {
-                unset($_static[$key]);
-            });
+            $_static[$key] = new PDODB($params, $options);
         } else {
             if (method_exists($_static[$key], 'clear')) {
                 $_static[$key]->clear();
@@ -107,7 +106,7 @@ class DB extends DBConfig
     /**
      * 检查连接参数
      *
-     * @param array $param_arr
+     * @param array  $param_arr
      * @param string $type
      * @return bool
      * @throws \Exception
@@ -163,10 +162,10 @@ class DB extends DBConfig
     /**
      * 返回Redis连接实例
      *
-     * @param mixed $params 连接参数
+     * @param mixed   $params  连接参数
      * @param integer $dbindex 库号
      * @param integer $timeout 超时时间
-     * @return \Redis
+     * @return RedisDB
      */
     public static function redis($params, $dbindex = 0, $timeout = 5)
     {
@@ -218,7 +217,7 @@ class DB extends DBConfig
     /**
      * 返回Memcache连接实例
      *
-     * @param mixed $params 连接参数
+     * @param mixed   $params  连接参数
      * @param integer $timeout 超时时间
      * @return MemcacheDB
      */
@@ -237,7 +236,11 @@ class DB extends DBConfig
 
             self::_checkConnectionParams($params, 'memcache');
 
-            $_static[$key] = new MemcacheDB($params, $timeout, $key);
+            if (class_exists("Memcached")) {
+                $_static[$key] = new MemcachedDB($params, $timeout, $key);
+            } else {
+                $_static[$key] = new MemcacheDB($params, $timeout, $key);
+            }
         }
 
         return $_static[$key];
@@ -268,7 +271,7 @@ class DB extends DBConfig
     /**
      * 返回搜索连接实例
      *
-     * @param mixed $params 连接参数
+     * @param mixed   $params  连接参数
      * @param integer $timeout 超时时间
      * @return ESDB
      */
@@ -358,7 +361,7 @@ class DB extends DBConfig
     /**
      * 返回MongoDB连接实例
      *
-     * @param mixed $params 连接参数
+     * @param mixed $params  连接参数
      * @param array $options 额外参数
      * @return \MongoDB\Client
      */

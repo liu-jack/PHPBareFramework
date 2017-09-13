@@ -7,12 +7,13 @@
 namespace Controller\Api\Common;
 
 use Bare\Controller;
+use Model\Mobile\AppInfo;
 
 /**
  * 客户端启动相关
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017-07-21
+ * @date   2017-07-21
  *
  */
 class Init extends Controller
@@ -25,7 +26,7 @@ class Init extends Controller
      *     width:   必选, 屏幕宽度
      *     height:  必选, 屏幕高度
      *     channel: 必选, 频道来源
-     *     deviceid: 可选, 为空时,返回服务器分配的deviceid
+     *     deviceid:可选, 为空时,返回服务器分配的deviceid
      * </pre>
      *
      * @return void|string 返回JSON数据
@@ -112,8 +113,9 @@ class Init extends Controller
         $version = $all[AppInfo::CACHE_VERSION . $appid];
         $version = is_array($version) ? $version : unserialize($version);
         if (!empty($version['VerCode'])) {
+            $low_ver = config('api/apiconfig')[$appid]['verid'];
             $result['Update'] = [
-                'LowVerCode' => $appid == MOBILE_APPID_ANDROID ? MOBILE_LOWVER_ANDROID : MOBILE_LOWVER_IPHONE,
+                'LowVerCode' => $low_ver,
                 'LowMsg' => '抱歉,当前版本已停用,请升级！',
                 'VerCode' => $version['VerCode'],
                 'VerMsg' => $version['Feature'],
@@ -134,34 +136,8 @@ class Init extends Controller
         }
 
         if (empty($deviceid)) {
-            $deviceid = $this->_getDeviceId($appid);
+            $deviceid = getDeviceId($appid);
             $result['DeviceId'] = $deviceid;
-
-            // 首次启动时进行默认频道订阅评分
-            $channel = loadconf('article/channel');
-            $defualt_channels = $channel['defualt_channels'];
-            $channels = $channel['channels'];
-            $mychannel = $defualt_channels[0];
-            $ctag = $ctag2 = $ctagname = [];
-            foreach ($channels as $v) {
-                if (!empty($v['tags'])) {
-                    $ctag[$v['name']] = current($v['tags']);
-                } else {
-                    $ctagname[$v['name']] = $v['name'];
-                }
-            }
-            if (!empty($ctagname)) {
-                $ctag2 = Tags::getTagsByName($ctagname);
-            }
-            $ctag = $ctag + $ctag2;
-            $myctag = [];
-            foreach ($mychannel as $v) {
-                if (isset($ctag[$channels[$v]['name']])) {
-                    $myctag[] = $ctag[$channels[$v]['name']];
-                }
-            }
-            UserScore::subscribeTag($deviceid, $myctag);
-
 
             // 初始化设备信息
             Device::initDevice($appid, $deviceid, $channel, '', $uid);
@@ -199,9 +175,10 @@ class Init extends Controller
         $appid = $GLOBALS['g_appid'];
 
         $version = AppInfo::getVersion($appid);
+        $low_ver = config('api/apiconfig')[$appid]['verid'];
 
         $data = [
-            'LowVerCode' => $appid == MOBILE_APPID_ANDROID ? MOBILE_LOWVER_ANDROID : MOBILE_LOWVER_IPHONE,
+            'LowVerCode' => $low_ver,
             'LowMsg' => '抱歉,当前版本已停用,请升级！',
             'VerCode' => $version['VerCode'],
             'VerMsg' => $version['Feature'],

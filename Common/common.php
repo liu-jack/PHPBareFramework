@@ -12,11 +12,56 @@
  */
 function table($id, $table = '')
 {
-    if ($id > 0) {
+    if (!empty($id)) {
         return $table . sprintf('%02x', $id % 256);
     }
 
     return $table;
+}
+
+/**
+ * 获取|保存 文件路径
+ *
+ * @param string $path   路径
+ * @param int    $itemid 项目id
+ * @param string $ext    图片保存扩展名
+ * @return mixed|string
+ */
+function getSavePath($path, $itemid = 0, $ext = 'jpg')
+{
+    if ($itemid) {
+        $hash1 = sprintf("%02x", $itemid % 256);
+        $hash2 = sprintf("%02x", $itemid / 256 % 256);
+        $name = substr(md5(__KEY__ . $itemid), -6);
+    } else {
+        $hash1 = date('Ym');
+        $hash2 = date('d');
+        $name = substr(md5(__KEY__ . uniqid()), -6);
+    }
+    $path .= "/{$hash1}/{$hash2}/{$name}.{$ext}";
+    $url = UPLOAD_URI . $path;
+
+    return [
+        'url' => HTTP_HOST . $url,
+        'path' => ROOT_PATH . ltrim($url, '/')
+    ];
+}
+
+/**
+ * 获取文件扩展名
+ *
+ * @param      $filepath
+ * @param bool $isimg
+ * @return string
+ */
+function getFileExt($filepath, $isimg = true)
+{
+    $ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
+    if ($isimg && !in_array($ext, ['jpg', 'png', 'gif', 'webp'])) {
+        $ext = 'jpg';
+    }
+
+    return $ext;
 }
 
 /**
@@ -80,7 +125,7 @@ function head($userid, $size = 100, $ver = 0)
 /**
  * 获取一个唯一设备字ID符串
  *
- * @param int $type 应用类型ID 0:web 1:wap 2:android 3:iphone
+ * @param int $type appid|应用类型ID 0:web 1:wap 2:android 3:iphone
  * @return string
  */
 function getDeviceId($type = 0)
@@ -151,7 +196,6 @@ function getMethods($classname, $access = null)
             } else {
                 array_push($returnArr, $value->name);
             }
-
         }
     }
     unset($class, $methods, $methodAccess);

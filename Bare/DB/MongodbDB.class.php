@@ -3,13 +3,13 @@
  * MongodbDB.php
  *
  * @author camfee<camfee@foxmail.com>
- * @date 2017/7/4 15:08
+ * @date   2017/7/4 15:08
  *
  */
 
 namespace Bare\DB;
 
-use \MongoDB\Client;
+use MongoDB\Client;
 
 include_once(LIB_PATH . 'MongoDB/functions.php');
 
@@ -31,7 +31,7 @@ class MongodbDB extends Client
     /**
      * Mongodb constructor.
      *
-     * @param array $params 链接参数
+     * @param array $params  链接参数
      * @param array $options 自定义选项
      */
     public function __construct(array $params, array $options = [])
