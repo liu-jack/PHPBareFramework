@@ -13,6 +13,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_29SHU_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -21,6 +22,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_29SHU_CONTENT_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -29,6 +31,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_PASSPORT_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -37,6 +40,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_ACCOUNT_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -45,6 +49,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_FAVORITE_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -53,14 +58,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_APPLICATION_W);
         }
-        return self::$pdo->exec($sql);
-    }
 
-    public function runDevice($sql)
-    {
-        if (empty(self::$pdo)) {
-            self::$pdo = DB::pdo(DB::DB_DEVICE_W);
-        }
         return self::$pdo->exec($sql);
     }
 
@@ -69,6 +67,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_COMMENT_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -77,6 +76,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_TAG_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -85,6 +85,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_ADMIN_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -93,6 +94,7 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_COLLECT_W);
         }
+
         return self::$pdo->exec($sql);
     }
 
@@ -101,14 +103,16 @@ class Sql
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_MOBILE_W);
         }
+
         return self::$pdo->exec($sql);
     }
-    
+
     public function runPicture($sql)
     {
         if (empty(self::$pdo)) {
             self::$pdo = DB::pdo(DB::DB_PICTURE_W);
         }
+
         return self::$pdo->exec($sql);
     }
 }

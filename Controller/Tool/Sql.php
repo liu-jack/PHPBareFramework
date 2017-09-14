@@ -140,22 +140,6 @@ class Sql extends Controller
     }
 
     /**
-     * 设备表管理 php index.php Tool/Sql/device
-     */
-    public function device()
-    {
-        need_cli();
-        $sqls = config('sql/common');
-        $create_sql = $sqls['create_device'];
-        for ($i = 0; $i < 256; $i++) {
-            $suff = sprintf('%02x', $i);
-            $sql = str_replace('`Device`', '`Device_' . $suff . '`', $create_sql);
-            $this->_m->runDevice($sql);
-            echo $i . PHP_EOL;
-        }
-    }
-
-    /**
      * 评论表管理 php index.php Tool/Sql/comment
      */
     public function comment()
@@ -238,9 +222,13 @@ class Sql extends Controller
         $create_sql1 = $sqls['create_version'];
         $create_sql2 = $sqls['create_image'];
         $create_sql3 = $sqls['create_recommend'];
+        $create_sql4 = $sqls['create_device_adr'];
+        $create_sql5 = $sqls['create_device_ios'];
         $this->_m->runMobile($create_sql1);
         $this->_m->runMobile($create_sql2);
         $this->_m->runMobile($create_sql3);
+        $this->_m->runMobile($create_sql4);
+        $this->_m->runMobile($create_sql5);
     }
 
     /**

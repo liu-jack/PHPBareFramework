@@ -6,6 +6,7 @@
 namespace Controller\Api\Common;
 
 use Bare\Controller;
+use Model\Book\Book;
 
 /**
  * 公用服务 - 赞/收藏/喜欢 系统
@@ -55,7 +56,7 @@ class Favorite extends Controller
      */
     public function add()
     {
-        $uid = $this->isLogin(true);
+        $uid = $this->isLogin(VISIT_TYPE_API, true);
         $type = (int)$_POST['type'];
         $itemid = (int)$_POST['itemid'];
 
@@ -69,8 +70,8 @@ class Favorite extends Controller
         $class_type = '';
         switch ($type) {
             case 1:
-                $class_type = $class::TYPE_ARTICLE;
-                $data = Article::getArticleById($itemid);
+                $class_type = $class::TYPE_BOOK;
+                $data = Book::getBookByIds($itemid);
                 $exist = isset($data['ArticleId']) && $itemid == $data['ArticleId'] && $data['Status'] == 1;
                 break;
             case 2:
@@ -124,7 +125,7 @@ class Favorite extends Controller
      */
     public function remove()
     {
-        $uid = $this->isLogin(true);
+        $uid = $this->isLogin(VISIT_TYPE_API, true);
         $type = (int)$_POST['type'];
         $itemid = (int)$_POST['itemid'];
 

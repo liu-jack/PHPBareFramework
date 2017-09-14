@@ -22,36 +22,51 @@ function table($id, $table = '')
 /**
  * 获取|保存 文件路径
  *
- * @param string $path   路径
- * @param int    $itemid 项目id
- * @param string $ext    图片保存扩展名
+ * @param string    $path   路径
+ * @param int       $itemid 项目id
+ * @param string    $ext    图片保存扩展名
+ * @param int|array $size   图片裁剪大小
  * @return mixed|string
  */
-function getSavePath($path, $itemid = 0, $ext = 'jpg')
+function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
 {
     if ($itemid) {
         $hash1 = sprintf("%02x", $itemid % 256);
         $hash2 = sprintf("%02x", $itemid / 256 % 256);
         $name = substr(md5(__KEY__ . $itemid), -6);
     } else {
-        $hash1 = date('Ym');
-        $hash2 = date('d');
+        $time = time();
+        $hash1 = date('Ym', $time);
+        $hash2 = date('d', $time);
         $name = substr(md5(__KEY__ . uniqid()), -6);
     }
-    $path .= "/{$hash1}/{$hash2}/{$name}.{$ext}";
-    $url = UPLOAD_URI . $path;
+    if (is_array($size)) {
+        $return = [];
+        foreach ($size as $v) {
+            $v = intval($v);
+            $url = UPLOAD_URI . "{$path}/{$hash1}/{$hash2}/{$name}_{$v}.{$ext}";
+            $return[$v] = [
+                'url' => HTTP_HOST . $url,
+                'path' => ROOT_PATH . ltrim($url, '/')
+            ];
+        }
+    } else {
+        $size = intval($size);
+        $url = UPLOAD_URI . "{$path}/{$hash1}/{$hash2}/{$name}_{$size}.{$ext}";
+        $return = [
+            'url' => HTTP_HOST . $url,
+            'path' => ROOT_PATH . ltrim($url, '/')
+        ];
+    }
 
-    return [
-        'url' => HTTP_HOST . $url,
-        'path' => ROOT_PATH . ltrim($url, '/')
-    ];
+    return $return;
 }
 
 /**
  * 获取文件扩展名
  *
- * @param      $filepath
- * @param bool $isimg
+ * @param string $filepath
+ * @param bool   $isimg
  * @return string
  */
 function getFileExt($filepath, $isimg = true)

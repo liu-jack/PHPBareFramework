@@ -88,7 +88,7 @@ class AppInfo
 
         if (empty($data)) {
             $pdo = DB::pdo(DB::DB_MOBILE_R);
-            $query = $pdo->prepare("select VersionCode as VerCode, Intro as Feature, DownUrl as Url from AppVersion where AppId=:appid ORDER BY Id DESC limit 1");
+            $query = $pdo->prepare("select VersionCode as VerCode, Description as Feature, DownUrl as Url from AppVersion where AppId=:appid ORDER BY Id DESC limit 1");
             $query->bindParam(':appid', $appid);
             $query->execute();
             $data = $query->fetch();

@@ -8,15 +8,11 @@
 namespace Model\Passport;
 
 use Bare\DB;
+use Common\RedisConst;
 use Model\Account\User as AUser;
 
 class Passport
 {
-    /**
-     * redis db 序号
-     */
-    const REDIS_INDEX = 11;
-
     /**
      * 通行证用户MC缓存前缀
      *
@@ -55,13 +51,13 @@ class Passport
     /**
      * 检查用户名是否存在
      *
-     * @param string $name 用户名
-     * @param bool $check_db 是否从DB检查
+     * @param string $name     用户名
+     * @param bool   $check_db 是否从DB检查
      * @return bool|int         存在返回用户ID, 不存在返回false
      */
     public static function isUserNameExists($name, $check_db = false)
     {
-        $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
+        $redis = DB::redis(RedisConst::PASSPORT_DB_W, RedisConst::PASSPORT_DB_INDEX);
         $key = self::$_redis_prefix['name'] . base64_encode(strtolower($name));
         $userid = $redis->get($key);
         if ($userid > 0) {
@@ -76,21 +72,23 @@ class Passport
             if ($userid > 0) {
                 $redis->set($key, $userid);
             }
+
             return $userid > 0 ? $userid : false;
         }
+
         return false;
     }
 
     /**
      * 检查邮箱是否存在
      *
-     * @param string $email 邮箱地址
-     * @param bool $check_db 是否从DB检查
+     * @param string $email    邮箱地址
+     * @param bool   $check_db 是否从DB检查
      * @return bool|int         存在返回用户ID, 不存在返回false
      */
     public static function isEmailExists($email, $check_db = false)
     {
-        $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
+        $redis = DB::redis(RedisConst::PASSPORT_DB_W, RedisConst::PASSPORT_DB_INDEX);
         $key = self::$_redis_prefix['email'] . $email;
         $userid = $redis->get($key);
         if ($userid > 0) {
@@ -105,21 +103,23 @@ class Passport
             if ($userid > 0) {
                 $redis->set($key, $userid);
             }
+
             return $userid > 0 ? $userid : false;
         }
+
         return false;
     }
 
     /**
      * 检查手机是否存在
      *
-     * @param string $mobile 手机号码
-     * @param bool $check_db 是否从DB检查
+     * @param string $mobile   手机号码
+     * @param bool   $check_db 是否从DB检查
      * @return bool|int         存在返回用户ID, 不存在返回false
      */
     public static function isMobileExists($mobile, $check_db = false)
     {
-        $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
+        $redis = DB::redis(RedisConst::PASSPORT_DB_W, RedisConst::PASSPORT_DB_INDEX);
         $key = self::$_redis_prefix['mobile'] . $mobile;
         $userid = $redis->get($key);
         if ($userid > 0) {
@@ -134,8 +134,10 @@ class Passport
             if ($userid > 0) {
                 $redis->set($key, $userid);
             }
+
             return $userid > 0 ? $userid : false;
         }
+
         return false;
 
     }
@@ -148,7 +150,7 @@ class Passport
      */
     public static function checkMobileExists(array $mobiles)
     {
-        $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
+        $redis = DB::redis(RedisConst::PASSPORT_DB_R, RedisConst::PASSPORT_DB_INDEX);
         $redis->multi(\Redis::PIPELINE);
         foreach ($mobiles as $v) {
             $redis->get(self::$_redis_prefix['mobile'] . $v);
@@ -158,6 +160,7 @@ class Passport
         foreach ($ret as $k => $v) {
             $result[$mobiles[$k]] = $v;
         }
+
         return $result;
 
     }
@@ -183,6 +186,7 @@ class Passport
         if (preg_match('/(' . implode('|', $forbidden_name) . ')/i', $name)) {
             return ['code' => 203, 'msg' => '用户名被保留'];
         }
+
         return true;
     }
 
@@ -201,6 +205,7 @@ class Passport
         $upper = preg_match('/[A-Z]/', $pwd) ? 1 : 0;
         $lower = preg_match('/[a-z]/', $pwd) ? 1 : 0;
         $symbol = preg_match('/^[a-zA-Z0-9]+$/', $pwd) ? 0 : 1;
+
         return ($number + $upper + $lower + $symbol);
     }
 
@@ -218,8 +223,8 @@ class Passport
     /**
      * 获取用户信息
      *
-     * @param int|array $userid 用户ID
-     * @param bool $no_cache true:不使用缓存, false: 使用
+     * @param int|array $userid   用户ID
+     * @param bool      $no_cache true:不使用缓存, false: 使用
      * @return array      失败返回[]
      */
     protected static function getUserById($userid, $no_cache = false)
@@ -266,14 +271,15 @@ class Passport
         if (is_numeric($userid)) {
             return $userinfo[$userid];
         }
+
         return !empty($userinfo) ? $userinfo : [];
     }
 
     /**
      * 更新用户信息
      *
-     * @param int $userid 用户ID
-     * @param array $data 数据
+     * @param int   $userid 用户ID
+     * @param array $data   数据
      * @return bool|array          成功返回true, 失败返回['code' => 失败代码, 'msg' => 失败原因]
      */
     protected static function updateUser($userid, $data)
@@ -328,7 +334,7 @@ class Passport
         if ($count > 0) {
             $pdo->update('User', $data, ['UserId' => $userid]);
 
-            $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
+            $redis = DB::redis(RedisConst::PASSPORT_DB_W, RedisConst::PASSPORT_DB_INDEX);
             $redis->multi(\Redis::PIPELINE);
 
             if (!empty($data['UserName']) && $data['UserName'] != $userinfo['UserName']) {

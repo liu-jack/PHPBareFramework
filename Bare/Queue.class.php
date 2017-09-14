@@ -11,6 +11,8 @@ namespace Bare;
 
 declare(ticks=1);
 
+use Common\RedisConst;
+
 /**
  *
  * 队列类
@@ -18,11 +20,6 @@ declare(ticks=1);
  */
 class Queue
 {
-    /**
-     * 队列保存redis dbindex
-     */
-    const REDIS_DB = 15;
-
     /**
      * 队列名称
      *
@@ -50,9 +47,9 @@ class Queue
     protected static function getRedis($type = false)
     {
         if ($type) {
-            return DB::redis(DB::REDIS_DEFAULT_W, self::REDIS_DB);
+            return DB::redis(RedisConst::QUEUE_DB_W, RedisConst::QUEUE_DB_INDEX);
         } else {
-            return DB::redis(DB::REDIS_DEFAULT_R, self::REDIS_DB);
+            return DB::redis(RedisConst::QUEUE_DB_R, RedisConst::QUEUE_DB_INDEX);
         }
     }
 

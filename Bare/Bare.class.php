@@ -97,9 +97,14 @@ class Bare
         $hash = trim($_GET['hash']);
         $deviceid = trim($_GET['deviceid']);
         $app_type = intval($_GET['_t']);
+        $channel = trim($_GET['channel']);
+
         $time = trim($_GET['time']);
         $method = $GLOBALS['_M'] . '/' . $GLOBALS['_C'] . '/' . $GLOBALS['_A'];
-        self::apiCheckParam($ver, $appid, $method, $hash, $app_type, $deviceid, $time);
+        if (empty($app_type) && in_array($appid, [APP_APPID_ADR, APP_APPID_IOS])) {
+            $app_type = $appid == APP_APPID_ADR ? APP_TYPE_ADR : APP_TYPE_IOS;
+        }
+        self::apiCheckParam($ver, $appid, $method, $hash, $app_type, $channel, $deviceid, $time);
         // 强行停止服务
         if (API_STOP === true) {
             self::apiStopServer($method, '抱歉, 服务器升级中, 请稍后访问');
@@ -222,11 +227,12 @@ class Bare
      * @param string  $method   方法路径
      * @param string  $hash     MD5 Hash
      * @param string  $app_type 应用类型
+     * @param string  $channel  渠道
      * @param string  $deviceid 设备ID
      * @param integer $time     时间戳
      * @return bool
      */
-    private static function apiCheckParam($ver, $appid, $method, $hash, $app_type, $deviceid, $time)
+    private static function apiCheckParam($ver, $appid, $method, $hash, $app_type, $channel, $deviceid, $time)
     {
         // 检查参数
         $fields = [
@@ -234,11 +240,17 @@ class Bare
             'appid' => $appid,
             'hash' => $hash,
             'app_type' => $app_type,
+            'channel' => $channel,
             'version' => $ver,
             'time' => $time
         ];
-        if (in_array($app_type, [0, 1])) {
-            unset($fields['deviceid']);
+        if (in_array($app_type, [APP_TYPE_WEB, APP_TYPE_WAP]) && empty($fields['deviceid'])) {
+            if (empty($fields['deviceid'])) {
+                unset($fields['deviceid']);
+            }
+            if (empty($fields['channel'])) {
+                unset($fields['channel']);
+            }
         }
 
         foreach ($fields as $k => $v) {
@@ -260,17 +272,17 @@ class Bare
             exit;
         }
 
-        if (!isset($GLOBALS['g_app_types'][$app_type])) {
+        if (!isset($GLOBALS[G_TYPES][$app_type])) {
             // app_type不存在
             self::apiError(500, '_t');
             exit;
         }
 
         // 注册全局基础信息
-        $GLOBALS['g_appid'] = $appid;
-        $GLOBALS['g_apptype'] = $app_type;
-        $GLOBALS['g_ver'] = $ver;
-        $GLOBALS['g_deviceid'] = $deviceid;
+        $GLOBALS[G_APP_ID] = $appid;
+        $GLOBALS[G_APP_TYPE] = $app_type;
+        $GLOBALS[G_VER] = $ver;
+        $GLOBALS[G_DEVICE_ID] = $deviceid;
 
         // 本地环境特殊处理
         if (defined("__ENV__")) {

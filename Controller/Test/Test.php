@@ -5,6 +5,9 @@ namespace Controller\Test;
 use Bare\Controller;
 use Bare\DB;
 use Bare\ViewModel;
+use Classes\Image\PhotoImage;
+use Common\ImgPath;
+use Model\Common\Upload;
 use Model\Mongo\UserData;
 use Model\Admin\Admin\AdminLog;
 use Model\Admin\Admin\SmsLog;
@@ -96,9 +99,11 @@ class Test extends Controller
         //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
         //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
         //        var_dump(ViewModel::add([]));
-        test2::test();
-        test1::test1();
-        var_dump(getImgExt('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
+        //        test2::test();
+        //        test1::test1();
+        //        var_dump(getFileExt('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
+//        $image_status = PhotoImage::checkImageByUrl('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png');
+//        var_dump(Upload::saveImg(ImgPath::IMG_TEST, $image_status, [0, 450], 1, ['height' => [450 => 290]]));
     }
 
     /**

@@ -7,6 +7,8 @@
 namespace Controller\Api\Common;
 
 use Bare\Controller;
+use Model\Account\User as AUser;
+use Model\Tool\DataFormat;
 
 /**
  * 公用服务 - 评论 系统
@@ -108,12 +110,12 @@ class Comment extends Controller
         $ret = $comment->post([
             'UserId' => $uid,
             'Content' => $content,
-            'Platform' => $GLOBALS['g_appid'] == 50 ? 1 : 2,
+            'Platform' => $GLOBALS[G_APP_ID] == 50 ? 1 : 2,
             'ReplyId' => 0
         ]);
 
         if ($ret['code'] == $class::RET_CODE_SUCC) {
-            $users = CUser::getNickByUserId($uid, 100);
+            $users = AUser::getNickByUserId($uid, 100);
             $data = [
                 'CommentId' => (int)$ret['id'],
                 'UserId' => (int)$uid,
@@ -260,7 +262,7 @@ class Comment extends Controller
                     foreach ($hotlist as $v) {
                         $uids[$v['UserId']] = $v['UserId'];
                     }
-                    $users = CUser::getNickByUserId($uids, 100);
+                    $users = AUser::getNickByUserId($uids, 100);
                     foreach ($hotlist as $v) {
                         $data['HotList'][] = [
                             'CommentId' => (int)$v['CommentId'],
@@ -291,7 +293,7 @@ class Comment extends Controller
             foreach ($ret['data'] as $v) {
                 $uids[$v['UserId']] = $v['UserId'];
             }
-            $users = CUser::getNickByUserId($uids, 100);
+            $users = AUser::getNickByUserId($uids, 100);
 
             foreach ($ret['data'] as $v) {
                 $data['List'][] = [

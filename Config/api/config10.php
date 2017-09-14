@@ -5,7 +5,7 @@
 $config = [
     'appid' => 10,
     'verid' => 'v1.0.0',
-    'appkey' => '68992dea816835d48918c56bb60872b7',
+    'appkey' => 'fe411dc7de70fb26cdc18e860b5f03aa',
     'rsakey' => '',
 ];
 

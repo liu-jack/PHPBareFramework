@@ -6,6 +6,8 @@
 
 namespace Bare;
 
+use Common\RedisConst;
+
 class RedisFastInterface
 {
     /**
@@ -21,9 +23,9 @@ class RedisFastInterface
     private $config = [
         self::TYPE_APP_INFO => [
             'prefix' => 'appinfo:',
-            'db' => 14,
-            'conn_write' => DB::REDIS_OTHER_W,
-            'conn_read' => DB::REDIS_OTHER_R,
+            'db' => RedisConst::FAST_DB_INDEX,
+            'conn_write' => RedisConst::FAST_DB_W,
+            'conn_read' => RedisConst::FAST_DB_R,
             'fields' => [
                 'Version_1' => 'a',
                 'Version_3' => 'b',

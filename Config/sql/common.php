@@ -21,21 +21,6 @@ CREATE TABLE IF NOT EXISTS `Favorite` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收藏/喜欢';
 EOT
     ,
-    'create_device' => <<<EOT
-CREATE TABLE IF NOT EXISTS `Device` (
-  `UserId` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `AppId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '应用id',
-  `AppType` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '设备类型 0：web 1:wap 2:andriod 3:ios',
-  `DeviceId` varchar(64) NOT NULL COMMENT '设备ID',
-  `Token` varchar(128) NOT NULL COMMENT '第三方推送ID',
-  `OriginToken` varchar(128) NOT NULL COMMENT '原生推送令牌',
-  `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '状态: 0:失效 1:正常',
-  `CreateTime` datetime NOT NULL,
-  UNIQUE KEY `Idx_DeviceId` (`DeviceId`) USING BTREE,
-  KEY `Idx_UserId_AppId_Type` (`UserId`,`AppId`,`AppType`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-EOT
-    ,
     'create_comment' => <<<EOT
 CREATE TABLE IF NOT EXISTS `Comment` (
   `CommentId` bigint(20) NOT NULL AUTO_INCREMENT,

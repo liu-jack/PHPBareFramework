@@ -8,6 +8,7 @@ namespace Controller\Api\Common;
 
 use Bare\Controller;
 use Model\Mobile\AppInfo;
+use Model\Mobile\Device;
 
 /**
  * 客户端启动相关
@@ -67,8 +68,8 @@ class Init extends Controller
         $width = intval($_GET['width']);
         $height = intval($_GET['height']);
 
-        $appid = $GLOBALS['g_appid'];
-        $uid = (int)$this->isLogin(false);
+        $appid = $GLOBALS[G_APP_ID];
+        $uid = (int)$this->isLogin(VISIT_TYPE_API);
 
         $result = [
             'StopServer' => [
@@ -172,7 +173,7 @@ class Init extends Controller
      */
     public function checkVersion()
     {
-        $appid = $GLOBALS['g_appid'];
+        $appid = $GLOBALS[G_APP_ID];
 
         $version = AppInfo::getVersion($appid);
         $low_ver = config('api/apiconfig')[$appid]['verid'];
@@ -217,14 +218,14 @@ class Init extends Controller
         $token = trim($_POST['token']);
         $ios_token = trim($_POST['ios_token']);
 
-        $appid = $GLOBALS['g_appid'];
-        $uid = (int)$this->isLogin(1);
+        $appid = $GLOBALS[G_APP_ID];
+        $uid = (int)$this->isLogin(VISIT_TYPE_API);
 
         if (empty($token)) {
             $this->output(201, '推送ID不可为空');
         }
 
-        if ($appid == MOBILE_APPID_IPHONE && empty($ios_token)) {
+        if ($appid == APP_APPID_IOS && empty($ios_token)) {
             $this->output(202, 'iOS下deviceToken不可为空');
         }
 

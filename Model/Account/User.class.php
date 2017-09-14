@@ -10,14 +10,14 @@ namespace Model\Account;
 use Bare\CommonModel;
 use Bare\DB;
 use Classes\Image\PhotoImage;
+use Common\RedisConst;
 
 class User extends CommonModel
 {
     // 日志路径定义
     const LOG_FAIL_PATH = 'Account/User/Fail';
     const LOG_SUCC_PATH = 'Account/User/Succ';
-    // redis index
-    const REDIS_INDEX = 10;
+    // redis 前缀定义
     const RD_PFX = 'UNA:';
     // MC 前缀定义
     const MC_PFX = 'AU:';
@@ -133,18 +133,21 @@ class User extends CommonModel
             self::_updateNickAvatarCache($id, $data);
             $rets = ['code' => 200, 'msg' => '成功'];
             $rets['id'] = $id;
+
             return $rets;
         }
 
-        logs(__METHOD__ . ": " . serialize($data) . ", exception: {$exception} @ {$now}", self::LOG_FAIL_PATH . '_addUser');
+        logs(__METHOD__ . ": " . serialize($data) . ", exception: {$exception} @ {$now}",
+            self::LOG_FAIL_PATH . '_addUser');
+
         return ['code' => 202, 'msg' => '失败'];
     }
 
     /**
      * 更新单个用户信息
      *
-     * @param integer $id 用户ID
-     * @param array $info 新的用户信息
+     * @param integer $id   用户ID
+     * @param array   $info 新的用户信息
      * @return mixed
      *                      nulll - 用户不存在或没有合法的更新字段
      *                      true  - 更新成功
@@ -216,10 +219,13 @@ class User extends CommonModel
             // 清除MC缓存: 用户详情
             $mc->delete(self::MC_PFX . $id);
             unset(self::$_user_cache[$id]);
+
             return true;
         }
 
-        logs(__METHOD__ . ": {$sql}, params: [" . serialize($params) . "], exception: {$exception} @ ", self::LOG_FAIL_PATH);
+        logs(__METHOD__ . ": {$sql}, params: [" . serialize($params) . "], exception: {$exception} @ ",
+            self::LOG_FAIL_PATH);
+
         return false;
     }
 
@@ -227,9 +233,9 @@ class User extends CommonModel
     /**
      * 上传用户头像
      *
-     * @param integer $uid 用户ID
-     * @param array $image_status 图片校验结果(PhotoImage::checkImage 返回对象)
-     * @param array $crop_info 图片裁剪区域信息
+     * @param integer $uid          用户ID
+     * @param array   $image_status 图片校验结果(PhotoImage::checkImage 返回对象)
+     * @param array   $crop_info    图片裁剪区域信息
      * @return array
      */
     public static function uploadAvatar($uid, $image_status, $crop_info = [])
@@ -354,7 +360,7 @@ class User extends CommonModel
             self::COUNT_AVATAR => '+1',
         ]);
         if ($upd_result['code'] === 200) {
-            $redis = DB::redis(DB::REDIS_ACCOUNT_W, self::REDIS_INDEX);
+            $redis = DB::redis(RedisConst::ACCOUNT_DB_W, RedisConst::ACCOUNT_DB_INDEX);
             // 更新REDIS缓存中的头像版本号
             $redis->hSet(self::RD_PFX . $uid, 'avatar', $avatar);
 
@@ -371,8 +377,8 @@ class User extends CommonModel
     /**
      * 从第三方平台同步头像
      *
-     * @param integer $id 用户ID
-     * @param string $url 头像URL
+     * @param integer $id  用户ID
+     * @param string  $url 头像URL
      * @return array
      */
     public static function crawlAvatar($id, $url)
@@ -424,6 +430,7 @@ class User extends CommonModel
                         ];
                         $rets = ['code' => 203, 'msg' => '上传图片失败'];
                         $rets['msg'] = isset($check_code) ? $_msgs[$check_code] : $image_status['msg'];
+
                         return $rets;
                     }
 
@@ -431,14 +438,15 @@ class User extends CommonModel
                 }
             }
         } while (false);
+
         return $rets;
     }
 
     /**
      * 更新单个用户的计数器信息
      *
-     * @param integer $id 用户ID
-     * @param array $info 计数器类别,可以为包含类别的数组. 请参考 User::COUNT_* 系列常量
+     * @param integer $id   用户ID
+     * @param array   $info 计数器类别,可以为包含类别的数组. 请参考 User::COUNT_* 系列常量
      * @return boolean
      */
     public static function updateCount($id, $info)
@@ -498,14 +506,15 @@ class User extends CommonModel
         }
 
         logs(__METHOD__ . ": {$sql}, exception: {$exception} @ ", self::LOG_FAIL_PATH);
+
         return false;
     }
 
     /**
      * 获取单个用户的信息
      *
-     * @param integer $id 用户ID
-     * @param array $extra 额外参数
+     * @param integer $id    用户ID
+     * @param array   $extra 额外参数
      *                       EXTRA_AVATAR  - 计算指定大小的用户头像(请参考 head()), 0表不计算头像, 默认不获取头像
      *                       EXTRA_REFRESH - 为true时表示不使用缓存,直接从数据库中取值, 默认为false
      *                       EXTRA_FROM_W  - 是否从写库取数据
@@ -548,13 +557,14 @@ class User extends CommonModel
         if (($avatar = (int)$avatar) > 0 && isset(self::$_avatar_sizes[$avatar])) {
             $data['AvatarUrl'] = head($id, $avatar, (int)$data['Avatar']);
         }
+
         return $data;
     }
 
     /**
      * 获取多个用户的信息
      *
-     * @param array $ids 用户ID数组
+     * @param array $ids   用户ID数组
      * @param array $extra 额外参数
      *                     EXTRA_AVATAR  - 计算指定大小的用户头像(请参考 head()), 0表不计算头像, 默认不获取头像
      *                     EXTRA_REFRESH - 为true时表示不使用缓存,直接从数据库中取值, 默认为false
@@ -621,13 +631,14 @@ class User extends CommonModel
                 $rets[$id] = $data;
             }
         }
+
         return $rets;
     }
 
     /**
      * 通过用户ID获取昵称
      *
-     * @param mixed(integer|array) $uids 单个用户ID/用户ID数组
+     * @param         mixed   (integer|array) $uids 单个用户ID/用户ID数组
      * @param integer $avatar 头像尺寸,0与-1均表不获取头像. 默认值为0
      *
      * @return mixed
@@ -658,7 +669,7 @@ class User extends CommonModel
         $nocache_ids = array_diff_key($id_map, $static_cache);
         if (count($nocache_ids) > 0) {
             static $fields = ['name', 'nick', 'avatar'];
-            $redis = DB::redis(DB::REDIS_ACCOUNT_W, self::REDIS_INDEX);
+            $redis = DB::redis(RedisConst::ACCOUNT_DB_R, RedisConst::ACCOUNT_DB_INDEX);
             $redis->multi(\Redis::PIPELINE);
             foreach ($nocache_ids as $id => $rds_key) {
                 $redis->hMget($rds_key, $fields);
@@ -701,6 +712,7 @@ class User extends CommonModel
                 }
             }
         }
+
         return ($single ? current($rets) : $rets);
     }
 
@@ -717,6 +729,7 @@ class User extends CommonModel
 
     /**
      * 更新用户redis缓存
+     *
      * @param $id
      * @param $data
      */
@@ -736,7 +749,7 @@ class User extends CommonModel
         }
 
         if (count($fresh_data) > 0) {
-            $redis = DB::redis(DB::REDIS_ACCOUNT_W, self::REDIS_INDEX);
+            $redis = DB::redis(RedisConst::ACCOUNT_DB_W, RedisConst::ACCOUNT_DB_INDEX);
             $redis->hMset(self::RD_PFX . $id, $fresh_data);
         }
     }

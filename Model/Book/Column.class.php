@@ -4,6 +4,7 @@ namespace Model\Book;
 
 use Bare\DB;
 use Bare\Model;
+use Common\RedisConst;
 
 class Column extends Model
 {
@@ -257,7 +258,7 @@ class Column extends Model
     public static function getReadRecord($uid, $fid, $bid)
     {
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $fid, $bid);
-        $redis = DB::redis(DB::REDIS_DEFAULT_R, self::RD_DB_INDEX);
+        $redis = DB::redis(RedisConst::BOOK_DB_R, RedisConst::BOOK_DB_INDEX);
         $ret = $redis->get($key);
 
         return $ret;
@@ -275,7 +276,7 @@ class Column extends Model
     public static function setReadRecord($uid, $fid, $bid, $cid)
     {
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $fid, $bid);
-        $redis = DB::redis(DB::REDIS_DEFAULT_W, self::RD_DB_INDEX);
+        $redis = DB::redis(RedisConst::BOOK_DB_W, RedisConst::BOOK_DB_INDEX);
 
         return $redis->set($key, $cid, self::RD_TIME);
     }
@@ -290,7 +291,7 @@ class Column extends Model
     public static function getRecom($uid, $bid)
     {
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $bid);
-        $redis = DB::redis(DB::REDIS_DEFAULT_R);
+        $redis = DB::redis(RedisConst::BOOK_DB_R, RedisConst::BOOK_DB_INDEX);
         $ret = $redis->get($key);
 
         return $ret;
@@ -306,7 +307,7 @@ class Column extends Model
     public static function setRecom($uid, $bid)
     {
         $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $bid);
-        $redis = DB::redis(DB::REDIS_DEFAULT_W);
+        $redis = DB::redis(RedisConst::BOOK_DB_W, RedisConst::BOOK_DB_INDEX);
 
         return $redis->set($key, 1, strtotime(date('Y-m-d 23:59:59')) - time());
     }

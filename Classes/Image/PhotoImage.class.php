@@ -6,7 +6,7 @@ namespace Classes\Image;
  * 图片上传处理类
  */
 
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1024M');
 
 class PhotoImage
 {
@@ -32,6 +32,9 @@ class PhotoImage
             case IMAGETYPE_BMP :
                 return 'bmp';
                 break;
+            case IMAGETYPE_WEBP :
+                return 'webp'; // since php7.1
+                break;
             default :
                 return false;
         }
@@ -40,10 +43,10 @@ class PhotoImage
     /**
      * 验证图片上传，并返回对应的值。只支持单张图片验证
      *
-     * @param array $files 图片文件上传变量
-     * @param int $width 图片限制的最小宽
-     * @param int $height 图片限制的最小高
-     * @param int $size 图片限制的最大大小，以字节（Byte）为单位
+     * @param array $files  图片文件上传变量
+     * @param int   $width  图片限制的最小宽
+     * @param int   $height 图片限制的最小高
+     * @param int   $size   图片限制的最大大小，以字节（Byte）为单位
      *
      * @return array $result    返回验证结果（状态码、状态、原因、图片类型、图片尺寸、临时文件名）
      * $result = array(
@@ -58,7 +61,6 @@ class PhotoImage
      */
     public static function checkImage($files, $width = 0, $height = 0, $size = 0)
     {
-        $code = 0;
         $code_info = [
             0 => '验证通过！',
             1 => '没有选择图片！',
@@ -126,9 +128,9 @@ class PhotoImage
             'code' => $code,
             'status' => $status,
             'msg' => $code_info[$code],
-            'image_type' => $image_type,
-            'image_width' => $image_size[0],
-            'image_height' => $image_size[1],
+            'image_type' => isset($image_type) ? $image_type : '',
+            'image_width' => !empty($image_size[0]) ? $image_size[0] : 0,
+            'image_height' => !empty($image_size[1]) ? $image_size[1] : 0,
             'tmp_name' => $files['tmp_name'],
         ];
 
@@ -138,9 +140,9 @@ class PhotoImage
     /**
      * 验证网络图片，并返回对应的值。只支持单张图片验证
      *
-     * @param string $url 网络图片路径
-     * @param int $width 图片限制的最小宽
-     * @param int $height 图片限制的最小高
+     * @param string $url    网络图片路径
+     * @param int    $width  图片限制的最小宽
+     * @param int    $height 图片限制的最小高
      * @return array
      */
     public static function checkImageByUrl($url, $width = 0, $height = 0)
@@ -195,23 +197,20 @@ class PhotoImage
             $hash2 = sprintf("%02x", $itemid / 256 % 256);
         } else {
             $time = time();
-            $hash1 = date('Y', $time);
-            $hash2 = date('m', $time);
-            $hash3 = date('d', $time);
+            $hash1 = date('Ym', $time);
+            $hash2 = date('d', $time);
         }
         $path = [];
         $path['hash1'] = $hash1;
         $path['hash2'] = $hash2;
-        if (!empty($hash3)) {
-            $path['hash3'] = $hash3;
-        }
+
         return $path;
     }
 
     /**
      * 创建一图像，并保存报对应目录
      *
-     * @param array $image_cfg 图片上传配置
+     * @param array $image_cfg    图片上传配置
      *                            $image_cfg = array(
      *                            'base' => '/data/www/img_haodou/pic/recipe/',//必需。base设置图片上传的基础路径
      *                            'thumb' => array(
@@ -221,7 +220,7 @@ class PhotoImage
      *                            'height' => 400,    //新生成图片的高
      *                            'maxheight' => 400,    //新生成图片的最大的宽，未设置新生成图片的高的情况下有效
      *                            'proportion' => true,//是否按原图比例生成新图（true/false），默认为true
-     *                            'position' => 'top',//生成新图时的裁剪起始位置（top上/middle中/buttom下），默认为top
+     *                            'position' => 'top',//生成新图时的裁剪起始位置（top上/middle中/bottom下），默认为top
      *                            'quality' => 80,    //生成新图的图片质量，默认为80
      *                            'watermark' => true,//是否需要水印（true/false），默认为false
      *                            'watermark_type' => '_waterMark' //生成水印的方法，有特殊需求的，需在上传类中自己添加，在这里配置方法名
@@ -233,7 +232,7 @@ class PhotoImage
      *                            'height' => 400,    //新生成图片的高
      *                            'maxheight' => 400,    //新生成图片的最大的宽，未设置新生成图片的高的情况下有效
      *                            'proportion' => true,//是否按原图比例生成新图（true/false），默认为true
-     *                            'position' => 'top',//生成新图时的裁剪起始位置（top上/middle中/buttom下），默认为top
+     *                            'position' => 'top',//生成新图时的裁剪起始位置（top上/middle中/bottom下），默认为top
      *                            'quality' => 80,    //生成新图的图片质量，默认为80
      *                            'watermark' => true,//是否需要水印（true/false），默认为false
      *                            'watermark_type' => '_waterMark' //生成水印的方法，有特殊需求的，需在上传类中自己添加，在这里配置方法名
@@ -274,6 +273,9 @@ class PhotoImage
             case 'bmp' :
                 $image = self::imagecreatefrombmp($image_status['tmp_name']);
                 break;
+            case 'webp' :
+                $image = imagecreatefromwebp($image_status['tmp_name']);
+                break;
             default :
                 $data = [
                     'error' => 'image_type error!!',
@@ -284,6 +286,7 @@ class PhotoImage
                 ];
                 $date_path = date('Y/m');
                 logs($data, "Upload/{$date_path}/error");
+
                 return false;
         }
         // 验证从文件或URL中创建图像是否成功
@@ -297,19 +300,21 @@ class PhotoImage
             ];
             $date_path = date('Y/m');
             logs($data, "Upload/{$date_path}/error");
+
             return false;
         }
         // 处理图片
         $result = self::_imageResize($image, $image_cfg, $image_status);
+
         return $result;
     }
 
     /**
      * 根据配置创建不同的图片，并移动到对应的目录
      *
-     * @param resource $image 新创建的图像
-     * @param array $image_cfg 图片上传配置
-     * @param array $image_status 图片验证信息
+     * @param resource $image        新创建的图像
+     * @param array    $image_cfg    图片上传配置
+     * @param array    $image_status 图片验证信息
      *
      * @return array $result        返回成功状态，和各图片的路径
      */
@@ -321,47 +326,31 @@ class PhotoImage
             'thumb' => [],
         ];
         $checkdir_array = [];
-        foreach ($image_cfg['thumb'] as $key => $val) {
-            if ($val['url'] && $val['url'] != false) {
+        foreach ($image_cfg as $key => $val) {
+            if (!empty($val['path'])) {
                 //裁剪图片已发生错误，统一返回各尺寸裁剪错误
                 if (isset($result['status']) && $result['status'] == false) {
                     $result['thumb'][$key] = false;
                     continue;
                 }
-                //替换变量，得到最终保存的路径和名称
-                $dest_path = $val['url'];
-                foreach ($image_cfg as $cfg_key => $cfg_val) {
-                    if (!in_array($cfg_key, ['base', 'thumb'])) {
-                        $dest_path = str_replace("{" . $cfg_key . "}", $cfg_val, $dest_path);
-                    }
-                }
-                //取'/'最后出现的位置
-                $str_index = strrpos($dest_path, "/");
-                //取需要保存的目录
-                $dest_folder = substr($dest_path, 0, $str_index);
+                //图片最终保存的路径
+                $dest_path = $val['path'];
+                $dest_folder = dirname($dest_path);
                 //验证目录并创建，同一目录只验证并创建一次
                 if (!isset($checkdir_array[$dest_folder])) {
                     $checkdir_array[$dest_folder] = true;
-                    if (!is_dir($image_cfg['base'] . $dest_folder) && $dest_folder != './' && $dest_folder != '../') {
-                        $dirname = $image_cfg['base'];
-                        $folders = explode('/', $dest_folder);
-                        foreach ($folders as $folder) {
-                            $dirname .= $folder . '/';
-                            if ($folder != '' && $folder != '.' && $folder != '..' && !is_dir($dirname)) {
-                                mkdir($dirname, 0777, true);
-                            }
-                        }
+                    if (!is_dir($dest_folder) && $dest_folder != './' && $dest_folder != '../') {
+                        mkdir($dest_folder, 0777, true);
                     }
                 }
-                //图片最终保存的路径
-                $dest_path = $image_cfg['base'] . $dest_path;
-                //保存成功状态
-                $save_flag = false;
-                //原图，则直接上传
-                if ($val['move'] == true) {
-                    $save_flag = move_uploaded_file($image_status['tmp_name'], $dest_path);
-                } //其他则裁剪成对应尺寸
-                else {
+
+                if ($key == 0) { //原图，则直接上传
+                    if (is_uploaded_file($image_status['tmp_name'])) {
+                        $save_flag = move_uploaded_file($image_status['tmp_name'], $dest_path);
+                    } else {
+                        $save_flag = self::getHttpImage($image_status['tmp_name'], $dest_path);
+                    }
+                } else { //其他则裁剪成对应尺寸
                     //图片类型
                     $image_type = $image_status['image_type'];
                     //原图的宽
@@ -397,7 +386,7 @@ class PhotoImage
                         $new_height, $proportion, $position, $quality, $watermark, $watermark_type);
                 }
                 if ($save_flag === true) {
-                    $result['thumb'][$key] = str_replace($image_cfg['base'], '', $dest_path);
+                    $result['thumb'][$key] = $val['url'];
                 } else {
                     $result['status'] = false;
                     $result['thumb'][$key] = false;
@@ -417,24 +406,25 @@ class PhotoImage
             }
         }
         imagedestroy($image);
+
         return $result;
     }
 
     /**
      * 生成图片
      *
-     * @param string $image_type 图片类型
-     * @param resource $image 图片对象
-     * @param string $dest_path 缩略图保存路径
-     * @param int $width 原图的宽
-     * @param int $height 原图的高
-     * @param int $new_width 缩略图的宽
-     * @param int $new_height 缩略图的高
-     * @param boolean $proportion 缩略图是否需要按比例，默认按比例
-     * @param string $position 缩略图位置，默认top(top截取上面、middle截取中间、buttom截取下面)
-     * @param int $quality 图片质量，默认80
-     * @param boolean $watermark 是否需要水印，默认不需要
-     * @param string $watermark_type 水印的方法，默认水印为LOGO，特殊水印需自己处理
+     * @param string   $image_type     图片类型
+     * @param resource $image          图片对象
+     * @param string   $dest_path      缩略图保存路径
+     * @param int      $width          原图的宽
+     * @param int      $height         原图的高
+     * @param int      $new_width      缩略图的宽
+     * @param int      $new_height     缩略图的高
+     * @param boolean  $proportion     缩略图是否需要按比例，默认按比例
+     * @param string   $position       缩略图位置，默认top(top截取上面、middle截取中间、bottom截取下面)
+     * @param int      $quality        图片质量，默认80
+     * @param boolean  $watermark      是否需要水印，默认不需要
+     * @param string   $watermark_type 水印的方法，默认水印为LOGO，特殊水印需自己处理
      *
      * @return boolean                    返回生成图片的成功状态
      */
@@ -466,7 +456,7 @@ class PhotoImage
                     $srcX = 0;
                     if ($position == 'middle') {
                         $srcY = round(($height - $test_height) / 2);
-                    } elseif ($position == 'buttom') {
+                    } elseif ($position == 'bottom') {
                         $srcY = round($height - $test_height);
                     }
                     $height = $test_height;
@@ -475,7 +465,7 @@ class PhotoImage
                     $text_width = round($new_width * $height / $new_height);
                     if ($position == 'middle') {
                         $srcX = round(($width - $text_width) / 2);
-                    } elseif ($position == 'buttom') {
+                    } elseif ($position == 'bottom') {
                         $srcX = round($width - $text_width);
                     }
                     $srcY = 0;
@@ -510,6 +500,7 @@ class PhotoImage
             case 'bmp' :
                 if (imagejpeg($image_color, $dest_path, $quality)) {
                     imagedestroy($image_color);
+
                     return true;
                 }
                 break;
@@ -517,6 +508,14 @@ class PhotoImage
                 imagecolortransparent($image_color, imagecolorallocate($image_color, 0, 0, 0));
                 if (imagegif($image_color, $dest_path)) {
                     imagedestroy($image_color);
+
+                    return true;
+                }
+                break;
+            case 'webp' :
+                if (imagewebp($image_color, $dest_path, $quality)) {
+                    imagedestroy($image_color);
+
                     return true;
                 }
                 break;
@@ -524,26 +523,27 @@ class PhotoImage
                 return -2;
         }
         imagedestroy($image_color);
+
         return -3;
     }
 
     /**
      * 图片裁剪
      *
-     * @param string $image_type 图片类型
-     * @param resource $image 图片对象
-     * @param string $dest_path 缩略图保存路径
-     * @param int $width 原图的宽
-     * @param int $height 原图的高
-     * @param int $crop_width 图片裁剪区域的宽
-     * @param int $crop_height 图片裁剪区域的高
-     * @param int $dst_w 裁剪后图片的宽,为0时默认为裁剪区域的宽$crop_width
-     * @param int $dst_h 裁剪后图片的高,为0时默认为裁剪区域的高$crop_height
-     * @param int $src_x 从原图载入的区域起始x坐标
-     * @param int $src_y 从原图载入的区域起始y坐标
-     * @param int $zoom_width 原图缩放后的宽,为0时表不进行缩放
-     * @param int $zoom_height 原图缩放后的高,为0时表不进行缩放
-     * @param int $quality 图片质量，默认80
+     * @param string   $image_type  图片类型
+     * @param resource $image       图片对象
+     * @param string   $dest_path   缩略图保存路径
+     * @param int      $width       原图的宽
+     * @param int      $height      原图的高
+     * @param int      $crop_width  图片裁剪区域的宽
+     * @param int      $crop_height 图片裁剪区域的高
+     * @param int      $dst_w       裁剪后图片的宽,为0时默认为裁剪区域的宽$crop_width
+     * @param int      $dst_h       裁剪后图片的高,为0时默认为裁剪区域的高$crop_height
+     * @param int      $src_x       从原图载入的区域起始x坐标
+     * @param int      $src_y       从原图载入的区域起始y坐标
+     * @param int      $zoom_width  原图缩放后的宽,为0时表不进行缩放
+     * @param int      $zoom_height 原图缩放后的高,为0时表不进行缩放
+     * @param int      $quality     图片质量，默认80
      *
      * @return boolean                    返回生成图片的成功状态
      */
@@ -563,8 +563,6 @@ class PhotoImage
         $zoom_height = 0,
         $quality = 85
     ) {
-        $xscale = 1;
-        $yscale = 1;
         $src_w = $crop_width;
         $src_h = $crop_height;
 
@@ -598,6 +596,7 @@ class PhotoImage
             case 'bmp' :
                 if (imagejpeg($image_color, $dest_path, $quality)) {
                     imagedestroy($image_color);
+
                     return true;
                 }
                 break;
@@ -605,6 +604,14 @@ class PhotoImage
                 imagecolortransparent($image_color, imagecolorallocate($image_color, 0, 0, 0));
                 if (imagegif($image_color, $dest_path)) {
                     imagedestroy($image_color);
+
+                    return true;
+                }
+                break;
+            case 'webp' :
+                if (imagewebp($image_color, $dest_path, $quality)) {
+                    imagedestroy($image_color);
+
                     return true;
                 }
                 break;
@@ -612,15 +619,16 @@ class PhotoImage
                 return false;
         }
         imagedestroy($image_color);
+
         return false;
     }
 
     /**
      * 按指定角度旋转图片
      *
-     * @param array $image_cfg 图片上传配置
-     * @param array $image_status 图片验证信息
-     * @param integer $angle 旋转角度(90: 逆时针旋转90度, -90: 顺时针旋转90度)
+     * @param array   $image_cfg    图片上传配置
+     * @param array   $image_status 图片验证信息
+     * @param integer $angle        旋转角度(90: 逆时针旋转90度, -90: 顺时针旋转90度)
      *
      * @return boolean
      */
@@ -644,6 +652,9 @@ class PhotoImage
             case 'bmp' :
                 $image = self::imagecreatefrombmp($image_status['tmp_name']);
                 break;
+            case 'webp' :
+                $image = imagecreatefromwebp($image_status['tmp_name']);
+                break;
             default :
                 break;
         }
@@ -657,6 +668,7 @@ class PhotoImage
                 'status' => serialize($image_status),
                 'time' => date('Y-m-d H:i:s'),
             ], $log_path);
+
             return false;
         }
         $quality = 100;
@@ -675,6 +687,11 @@ class PhotoImage
             case 'gif' :
                 imagecolortransparent($rotate, imagecolorallocate($rotate, 0, 0, 0));
                 if (imagegif($rotate, $tempone)) {
+                    imagedestroy($rotate);
+                }
+                break;
+            case 'webp' :
+                if (imagewebp($rotate, $tempone, $quality)) {
                     imagedestroy($rotate);
                 }
                 break;
@@ -703,8 +720,10 @@ class PhotoImage
                 $log_path = "ImageRotate/{$date_path}/error";
             }
             logs($log_data, $log_path);
+
             return false;
         }
+
         return true;
     }
 
@@ -728,14 +747,15 @@ class PhotoImage
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * 生成水印
      *
-     * @param object $im 图片资源
-     * @param string $width 图片资源的宽度
+     * @param object $im     图片资源
+     * @param string $width  图片资源的宽度
      * @param string $height 图片资源的高度
      *
      * @return object|boolean        图片资源
@@ -750,14 +770,15 @@ class PhotoImage
                 return imagecopy($im, $water, $width - 20 - 150, $height - 40 - 57, 0, 0, 150, 57);
             }
         }
+
         return false;
     }
 
     /**
      * 加透明层
      *
-     * @param object $im 图片资源
-     * @param string $width 图片资源的宽度
+     * @param object $im     图片资源
+     * @param string $width  图片资源的宽度
      * @param string $height 图片资源的高度
      *
      * @return object|boolean        图片资源
@@ -770,13 +791,14 @@ class PhotoImage
             $merge = imagecreatefrompng($merge_path);
             imagecopy($im, $merge, 0, 0, 0, 0, $key, $key);
         }
+
         return false;
     }
 
     /**
      * 转换BMP为GD格式
      *
-     * @param string $src 输入文件
+     * @param string $src  输入文件
      * @param string $dest 输出文件
      *
      * @return boolean         成功返回true,失败返回false
@@ -876,6 +898,7 @@ class PhotoImage
         }
         fclose($src_f);
         fclose($dest_f);
+
         return true;
     }
 
@@ -891,8 +914,41 @@ class PhotoImage
         if (self::ConvertBMP2GD($filename, $tmp_name)) {
             $img = imagecreatefromgd($tmp_name);
             unlink($tmp_name);
+
             return $img;
         }
+
         return false;
+    }
+
+    /**
+     * 获取远程图片
+     *
+     * @param $url
+     * @param $path
+     * @return mixed
+     */
+    public static function getHttpImage($url, $path)
+    {
+        if (empty($url)) {
+            return false;
+        }
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
+        $img = curl_exec($ch);
+        curl_close($ch);
+
+        if (!empty($img)) {
+            $fp = fopen($path, 'a');
+            fwrite($fp, $img);
+            fclose($fp);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

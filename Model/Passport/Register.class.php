@@ -7,6 +7,7 @@
 
 namespace Model\Passport;
 
+use Common\RedisConst;
 use Model\Account\User as AUser;
 use Bare\DB;
 
@@ -66,11 +67,11 @@ class Register extends Passport
     /**
      * 注册一个用户
      *
-     * @param array $data 注册字段数据 ['Email','Mobile','UserName','Password','FromPlatform','FromProduct','FromWay']
-     * @param int $type 类型,见REG_TYPE_*
-     * @param bool $init_auser 是否初始化account用户
+     * @param array $data       注册字段数据 ['Email','Mobile','UserName','Password','FromPlatform','FromProduct','FromWay']
+     * @param int   $type       类型,见REG_TYPE_*
+     * @param bool  $init_auser 是否初始化account用户
      * @return array          失败返回 ['code' => 失败代码, 'msg' => 失败原因]
-     *                        成功返回 ['UserId' => 用户ID, ...]
+     *                          成功返回 ['UserId' => 用户ID, ...]
      */
     public static function addUser($data = [], $type = self::REG_TYPE_USERNAME, $init_auser = true)
     {
@@ -138,6 +139,7 @@ class Register extends Passport
 
             if ($res == false || $res < 1) {
                 logs($user, 'Passport/Reg/DbInsertFail');
+
                 return ['code' => 215, 'msg' => '数据库写入失败'];
             }
             self::_initRedis($user);
@@ -149,12 +151,14 @@ class Register extends Passport
                     'UserNick' => !empty($data['Mobile']) ? self::hideMobileName($data['Mobile']) : $user['UserName']
                 ]);
             }
+
             return $user;
         } else {
             if ($res === 0 && $res !== false) {
                 return ['code' => 217, 'msg' => '用户已经存在'];
             }
         }
+
         return ['code' => 216, 'msg' => '数据库写入失败'];
     }
 
@@ -176,7 +180,7 @@ class Register extends Passport
      */
     private static function _initRedis($user)
     {
-        $redis = DB::redis(DB::REDIS_PASSPORT_W, self::REDIS_INDEX);
+        $redis = DB::redis(RedisConst::PASSPORT_DB_W, RedisConst::PASSPORT_DB_INDEX);
         $redis->multi(\Redis::PIPELINE);
         if (!empty($user['Email'])) {
             $redis->set(self::$_redis_prefix['email'] . $user['Email'], $user['UserId']);
@@ -185,21 +189,20 @@ class Register extends Passport
             $redis->set(self::$_redis_prefix['mobile'] . $user['Mobile'], $user['UserId']);
         }
         $redis->set(self::$_redis_prefix['name'] . base64_encode(strtolower($user['UserName'])), $user['UserId']);
-        $redis->hMset(
-            self::$_redis_prefix['uid'] . $user['UserId'],
-            [
-                'name' => $user['UserName'],
-                'email' => $user['Email'],
-                'mobile' => $user['Mobile'],
-            ]
-        );
+        $redis->hMset(self::$_redis_prefix['uid'] . $user['UserId'], [
+            'name' => $user['UserName'],
+            'email' => $user['Email'],
+            'mobile' => $user['Mobile'],
+        ]);
         $res = $redis->exec();
         foreach ($res as $v) {
             if ($v === false) {
                 logs($user, 'Passport/Reg/InitRedisFail');
+
                 return false;
             }
         }
+
         return true;
     }
 }

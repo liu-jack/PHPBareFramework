@@ -14,12 +14,10 @@ use Bare\DB;
 
 class RecomData
 {
-    const APP_ACTIVE_BANNER = 'app_active_banner';
-    const APP_TEMAI_SKIP = 'app_temai_skip';
+    const APP_TEST = 'app_test';
     // 支持的访问key数据
     const KEY_CONFIG = [
-        self::APP_ACTIVE_BANNER => 'app活动banner图',
-        self::APP_TEMAI_SKIP => 'app特卖入口跳转图'
+        self::APP_TEST => 'app test',
     ];
 
     // MC KEY 推荐数据
@@ -108,6 +106,5 @@ class RecomData
         }
 
         return false;
-
     }
 }

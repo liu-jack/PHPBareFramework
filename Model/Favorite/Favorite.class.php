@@ -13,8 +13,10 @@ abstract class Favorite
 {
     // 收藏类型
     const TYPE_BOOK = 1; // 书本
+    const TYPE_TAG = 2; // 书本
     protected static $_types = [
         self::TYPE_BOOK => 'book',
+        self::TYPE_TAG => 'tag',
     ];
     //收藏类型
     protected static $_type;
@@ -39,8 +41,8 @@ abstract class Favorite
     /**
      * 更新用户收藏计数
      *
-     * @param int $userid 用户ID
-     * @param string $count 计数变化， +1/-1
+     * @param int    $userid 用户ID
+     * @param string $count  计数变化， +1/-1
      * @return bool
      */
     abstract public static function updateUserFavCount($userid, $count);
@@ -48,8 +50,8 @@ abstract class Favorite
     /**
      * 更新项目收藏计数
      *
-     * @param int $itemid 项目ID
-     * @param string $count 计数变化， +1/-1
+     * @param int    $itemid 项目ID
+     * @param string $count  计数变化， +1/-1
      * @return bool
      */
     abstract public static function updateItemFavCount($itemid, $count);
@@ -96,8 +98,10 @@ abstract class Favorite
                 'ItemId' => $itemid,
                 'ItemType' => static::$_type
             ], self::LOG_FAIL_PATH);
+
             return false;
         }
+
         return true;
     }
 
@@ -140,16 +144,18 @@ abstract class Favorite
                     'ItemId' => $itemid,
                     'ItemType' => static::$_type
                 ], self::LOG_FAIL_PATH);
+
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * 判断一个或多个项目是否被用户收藏
      *
-     * @param int $userid
+     * @param int       $userid
      * @param int|array $itemid
      * @return bool|array  一个时返回true/false, 多个是返回['ItemId1' => true, 'ItemId2' => false, ...]
      */
@@ -169,8 +175,10 @@ abstract class Favorite
                     $ret[$v] = false;
                 }
             }
+
             return $ret;
         }
+
         return in_array($itemid, $items);
     }
 
@@ -179,7 +187,7 @@ abstract class Favorite
      *
      * @param int $userid 用户ID
      * @param int $offset 偏移量
-     * @param int $limit 每次数量
+     * @param int $limit  每次数量
      * @return array          ['total' => 记录总数, 'data' => [ItemId1, ItemId2, ...]]
      */
     public static function getItemsByUserId($userid, $offset = 0, $limit = 10)
@@ -189,6 +197,7 @@ abstract class Favorite
         if ($offset !== -1) {
             $items = array_slice($items, $offset, $limit);
         }
+
         return ['total' => $count, 'data' => $items];
     }
 
@@ -223,6 +232,7 @@ abstract class Favorite
         }
         $data = unpack('L*', $data);
         is_array($data) || $data = [];
+
         return $data;
     }
 
@@ -251,6 +261,7 @@ abstract class Favorite
         }
         $data = unpack('L*', $data);
         is_array($data) || $data = [];
+
         return $data;
     }
 

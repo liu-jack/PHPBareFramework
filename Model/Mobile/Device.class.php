@@ -6,13 +6,13 @@
 namespace Model\Mobile;
 
 use Bare\DB;
+use Common\RedisConst;
 
 /**
  * 设备管理
  *
  * @ignore
- * @package Lib
- * @author  suning <snsnsky@gmail.com>
+ * @package Model\Api
  *
  */
 class Device
@@ -24,15 +24,15 @@ class Device
     /**
      * REDIS Key
      */
-    const REDIS_KEY = 'U:';
+    const REDIS_KEY = 'DU:';
     /**
      * 设备表
      *
      * @var array
      */
     private static $table = [
-        MOBILE_APPID_IPHONE => 'iOSDevice',
-        MOBILE_APPID_ANDROID => 'AndroidDevice'
+        APP_APPID_IOS => 'iOSDevice',
+        APP_APPID_ADR => 'AndroidDevice'
     ];
 
     /**
@@ -47,17 +47,15 @@ class Device
         if (!isset(self::$table[$appid])) {
             return false;
         }
-        $flag = $appid == MOBILE_APPID_IPHONE ? 'ios' : 'and';
+        $flag = $appid == APP_APPID_IOS ? 'ios' : 'and';
 
-        $redis = Bridge::redis(Bridge::REDIS_MOBILE_W);
-
+        $redis = DB::redis(RedisConst::MOBILE_DB_W, RedisConst::MOBILE_DB_INDEX);
         $redis->hDel(self::REDIS_KEY . $userid, $flag);
 
-        $pdo = Bridge::pdo(Bridge::DB_MOBILE_W);
+        $pdo = DB::pdo(DB::DB_MOBILE_W);
 
         $old_device_id = [];
         $old_device = $pdo->find(self::$table[$appid], ['UserId' => $userid], 'DeviceId');
-
         $pdo->update(self::$table[$appid], ['UserId' => 0], ['UserId' => $userid]);
 
         if (is_array($old_device) && count($old_device) > 0) {
@@ -78,7 +76,7 @@ class Device
      */
     public static function delCache($deviceid)
     {
-        $mc = Bridge::memcache(Bridge::MEMCACHE_DEFAULT);
+        $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
 
         $deviceid = is_array($deviceid) ? $deviceid : [$deviceid];
         foreach ($deviceid as $v) {
@@ -126,9 +124,9 @@ class Device
             return false;
         }
         $table = self::$table[$appid];
-        $flag = $appid == MOBILE_APPID_IPHONE ? 'ios' : 'and';
+        $flag = $appid == APP_APPID_IOS ? 'ios' : 'and';
 
-        $pdo = Bridge::pdo(Bridge::DB_MOBILE_W);
+        $pdo = DB::pdo(DB::DB_MOBILE_W);
         $device = self::_getDevice($device_id, $table);
 
         if (empty($device['Id'])) {
@@ -138,13 +136,13 @@ class Device
 
             $data['UserId'] = $userid;
             $data['Token'] = $token;
-            if (MOBILE_APPID_IPHONE == $appid) {
+            if (APP_APPID_IOS == $appid) {
                 $data['iOSToken'] = $ios_token;
             }
             $pdo->insert($table, $data, ['ignore' => true]);
 
             if ($userid > 0) {
-                $redis = Bridge::redis(Bridge::REDIS_MOBILE_W);
+                $redis = DB::redis(RedisConst::MOBILE_DB_W, RedisConst::MOBILE_DB_INDEX);
                 if (!empty($token) && $pdo->rowCount() == 1) {
                     $redis->hset(self::REDIS_KEY . $userid, $flag, $token);
                 } else {
@@ -156,19 +154,19 @@ class Device
             $data['UserId'] = $userid;
 
             if ($device['UserId'] > 0) {
-                $redis = Bridge::redis(Bridge::REDIS_MOBILE_W);
+                $redis = DB::redis(RedisConst::MOBILE_DB_W, RedisConst::MOBILE_DB_INDEX);
                 $redis->hDel(self::REDIS_KEY . $device['UserId'], $flag);
             }
 
             if ($userid > 0) {
                 $clearold($userid);
 
-                $redis = Bridge::redis(Bridge::REDIS_MOBILE_W);
+                $redis = DB::redis(RedisConst::MOBILE_DB_W, RedisConst::MOBILE_DB_INDEX);
                 $redis->hset(self::REDIS_KEY . $userid, $flag, $token);
             }
 
             $data['Token'] = $token;
-            if (MOBILE_APPID_IPHONE == $appid) {
+            if (APP_APPID_IOS == $appid) {
                 $data['iOSToken'] = $ios_token;
             }
             self::updateDevice($appid, $device['DeviceId'], $data);
@@ -186,11 +184,11 @@ class Device
      */
     private static function _getDevice($device_id, $table)
     {
-        $mc = Bridge::memcache(Bridge::MEMCACHE_DEFAULT);
+        $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
         $info = $mc->get(self::MC_KEY . $device_id);
 
         if (empty($info)) {
-            $pdo = Bridge::pdo(Bridge::DB_MOBILE_R);
+            $pdo = DB::pdo(DB::DB_MOBILE_R);
             $pdo->prepare("SELECT * FROM $table WHERE DeviceId=:id LIMIT 1");
             $pdo->bindValue(':id', $device_id);
             $pdo->execute();
@@ -213,7 +211,7 @@ class Device
      */
     public static function updateDevice($appid, $deviceid, $data = [])
     {
-        $pdo = Bridge::pdo(Bridge::DB_MOBILE_W);
+        $pdo = DB::pdo(DB::DB_MOBILE_W);
 
         $ret = $pdo->update(self::$table[$appid], $data, [
             'DeviceId' => $deviceid
@@ -246,7 +244,7 @@ class Device
      */
     public static function getTokenByUserId($uid)
     {
-        $redis = Bridge::redis(Bridge::REDIS_MOBILE_W);
+        $redis = DB::redis(RedisConst::MOBILE_DB_R, RedisConst::MOBILE_DB_INDEX);
         $token = $redis->hMGet(self::REDIS_KEY . $uid, ['ios', 'and']);
 
         return [

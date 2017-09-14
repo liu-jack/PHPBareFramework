@@ -87,6 +87,10 @@ class DBConfig
     const REDIS_ACCOUNT_W = 5;
     const REDIS_OTHER_R = 6;
     const REDIS_OTHER_W = 7;
+    const REDIS_QUEUE_R = 8;
+    const REDIS_QUEUE_W = 9;
+    const REDIS_MOBILE_R = 10;
+    const REDIS_MOBILE_W = 11;
 
     protected static $_redis_cfgs = [
         self::REDIS_DEFAULT_R => 'default',
@@ -97,6 +101,10 @@ class DBConfig
         self::REDIS_ACCOUNT_W => 'default',
         self::REDIS_OTHER_R => 'default',
         self::REDIS_OTHER_W => 'default',
+        self::REDIS_QUEUE_R => 'default',
+        self::REDIS_QUEUE_W => 'default',
+        self::REDIS_MOBILE_R => 'default',
+        self::REDIS_MOBILE_W => 'default',
     ];
 
     /**
