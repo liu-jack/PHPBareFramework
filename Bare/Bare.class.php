@@ -58,15 +58,15 @@ class Bare
         if (defined('API_VAR') && !empty($_GET[API_VAR])) {
             //接口访问
             self::visitApi();
-            define('VISIT_TYPE', VISIT_TYPE_API);
+            define('VISIT_TYPE', V_API);
         } elseif (defined('ADMIN_VAR') && isset($_GET[ADMIN_VAR])) {
             //后台访问
             self::visitWebAdmin();
-            define('VISIT_TYPE', VISIT_TYPE_ADMIN);
+            define('VISIT_TYPE', V_ADMIN);
         } else {
             //网站访问
             self::visitWeb();
-            define('VISIT_TYPE', VISIT_TYPE_WEB);
+            define('VISIT_TYPE', V_WEB);
         }
 
         $GLOBALS['_URL'] = $GLOBALS['_M'] . '/' . $GLOBALS['_C'] . '/' . $GLOBALS['_A'];

@@ -69,7 +69,7 @@ class Init extends Controller
         $height = intval($_GET['height']);
 
         $appid = $GLOBALS[G_APP_ID];
-        $uid = (int)$this->isLogin(VISIT_TYPE_API);
+        $uid = (int)$this->isLogin(V_API);
 
         $result = [
             'StopServer' => [
@@ -95,7 +95,7 @@ class Init extends Controller
         ];
 
         // 停服信息
-        if (false) {
+        if (API_STOP) {
             $result['StopServer'] = [
                 'Code' => 1,
                 'Msg' => '服务器维护中,暂停服务'
@@ -219,7 +219,7 @@ class Init extends Controller
         $ios_token = trim($_POST['ios_token']);
 
         $appid = $GLOBALS[G_APP_ID];
-        $uid = (int)$this->isLogin(VISIT_TYPE_API);
+        $uid = (int)$this->isLogin(V_API);
 
         if (empty($token)) {
             $this->output(201, '推送ID不可为空');

@@ -26,7 +26,7 @@ Class Controller
             $this->_m = new $model;
         }
         //接口访问设置
-        if (!defined('NO_SESSION') && VISIT_TYPE != VISIT_TYPE_API) {
+        if (!defined('NO_SESSION') && VISIT_TYPE != V_API) {
             session_start();
         }
     }
@@ -105,14 +105,14 @@ Class Controller
     /**
      * 登录状态验证
      *
-     * @param int  $type 0:web/wap 1:api 2:admin 详见 VISIT_TYPE_×
+     * @param int  $type 0:web/wap 1:api 2:admin 详见 V_*
      * @param bool $auto 接口未登录是否退出程序
      * @return int
      */
-    public static function isLogin($type = VISIT_TYPE_WEB, $auto = false)
+    public static function isLogin($type = V_WEB, $auto = false)
     {
         switch ($type) {
-            case VISIT_TYPE_WEB:  // 网站登录验证
+            case V_WEB:  // 网站登录验证
                 if (empty($_SESSION['UserId'])) {
                     if (!empty($_COOKIE['_auth'])) {
                         $uid = cookie_decode($_COOKIE['_auth']);
@@ -124,7 +124,7 @@ Class Controller
 
                 return !empty($_SESSION['UserId']) ? $_SESSION['UserId'] : 0;
                 break;
-            case VISIT_TYPE_API:  // 接口登录验证
+            case V_API:  // 接口登录验证
                 $code = 551;
                 $msg = '未登录, 请重新登录后再试!';
                 $ssid = self::getAuthString();
@@ -170,7 +170,7 @@ Class Controller
 
                 return $_SESSION['uid'];
                 break;
-            case VISIT_TYPE_ADMIN: // 网站后台登录验证
+            case V_ADMIN: // 网站后台登录验证
                 return AdminLogin::isLogin();
                 break;
             default:

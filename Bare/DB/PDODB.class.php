@@ -115,14 +115,11 @@ class PDODB extends PDO
      * @see PDO::query()
      *
      * @param string $statement
-     * @param int    $mode
-     * @param null   $arg3
-     * @param array  $ctorargs
      * @return PDOStatement
      */
-    public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null, array $ctorargs = array())
+    public function query($statement)
     {
-        $this->statement = parent::query($statement, $mode, $arg3, $ctorargs);
+        $this->statement = parent::query($statement);
         $this->statement->setFetchMode($this->opt['fetchMode']);
 
         return $this->statement;

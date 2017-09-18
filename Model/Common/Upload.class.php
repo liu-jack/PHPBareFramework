@@ -14,14 +14,14 @@ use Classes\Image\PhotoImage;
 class Upload
 {
     /**
-     * @param string $path         \Common\ImgPath
-     * @param array  $image_status PhotoImage::checkImage|PhotoImage::checkImageByUrl
-     * @param int    $size         裁剪尺寸 0：原图
-     * @param int    $itemid       项目id
-     * @param array  $extra        quality   裁剪质量 0 - 100
-     *                             position  位置 top|middle|bottom
-     *                             height    限制高度
-     *                             watermark 水印 true|false
+     * @param string    $path         \Common\ImgPath
+     * @param array     $image_status PhotoImage::checkImage|PhotoImage::checkImageByUrl
+     * @param int|array $size         裁剪尺寸   0:原图
+     * @param int       $itemid       项目id    0:按时间生成路径
+     * @param array     $extra        quality   裁剪质量 0 - 100
+     *                                position  位置 top|middle|bottom
+     *                                height    限制高度
+     *                                watermark 水印 true|false
      * @return array|bool
      */
     public static function saveImg($path, $image_status, $size = 0, $itemid = 0, $extra = [])

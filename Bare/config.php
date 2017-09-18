@@ -29,9 +29,9 @@ define('CEXT', '.class.php');
 define('VEXT', '.html');
 define('URL_MODE', 1); //0 一般模式 1 rewrite模式
 
-define('VISIT_TYPE_WEB', 0); // web访问
-define('VISIT_TYPE_API', 1); // 接口访问
-define('VISIT_TYPE_ADMIN', 2); // 后台访问
+define('V_WEB', 0); // web访问
+define('V_API', 1); // 接口访问
+define('V_ADMIN', 2); // 后台访问
 
 if (php_sapi_name() !== 'cli') {
     $search = ['/index.php', '/admin.php', VEXT];

@@ -15,12 +15,12 @@ class Login extends Passport
     /**
      * 登录
      *
-     * @param string $login_name 登录账号,手机/邮箱/用户名
-     * @param string $pwd 原始密码
-     * @param bool $auto_init 是否初始化session和cookie(用于web/wap)
-     * @param bool $auto_login 是否记住登录状态,当$auto_init为true时才有效
-     * @param bool $update_count 是否更新计数, 后台登陆时不更新
-     * @return array                成功返回用户信息, 错误返回['code' => 失败代码, 'msg' => 失败原因]
+     * @param string $login_name   登录账号,手机/邮箱/用户名
+     * @param string $pwd          原始密码
+     * @param bool   $auto_init    是否初始化session和cookie(用于web/wap)
+     * @param bool   $auto_login   是否记住登录状态,当$auto_init为true时才有效
+     * @param bool   $update_count 是否更新计数, 后台登陆时不更新
+     * @return array               成功返回用户信息, 错误返回['code' => 失败代码, 'msg' => 失败原因]
      */
     public static function doLogin($login_name, $pwd, $auto_init = true, $auto_login = true, $update_count = true)
     {
@@ -55,6 +55,7 @@ class Login extends Passport
             self::initCookie($userid, $auto_login);
         }
         self::updateLoginInfo($userid, $update_count);
+
         return $userinfo;
     }
 
@@ -73,7 +74,7 @@ class Login extends Passport
     /**
      * 初始化cookie
      *
-     * @param int $uid 用户ID
+     * @param int  $uid        用户ID
      * @param bool $auto_login 是否保持登录
      */
     public static function initCookie($uid, $auto_login = true)
@@ -88,7 +89,7 @@ class Login extends Passport
     /**
      * 更新登录变更信息
      *
-     * @param int $userid 用户ID
+     * @param int  $userid       用户ID
      * @param bool $update_count 是否更新登录计数
      * @return bool
      */
@@ -111,6 +112,7 @@ class Login extends Passport
             'LoginCount' => ['LoginCount', '+1'],
             'LoginIp' => ip()
         ];
+
         return self::updateUser($userid, $passport_update);
     }
 
@@ -139,6 +141,7 @@ class Login extends Passport
                 return $key[1];
             }
         }
+
         return '';
     }
 }

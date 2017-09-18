@@ -225,7 +225,7 @@ class Passport
      *
      * @param int|array $userid   用户ID
      * @param bool      $no_cache true:不使用缓存, false: 使用
-     * @return array      失败返回[]
+     * @return array              失败返回[]
      */
     protected static function getUserById($userid, $no_cache = false)
     {

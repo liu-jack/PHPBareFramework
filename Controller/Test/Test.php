@@ -102,8 +102,8 @@ class Test extends Controller
         //        test2::test();
         //        test1::test1();
         //        var_dump(getFileExt('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
-//        $image_status = PhotoImage::checkImageByUrl('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png');
-//        var_dump(Upload::saveImg(ImgPath::IMG_TEST, $image_status, [0, 450], 1, ['height' => [450 => 290]]));
+        //        $image_status = PhotoImage::checkImageByUrl('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png');
+        //        var_dump(Upload::saveImg(ImgPath::IMG_TEST, $image_status, [0, 450], 1, ['height' => [450 => 290]]));
     }
 
     /**

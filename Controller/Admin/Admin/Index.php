@@ -51,7 +51,7 @@ class Index extends AdminController
      */
     public function updatePwd()
     {
-        $uid = $this->isLogin(VISIT_TYPE_ADMIN);
+        $uid = $this->isLogin(V_ADMIN);
         if ($uid < 1) {
             $this->alert('请先登录', url('admin/index/login'));
         }
