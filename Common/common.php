@@ -33,12 +33,12 @@ function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
     if ($itemid) {
         $hash1 = sprintf("%02x", $itemid % 256);
         $hash2 = sprintf("%02x", $itemid / 256 % 256);
-        $name = substr(md5(__KEY__ . $itemid), -6);
+        $name = $itemid . '_' . substr(md5(__KEY__ . $itemid), -6);
     } else {
         $time = time();
         $hash1 = date('Ym', $time);
         $hash2 = date('d', $time);
-        $name = substr(md5(__KEY__ . uniqid()), -6);
+        $name = mt_rand(10, 99) . '_' . substr(md5(__KEY__ . uniqid()), -6);
     }
     if (is_array($size)) {
         $return = [];
