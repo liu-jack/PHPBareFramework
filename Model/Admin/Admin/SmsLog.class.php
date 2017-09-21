@@ -135,7 +135,7 @@ class SmsLog extends ViewModel
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
         self::CF_MC_KEY => '',
         // 可选, 超时时间, 默认不过期
-        self::CF_MC_TIME => 86400
+        self::CF_MC_TIME => 86400,
     ];
     // 新增必须字段
     protected static $_add_must_fields = [
@@ -144,11 +144,11 @@ class SmsLog extends ViewModel
     ];
 
     /**
-     * @see ViewModel::add() 新增
-     * @see ViewModel::update() 更新
-     * @see ViewModel::getInfoByIds() 按id查询
-     * @see ViewModel::getList() 条件查询
-     * @see ViewModel::delete() 删除
+     * @see \Bare\Model::add() 新增
+     * @see \Bare\Model::update() 更新
+     * @see \Bare\Model::getInfoByIds() 按主键id查询
+     * @see \Bare\Model::getList() 条件查询
+     * @see \Bare\Model::delete() 删除
      */
 
     /**

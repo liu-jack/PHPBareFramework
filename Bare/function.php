@@ -97,8 +97,10 @@ function parseTemplate($path)
         '@\{:([\w_]+\([^}]*\))\}@isU',
         // 2. {@view('admin/public/header')}
         '@\{\@([\w_]+\([^}]*\))\}@isU',
-        // 3. {foreach ($group as $v)}{if(xx)}{elseif(xx)}
-        '@\{(foreach|if|elseif)\s*(\([^}]*\))\}@isU',
+        // 3. {foreach ($group as $v)}{if(xx)}
+        '@\{(foreach|if)\s*(\([^}]*\))\}@isU',
+        // 3.1 {elseif(xx)}
+        '@\{(elseif)\s*(\([^}]*\))\}@isU',
         // 4. {else}
         '@\{(else)\}@isU',
         // 5. {/foreach}{/if}
@@ -120,6 +122,7 @@ function parseTemplate($path)
         '<?php $this->$1?>',
         '<?php $1?>',
         "<?php $1$2{?>",
+        "<?php }$1$2{?>",
         "<?php }$1{?>",
         "<?php }?>",
         "<?php echo $1['$2']['$3']?>",
@@ -213,17 +216,9 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
     } else {
         $domain .= '/index.php/';
     }
-    if (empty($url)) {
-        $temp = explode('/', $GLOBALS['_URL']);
-        $temp = array_map('lcfirst', $temp);
-        $url = implode('/', $temp);
-    } elseif (substr_count($url, '/') == 0) {
-        $temp = explode('/', $GLOBALS['_MURL']);
-        $temp = array_map('lcfirst', $temp);
-        $url = implode('/', $temp) . '/' . $url;
-    } elseif (substr_count($url, '/') == 1) {
-        $url = lcfirst($GLOBALS['_M']) . '/' . $url;
-    }
+
+    $url = parseUri($url);
+
     $params = $query = '';
     if (!empty($vars)) {
         if (is_array($vars)) {
@@ -250,6 +245,31 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
     }
 
     return $urls;
+}
+
+/**
+ * uri路径解析 module/controller/action
+ *
+ * @param string $uri
+ * @param int    $type 0: lcfirst 1:ucfirst
+ * @return string
+ */
+function parseUri($uri = '', $type = 0)
+{
+    $func = $type == 0 ? 'lcfirst' : 'ucfirst';
+    if (empty($uri)) {
+        $temp = explode('/', $GLOBALS['_URL']);
+        $temp = array_map($func, $temp);
+        $uri = implode('/', $temp);
+    } elseif (substr_count($uri, '/') == 0) {
+        $temp = explode('/', $GLOBALS['_MURL']);
+        $temp = array_map($func, $temp);
+        $uri = implode('/', $temp) . '/' . $uri;
+    } elseif (substr_count($uri, '/') == 1) {
+        $uri = lcfirst($GLOBALS['_M']) . '/' . $uri;
+    }
+
+    return $uri;
 }
 
 /**

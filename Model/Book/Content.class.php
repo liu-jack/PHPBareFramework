@@ -27,11 +27,11 @@ class Content extends Model
             'Content' => self::VAR_TYPE_STRING,
         ],
         // 可选, MC连接参数
-        'mc' => '',
+        self::CF_MC => '',
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
-        'mckey' => '',
+        self::CF_MC_KEY => '',
         // 可选, 超时时间, 默认不过期
-        'mctime' => 86400
+        self::CF_MC_TIME => 86400,
     ];
 
     /**

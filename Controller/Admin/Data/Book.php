@@ -76,7 +76,7 @@ class Book extends AdminController
         $sites = config('book/sites');
 
         $this->value('sites', $sites);
-        $this->view('Data/Book/update');
+        $this->view('update');
     }
 
     public function edit()
@@ -88,7 +88,7 @@ class Book extends AdminController
 
         $this->value('sites', $sites);
         $this->value('info', $book);
-        $this->view('Data/Book/update');
+        $this->view('update');
     }
 
     public function update()

@@ -66,7 +66,7 @@ class Collect extends AdminController
         $sites = config('book/sites');
         $this->value('sites', $sites);
         $this->value('status_list', self::$_status);
-        $this->view('Data/Collect/update');
+        $this->view('update');
     }
 
     public function edit()
@@ -80,7 +80,7 @@ class Collect extends AdminController
         $this->value('sites', $sites);
         $this->value('info', $info);
         $this->value('status_list', self::$_status);
-        $this->view('Data/Collect/update');
+        $this->view('update');
     }
 
     public function update()

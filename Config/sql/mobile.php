@@ -27,13 +27,14 @@ CREATE TABLE IF NOT EXISTS `AppScreenImage` (
   `AppId` int(11) NOT NULL COMMENT 'appid',
   `Name` varchar(45) DEFAULT NULL COMMENT '启动图名称',
   `Channel` varchar(512) NOT NULL COMMENT '特殊渠道名字，多个渠道用半角逗号隔开',
+  `ImgUrl` varchar(255) NOT NULL COMMENT '图片链接',
   `Description` varchar(512) DEFAULT NULL COMMENT '启动图描述',
   `StartTime` datetime DEFAULT NULL COMMENT '启动图显示开始时间',
   `EndTime` datetime DEFAULT NULL COMMENT '启动图显示结束时间',
   `CreateTime` datetime DEFAULT NULL COMMENT '创建时间',
   `LastTime` datetime DEFAULT NULL COMMENT '最后更新时间',
   `Url` varchar(255) DEFAULT NULL COMMENT '点击Url, 可以为空',
-  `Status` int(11) NOT NULL DEFAULT '1' COMMENT '状态 1：正常 2：删除',
+  `Status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态 1：正常 2：删除',
   PRIMARY KEY (`Id`),
   KEY `Index_id_type` (`AppId`,`Channel`(255),`Status`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='启动图';

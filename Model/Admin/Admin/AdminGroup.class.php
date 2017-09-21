@@ -32,20 +32,20 @@ class AdminGroup extends Model
             'r' => DB::DB_ADMIN_R
         ],
         // 必选, 数据表名
-        'table' => 'AdminGroup',
+        self::CF_TABLE => 'AdminGroup',
         // 必选, 字段信息
-        'fields' => [
+        self::CF_FIELDS => [
             'GroupId' => self::VAR_TYPE_KEY,
             'GroupName' => self::VAR_TYPE_STRING,
             'AdminAuth' => self::VAR_TYPE_ARRAY,
             'Status' => self::VAR_TYPE_INT,
         ],
         // 可选, MC连接参数
-        'mc' => '',
+        self::CF_MC => '',
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
-        'mckey' => '',
+        self::CF_MC_KEY => '',
         // 可选, 超时时间, 默认不过期
-        'mctime' => 86400
+        self::CF_MC_TIME => 86400
     ];
 
 

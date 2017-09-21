@@ -1,0 +1,85 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left"><a class="btn btn-default" href="{url('add')}"> 添加 <i class="icon-plus-sign"></i></a></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">启动图管理</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>启动图对应应用名</td>
+                        <td>启动图名称</td>
+                        <td>启动图点击URL</td>
+                        <td>启动图描述</td>
+                        <td>开始时间</td>
+                        <td>结束时间</td>
+                        <td>预览</td>
+                        <td>状态</td>
+                        <td>操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if (!empty($list))}
+                    {foreach($list as $v)}
+                    <tr>
+                        <td>{$v.Id}</td>
+                        <td>{$app_ids[$v['AppId']]}</td>
+                        <td>{$v.Name}</td>
+                        <td>{$v.Url}</td>
+                        <td>{$v.Description}</td>
+                        <td>{$v.StartTime}</td>
+                        <td>{$v.EndTime}</td>
+                        <td>
+                            <a href="{$v.ImgUrl}" target="_blank"><img src="{$v.ImgUrl}" width="100px" alt=""/></a>
+                        </td>
+                        <td>
+                            {if ($v['StartStatus'] == 1)}
+                            <span class="label label-primary">未开始</span>
+                            {elseif ($v['StartStatus'] == 2)}
+                            <span class="label label-success">进行中</span>
+                            {else}
+                            <span class="label label-danger">已结束</span>
+                            {/if}
+                        </td>
+                        <td>
+                            <a href="{url('edit', ['id'=>$v['Id'],'app_id'=>$v['AppId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
+                            <a href="{url('delete', ['id'=>$v['Id'],'app_id'=>$v['AppId']])}" class="btn btn-danger delete delete_btn"><i class="icon-remove"></i></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+                {if (!empty($pages))}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+
+{@view('Public/footer')}

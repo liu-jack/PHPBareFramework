@@ -29,11 +29,11 @@ class Atlas extends Model
             'CreateTime' => self::VAR_TYPE_STRING,
         ],
         // 可选, MC连接参数
-        'mc' => DB::MEMCACHE_DEFAULT,
+        self::CF_MC => DB::MEMCACHE_DEFAULT,
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
-        'mckey' => 'PIC:%d',
+        self::CF_MC_KEY => 'PIC:%d',
         // 可选, 超时时间, 默认不过期
-        'mctime' => 86400
+        self::CF_MC_TIME => 86400
     ];
 
     /**

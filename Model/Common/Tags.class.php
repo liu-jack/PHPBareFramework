@@ -7,7 +7,7 @@ namespace Model\Common;
 
 use Bare\CommonModel;
 use Bare\DB;
-use Classes\Image\PhotoImage;
+use Common\Upload;
 use Common\ImgPath;
 
 class Tags extends CommonModel

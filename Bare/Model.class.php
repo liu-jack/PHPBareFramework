@@ -23,8 +23,8 @@ abstract class Model
     const CF_MC = 'mc';
     const CF_MC_KEY = 'mc_key';
     const CF_MC_TIME = 'mc_expire';
-    const CF_RD = 'redis_db';
-    const CF_RD_INDEX = 'redis_db_index';
+    const CF_RD = 'redis';
+    const CF_RD_INDEX = 'redis_index';
     const CF_RD_TIME = 'redis_expire';
     const CF_PRIMARY_KEY = '_primary_key';
     const CF_FIELDS_ARRAY = '_fields_array';
@@ -82,8 +82,8 @@ abstract class Model
     const EXTRA_GET_RET = 'get_result';
     const EXTRA_MOD_TYPE = 'type';
     const EXTRA_MC = 'mc';
-    const EXTRA_MC_KEY = 'mckey';
-    const EXTRA_MC_TIME = 'mctime';
+    const EXTRA_MC_KEY = 'mc_key';
+    const EXTRA_MC_TIME = 'mc_expire';
 
     // 模块类型, MC模式
     const MOD_TYPE_MEMCACHE = 1;

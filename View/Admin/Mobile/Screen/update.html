@@ -1,0 +1,135 @@
+{:view('Public/header')}
+
+<script type="text/javascript" src="{JS_PATH}DatePicker/WdatePicker.js"></script>
+
+<!-- Main content starts -->
+<div class="content">
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+
+                <div class="widget wgreen">
+
+                    <div class="widget-head">
+                        <div class="pull-left">添加书本</div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="widget-content">
+                        <div class="padd">
+
+                            <!-- Form starts.  -->
+                            <form action="{url('update')}" method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
+                                <input type="hidden" name="id" id="_id" value="{$info.Id}"/>
+                                <table class="table table-bordered table-striped" align="center">
+                                    <tbody>
+                                    <tr><td colspan="3"><h5>添加启动图</h5></td></tr>
+                                    <tr>
+                                        <td class="col-xs-2">应用名：</td>
+                                        <td>
+                                            <select id="app_id" name="app_id" class="form-control" style="width: 300px;">
+                                                <option value="0">请选择需要更新的应用</option>
+                                                {foreach ($app_ids as $k => $v)}
+                                                <option value="{$k}" {if ($info['AppId'] == $k)}selected{/if}>{$v}</option>
+                                                {/foreach}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>启动图名称：</td>
+                                        <td><input type="text" class="form-control" id="name" name="name" value="{$info.Name}" placeholder="启动图名称" style="width: 300px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>启动图点击URL：</td>
+                                        <td><input type="text" class="form-control" id="url" name="url" value="{$info.Url}" placeholder="启动图点击URL" style="width: 300px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>启动图描述：</td>
+                                        <td><textarea rows="5" cols="20" class="form-control" id="description" name="description" style="width: 500px;" placeholder="启动图描述">{$info.Description}</textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>启动图显示开始时间：</td>
+                                        <td><input class="form-control" id="start_time" name="start_time" type="text" onFocus="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_time\')}'});" value="{$info.StartTime}" readonly="" style="width: 200px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>启动图显示结束时间：</td>
+                                        <td><input class="form-control" id="end_time" name="end_time" type="text" onFocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_time\')}'});" value="{$info.EndTime}" readonly="" style="width: 200px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>上传图片<br>
+                                            (仅限jpg&png格式,<br>
+                                            大小为： 375 X 512)</td>
+                                        <td>
+                                            <div class="form-inline">
+                                                <input type="file" class="form-control" id="appscreen" name="appscreen" style="width: 200px;" />
+                                                <div class="form-group padd">
+                                                    {if (!empty($info['ImgUrl']))}<img src="{$info['ImgUrl']}" style="width: 100px;">{/if}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <hr />
+                                <div class="form-group">
+                                    <div class="col-lg-offset-1 col-lg-9">
+                                        <button type="submit" class="btn btn-success" id="save_btn"><i class="icon-ok"></i></button>
+                                        <button type="reset" class="btn btn-warning"><i class="icon-refresh"></i></button>
+                                        <button type="button" class="btn btn-danger"><i class="icon-remove"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="widget-foot">
+                        <!-- Footer goes here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $("#save_btn").click(function (){
+        var app_id = parseInt($("#app_id").val()),
+            id = parseInt($("#_id").val()),
+            name = $.trim($("#name").val()),
+            description = $.trim($("#description").val()),
+            start_time = $.trim($("#start_time").val()),
+            end_time = $.trim($("#end_time").val()),
+            appscreen = $.trim($('#appscreen').val());
+
+        if (!app_id){
+            top.swal('出错了', '请选择应用！', 'error');
+            return false;
+        }
+        if (!name.length){
+            top.swal('出错了', '启动图名称不能为空！', 'error');
+            return false;
+        }
+        if (!description.length){
+            top.swal('出错了', '启动图描述不能为空！', 'error');
+            return false;
+        }
+        if (!start_time.length){
+            top.swal('出错了', '启动图显示开始时间不能为空！', 'error');
+            return false;
+        }
+        if (!end_time.length){
+            top.swal('出错了', '启动图显示结束时间不能为空！', 'error');
+            return false;
+        }
+        if (!id && !/\.(jpg|png)$/.test(appscreen)) {
+            top.swal('出错了', '未选择图片, 且图片必须为jpg格式', 'error');
+            return false;
+        }
+
+        return true;
+    });
+</script>
+
+{@view('Public/footer')}

@@ -130,11 +130,11 @@ class AdminLog extends ViewModel
     ];
 
     /**
-     * @see ViewModel::add() 新增
-     * @see ViewModel::update() 更新
-     * @see ViewModel::getInfoByIds() 按id查询
-     * @see ViewModel::getList() 条件查询
-     * @see ViewModel::delete() 删除
+     * @see \Bare\Model::add() 新增
+     * @see \Bare\Model::update() 更新
+     * @see \Bare\Model::getInfoByIds() 按主键id查询
+     * @see \Bare\Model::getList() 条件查询
+     * @see \Bare\Model::delete() 删除
      */
 
     /**

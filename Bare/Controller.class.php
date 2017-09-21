@@ -48,10 +48,14 @@ Class Controller
      *
      * @param string $path 模板的路径 默认为
      *                     ROOT_PATH/View/模块名(module)/控制器名(controller)/方法名(action)
+     * @param string $ext
      */
     public function view($path = '', $ext = VEXT)
     {
         if (!empty($path)) {
+            if (substr_count($path, '/') == 0) {
+                $path = parseUri($path, 1);
+            }
             if (isset($_GET[ADMIN_VAR])) {
                 $path = ADMIN_PATH . '/' . $path;
             }

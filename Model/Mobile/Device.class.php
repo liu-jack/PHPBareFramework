@@ -139,11 +139,11 @@ class Device
             if (APP_APPID_IOS == $appid) {
                 $data['iOSToken'] = $ios_token;
             }
-            $pdo->insert($table, $data, ['ignore' => true]);
+            $row_count = $pdo->insert($table, $data, ['ignore' => true]);
 
             if ($userid > 0) {
                 $redis = DB::redis(RedisConst::MOBILE_DB_W, RedisConst::MOBILE_DB_INDEX);
-                if (!empty($token) && $pdo->rowCount() == 1) {
+                if (!empty($token) && $row_count == 1) {
                     $redis->hset(self::REDIS_KEY . $userid, $flag, $token);
                 } else {
                     $redis->hDel(self::REDIS_KEY . $userid, $flag);

@@ -8,7 +8,6 @@ namespace Model\Mobile;
 
 use Bare\RedisFastInterface as Fast;
 use Bare\DB;
-use Common\ImgPath;
 
 class AppInfo
 {
@@ -52,15 +51,13 @@ class AppInfo
         $data = unserialize($data[self::APPINFO_KEY][$field]);
         if (empty($data)) {
             $pdo = DB::pdo(DB::DB_MOBILE_R);
-            $query = $pdo->prepare("select Id,Channel,Url as ClickUrl,StartTime,EndTime from AppScreenImage where AppId=:appid and Status=1 and EndTime>=:time ORDER BY Id DESC limit 1");
+            $query = $pdo->prepare("select Id,Channel,ImgUrl,Url as ClickUrl,StartTime,EndTime from AppScreenImage where AppId=:appid and Status=1 and EndTime>=:time ORDER BY Id DESC limit 1");
             $query->bindParam(':appid', $appid, \PDO::PARAM_INT);
             $query->bindParam(':time', $time, \PDO::PARAM_STR);
             $query->execute();
             $data = $query->fetch();
             if (empty($data)) {
                 $data = $base;
-            } else {
-                $data['ImgUrl'] = getSavePath(ImgPath::IMG_APP_SCREEN, $data['Id'])['url'];
             }
             $fast->set(self::APPINFO_KEY, [$field => serialize($data)]);
         }

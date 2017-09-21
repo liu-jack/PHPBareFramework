@@ -7,7 +7,7 @@
  *
  */
 
-namespace Model\Common;
+namespace Common;
 
 use Classes\Image\PhotoImage;
 
