@@ -28,6 +28,8 @@ class Index extends Controller
             $class_name = '\Model\Queue\\' . $class_name;
             $class = new $class_name();
             $queue->doLoop($class);
+        } else {
+            exit('model file not exist');
         }
     }
 }

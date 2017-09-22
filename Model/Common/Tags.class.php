@@ -8,7 +8,7 @@ namespace Model\Common;
 use Bare\CommonModel;
 use Bare\DB;
 use Common\Upload;
-use Common\ImgPath;
+use Common\PathConst;
 
 class Tags extends CommonModel
 {
@@ -423,7 +423,7 @@ class Tags extends CommonModel
 
     public static function updateTagIcon($id, $icon)
     {
-        $ret = Upload::saveImg(ImgPath::IMG_TAG_ICON, $icon, 0, $id);
+        $ret = Upload::saveImg(PathConst::IMG_TAG_ICON, $icon, PathConst::IMG_TAG_ICON_SIZE, $id);
         if (is_array($ret) && $ret['status'] == true) {
             self::updateTagVer($id);
 
@@ -449,7 +449,7 @@ class Tags extends CommonModel
 
     public static function updateTagCover($id, $cover)
     {
-        $ret = Upload::saveImg(ImgPath::IMG_TAG_COVER, $cover, 450, $id);
+        $ret = Upload::saveImg(PathConst::IMG_TAG_COVER, $cover, PathConst::IMG_TAG_COVER_SIZE, $id);
         if (is_array($ret) && $ret['status'] == true) {
             self::updateTagVer($id);
 
@@ -461,8 +461,7 @@ class Tags extends CommonModel
 
     public static function updateTagBannerImg($id, $img)
     {
-        $extra = ['height' => [450 => 290]];
-        $ret = Upload::saveImg(ImgPath::IMG_TAG_COVER, $img, 450, $id, $extra);
+        $ret = Upload::saveImg(PathConst::IMG_TAG_BANNER, $img, PathConst::IMG_TAG_BANNER_SIZE, $id, PathConst::IMG_TAG_BANNER_EXTRA);
         if (is_array($ret) && $ret['status'] == true) {
 
             return $ret;

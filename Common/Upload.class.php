@@ -14,10 +14,10 @@ use Classes\Image\PhotoImage;
 class Upload
 {
     /**
-     * @param string    $path         \Common\ImgPath
+     * @param string    $path         PathConst
      * @param array     $image_status PhotoImage::checkImage|PhotoImage::checkImageByUrl
-     * @param int|array $size         裁剪尺寸   0:原图
-     * @param int       $itemid       项目id    0:按时间生成路径
+     * @param int|array $size         裁剪尺寸    0:原图
+     * @param int       $itemid       项目id     0:按时间生成路径
      * @param array     $extra        quality   裁剪质量 0 - 100
      *                                position  位置 top|middle|bottom
      *                                height    限制高度

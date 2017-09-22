@@ -1,0 +1,147 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left"> 添加 </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <table class="table table-bordered table-striped" align="center">
+                    <tbody>
+                    <tr><td colspan="2"><h5>添加手机应用版本</h5></td></tr>
+                    <tr>
+                        <td class="col-xs-2">选择应用：</td>
+                        <td>
+                            <select id="app_id" class="form-control" style="width: 300px;">
+                                <option value="0">请选择需要更新的应用</option>
+                                {foreach ($app_ids as $k=>$v)}
+                                <option value="{$k}">{$v}</option>
+                                {/foreach}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>应用版本号：</td>
+                        <td><input type="text" class="form-control" id="version_code" value="" placeholder="应用版本号" style="width: 300px;" /></td>
+                    </tr>
+                    <tr>
+                        <td>应用版本升级描述：</td>
+                        <td><textarea rows="5" cols="20" class="form-control" id="intro" style="width: 500px;" placeholder="应用版本升级描述"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>应用升级下载链接地址：</td>
+                        <td><input type="text" class="form-control" id="down_url" value="" placeholder="应用升级下载链接地址" style="width: 500px;" /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><button type="button" id="add_btn" class="btn btn-success"><i class="icon-ok"></i></button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left iframe-nav col-md-12">
+                    <ul class="nav nav-tabs" style="padding: 0 40px">
+                        {foreach ($app_ids as $k=>$v)}
+                        <li class="iframe-title {if ($app_id == $k)}active{/if}">
+                            <a href="{url('index', ['app_id'=> $k])}" style="padding-right: 15px !important;">{$v}</a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+
+                <table class="table table-bordered table-striped table-hover" align="center">
+                    <thead>
+                    <tr>
+                        <td width="5%">ID</td>
+                        <td width="5%">版本号</td>
+                        <td>版本更新说明</td>
+                        <td width="18%">下载链接</td>
+                        <td width="160px">添加时间</td>
+                        <td width="70px">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if (!empty($list))}
+                    {foreach ($list as $k=>$v)}
+                    <tr>
+                        <td>{$v.Id}</td>
+                        <td>{$v.VersionCode}</td>
+                        <td>{$v.Description}</td>
+                        <td>{$v.DownUrl}</td>
+                        <td>{$v.CreateTime}</td>
+                        <td><a class="btn btn-danger delete delete_btn" href="{url('delete',['id'=>$v['Id'],'app_id'=>$app_id])}" _id="{$v.Id}"><i class="icon-remove"></i></a></td>
+                    </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+                {if (!empty($pages))}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script>
+    $("#add_btn").click(function (){
+        var app_id = parseInt($("#app_id").val()),
+            version_code = $.trim($("#version_code").val()),
+            intro = $.trim($("#intro").val()),
+            down_url = $.trim($("#down_url").val());
+
+        if (!app_id){
+            top.swal('出错了', '请选择应用！', 'error');
+            return false;
+        }
+        if (!version_code.length){
+            top.swal('出错了', '应用版本号不能为空！', 'error');
+            return false;
+        }
+        if (!intro.length){
+            top.swal('出错了', '应用版本升级描述不能为空！', 'error');
+            return false;
+        }
+        if (!down_url.length){
+            top.swal('出错了', '应用升级下载链接地址不能为空！', 'error');
+            return false;
+        }
+        $.post("{url('add')}", {'app_id' : app_id, 'version_code' : version_code, 'intro' : intro,  'down_url' : down_url}, function (ret){
+            if (ret.code == 200){
+                top.swal('温馨提示', ret.msg, 'success');
+                self.location.reload();
+            }else{
+                top.swal('出错了', ret.msg, 'error');
+            }
+        },'json');
+    });
+
+    //删除
+    $(".delete_btn").click(function(){
+        var url = $(this).attr("href");
+        top.__confirm('确定要删除吗？','删除后不可恢复！', url, self);
+        return false;
+    });
+</script>
+
+{@view('Public/footer')}

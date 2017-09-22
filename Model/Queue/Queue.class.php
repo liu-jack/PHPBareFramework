@@ -27,6 +27,7 @@ abstract class Queue
 
     /**
      *  最后一条数据
+     *
      * @var
      */
     public $lastdata;
@@ -70,9 +71,19 @@ abstract class Queue
     }
 
     /**
+     * 错误日志路径
+     *
+     * @return string
+     */
+    public function logPath()
+    {
+        return 'Queue/' . static::class;
+    }
+
+    /**
      *  用于处理队列返回的数据
      *
-     * @param array $data 队列中存入的数据
+     * @param array|string $data 队列中存入的数据
      */
     abstract public function run($data);
 }

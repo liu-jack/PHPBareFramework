@@ -10,7 +10,7 @@ namespace Controller\Admin\Mobile;
 use Bare\AdminController;
 use Model\Mobile\AppInfo;
 use Classes\Image\PhotoImage;
-use Common\ImgPath;
+use Common\PathConst;
 use Common\Upload;
 use Model\Admin\Admin\AdminLog;
 use Bare\DB;
@@ -127,7 +127,7 @@ class Screen extends AdminController
         if ($id > 0) {
             // 上传图片
             if (!empty($rel)) {
-                $img_url = Upload::saveImg(ImgPath::IMG_APP_SCREEN, $rel, 0, $id);
+                $img_url = Upload::saveImg(PathConst::IMG_APP_SCREEN, $rel, PathConst::IMG_APP_SCREEN_SIZE, $id);
                 if (empty($img_url['thumb'][0])) {
                     $this->alertErr('编辑失败！', '', '图片上传失败!');
                 }
@@ -151,7 +151,7 @@ class Screen extends AdminController
                 AdminLog::log('添加启动图', 'add', $id, $data, self::TABLE_NAME);
                 // 上传图片
                 if (!empty($rel)) {
-                    $img_url = Upload::saveImg(ImgPath::IMG_APP_SCREEN, $rel, 0, $id);
+                    $img_url = Upload::saveImg(PathConst::IMG_APP_SCREEN, $rel, PathConst::IMG_APP_SCREEN_SIZE, $id);
                     if (empty($img_url['thumb'][0])) {
                         $this->alertErr('编辑失败！', '', '图片上传失败!');
                     }

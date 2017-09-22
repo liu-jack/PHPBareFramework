@@ -9,6 +9,7 @@ namespace Controller\Admin\Mobile;
 use Bare\AdminController;
 use Model\Admin\Admin\AdminLog;
 use Model\Mobile\AppInfo;
+use Model\Mobile\Version as MVersion;
 use Bare\DB;
 
 class Version extends AdminController
@@ -24,18 +25,18 @@ class Version extends AdminController
     {
         $page = max(1, intval($_GET[PAGE_VAR]));
         $app_id = intval($_GET['app_id']);
-        $app_id = isset($this->appinfo[$app_id]) ? $app_id : APP_APPID_IOS;
+        $app_id = isset($this->appinfo[$app_id]) ? $app_id : APP_APPID_ADR;
 
         $where = ['AppId' => $app_id];
-
         $pdo_r = DB::pdo(DB::DB_MOBILE_R);
         $total = $pdo_r->clear()->select('count(Id)')->from(self::TABLE)->where($where)->getValue();
 
         if ($total > 0) {
-            $data = $pdo_r->clear()->select('*')->from(self::TABLE)->where($where)->order('Id DESC')->limit(($page - 1) * PAGE_SIZE,
-                PAGE_SIZE)->getAll();
-            $this->page($total, PAGE_SIZE, $page);
-
+            $limit = PAGE_SIZE;
+            $offset = ($page - 1) * $limit;
+            $data = $pdo_r->clear()->select('*')->from(self::TABLE)->where($where)->order('Id DESC')->limit($offset,
+                $limit)->getAll();
+            $this->page($total, $limit, $page);
             $this->value('list', $data);
         }
 
@@ -52,19 +53,19 @@ class Version extends AdminController
         $down_url = trim($_POST['down_url']);
 
         if (!isset($this->appinfo[$app_id])) {
-            $this->output(['status' => false, 'msg' => '请选择应用！']);
+            output(201, '请选择应用！');
         }
         if (empty($version_code)) {
-            $this->output(['status' => false, 'msg' => '应用版本号不能为空！']);
+            output(201, '应用版本号不能为空！');
         }
         if (empty($intro)) {
-            $this->output(['status' => false, 'msg' => '应用版本升级描述不能为空！']);
+            output(201, '应用版本升级描述不能为空！');
         }
         if (empty($down_url)) {
-            $this->output(['status' => false, 'msg' => '应用升级下载链接地址不能为空！']);
+            output(201, '应用升级下载链接地址不能为空！');
         }
         if (!filter_var($down_url, FILTER_VALIDATE_URL)) {
-            $this->output(['status' => false, 'msg' => '请填写有效的应用升级下载链接地址！']);
+            output(201, '请填写有效的应用升级下载链接地址！');
         }
 
         $data = [
@@ -73,14 +74,14 @@ class Version extends AdminController
             'Description' => $intro,
             'DownUrl' => $down_url
         ];
-        $pdo_w = DB::pdo(DB::DB_MOBILE_W);
+        $r = MVersion::add($data);
 
-        if ($pdo_w->insert(self::TABLE, $data)) {
+        if ($r !== false) {
             AppInfo::removeCache(AppInfo::CACHE_VERSION, $app_id);
-            AdminLog::log('添加手机应用版本', $pdo_w->lastInsertId(), 'add', serialize($data));
-            $this->output(array('status' => true, 'msg' => '添加成功！'));
+            AdminLog::log('添加手机应用版本', 'add', $r, $data, self::TABLE);
+            output(200, '添加成功！');
         } else {
-            $this->output(array('status' => false, 'msg' => '操作失败， 请稍后再试！'));
+            output(201, '操作失败， 请稍后再试！');
         }
     }
 
@@ -89,17 +90,17 @@ class Version extends AdminController
         $id = intval($_GET['id']);
         $app_id = intval($_GET['app_id']);
         if (!$id || !isset($this->appinfo[$app_id])) {
-            $this->alertErr('删除失败', ['type' => 'error', 'desc' => '参数非法！']);
+            $this->alertErr('删除失败', '', '参数非法！');
         }
 
         $pdo_w = DB::pdo(DB::DB_MOBILE_W);
         $where = ['Id' => $id, 'AppId' => $app_id];
         if ($pdo_w->delete(self::TABLE, $where)) {
             AppInfo::removeCache(AppInfo::CACHE_VERSION, $app_id);
-            AdminLog::log('删除手机应用版本', $id, 'del', serialize($where));
+            AdminLog::log('删除手机应用版本', 'del', $id, $where, self::TABLE);
             $this->alert('删除成功！');
         } else {
-            $this->alertErr('删除失败', ['type' => 'error', 'desc' => '请稍后再试！']);
+            $this->alertErr('删除失败', '', '请稍后再试！');
         }
     }
 }
