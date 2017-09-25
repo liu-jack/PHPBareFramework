@@ -14,7 +14,6 @@ CREATE DATABASE IF NOT EXISTS zf_passport default character set utf8 COLLATE utf
 CREATE DATABASE IF NOT EXISTS zf_account default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_favorite default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_application default character set utf8 COLLATE utf8_general_ci;
-CREATE DATABASE IF NOT EXISTS zf_device default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_comment default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_tag default character set utf8 COLLATE utf8_general_ci;
 CREATE DATABASE IF NOT EXISTS zf_admin default character set utf8 COLLATE utf8_general_ci;

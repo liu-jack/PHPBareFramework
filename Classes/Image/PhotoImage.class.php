@@ -284,8 +284,7 @@ class PhotoImage
                         'image_status' => $image_status,
                     ]),
                 ];
-                $date_path = date('Y/m');
-                logs($data, "Upload/{$date_path}/error");
+                logs($data, __CLASS__ . "Upload/error");
 
                 return false;
         }
@@ -298,8 +297,7 @@ class PhotoImage
                     'image_status' => $image_status,
                 ]),
             ];
-            $date_path = date('Y/m');
-            logs($data, "Upload/{$date_path}/error");
+            logs($data, __CLASS__ . "Upload/error");
 
             return false;
         }
@@ -400,8 +398,7 @@ class PhotoImage
                             'image_status' => $image_status,
                         ]),
                     ];
-                    $date_path = date('Y/m');
-                    logs($data, "Upload/{$date_path}/error");
+                    logs($data, __CLASS__ . "/Upload/error");
                 }
             }
         }
@@ -660,8 +657,7 @@ class PhotoImage
         }
         // 验证从文件或URL中创建图像是否成功
         if ($image == false) {
-            $date_path = date('Y/m');
-            $log_path = "ImageRotate/{$date_path}/error";
+            $log_path = __CLASS__ . "ImageRotate/error";
 
             logs([
                 'error' => 'image_type error!',
@@ -716,8 +712,7 @@ class PhotoImage
         file_exists($tempone) && unlink($tempone);
         if (isset($log_data)) {
             if (!isset($log_path)) {
-                $date_path = date('Y/m');
-                $log_path = "ImageRotate/{$date_path}/error";
+                $log_path = __CLASS__ . "ImageRotate/error";
             }
             logs($log_data, $log_path);
 

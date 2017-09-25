@@ -19,7 +19,6 @@ start cmd /c "mode con cols=45 lines=10 && title tag && php index.php Tool/Sql/t
 
 REM app
 start cmd /c "mode con cols=45 lines=10 && title application && php index.php Tool/Sql/application"
-start cmd /c "mode con cols=45 lines=10 && title device && php index.php Tool/Sql/device"
 start cmd /c "mode con cols=45 lines=10 && title mobile && php index.php Tool/Sql/mobile"
 
 REM 后台

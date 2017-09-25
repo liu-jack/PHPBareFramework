@@ -540,3 +540,16 @@ function output($code = 200, $data = [])
         exit(json_encode($result));
     }
 }
+
+/**
+ * 404页面
+ *
+ * @param string $path
+ */
+function show404($path = '')
+{
+    header('HTTP/1.0 404 Not Found');
+    header('Content-Type: text/html; charset=UTF-8');
+    readfile(!empty($path) ? $path : VIEW_PATH . 'Public/404.html');
+    exit;
+}

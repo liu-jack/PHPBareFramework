@@ -16,10 +16,20 @@ use Bare\DB;
 
 class Push extends AdminController
 {
+    private static $system = [
+        APP_APPID_IOS => [
+            'AppId' => APP_APPID_IOS,
+            'AppName' => 'IOS'
+        ],
+        APP_APPID_ADR => [
+            'AppId' => APP_APPID_ADR,
+            'AppName' => 'Android'
+        ],
+    ];
+
     public function index()
     {
-        $system = config('mobileapi/base');
-        $this->value('system', $system);
+        $this->value('system', self::$system);
 
         $types = [
             [
@@ -55,32 +65,8 @@ class Push extends AdminController
         $msg = trim($_POST['msg']);
         $data = trim($_POST['data']);
 
-        if (!AppPush::checkType($type)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '请选择推送消息类型！']);
-        }
+        self::checkParam($type, $app_id, $msg, $data);
 
-        $count = count($app_id);
-        if ($count < 1) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-        } else {
-            $system = config('mobileapi/base');
-            $system_id = array_column($system, 'AppId');
-            foreach ($app_id as $v) {
-                if (!in_array($v, $system_id)) {
-                    $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-                }
-            }
-        }
-
-        if (empty($msg)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送消息不能为空！']);
-        }
-        if ((in_array($type, [2, 3])) && empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送数据不能为空！']);
-        }
-        if ((in_array($type, [1])) && !empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送纯消息时数据只能为空！']);
-        }
         $platform = [];
         foreach ($app_id as $v) {
             if ($v == APP_APPID_IOS) {
@@ -100,9 +86,9 @@ class Push extends AdminController
         $result = AppPush::pushAll($type, $msg, $data, $platform);
 
         if ($result) {
-            $this->output(['status' => true, 'type' => 'success', 'msg' => '推送成功！']);
+            output(['status' => true, 'type' => 'success', 'msg' => '推送成功！']);
         } else {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送失败，请稍后再试！']);
+            output(['status' => false, 'type' => 'error', 'msg' => '推送失败，请稍后再试！']);
         }
     }
 
@@ -125,34 +111,10 @@ class Push extends AdminController
         $msg = trim($_POST['msg']);
         $data = trim($_POST['data']);
 
-        if (!AppPush::checkType($type)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '请选择推送消息类型！']);
-        }
+        self::checkParam($type, $app_id, $msg, $data);
 
-        $count = count($app_id);
-        if ($count < 1) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-        } else {
-            $system = config('mobileapi/base');
-            $system_id = array_column($system, 'AppId');
-            foreach ($app_id as $v) {
-                if (!in_array($v, $system_id)) {
-                    $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-                }
-            }
-        }
-
-        if (empty($msg)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送消息不能为空！']);
-        }
-        if ((in_array($type, [2, 3])) && empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送数据不能为空！']);
-        }
-        if ((in_array($type, [1])) && !empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送纯消息时数据只能为空！']);
-        }
         if (empty($stag)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送用户类型不能为空！']);
+            output(201, '推送用户类型不能为空！');
         }
         $platform = [];
         foreach ($app_id as $v) {
@@ -163,7 +125,7 @@ class Push extends AdminController
                 $platform[] = 'android';
             }
         }
-        if ($type == 2) {
+        if ($type == AppPush::PUSH_TYPE_URL) {
             $data = [
                 AppPush::VAR_CONT => $data,
             ];
@@ -172,9 +134,9 @@ class Push extends AdminController
         $result = AppPush::pushTag($stag, $type, $msg, $data, $platform);
 
         if ($result) {
-            $this->output(['status' => true, 'type' => 'success', 'msg' => '推送成功！']);
+            output(200, '推送成功！');
         } else {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送失败，请稍后再试！']);
+            output(201, '推送失败，请稍后再试！');
         }
     }
 
@@ -200,12 +162,8 @@ class Push extends AdminController
         $data = trim($_POST['data']);
         $token = trim($_POST['token']);
 
-        //参数验证
-        $system = config('mobileapi/base');
-        $system_id = array_column($system, 'AppId');
-        if (!in_array($app_id, $system_id)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-        }
+        self::checkParam($type, $app_id, $msg, $data);
+
         if (empty($token) && $uid > 1) {
             $tokens = Device::getTokenByUserId($uid);
             if ($app_id == APP_APPID_IOS) {
@@ -214,24 +172,14 @@ class Push extends AdminController
                 $token = $tokens['android'] ?? '';
             }
             if (empty($token)) {
-                $this->output(['status' => false, 'type' => 'error', 'msg' => '用户没有关联到手机或者已经退出登录！']);
+                output(201, '用户没有关联到手机或者已经退出登录！');
             }
         }
-        $cate = AppPush::checkType($type);
-        if (!$cate) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '请选择推送消息类型！']);
-        }
         if (empty($token)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '请选填写有效的用户识别标识！']);
-        }
-        if (empty($msg)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送消息不能为空！']);
-        }
-        if (in_array($type, [2, 3]) && empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送数据不能为空！']);
+            output(201, '请选填写有效的用户识别标识！');
         }
 
-        if ($type == 2) {
+        if ($type == AppPush::PUSH_TYPE_URL) {
             $data = [
                 AppPush::VAR_CONT => $data,
             ];
@@ -245,9 +193,9 @@ class Push extends AdminController
         }
 
         if ($result) {
-            $this->output(['status' => true, 'type' => 'success', 'msg' => '推送成功！']);
+            output(200, '推送成功！');
         } else {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送失败，请稍后再试！']);
+            output(201, '推送失败，请稍后再试！');
         }
     }
 
@@ -272,35 +220,13 @@ class Push extends AdminController
         $data = trim($_POST['data']);
         $settime = trim($_POST['settime']);
 
-        if (!in_array($type, [AppPush::PUSH_TYPE_MSG, AppPush::PUSH_TYPE_URL])) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '请选择推送消息类型！']);
-        }
-        $count = count($app_id);
-        if ($count < 1) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-        } else {
-            $system = config('mobileapi/base');
-            $system_id = array_column($system, 'AppId');
-            foreach ($app_id as $v) {
-                if (!in_array($v, $system_id)) {
-                    $this->output(['status' => false, 'type' => 'error', 'msg' => '平台选择有误！']);
-                }
-            }
-        }
-        if (empty($msg)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送消息不能为空！']);
-        }
-        if (in_array($type, [2, 3]) && empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送数据不能为空！']);
-        }
-        if ((in_array($type, [1])) && !empty($data)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送纯消息时数据只能为空！']);
-        }
+        self::checkParam($type, $app_id, $msg, $data);
+
         if (empty($settime) || $settime <= date('Y-m-d H:i')) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '定时推送时间设置错误！']);
+            output(201, '定时推送时间设置错误！');
         }
         if (isset($_POST['tag']) && empty($tag)) {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '推送用户类型不能为空！']);
+            output(201, '推送用户类型不能为空！');
         }
         $platform = [];
         foreach ($app_id as $v) {
@@ -311,7 +237,7 @@ class Push extends AdminController
                 $platform[] = 'android';
             }
         }
-        if ($type == 2) {
+        if ($type == AppPush::PUSH_TYPE_URL) {
             $data = [
                 AppPush::VAR_CONT => $data,
             ];
@@ -334,9 +260,44 @@ class Push extends AdminController
 
         if ($result) {
             AdminLog::log('设置定时推送', 'add', $pdo->lastInsertId(), $add_data, 'AdminCron');
-            $this->output(['status' => true, 'type' => 'success', 'msg' => '设置定时推送成功！']);
+            output(200, '设置定时推送成功！');
         } else {
-            $this->output(['status' => false, 'type' => 'error', 'msg' => '设置定时推送失败，请稍后再试！']);
+            output(201, '设置定时推送失败，请稍后再试！');
+        }
+    }
+
+    /**
+     * 推送参数验证
+     *
+     * @param $type
+     * @param $app_id
+     * @param $msg
+     * @param $data
+     */
+    private static function checkParam($type, $app_id, $msg, $data)
+    {
+        if (!AppPush::checkType($type)) {
+            output(201, '请选择推送消息类型！');
+        }
+        $count = count($app_id);
+        if ($count < 1) {
+            output(201, '平台选择有误！');
+        } else {
+            $system_id = array_column(self::$system, 'AppId');
+            foreach ($app_id as $v) {
+                if (!in_array($v, $system_id)) {
+                    output(201, '平台选择有误！');
+                }
+            }
+        }
+        if (empty($msg)) {
+            output(201, '推送消息不能为空！');
+        }
+        if ((in_array($type, [AppPush::PUSH_TYPE_URL])) && empty($data)) {
+            output(201, '推送数据不能为空！');
+        }
+        if ((in_array($type, [AppPush::PUSH_TYPE_MSG])) && !empty($data)) {
+            output(201, '推送纯消息时数据只能为空！');
         }
     }
 }

@@ -20,7 +20,6 @@ php index.php Tool/Sql/tag
 
 # app
 php index.php Tool/Sql/application
-php index.php Tool/Sql/device
 php index.php Tool/Sql/mobile
 
 # 后台
