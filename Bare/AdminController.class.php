@@ -58,15 +58,15 @@ Class AdminController extends Controller
             foreach ($list_info['data'] as $k => $v) {
                 $list[$k] = $v;
                 if (isset($v['Content'])) {
-                    $sub_cont = mb_substr($v['Content'], 0, 80);
+                    $sub_cont = mb_substr($v['Content'], 0, 50);
                     $list[$k]['Content'] = '<a title="' . htmlspecialchars($v['Content']) . '">' . $sub_cont . '</a>';
                 }
                 if (isset($v['Log'])) {
-                    $sub_cont = mb_substr($v['Log'], 0, 80);
+                    $sub_cont = mb_substr($v['Log'], 0, 50);
                     $list[$k]['Log'] = '<a title="' . htmlspecialchars($v['Log']) . '">' . $sub_cont . '</a>';
                 }
                 if (isset($v['Info'])) {
-                    $sub_cont = mb_substr($v['Info'], 0, 80);
+                    $sub_cont = mb_substr($v['Info'], 0, 50);
                     $list[$k]['Info'] = '<a title="' . htmlspecialchars($v['Info']) . '">' . $sub_cont . '</a>';
                 }
             }

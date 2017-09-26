@@ -30,7 +30,6 @@ class Push extends AdminController
     public function index()
     {
         $this->value('system', self::$system);
-
         $types = [
             [
                 'TypeId' => AppPush::PUSH_TYPE_MSG,
@@ -42,7 +41,6 @@ class Push extends AdminController
             ]
         ];
         $this->value('types', $types);
-
         $this->view();
     }
 
@@ -56,7 +54,6 @@ class Push extends AdminController
      *
      * 公共消息推送
      *
-     * @return string json
      */
     public function pushAll()
     {
@@ -101,7 +98,6 @@ class Push extends AdminController
      *
      * 按用户类型推送
      *
-     * @return string json
      */
     public function pushTag()
     {
@@ -151,7 +147,6 @@ class Push extends AdminController
      *
      * 个人消息推送
      *
-     * @return string json
      */
     public function pushPerson()
     {
@@ -207,9 +202,9 @@ class Push extends AdminController
      * msg:     推送消息
      * data:    推送数据
      * settime  推送时间
+     *
      * 定时 公共|用户类型 消息推送
      *
-     * @return string json
      */
     public function pushSetTime()
     {
@@ -284,6 +279,7 @@ class Push extends AdminController
             output(201, '平台选择有误！');
         } else {
             $system_id = array_column(self::$system, 'AppId');
+            $app_id = is_array($app_id) ? $app_id : [$app_id];
             foreach ($app_id as $v) {
                 if (!in_array($v, $system_id)) {
                     output(201, '平台选择有误！');

@@ -124,7 +124,7 @@ abstract class Model
             if (empty($data['CreateTime'])) {
                 $data['CreateTime'] = date('Y-m-d H:i:s');
             }
-            $ret = static::addData($data, $ignore, table($data[static::$_suffix_field]));
+            $ret = static::addData($data, $ignore, table($data[static::$_suffix_field] ?? ''));
             if (!empty(static::$_cache_list_keys) && $ret !== false) {
                 $data[key(static::$_conf[static::CF_FIELDS])] = $ret;
                 static::delListCache($data);
@@ -145,7 +145,7 @@ abstract class Model
     public static function update($id, $data, $filter = true)
     {
         $ret = false;
-        $suffix = table($data[static::$_suffix_field]);
+        $suffix = table($data[static::$_suffix_field] ?? '');
         if (!empty(static::$_un_modify_fields)) {
             if ($filter) {
                 $data = array_diff_key($data, static::$_un_modify_fields);
@@ -304,6 +304,7 @@ abstract class Model
         }
 
         $pdo->close();
+        DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
         $pdo = null;
 
         return false;
@@ -420,6 +421,7 @@ abstract class Model
             }
 
             $pdo->close();
+            DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
             $pdo = null;
 
             return true;
@@ -453,6 +455,7 @@ abstract class Model
             }
 
             $pdo->close();
+            DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
             $pdo = null;
 
             return true;
@@ -563,6 +566,7 @@ abstract class Model
 
         if (!empty($pdo)) {
             $pdo->close();
+            DB::pdo($extra[static::EXTRA_DB], 'force_close');
             $pdo = null;
         }
 
@@ -630,6 +634,7 @@ abstract class Model
         ]);
 
         $pdo->close();
+        DB::pdo($db, 'force_close');
         $pdo = null;
 
         if (is_array($ret) && count($ret) > 0) {
@@ -719,7 +724,7 @@ abstract class Model
                     switch ($type) {
                         case static::VAR_TYPE_KEY:
                         case static::VAR_TYPE_INT:
-                            $v = (int)$v;
+                            $v = is_array($v) ? $v : intval($v);
                             break;
                         case static::VAR_TYPE_ARRAY:
                             $v = is_array($v) ? serialize($v) : $v;
