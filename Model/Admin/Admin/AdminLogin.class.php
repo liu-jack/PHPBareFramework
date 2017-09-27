@@ -244,15 +244,17 @@ class AdminLogin
                 $class = 'Controller\\' . ADMIN_PATH . '\\' . str_replace('/', '\\', $v);
                 $method = getMethods($class, 'public');
                 foreach ($method as $mk => $mv) {
-                    $url = $v . '/' . $mk;
-                    if (!isset($methods_exist[$url])) {
-                        $key = explode('|', $methods_pos[$v], 2)[0];
-                        $mid = $methods_pos[$v] . '|' . $mk;
-                        $menu[$key][$mid] = [
-                            'AdminMenuId' => $url,
-                            'Name' => $methods_name[$v] . '-' . $mk,
-                            'Url' => $url
-                        ];
+                    if (strpos($mk, '__') !== 0) {
+                        $url = $v . '/' . $mk;
+                        if (!isset($methods_exist[$url])) {
+                            $key = explode('|', $methods_pos[$v], 2)[0];
+                            $mid = $methods_pos[$v] . '|' . $mk;
+                            $menu[$key][$mid] = [
+                                'AdminMenuId' => $url,
+                                'Name' => $methods_name[$v] . '-' . $mk,
+                                'Url' => $url
+                            ];
+                        }
                     }
                 }
             }

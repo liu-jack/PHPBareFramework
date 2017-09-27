@@ -37,8 +37,8 @@ class BookSearch extends SearchBase
         'ViewCount' => [self::T_INT, 'viewcount'],
         'LikeCount' => [self::T_INT, 'likecount'],
         'FavoriteCount' => [self::T_INT, 'favoritecount'],
-        'CreateTime' => [self::T_STRING, 'createtime'],
-        'UpdateTime' => [self::T_STRING, 'updatetime'],
+        'CreateTime' => [self::T_STRTOTIME, 'createtime'],
+        'UpdateTime' => [self::T_STRTOTIME, 'updatetime'],
         'Status' => [self::T_INT, 'status'],
         'IsFinish' => [self::T_INT, 'finish'],
     ];

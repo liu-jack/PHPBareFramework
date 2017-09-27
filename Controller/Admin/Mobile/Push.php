@@ -206,7 +206,7 @@ class Push extends AdminController
      * 定时 公共|用户类型 消息推送
      *
      */
-    public function pushSetTime()
+    public function pushTime()
     {
         $type = (int)$_POST['type'];
         $app_id = (array)$_POST['appid'];

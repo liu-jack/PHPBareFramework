@@ -323,7 +323,7 @@
         }, function (isConfirm) {
             if (isConfirm) {
                 $.ajax({
-                    url: "{url('pushSetTime')}",
+                    url: "{url('pushTime')}",
                     type: "POST",
                     data: $("#public-form").serialize(),
                     dataType: "json",
@@ -415,7 +415,7 @@
         }, function (isConfirm) {
             if (isConfirm) {
                 $.ajax({
-                    url: "{url('pushSetTime')}",
+                    url: "{url('pushTime')}",
                     type: "POST",
                     data: $("#tag-form").serialize(),
                     dataType: "json",
