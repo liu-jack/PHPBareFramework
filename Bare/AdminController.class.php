@@ -38,7 +38,11 @@ Class AdminController extends Controller
     public function __call($method, $args)
     {
         $action = 'admin' . ucfirst($GLOBALS['_A']);
-        $this->$action();
+        if (method_exists($this, $action)) {
+            $this->$action();
+        } else {
+            show404();
+        }
     }
 
     /**
@@ -55,19 +59,14 @@ Class AdminController extends Controller
         $this->page(intval($list_info['count']), $limit, $page);
         $list = [];
         if (!empty($list_info['data'])) {
+            $_sub_fields = ['Content', 'Log', 'Info', 'CronData'];
             foreach ($list_info['data'] as $k => $v) {
                 $list[$k] = $v;
-                if (isset($v['Content'])) {
-                    $sub_cont = mb_substr($v['Content'], 0, 50);
-                    $list[$k]['Content'] = '<a title="' . htmlspecialchars($v['Content']) . '">' . $sub_cont . '</a>';
-                }
-                if (isset($v['Log'])) {
-                    $sub_cont = mb_substr($v['Log'], 0, 50);
-                    $list[$k]['Log'] = '<a title="' . htmlspecialchars($v['Log']) . '">' . $sub_cont . '</a>';
-                }
-                if (isset($v['Info'])) {
-                    $sub_cont = mb_substr($v['Info'], 0, 50);
-                    $list[$k]['Info'] = '<a title="' . htmlspecialchars($v['Info']) . '">' . $sub_cont . '</a>';
+                foreach ($_sub_fields as $sv) {
+                    if (isset($v[$sv])) {
+                        $sub_cont = mb_substr($v[$sv], 0, 50);
+                        $list[$k][$sv] = '<a title="' . htmlspecialchars($v[$sv]) . '">' . $sub_cont . '</a>';
+                    }
                 }
             }
         }

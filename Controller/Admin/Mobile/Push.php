@@ -9,10 +9,10 @@
 namespace Controller\Admin\Mobile;
 
 use Bare\AdminController;
+use Model\Admin\Admin\AdminCron;
 use Model\Admin\Admin\AdminLog;
 use Model\Mobile\AppPush;
 use Model\Mobile\Device;
-use Bare\DB;
 
 class Push extends AdminController
 {
@@ -245,16 +245,14 @@ class Push extends AdminController
             'data' => $data,
             'platform' => $platform
         ];
-        $add_data['Type'] = 1;
-        $add_data['Status'] = 0;
+        $add_data['Type'] = AdminCron::TYPE_PUSH;
+        $add_data['Status'] = AdminCron::STATUS_WAIT;
         $add_data['CronTime'] = $settime;
-        $add_data['CronData'] = serialize($cron_data);
-        $add_data['CreateTime'] = date('Y-m-d H:i:s');
-        $pdo = DB::pdo(DB::DB_ADMIN_W);
-        $result = $pdo->insert('AdminCron', $add_data);
+        $add_data['CronData'] = $cron_data;
+        $ret = AdminCron::add($add_data);
 
-        if ($result) {
-            AdminLog::log('设置定时推送', 'add', $pdo->lastInsertId(), $add_data, 'AdminCron');
+        if ($ret !== false) {
+            AdminLog::log('定时推送', 'add', $ret, $add_data, 'AdminCron');
             output(200, '设置定时推送成功！');
         } else {
             output(201, '设置定时推送失败，请稍后再试！');

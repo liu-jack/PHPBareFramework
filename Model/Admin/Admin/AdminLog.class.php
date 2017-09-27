@@ -91,7 +91,7 @@ class AdminLog extends ViewModel
                 self::FORM_FIELD_NAME => '操作细分',
             ],
             self::FD_LOG => [
-                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_ARRAY,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '操作内容',
             ],
@@ -160,7 +160,7 @@ class AdminLog extends ViewModel
             self::FD_MENU_KEY => $GLOBALS['_URL'],
             self::FD_MENU_NAME => $title,
             self::FD_LOG_FLAG => $option,
-            self::FD_LOG => is_array($data) ? serialize($data) : $data,
+            self::FD_LOG => $data,
         ];
 
         return self::add($adddata);

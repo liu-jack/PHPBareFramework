@@ -105,9 +105,9 @@ class CollectBook77 extends CollectBookBase
                                 $res = $res['data'][0]['BookId'];
                                 $tdata['Words'] = intval($word[$k]);
                                 if (date('m-d H:i') >= $time[$k]) {
-                                    $tdata['UpdateTime'] = strtotime(date('Y') . '-' . $time[$k]);
+                                    $tdata['UpdateTime'] = date('Y-m-d H:i:s', strtotime(date('Y') . '-' . $time[$k]));
                                 } else {
-                                    $tdata['UpdateTime'] = strtotime((date('Y') - 1) . '-' . $time[$k]);
+                                    $tdata['UpdateTime'] = date('Y-m-d H:i:s', strtotime((date('Y') - 1) . '-' . $time[$k]));
                                 }
                                 Book::updateBook($res, $tdata);
                             } else {
@@ -117,9 +117,9 @@ class CollectBook77 extends CollectBookBase
                                 }
                                 $data['Words'] = intval($word[$k]);
                                 if (date('m-d H:i') >= $time[$k]) {
-                                    $data['UpdateTime'] = strtotime(date('Y') . '-' . $time[$k]);
+                                    $data['UpdateTime'] = date('Y-m-d H:i:s', strtotime(date('Y') . '-' . $time[$k]));
                                 } else {
-                                    $data['UpdateTime'] = strtotime((date('Y') - 1) . '-' . $time[$k]);
+                                    $data['UpdateTime'] = date('Y-m-d H:i:s', strtotime((date('Y') - 1) . '-' . $time[$k]));
                                 }
                                 $data['CreateTime'] = date('Y-m-d H:i:s');
                                 $res = Book::addBook($data);

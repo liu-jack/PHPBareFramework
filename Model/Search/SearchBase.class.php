@@ -154,8 +154,8 @@ class SearchBase
         foreach ($data as $row) {
             $t_head = str_replace('{' . static::PRIMARY_KEY . '}', $row[$primary], $head);
             $query .= $t_head . "\n";
-            if (isset($row['UpdateTime']) && strtotime($row['UpdateTime']) <= 0) {
-                $row['UpdateTime'] = $row['CreateTime'];
+            if (empty($row['UpdateTime']) || $row['UpdateTime'] == '0000-00-00 00:00:00') {
+                $row['UpdateTime'] = $row['CreateTime'] ?? date('Y-m-d H:i:s');
             }
             $t_body = static::checkFields($row);
 
@@ -197,7 +197,7 @@ class SearchBase
                         $t = (string)$t;
                         break;
                     case static::T_STRTOTIME:
-                        $t = strtotime($t);
+                        $t = empty($t) ? 0 : strtotime($t);
                         break;
                 }
                 $return[$v[1]] = $t;

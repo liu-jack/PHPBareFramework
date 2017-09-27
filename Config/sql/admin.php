@@ -80,4 +80,17 @@ CREATE TABLE IF NOT EXISTS `SmsLog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='后台 - 短信记录';
 EOT
     ,
+    'create_cron' => <<<EOT
+CREATE TABLE IF NOT EXISTS `AdminCron` (
+  `CronId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Type` tinyint(4) NOT NULL COMMENT 'Cron类型 1: 推送',
+  `CronData` text COMMENT '定时任务数据, 序列化',
+  `Status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态: 0: 待发送 1: 已发送 2: 发送失败',
+  `CronTime` datetime NOT NULL COMMENT '计划任务时间',
+  `CreateTime` datetime DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`CronId`),
+  KEY `Idx_All` (`Type`,`Status`,`CronTime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='后台 - 定时任务';
+EOT
+    ,
 ];

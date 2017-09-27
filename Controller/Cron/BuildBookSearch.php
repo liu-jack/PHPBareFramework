@@ -6,7 +6,7 @@
  * Time: 16:25
  */
 
-namespace Controller\Crontab;
+namespace Controller\Cron;
 
 use Bare\DB;
 use Bare\Controller;
@@ -18,7 +18,7 @@ class BuildBookSearch extends Controller
     const PAGE_SIZE = 1000;
 
     /**
-     * 重建书本搜索 php index.php Crontab/BuildBookSearch/index _v1
+     * 重建书本搜索 php index.php Cron/BuildBookSearch/index _v1
      */
     public function index()
     {

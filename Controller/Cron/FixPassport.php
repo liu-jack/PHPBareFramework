@@ -7,11 +7,12 @@
  *
  */
 
-namespace Controller\Crontab;
+namespace Controller\Cron;
 
+use Bare\Controller;
 use Bare\DB;
 
-class FixPassport
+class FixPassport extends Controller
 {
     //一次处理多少条记录
     const DATA_LIMIT = 100;
@@ -22,7 +23,7 @@ class FixPassport
     const RD_KEY_PU = 'PU:%s'; // 用户名 邮箱 手机缓存key
 
     /**
-     * 更新通行证用户用户名 邮箱 手机等缓存数据 php index.php Crontab/FixPassport/fixUser
+     * 更新通行证用户用户名 邮箱 手机等缓存数据 php index.php Cron/FixPassport/fixUser
      */
     public function fixUser()
     {

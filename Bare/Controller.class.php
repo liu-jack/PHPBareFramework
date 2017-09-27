@@ -34,7 +34,7 @@ Class Controller
     /**
      * 数据模型
      *
-     * @var \Model\Tool\Sql
+     * @var \Model\Tool\Sql|\Bare\Model|\Bare\ViewModel
      */
     protected $_m = null;
 
@@ -344,11 +344,10 @@ Class Controller
                 'API Error',
                 "API Class Name:{$args[0]}",
                 "API Function Name:{$method}",
-                'DATE:' . date("Y-m-d H:i:s"),
                 "GET:" . json_encode($_GET),
                 "POST:" . json_encode($_POST),
             ], 'Api/CallFailed');
         }
-        $this->output(501, '调用方法不存在');
+        show404();
     }
 }

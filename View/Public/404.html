@@ -1,13 +1,29 @@
 <!doctype html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>404 not found</title>
-	<style type="text/css">
-	body {font-family: Verdana}
-	</style>
+    <meta charset="utf-8">
+    <title>404 not found</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #info {
+            color: #919191;
+            text-align: center;
+            font-size: 50px;
+            line-height: 50px;
+        }
+    </style>
 </head>
 <body>
-	404 not found
+<div id="info">404 not found</div>
+<script>
+    var bh = document.documentElement.clientHeight;
+    var h = (bh - 30) / 2;
+    h = h - (h / 2);
+    var info = document.getElementById('info');
+    info.setAttribute('style', 'margin-top:' + h + 'px');
+</script>
 </body>
 </html>

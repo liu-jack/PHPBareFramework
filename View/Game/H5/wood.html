@@ -4,7 +4,7 @@
     <meta name="viewport" content="width = 320,initial-scale=1,user-scalable=no" />
     <link rel="apple-touch-icon-precomposed" href="/favicon.ico"/>
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="apple-touch-icon-precomposed" href="/favicom.ico"/>
+    <link rel="apple-touch-icon-precomposed" href="/favicon.ico"/>
     <title><?php echo $seo['title']?></title>
     <meta name="keywords" content="<?php echo $seo['key']?>">
     <meta name="description" content="<?php echo $seo['desc']?>">
@@ -22,8 +22,8 @@
 
         .ibox {width:320px; height:315px; overflow:hidden; background-color: #000000; margin:auto;}
         .iboxcontent {width:320px; height:315px; float:left; overflow:hidden;}
-        .ibc1 {background-color: #3b4859; background-image:url(<?php echo STATICS_URL?>i/bg1.png);}
-        .ibc2 {background-color: #404d5e; background-image:url(<?php echo STATICS_URL?>i/bg2.png);}
+        .ibc1 {background-color: #3b4859; background-image:url({STATICS_URL}i/bg1.png);}
+        .ibc2 {background-color: #404d5e; background-image:url({STATICS_URL}i/bg2.png);}
 
         #alertbox {display:none;position:absolute; z-index:200;}
         #alertbox_flekk {position:absolute; width:320px; height: 356px; background-color:#000000; opacity: .8;}
@@ -32,24 +32,24 @@
         #alertbox a {margin:10px; width:114px; height:54px; }
         img {border:0;}
 
-        #imenu {width:320px;height:41px; margin:auto; text-align:center; background-image:url(<?php echo STATICS_URL?>i/menu.png); background-position:0 0px;}
+        #imenu {width:320px;height:41px; margin:auto; text-align:center; background-image:url({STATICS_URL}i/menu.png); background-position:0 0px;}
         #imenu a:hover {opacity:.5;}
-        #button_game {background-image:url(<?php echo STATICS_URL?>i/menu.png); display:block; float:left; width:72px; height:41px; background-position:0 0;}
-        #button_highscore {background-image:url(<?php echo STATICS_URL?>i/menu.png); display:block; float:left; width:110px; height:41px;background-position: -72px -41px;}
-        #button_about {background-image:url(<?php echo STATICS_URL?>i/menu.png); display:block; float:left; width:100px; height:41px; background-position: -182px -41px;}
+        #button_game {background-image:url({STATICS_URL}i/menu.png); display:block; float:left; width:72px; height:41px; background-position:0 0;}
+        #button_highscore {background-image:url({STATICS_URL}i/menu.png); display:block; float:left; width:110px; height:41px;background-position: -72px -41px;}
+        #button_about {background-image:url({STATICS_URL}i/menu.png); display:block; float:left; width:100px; height:41px; background-position: -182px -41px;}
 
         #score,#combo,#level {color:#ffffff;}
 
-        #button_xwuz {position:absolute; display:block; width:48px; height:57px; margin: 5px 0 0 267px; background-image:url(<?php echo STATICS_URL?>i/xwuz.png);z-index:1; cursor:pointer;}
+        #button_xwuz {position:absolute; display:block; width:48px; height:57px; margin: 5px 0 0 267px; background-image:url({STATICS_URL}i/xwuz.png);z-index:1; cursor:pointer;}
 
-        #yourbest { text-align:center; font-weight:bold; color:#ffffff;font-size: 300%; margin: .5em auto .5em auto; background-image:url(<?php echo STATICS_URL?>i/flekk.png); width:296px; height:65px; padding-top:15px;}
+        #yourbest { text-align:center; font-weight:bold; color:#ffffff;font-size: 300%; margin: .5em auto .5em auto; background-image:url({STATICS_URL}i/flekk.png); width:296px; height:65px; padding-top:15px;}
         .fontostext {color: #ffffff;}
 
         #preload {width:320px;position:absolute; visibility:hidden; overflow:hidden;}
     </style>
 
-    <script type="text/javascript" src="<?php echo STATICS_URL?>standard.js"  charset="utf-8"></script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>stack.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="{STATICS_URL}standard.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="{STATICS_URL}stack.js"  charset="utf-8"></script>
 </head>
 <body>
 
@@ -85,16 +85,15 @@
 
         </div>
     </div></div>
-    <script type="text/javascript"><!--
+    <script type="text/javascript">
     firstinit();
-    ialert('<h1>堆木头</h1><p style="margin: 0 20px 0 20px; text-align:left;"><img src="<?php echo STATICS_URL?>i/icon.png" alt="堆木头!" style="width:64px; height:64px;float:left; margin-right:5px;"/> 当木头移动到木头堆正上方时，按下按钮放木头，尽可能的对齐木头.</p>'+
+    ialert('<h1>堆木头</h1><p style="margin: 0 20px 0 20px; text-align:left;"><img src="{STATICS_URL}i/icon.png" alt="堆木头!" style="width:64px; height:64px;float:left; margin-right:5px;"/> 当木头移动到木头堆正上方时，按下按钮放木头，尽可能的对齐木头.</p>'+
             '<div style="width:110px; margin:30px auto -30px auto;"></div>','restartgame()');
-    //-->
     </script>
 
 </div>
 
-<?php view('Game/Public/nav')?>
+<?php @view('Game/Public/nav')?>
 
 </body>
 </html>

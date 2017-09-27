@@ -188,11 +188,13 @@ class Sql extends Controller
         $create_sql3 = $sqls['create_menu'];
         $create_sql4 = $sqls['create_log'];
         $create_sql5 = $sqls['create_sms'];
+        $create_sql6 = $sqls['create_cron'];
         $this->_m->runAdmin($create_sql1);
         $this->_m->runAdmin($create_sql2);
         $this->_m->runAdmin($create_sql3);
         $this->_m->runAdmin($create_sql4);
         $this->_m->runAdmin($create_sql5);
+        $this->_m->runAdmin($create_sql6);
     }
 
     /**

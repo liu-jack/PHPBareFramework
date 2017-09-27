@@ -5,13 +5,15 @@
         #dbg {
             font-family: "Helvetica", cursive, sans-serif;
             border: 1px solid black;
-            width: 600;
+            width: 600px;
         }
+
         body {
-            background:#000;
-            color:white;
-            font-family: Arial,Helvetica,Sans-serif;
+            background: #000;
+            color: white;
+            font-family: Arial, Helvetica, Sans-serif;
         }
+
         a {
             color: #009de9;
             outline: none;
@@ -24,32 +26,32 @@
     </style>
 
     <link rel="shortcut icon" href="/favicon.ico">
-    <title><?php echo $seo['title']?></title>
-    <meta name="keywords" content="<?php echo $seo['key']?>">
-    <meta name="description" content="<?php echo $seo['desc']?>">
+    <title>{$seo['title']}</title>
+    <meta name="keywords" content="{$seo['key']}">
+    <meta name="description" content="{$seo['desc']}">
 
     <!---- javascript includes --->
     <!---- open license with citation to dougx.net--->
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Sound.js"> </script>
+    <script type="text/javascript" src="{STATICS_URL}Sound.js"></script>
 
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Background.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Mouse.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Loader.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>FloatyText.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Keyboard.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Collision.js"> </script>
+    <script type="text/javascript" src="{STATICS_URL}Background.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Mouse.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Loader.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}FloatyText.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Keyboard.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Collision.js"></script>
 
-    <script type="text/javascript" src="<?php echo STATICS_URL?>AfterEffect.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>PeaShooter.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Laser.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>LevelDirector.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Sortie.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Enemy.js"> </script>
+    <script type="text/javascript" src="{STATICS_URL}AfterEffect.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}PeaShooter.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Laser.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}LevelDirector.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Sortie.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Enemy.js"></script>
 
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Powerup.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Shot.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>EnemyShot.js"> </script>
-    <script type="text/javascript" src="<?php echo STATICS_URL?>Ship.js"> </script>
+    <script type="text/javascript" src="{STATICS_URL}Powerup.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Shot.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}EnemyShot.js"></script>
+    <script type="text/javascript" src="{STATICS_URL}Ship.js"></script>
 
     <script type="text/javascript">
 
@@ -110,8 +112,7 @@
         // on the "new game" button on the splash screen. This is a clean slate
         // with no registered timers or event listeners.
         //
-        function main()
-        {
+        function main() {
             var level_1_loop = document.getElementById("level_1_loop");
             var bossLoop = document.getElementById("boss_loop");
 
@@ -121,13 +122,12 @@
             document.addEventListener('keydown', keyDown, false);
             document.addEventListener('keyup', keyUp, false);
 
-            if ( g_basicShotSound == null )
-            {
+            if (g_basicShotSound == null) {
 
-                g_basicShotSound = new Sound("basic_shot",5);
-                g_laserShotSound = new Sound("laser",5);
-                g_smallExplodeSound = new Sound("small_explode",5);
-                g_bonusSound = new Sound("bonus_sound",4);
+                g_basicShotSound = new Sound("basic_shot", 5);
+                g_laserShotSound = new Sound("laser", 5);
+                g_smallExplodeSound = new Sound("small_explode", 5);
+                g_bonusSound = new Sound("bonus_sound", 4);
                 g_explodeSound = new Sound("explode", 3);
 
                 g_artifact_chard_sound = new Sound("artifact_chard_sound", 2);
@@ -152,18 +152,22 @@
         //
         // map a sound name to a global audio object
         //
-        function lookupSound(name)
-        {
-            if ( name == "double_sound" )
+        function lookupSound(name) {
+            if (name == "double_sound") {
                 return g_double_sound;
-            else if ( name == "gem_sound" )
+            }
+            else if (name == "gem_sound") {
                 return g_gem_sound;
-            else if ( name == "gun_sound" )
+            }
+            else if (name == "gun_sound") {
                 return g_gun_sound;
-            else if ( name == "shot_sound" )
+            }
+            else if (name == "shot_sound") {
                 return g_shot_sound;
-            else if ( name == "speed_sound" )
+            }
+            else if (name == "speed_sound") {
                 return g_speed_sound;
+            }
 
             dbg("Failed sound lookup: " + name, false);
 
@@ -174,10 +178,10 @@
         // the level director will kick off an interval that calls
         // this function every 100ms
         //
-        function clockLoop()
-        {
-            if ( g_paused )
+        function clockLoop() {
+            if (g_paused) {
                 return;
+            }
 
             g_levelDirector.myClock += 100;
             //dbg("Clock = " +  g_levelDirector.myClock, false);
@@ -191,82 +195,75 @@
         // which redraws the entire screen. that interval determines the game's
         // fps.
         //
-        function renderLoop()
-        {
-            if ( g_paused )
+        function renderLoop() {
+            if (g_paused)
                 return;
 
             g_background.render();
             g_ship.render();
 
             var remainingPowerups = new Array();
-            for (var i = 0; i < g_powerups.length; ++i)
-            {
-                if (g_powerups[i].render())
-                {
+            for (var i = 0; i < g_powerups.length; ++i) {
+                if (g_powerups[i].render()) {
                     remainingPowerups.push(g_powerups[i]);
+                } else {
+                    delete g_powerups[i];
                 }
-                else delete g_powerups[i];
             }
             delete g_powerups;
             g_powerups = remainingPowerups;
 
             var remainingText = new Array();
-            for (var i = 0; i < g_floatyText.length; ++i)
-            {
-                if (g_floatyText[i].render())
-                {
+            for (var i = 0; i < g_floatyText.length; ++i) {
+                if (g_floatyText[i].render()) {
                     remainingText.push(g_floatyText[i]);
+                } else {
+                    delete g_floatyText[i];
                 }
-                else delete g_floatyText[i];
             }
             delete g_floatyText;
             g_floatyText = remainingText;
 
             var remainingEnemies = new Array();
-            for (var i = 0; i < g_enemies.length; ++i)
-            {
-                if (g_enemies[i].render())
-                {
+            for (var i = 0; i < g_enemies.length; ++i) {
+                if (g_enemies[i].render()) {
                     remainingEnemies.push(g_enemies[i]);
+                } else {
+                    delete g_enemies[i];
                 }
-                else delete g_enemies[i];
             }
             delete g_enemies;
             g_enemies = remainingEnemies;
 
             var remainingProjectiles = new Array();
-            for (var i = 0; i < g_projectiles.length; ++i)
-            {
-                if (g_projectiles[i].render())
-                {
+            for (var i = 0; i < g_projectiles.length; ++i) {
+                if (g_projectiles[i].render()) {
                     remainingProjectiles.push(g_projectiles[i]);
+                } else {
+                    delete g_projectiles[i];
                 }
-                else delete g_projectiles[i];
             }
             delete g_projectiles;
             g_projectiles = remainingProjectiles;
 
             var remainingEnemyProjectiles = new Array();
-            for (var i = 0; i < g_enemyProjectiles.length; ++i)
-            {
-                if (g_enemyProjectiles[i].render())
-                {
+            for (var i = 0; i < g_enemyProjectiles.length; ++i) {
+                if (g_enemyProjectiles[i].render()) {
                     remainingEnemyProjectiles.push(g_enemyProjectiles[i]);
+                } else {
+                    delete g_enemyProjectiles[i];
                 }
-                else delete g_enemyProjectiles[i];
             }
             delete g_enemyProjectiles;
             g_enemyProjectiles = remainingEnemyProjectiles;
 
             var remainingAfterEffects = new Array();
-            for (var i = 0; i < g_afterEffects.length; ++i)
-            {
-                if (g_afterEffects[i].render())
-                {
+            for (var i = 0; i < g_afterEffects.length; ++i) {
+                if (g_afterEffects[i].render()) {
                     remainingAfterEffects.push(g_afterEffects[i]);
+                } else {
+                    delete g_afterEffects[i];
                 }
-                else delete g_afterEffects[i];
             }
             delete g_afterEffects;
             g_afterEffects = remainingAfterEffects;
@@ -275,8 +272,7 @@
 
             g_foreground.render();
 
-            if ( g_onscreenControls )
-            {
+            if (g_onscreenControls) {
                 var ox = 40;
                 var oy = 300;
                 var ow = 30;
@@ -286,19 +282,19 @@
 
                 g_context.fillStyle = "yellow";
                 g_context.strokeStyle = "yellow";
-                g_context.strokeRect(ox,oy,ow,ow);
-                g_context.strokeRect(ox-35,oy+35,ow,ow);
-                g_context.strokeRect(ox+35,oy+35,ow,ow);
-                g_context.strokeRect(ox,oy+70,ow,ow);
-                g_context.strokeRect(ox+520,oy+35,ow,ow);
-                g_context.strokeRect(ox+270,oy+35,ow,ow);
+                g_context.strokeRect(ox, oy, ow, ow);
+                g_context.strokeRect(ox - 35, oy + 35, ow, ow);
+                g_context.strokeRect(ox + 35, oy + 35, ow, ow);
+                g_context.strokeRect(ox, oy + 70, ow, ow);
+                g_context.strokeRect(ox + 520, oy + 35, ow, ow);
+                g_context.strokeRect(ox + 270, oy + 35, ow, ow);
 
-                g_context.fillText("U",ox+tx,oy+ty);
-                g_context.fillText("L", ox-35+tx,oy+35+ty);
-                g_context.fillText("R", ox+35+tx,oy+35+ty);
-                g_context.fillText("D", ox+tx,oy+70+ty);
-                g_context.fillText("Z",ox+520+tx,oy+35+ty);
-                g_context.fillText("P",ox+270+tx,oy+35+ty);
+                g_context.fillText("U", ox + tx, oy + ty);
+                g_context.fillText("L", ox - 35 + tx, oy + 35 + ty);
+                g_context.fillText("R", ox + 35 + tx, oy + 35 + ty);
+                g_context.fillText("D", ox + tx, oy + 70 + ty);
+                g_context.fillText("Z", ox + 520 + tx, oy + 35 + ty);
+                g_context.fillText("P", ox + 270 + tx, oy + 35 + ty);
             }
 
             g_ship.renderPowers();
@@ -311,20 +307,15 @@
         // of the Autdio object yet, so we have to listen for the ended event
         // on our background music and play it again
         //
-        function start_level_1_loop(terminate)
-        {
+        function start_level_1_loop(terminate) {
             var level_1_loop = document.getElementById("level_1_loop");
 
-            if ( terminate != undefined )
-            {
-                if ( terminate.toString() == "boss" )
-                {
+            if (terminate != undefined) {
+                if (terminate.toString() == "boss") {
                     level_1_loop.volume = 0;
                     level_1_loop.removeEventListener("ended", l1_loopit, true);
                     return;
-                }
-                else if ( terminate.toString() == "gameover" )
-                {
+                } else if (terminate.toString() == "gameover") {
                     level_1_loop.removeEventListener("ended", l1_loopit, true);
                     level_1_loop.pause();
                     return;
@@ -334,20 +325,17 @@
             l1_loopit();
         }
 
-        function l1_loopit()
-        {
+        function l1_loopit() {
             var level_1_loop = document.getElementById("level_1_loop");
             level_1_loop.volume = 1;
             level_1_loop.play();
             level_1_loop.addEventListener("ended", l1_loopit, true);
         }
 
-        function startBossLoop(terminate)
-        {
+        function startBossLoop(terminate) {
             var bossLoop = document.getElementById("boss_loop");
 
-            if ( terminate != undefined && terminate.toString() == "end_boss")
-            {
+            if (terminate != undefined && terminate.toString() == "end_boss") {
                 bossLoop.volume = 0;
                 bossLoop.removeEventListener("ended", bos_loopit, true);
                 return;
@@ -355,8 +343,8 @@
 
             bos_loopit();
         }
-        function bos_loopit()
-        {
+
+        function bos_loopit() {
             var bossLoop = document.getElementById("boss_loop");
             bossLoop.volume = 1;
             bossLoop.play();
@@ -364,12 +352,10 @@
         }
 
 
-        function startLevel2Loop(terminate)
-        {
+        function startLevel2Loop(terminate) {
             var penguinLoop = document.getElementById("level_2_loop");
 
-            if ( terminate != undefined && terminate.toString() == "terminate")
-            {
+            if (terminate != undefined && terminate.toString() == "terminate") {
                 penguinLoop.volume = 0;
                 penguinLoop.removeEventListener("ended", l2_loopit, true);
                 return;
@@ -377,8 +363,7 @@
             l2_loopit();
         }
 
-        function l2_loopit()
-        {
+        function l2_loopit() {
             var penguinLoop = document.getElementById("level_2_loop");
             penguinLoop.volume = 1;
             penguinLoop.play();
@@ -388,10 +373,9 @@
         //
         // write message to debug area
         //
-        function dbg(str, append)
-        {
+        function dbg(str, append) {
             var dbgObj = document.getElementById("dbg");
-            dbgObj.innerHTML = append? (dbgObj.innerHTML + str): str;
+            dbgObj.innerHTML = append ? (dbgObj.innerHTML + str) : str;
         }
 
         //
@@ -403,17 +387,15 @@
         // correctly re-play short audio sounds (which is just about every sound
         // effect in the game)
         //
-        function loadGameSounds()
-        {
-            var fileref=document.createElement('script')
-            fileref.setAttribute("type","text/javascript")
+        function loadGameSounds() {
+            var fileref = document.createElement('script')
+            fileref.setAttribute("type", "text/javascript")
             //fileref.setAttribute("src", "http://dougx.net/plunder/GameSounds.php")
             fileref.setAttribute("src", "/Public/statics/game/h5/flyfight/GameSounds.js")
 
 
             var agent = navigator.userAgent;
-            if ( agent.indexOf("MSIE") != -1 )
-            {
+            if (agent.indexOf("MSIE") != -1) {
                 //
                 // IE9 does not support OGG so we have to load a special
                 // version of the file that has MP3 encoded sound
@@ -421,29 +403,35 @@
                 fileref.setAttribute("src", "GameSoundsIE9.php")
             }
 
-            fileref.onload = function() { g_soundsLoaded = true; }
+            fileref.onload = function () {
+                g_soundsLoaded = true;
+            }
 
             document.getElementsByTagName("head")[0].appendChild(fileref)
         }
 
-        function pause()
-        {
-            if (g_paused == null )
+        function pause() {
+            if (g_paused == null) {
                 g_paused = false;
+            }
 
             g_paused = !g_paused;
 
-            if ( g_paused )
+            if (g_paused) {
                 dbg("Game Paused", false);
-            else
+            }
+            else {
                 dbg("", false);
+            }
         }
 
 
     </script>
 
     <style type="text/css">
-        canvas { border: 1px solid black; }
+        canvas {
+            border: 1px solid black;
+        }
     </style>
 </head>
 
@@ -488,263 +476,263 @@
 
             <div id="hidden" style="visibility:hidden; width:1px; height:1px; overflow:hidden">
 
-                <img    id="splash_screen"
-                        src="<?php echo STATICS_URL?>splash_screen.jpg"
-                        onload="itemLoaded(this);">
+                <img id="splash_screen"
+                     src="{STATICS_URL}splash_screen.jpg"
+                     onload="itemLoaded(this);">
 
-                <img    id="loading"
-                        src="<?php echo STATICS_URL?>loading.png"
-                        onload="itemLoaded(this);">
+                <img id="loading"
+                     src="{STATICS_URL}loading.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="title"
-                        src="<?php echo STATICS_URL?>title.png"
-                        onload="itemLoaded(this);">
+                <img id="title"
+                     src="{STATICS_URL}title.png"
+                     onload="itemLoaded(this);">
 
                 <!--[if IE]>
-                <audio  id="loading_music"
-                        src="<?php echo STATICS_URL?>loading_music.mp3"
-                        autoplay="true" >
+                <audio id="loading_music"
+                       src="{STATICS_URL}loading_music.mp3"
+                       autoplay="true">
                 </audio>
 
-                <audio  id="level_1_preloop"
-                        src="<?php echo STATICS_URL?>level_1_preloop.mp3"
-                        preload='true'>
+                <audio id="level_1_preloop"
+                       src="{STATICS_URL}level_1_preloop.mp3"
+                       preload='true'>
                 </audio>
 
-                <audio  id="level_1_loop"
-                        src="<?php echo STATICS_URL?>level_1_loop.mp3"
-                        preload='true'>
+                <audio id="level_1_loop"
+                       src="{STATICS_URL}level_1_loop.mp3"
+                       preload='true'>
                 </audio>
 
-                <audio  id="level_2_loop"
-                        src="<?php echo STATICS_URL?>level_2_loop.mp3"
-                        preload='true'>
+                <audio id="level_2_loop"
+                       src="{STATICS_URL}level_2_loop.mp3"
+                       preload='true'>
                 </audio>
 
-                <audio  id="level_passed"
-                        src="<?php echo STATICS_URL?>level_passed.mp3"
-                        preload='true'>
+                <audio id="level_passed"
+                       src="{STATICS_URL}level_passed.mp3"
+                       preload='true'>
                 </audio>
 
-                <audio  id="boss_loop"
-                        src="<?php echo STATICS_URL?>boss_loop.mp3"
-                        preload='true'>
+                <audio id="boss_loop"
+                       src="{STATICS_URL}boss_loop.mp3"
+                       preload='true'>
                 </audio>
 
                 <![endif]-->
 
                 <!--[if !IE]> <-->
-                <audio  id="loading_music"
-                        src="<?php echo STATICS_URL?>loading_music.ogg"
-                        autoplay="autoplay" >
+                <audio id="loading_music"
+                       src="{STATICS_URL}loading_music.ogg"
+                       autoplay="autoplay">
 
                 </audio>
 
-                <audio  id="level_1_preloop"
-                        src="<?php echo STATICS_URL?>level_1_preloop.ogg"
-                        autobuffer='true'>
+                <audio id="level_1_preloop"
+                       src="{STATICS_URL}level_1_preloop.ogg"
+                       autobuffer='true'>
                 </audio>
 
-                <audio  id="level_1_loop"
-                        src="<?php echo STATICS_URL?>level_1_loop.ogg"
-                        autobuffer='true'>
+                <audio id="level_1_loop"
+                       src="{STATICS_URL}level_1_loop.ogg"
+                       autobuffer='true'>
                 </audio>
 
-                <audio  id="level_2_loop"
-                        src="<?php echo STATICS_URL?>level_2_loop.ogg"
-                        autobuffer='true'>
+                <audio id="level_2_loop"
+                       src="{STATICS_URL}level_2_loop.ogg"
+                       autobuffer='true'>
                 </audio>
 
-                <audio  id="level_passed"
-                        src="<?php echo STATICS_URL?>level_passed.ogg"
-                        autobuffer='true'>
+                <audio id="level_passed"
+                       src="{STATICS_URL}level_passed.ogg"
+                       autobuffer='true'>
                 </audio>
 
-                <audio  id="boss_loop"
-                        src="<?php echo STATICS_URL?>boss_loop.ogg"
-                        autobuffer='true'>
+                <audio id="boss_loop"
+                       src="{STATICS_URL}boss_loop.ogg"
+                       autobuffer='true'>
                 </audio>
                 <!--> <![endif]-->
 
-                <img    id="starfield"
-                        src="<?php echo STATICS_URL?>starfield.jpg"
-                        onload="itemLoaded(this);">
+                <img id="starfield"
+                     src="{STATICS_URL}starfield.jpg"
+                     onload="itemLoaded(this);">
 
-                <img    id="foreground"
-                        src="<?php echo STATICS_URL?>foreground.png"
-                        onload="itemLoaded(this);">
+                <img id="foreground"
+                     src="{STATICS_URL}foreground.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_center"
-                        src="<?php echo STATICS_URL?>ship_center.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_center"
+                     src="{STATICS_URL}ship_center.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_up_1"
-                        src="<?php echo STATICS_URL?>ship_up_1.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_up_1"
+                     src="{STATICS_URL}ship_up_1.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_up_2"
-                        src="<?php echo STATICS_URL?>ship_up_2.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_up_2"
+                     src="{STATICS_URL}ship_up_2.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_up_3"
-                        src="<?php echo STATICS_URL?>ship_up_3.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_up_3"
+                     src="{STATICS_URL}ship_up_3.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_down_1"
-                        src="<?php echo STATICS_URL?>ship_down_1.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_down_1"
+                     src="{STATICS_URL}ship_down_1.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_down_2"
-                        src="<?php echo STATICS_URL?>ship_down_2.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_down_2"
+                     src="{STATICS_URL}ship_down_2.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_down_3"
-                        src="<?php echo STATICS_URL?>ship_down_3.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_down_3"
+                     src="{STATICS_URL}ship_down_3.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_icon"
-                        src="<?php echo STATICS_URL?>ship_icon.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_icon"
+                     src="{STATICS_URL}ship_icon.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="foreground_light"
-                        src="<?php echo STATICS_URL?>foreground_light.png"
-                        onload="itemLoaded(this);">
+                <img id="foreground_light"
+                     src="{STATICS_URL}foreground_light.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="sky"
-                        src="<?php echo STATICS_URL?>sky.jpg"
-                        onload="itemLoaded(this);">
+                <img id="sky"
+                     src="{STATICS_URL}sky.jpg"
+                     onload="itemLoaded(this);">
 
-                <img    id="speed_image"
-                        src="<?php echo STATICS_URL?>speed_image.png"
-                        onload="itemLoaded(this);">
+                <img id="speed_image"
+                     src="{STATICS_URL}speed_image.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="gun_image"
-                        src="<?php echo STATICS_URL?>gun_image.png"
-                        onload="itemLoaded(this);">
+                <img id="gun_image"
+                     src="{STATICS_URL}gun_image.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="shot_image"
-                        src="<?php echo STATICS_URL?>shot_image.png"
-                        onload="itemLoaded(this);">
+                <img id="shot_image"
+                     src="{STATICS_URL}shot_image.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="double_image"
-                        src="<?php echo STATICS_URL?>double_image.png"
-                        onload="itemLoaded(this);">
+                <img id="double_image"
+                     src="{STATICS_URL}double_image.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="gem_image"
-                        src="<?php echo STATICS_URL?>gem_image.png"
-                        onload="itemLoaded(this);">
+                <img id="gem_image"
+                     src="{STATICS_URL}gem_image.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small"
-                        src="<?php echo STATICS_URL?>enemy_small.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small"
+                     src="{STATICS_URL}enemy_small.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small_special"
-                        src="<?php echo STATICS_URL?>enemy_small_special.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small_special"
+                     src="{STATICS_URL}enemy_small_special.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small_2"
-                        src="<?php echo STATICS_URL?>enemy_small_2.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small_2"
+                     src="{STATICS_URL}enemy_small_2.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small_2_special"
-                        src="<?php echo STATICS_URL?>enemy_small_2_special.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small_2_special"
+                     src="{STATICS_URL}enemy_small_2_special.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small_3"
-                        src="<?php echo STATICS_URL?>enemy_small_3.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small_3"
+                     src="{STATICS_URL}enemy_small_3.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small_4"
-                        src="<?php echo STATICS_URL?>enemy_small_4.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small_4"
+                     src="{STATICS_URL}enemy_small_4.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_small_4_special"
-                        src="<?php echo STATICS_URL?>enemy_small_4_special.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_small_4_special"
+                     src="{STATICS_URL}enemy_small_4_special.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_artifact"
-                        src="<?php echo STATICS_URL?>enemy_artifact.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_artifact"
+                     src="{STATICS_URL}enemy_artifact.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="enemy_artifact_2"
-                        src="<?php echo STATICS_URL?>enemy_artifact_2.png"
-                        onload="itemLoaded(this);">
+                <img id="enemy_artifact_2"
+                     src="{STATICS_URL}enemy_artifact_2.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_1"
-                        src="<?php echo STATICS_URL?>ship_death_1.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_1"
+                     src="{STATICS_URL}ship_death_1.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_2"
-                        src="<?php echo STATICS_URL?>ship_death_2.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_2"
+                     src="{STATICS_URL}ship_death_2.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_3"
-                        src="<?php echo STATICS_URL?>ship_death_3.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_3"
+                     src="{STATICS_URL}ship_death_3.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_4"
-                        src="<?php echo STATICS_URL?>ship_death_4.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_4"
+                     src="{STATICS_URL}ship_death_4.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_5"
-                        src="<?php echo STATICS_URL?>ship_death_5.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_5"
+                     src="{STATICS_URL}ship_death_5.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_6"
-                        src="<?php echo STATICS_URL?>ship_death_6.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_6"
+                     src="{STATICS_URL}ship_death_6.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="ship_death_7"
-                        src="<?php echo STATICS_URL?>ship_death_7.png"
-                        onload="itemLoaded(this);">
+                <img id="ship_death_7"
+                     src="{STATICS_URL}ship_death_7.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_1"
-                        src="<?php echo STATICS_URL?>splode_1.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_1"
+                     src="{STATICS_URL}splode_1.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_2"
-                        src="<?php echo STATICS_URL?>splode_2.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_2"
+                     src="{STATICS_URL}splode_2.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_3"
-                        src="<?php echo STATICS_URL?>splode_3.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_3"
+                     src="{STATICS_URL}splode_3.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_4"
-                        src="<?php echo STATICS_URL?>splode_4.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_4"
+                     src="{STATICS_URL}splode_4.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_5"
-                        src="<?php echo STATICS_URL?>splode_5.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_5"
+                     src="{STATICS_URL}splode_5.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_6"
-                        src="<?php echo STATICS_URL?>splode_6.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_6"
+                     src="{STATICS_URL}splode_6.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="splode_7"
-                        src="<?php echo STATICS_URL?>splode_7.png"
-                        onload="itemLoaded(this);">
+                <img id="splode_7"
+                     src="{STATICS_URL}splode_7.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="artifact_chard_image"
-                        src="<?php echo STATICS_URL?>artifact_chard.png"
-                        onload="itemLoaded(this);">
+                <img id="artifact_chard_image"
+                     src="{STATICS_URL}artifact_chard.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="artifact_skull_image"
-                        src="<?php echo STATICS_URL?>artifact_skull.png"
-                        onload="itemLoaded(this);">
+                <img id="artifact_skull_image"
+                     src="{STATICS_URL}artifact_skull.png"
+                     onload="itemLoaded(this);">
 
-                <img    id="command_ship"
-                        src="<?php echo STATICS_URL?>command_ship.png"
-                        onload="itemLoaded(this);">
+                <img id="command_ship"
+                     src="{STATICS_URL}command_ship.png"
+                     onload="itemLoaded(this);">
 
 
             </div> <!--- end hidden dev that contains all game graphics/sound --->
-            </table>
-        </tr>
-    </table>
+        </table>
+    </tr>
+</table>
 
-    <?php view('Game/Public/nav')?>
+{@view('Game/Public/nav')}
 
 </body>
 </html>

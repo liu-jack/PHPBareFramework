@@ -11,15 +11,15 @@ namespace Bare;
 class ViewModel extends Model
 {
     // 变量名称
-    const FIELD_VAR_TYPE = 'var_type';
-    const FIELD_FORM_TYPE = 'form_type';
-    const FIELD_SEARCH_TYPE = 'search_type';
-    const SEARCH_WHERE_OP = 'op';
-    const FIELD_MAP = 'field_map';
-    const FIELD_LIST_TYPE = 'list_type';
-    const LIST_VAL_SHOW = 1;
-    const EXTRA_LIST_EDIT = 'edit';
-    const EXTRA_LIST_DEL = 'delete';
+    const FIELD_VAR_TYPE = 'var_type'; // 值类型
+    const FIELD_FORM_TYPE = 'form_type'; // 表单类型
+    const FIELD_SEARCH_TYPE = 'search_type'; // 搜索表单类型
+    const SEARCH_WHERE_OP = 'op'; // 搜索查询操作
+    const FIELD_MAP = 'field_map'; // 搜索字段映射
+    const FIELD_LIST_TYPE = 'list_type'; // 列表类型
+    const LIST_VAL_SHOW = true; // 在列表显示
+    const EXTRA_LIST_EDIT = 'edit'; // 列表显示编辑
+    const EXTRA_LIST_DEL = 'delete'; // 列表显示删除
     // form表单
     const FORM_INPUT_TEXT = 'text';
     const FORM_INPUT_TIME = 'datetime';
@@ -31,10 +31,10 @@ class ViewModel extends Model
     const FORM_INPUT_CHECKBOX = 'checkbox';
     const FORM_CHECKBOX_OPTION = 'checkbox_option';
     const FORM_SELECT = 'select';
-    const FORM_SELECT_OPTION = 'option';
+    const FORM_SELECT_OPTION = 'select_option';
     const FORM_TEXTAREA = 'textarea';
     const FORM_EDITOR = 'editor';
-    const FORM_FIELD_NAME = 'name';
+    const FORM_FIELD_NAME = 'name'; // 字数描述 列表|表单 显示
     const FORM_FIELD_TIPS = 'tips';
     // 字段
     const FD_ID = 'Id';
@@ -74,8 +74,8 @@ class ViewModel extends Model
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_RADIO,
                 self::FORM_RADIO_OPTION => [
-                    '1' => '显示',
-                    '2' => '隐藏',
+                    1 => '显示',
+                    2 => '隐藏',
                 ],
                 self::FORM_FIELD_NAME => '状态',
             ],
@@ -255,8 +255,16 @@ class ViewModel extends Model
         foreach ($list as $kk => $vv) {
             $form .= '<tr>';
             foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
+                $option = [];
                 if (!empty($v[self::FIELD_LIST_TYPE])) {
-                    $form .= '<td>' . $vv[$k] . '</td>';
+                    if (!empty($v[self::FORM_RADIO_OPTION])) {
+                        $option = $v[self::FORM_RADIO_OPTION];
+                    } elseif (!empty($v[self::FORM_CHECKBOX_OPTION])) {
+                        $option = $v[self::FORM_CHECKBOX_OPTION];
+                    } elseif (!empty($v[self::FORM_SELECT_OPTION])) {
+                        $option = $v[self::FORM_SELECT_OPTION];
+                    }
+                    $form .= '<td>' . (!empty($option[$vv[$k]]) ? $option[$vv[$k]] : $vv[$k]) . '</td>';
                 }
             }
             if (!empty($extra)) {

@@ -7,11 +7,12 @@
  *
  */
 
-namespace Controller\Crontab;
+namespace Controller\Cron;
 
+use Bare\Controller;
 use Bare\DB;
 
-class FixAccount
+class FixAccount extends Controller
 {
     //一次处理多少条记录
     const DATA_LIMIT = 100;
@@ -19,7 +20,7 @@ class FixAccount
     const RD_KEY_NICK = 'UNA:%s'; // 昵称 用户名 头像版本缓存key
 
     /**
-     * 更新用户昵称等缓存数据  php index.php Crontab/FixAccount/fixUser
+     * 更新用户昵称等缓存数据  php index.php Cron/FixAccount/fixUser
      */
     public function fixUser()
     {

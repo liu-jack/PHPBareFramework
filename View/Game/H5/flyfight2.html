@@ -37,7 +37,7 @@
 
     $(function () {
         game.startScreen.draw();
-    })
+    });
 
 
     var game = {
@@ -137,7 +137,7 @@
                             game.core.warcraft([x,y]);
                         }
                         game.num.count++;
-                    })
+                    });
                     var set = game.mode[$(this).index()];
                     game.modetxt = $(this).html();
                     game.core.draw(set[0]);
@@ -159,7 +159,7 @@
                 removeDiv.stop().animate({opacity:0},100);
                 setTimeout( function () {
                     removeDiv.remove();
-                },300)
+                },300);
             }
         }, //开始场景
         core : {
@@ -230,7 +230,7 @@
                             clearInterval(oEnemy.timer);
                             game.num.score++;
                             game.stage.find($(".score")).html(game.num.score*1000);
-                            setTimeout( function () { oEnemy.remove(); },300)
+                            setTimeout( function () { oEnemy.remove(); },300);
                         }
                     }
                     var bx2 = Math.abs( x - parseInt($(".warcraft").css("left")) - 30),
@@ -244,18 +244,18 @@
                             game.num.score = 0;
                             game.startScreen.remove();
                             game.startScreen.draw();
-                        })
+                        });
                         oEnemy.remove();
                         $(".score").css("display","none");
                         $(".warcraft").css("background","url('<?php echo STATICS_URL?>img/boom2.png')");
                         clearInterval(oEnemy.timer);
-                        setTimeout( function () { $(".warcraft").remove(); },300)
+                        setTimeout( function () { $(".warcraft").remove(); },300);
                         clearInterval(game.timer.bullet);
                         clearInterval(game.timer.enemy);
                         clearInterval(game.timer.bg);
                         setTimeout( function () {
                             game.stage.append(tips);
-                        },3000)
+                        },3000);
 
                     }
                 },50)

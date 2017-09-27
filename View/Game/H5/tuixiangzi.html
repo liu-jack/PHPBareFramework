@@ -6,7 +6,7 @@
     <meta name="keywords" content="<?php echo $seo['key']?>">
     <meta name="description" content="<?php echo $seo['desc']?>">
     <style>/*css样式表的衣柜*/
-    *{ margin:0px; padding:0px;}
+    *{ margin:0; padding:0;}
     .game{ width:560px; margin:5px auto;}
     </style>
 </head>
@@ -40,8 +40,8 @@
         "up" : "<?php echo STATICS_IMG?>up.png",
         "down" : "<?php echo STATICS_IMG?>down.png",
         "left" : "<?php echo STATICS_IMG?>left.png",
-        "right" : "<?php echo STATICS_IMG?>right.png",
-    }
+        "right" : "<?php echo STATICS_IMG?>right.png"
+    };
     function imgPreload(srcs,callback){
         var count = 0,imgNum = 0,images = {};
 
@@ -56,7 +56,7 @@
                 {
                     callback(images);
                 }
-            }
+            };
             images[src].src = srcs[src];
         }
     }
