@@ -85,7 +85,7 @@ class Auth extends AdminController
         $ret = AdminGroup::delGroup($id);
         if ($ret) {
             AdminLog::log('删除权限组', 'del', $id, $id, 'AdminGroup');
-            $this->alertMsg('删除成功');
+            $this->alert('删除成功');
         }
         $this->alertErr('删除失败');
     }

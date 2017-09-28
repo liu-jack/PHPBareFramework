@@ -27,6 +27,9 @@ class AdminCron extends ViewModel
     const FD_CREATE_TIME = 'CreateTime';
     const EX_FD_START_TIME = 'StartTime';
     const EX_FD_END_TIME = 'EndTime';
+
+    const TABLE = 'AdminCron';
+    const TABLE_REMARK = '定时任务';
     // 配置文件
     protected static $_conf = [
         // 必选, 数据库连接(来自DBConfig配置), w: 写, r: 读
@@ -35,7 +38,7 @@ class AdminCron extends ViewModel
             self::CF_DB_R => DB::DB_ADMIN_R
         ],
         // 必选, 数据表名
-        self::CF_TABLE => 'AdminCron',
+        self::CF_TABLE => self::TABLE,
         // 必选, 字段信息
         self::CF_FIELDS => [
             self::FD_CRON_ID => [

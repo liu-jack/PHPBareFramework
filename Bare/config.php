@@ -42,6 +42,12 @@ if (php_sapi_name() !== 'cli') {
     define('IS_CLI', true);
     $_GET['argv'] = array_slice($argv, 1);
 }
+if (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQUESTED_WITH"]) == "xmlhttprequest") {
+    define('IS_AJAX', true);
+} else {
+    define('IS_AJAX', false);
+};
+
 $env = get_cfg_var('environment');
 if ($env === 'DEV') {
     // 定义开发环境  

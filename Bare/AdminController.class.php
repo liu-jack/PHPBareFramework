@@ -9,9 +9,14 @@
 namespace Bare;
 
 use Model\Admin\Admin\AdminLogin;
+use Model\Admin\Admin\AdminLog;
 
 Class AdminController extends Controller
 {
+    protected static $_list_extra = []; // 列表扩展设置
+    protected static $_search_val = []; // 搜索默认选项
+    protected static $_form_val = [];   // 列表默认选项
+
     /**
      * Controller constructor.
      */
@@ -22,7 +27,11 @@ Class AdminController extends Controller
             if (!self::isLogin(V_ADMIN)) {
                 $this->alert('请先登录', url('admin/index/login'));
             } elseif (!AdminLogin::isHasAuth()) {
-                $this->alertErr('没有权限', url('admin/index/index'), '', 'top');
+                if (IS_AJAX) {
+                    output(403, '没有访问权限');
+                } else {
+                    $this->alertErr('没有权限', url('admin/index/index'), '禁止访问', 'top');
+                }
             }
         }
 
@@ -51,7 +60,7 @@ Class AdminController extends Controller
     public function adminIndex()
     {
         $page = max(1, intval($_GET[PAGE_VAR]));
-        $where = $this->_m->createWhere();
+        $where = $this->_m->createWhere(static::$_search_val);
         $limit = PAGE_SIZE;
         $offset = ($page - 1) * $limit;
         $list_info = $this->_m->getList($where, $offset, $limit);
@@ -71,9 +80,9 @@ Class AdminController extends Controller
             }
         }
 
-        $list_search = $this->_m->createSearch();
+        $list_search = $this->_m->createSearch(static::$_search_val);
         $list_title = '列表';
-        $list_list = $this->_m->createList($list);
+        $list_list = $this->_m->createList($list, static::$_list_extra);
 
         $this->value('list_search', $list_search);
         $this->value('list_title', $list_title);
@@ -103,10 +112,27 @@ Class AdminController extends Controller
     public function adminAdd()
     {
         $info_title = '添加';
-        $info_form = $this->_m->createForm();
+        $info_form = $this->_m->createForm(static::$_form_val);
 
         $this->value('info_title', $info_title);
         $this->value('info_form', $info_form);
         $this->view('Public/info');
+    }
+
+    /**
+     * 后台删除
+     */
+    public function adminDelete()
+    {
+        $id = intval($_GET['id']);
+        if ($id > 0) {
+            $ret = $this->_m->delete($id);
+            if ($ret !== false) {
+                AdminLog::log('删除' . $this->_m::TABLE_REMARK, 'del', $id, $id, $this->_m::TABLE);
+                $this->alert('删除成功');
+            }
+            $this->alertErr('删除失败');
+        }
+        $this->alertErr('参数错误');
     }
 }

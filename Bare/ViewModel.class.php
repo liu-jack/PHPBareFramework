@@ -11,15 +11,15 @@ namespace Bare;
 class ViewModel extends Model
 {
     // 变量名称
-    const FIELD_VAR_TYPE = 'var_type'; // 值类型
-    const FIELD_FORM_TYPE = 'form_type'; // 表单类型
+    const FIELD_VAR_TYPE = 'var_type';       // 值类型
+    const FIELD_FORM_TYPE = 'form_type';     // 表单类型
     const FIELD_SEARCH_TYPE = 'search_type'; // 搜索表单类型
-    const SEARCH_WHERE_OP = 'op'; // 搜索查询操作
-    const FIELD_MAP = 'field_map'; // 搜索字段映射
-    const FIELD_LIST_TYPE = 'list_type'; // 列表类型
-    const LIST_VAL_SHOW = true; // 在列表显示
-    const EXTRA_LIST_EDIT = 'edit'; // 列表显示编辑
-    const EXTRA_LIST_DEL = 'delete'; // 列表显示删除
+    const SEARCH_WHERE_OP = 'op';            // 搜索查询操作
+    const FIELD_MAP = 'field_map';           // 搜索字段映射
+    const FIELD_LIST_TYPE = 'list_type';     // 列表类型
+    const LIST_VAL_SHOW = true;              // 在列表显示
+    const EXTRA_LIST_EDIT = 'edit';          // 列表显示编辑
+    const EXTRA_LIST_DEL = 'delete';         // 列表显示删除
     // form表单
     const FORM_INPUT_TEXT = 'text';
     const FORM_INPUT_TIME = 'datetime';
@@ -34,7 +34,7 @@ class ViewModel extends Model
     const FORM_SELECT_OPTION = 'select_option';
     const FORM_TEXTAREA = 'textarea';
     const FORM_EDITOR = 'editor';
-    const FORM_FIELD_NAME = 'name'; // 字数描述 列表|表单 显示
+    const FORM_FIELD_NAME = 'name';  // 字数描述 列表|表单 显示
     const FORM_FIELD_TIPS = 'tips';
     // 字段
     const FD_ID = 'Id';
@@ -44,6 +44,9 @@ class ViewModel extends Model
     const FD_CREATE_TIME = 'CreateTime';
     const EX_FD_START_TIME = 'StartTime';
     const EX_FD_END_TIME = 'EndTime';
+
+    const TABLE = 'Test';
+    const TABLE_REMARK = 'Test';
     // 配置
     protected static $_conf = [
         // 必选, 数据库代码 (来自Bridge配置), w: 写, r: 读
@@ -52,7 +55,7 @@ class ViewModel extends Model
             self::CF_DB_R => DB::DB_29SHU_CONTENT_R
         ],
         // 必选, 数据表名
-        self::CF_TABLE => 'Test',
+        self::CF_TABLE => self::TABLE,
         // 必选, 字段信息
         self::CF_FIELDS => [
             self::FD_ID => [
@@ -133,9 +136,7 @@ class ViewModel extends Model
      */
     public static function createWhere($val = [])
     {
-        if (empty($val)) {
-            $val = $_GET;
-        }
+        $val = array_merge($val, $_GET);
         $where = [];
         foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
             if (isset($v[self::FIELD_SEARCH_TYPE]) && isset($val[$k])) {
@@ -171,9 +172,7 @@ class ViewModel extends Model
      */
     public static function createSearch($val = [])
     {
-        if (empty($val)) {
-            $val = $_GET;
-        }
+        $val = array_merge($val, $_GET);
         $form = '<input type="hidden" name="' . ADMIN_VAR . '" value="1"/>';
         $form .= '<table class="table table-bordered table-striped" align="center">';
         $i = 1;

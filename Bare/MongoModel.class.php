@@ -21,14 +21,28 @@ class MongoModel
      */
     protected static $_collection = 'test';
 
-    /**
-     * mongodb 实例
-     */
+    // mongodb conn
+    private static $_conn = [];
+    // mongodb 实例
     protected static $_mongo = [];
-    /**
-     * mongodb 配置
-     */
+    // mongodb 配置
     protected static $config = [];
+
+    /**
+     * 获取连接实例
+     *
+     * @param string $dns
+     * @return array|\MongoDB\Client
+     */
+    protected static function getConn($dns = '')
+    {
+        if ($dns === '') {
+            $dns = !empty(static::$config['dns']) ? static::$config['dns'] : DB::MONGODB_DEFAULT;
+        }
+        self::$_conn = DB::mongodb($dns);
+
+        return self::$_conn;
+    }
 
     /**
      * 获取实例化类
@@ -44,15 +58,14 @@ class MongoModel
         $config['col'] = !empty($config['col']) ? $config['col'] : static::$_collection;
         $key = md5(implode('_', $config));
         if (empty(static::$_mongo[$key])) {
-            $conn = DB::mongodb($config['dns']);
-            static::$_mongo[$key] = $conn->selectCollection($config['db'], $config['col']);
+            static::$_mongo[$key] = self::getConn($config['dns'])->selectCollection($config['db'], $config['col']);
         }
 
         return static::$_mongo[$key];
     }
 
     /**
-     * 切换配置
+     * 切换连接配置
      *
      * @param $config
      */
@@ -60,6 +73,16 @@ class MongoModel
     {
         self::$config = $config;
         static::getMongodb($config);
+    }
+
+    /**
+     * @param string $db
+     * @param array  $options
+     * @return \MongoDB\Database
+     */
+    public function selectDatabase($db, $options = [])
+    {
+        return self::getConn()->selectDatabase($db, $options);
     }
 
     /**
