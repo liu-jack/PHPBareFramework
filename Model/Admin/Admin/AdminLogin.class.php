@@ -298,6 +298,7 @@ class AdminLogin
     public static function getMenuByAuth($auth_list)
     {
         $mids = [];
+        $auth_list = (array)$auth_list;
         foreach ($auth_list as $k => $v) {
             if (is_numeric($v)) {
                 $mids[] = $v;
