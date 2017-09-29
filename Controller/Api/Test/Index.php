@@ -64,7 +64,7 @@ class Index extends Controller
      */
     public function getIndex()
     {
-        $this->output(200, $this->m->index());
+        $this->output(200, $this->_m->index());
     }
 
     /**

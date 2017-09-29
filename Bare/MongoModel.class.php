@@ -11,78 +11,298 @@ namespace Bare;
 
 class MongoModel
 {
-    /**
-     * 库名 继承修改
-     */
+    // 库名 继承修改
     protected static $_db = 'test';
-
-    /**
-     * 集合名  继承修改
-     */
+    // 集合名  继承修改
     protected static $_collection = 'test';
-
-    // mongodb conn
-    private static $_conn = [];
+    // mongodb 连接参数
+    protected static $_dns = DB::MONGODB_DEFAULT;
     // mongodb 实例
-    protected static $_mongo = [];
-    // mongodb 配置
-    protected static $config = [];
+    protected static $_mongo = null;
+    // mongodb conn
+    private static $_conn = null;
 
     /**
      * 获取连接实例
      *
-     * @param string $dns
-     * @return array|\MongoDB\Client
+     * @return null|\MongoDB\Client
      */
-    protected static function getConn($dns = '')
+    protected static function getConn()
     {
-        if ($dns === '') {
-            $dns = !empty(static::$config['dns']) ? static::$config['dns'] : DB::MONGODB_DEFAULT;
+        if (empty(static::$_conn)) {
+            static::$_conn = DB::mongodb(static::$_dns);
         }
-        self::$_conn = DB::mongodb($dns);
 
-        return self::$_conn;
+        return static::$_conn;
     }
 
     /**
      * 获取实例化类
      *
-     * @param mixed $config
-     * @return \MongoDB\Collection|null
+     * @return null|\MongoDB\Collection
      */
-    protected static function getMongodb($config = [])
+    protected static function getMongodb()
     {
-        $config = array_merge($config, static::$config);
-        $config['dns'] = !empty($config['dns']) ? $config['dns'] : DB::MONGODB_DEFAULT;
-        $config['db'] = !empty($config['db']) ? $config['db'] : static::$_db;
-        $config['col'] = !empty($config['col']) ? $config['col'] : static::$_collection;
-        $key = md5(implode('_', $config));
-        if (empty(static::$_mongo[$key])) {
-            static::$_mongo[$key] = self::getConn($config['dns'])->selectCollection($config['db'], $config['col']);
+        if (empty(static::$_mongo)) {
+            static::$_mongo = self::getConn()->selectCollection(static::$_db, static::$_collection);
         }
 
-        return static::$_mongo[$key];
+        return static::$_mongo;
     }
 
     /**
-     * 切换连接配置
+     * 切换连接
      *
-     * @param $config
+     * @param $dns
+     * @return \MongoDB\Client
      */
-    public static function change($config)
+    public static function changeConn($dns)
     {
-        self::$config = $config;
-        static::getMongodb($config);
+        static::$_conn = DB::mongodb($dns);
+
+        return static::$_conn;
     }
 
     /**
+     * 切换数据库
+     *
      * @param string $db
      * @param array  $options
      * @return \MongoDB\Database
      */
-    public function selectDatabase($db, $options = [])
+    public static function selectDatabase($db, $options = [])
     {
-        return self::getConn()->selectDatabase($db, $options);
+        return static::getConn()->selectDatabase($db, $options);
+    }
+
+    /**
+     * 切换集合
+     *
+     * @param       $collection
+     * @param null  $db
+     * @param array $options
+     * @return \MongoDB\Collection
+     */
+    public static function selectCollection($collection, $db = null, $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+
+        return static::getConn()->selectCollection($db, $collection, $options);
+    }
+
+    /**
+     * 获取所有数据库
+     *
+     * @param array $options
+     * @return array|\MongoDB\Model\DatabaseInfoIterator
+     */
+    public static function getDataBases($options = [])
+    {
+        $dbs = [];
+        $databases = static::getConn()->listDatabases($options);
+        foreach ($databases as $databaseInfo) {
+            $name = $databaseInfo->getName();
+            if (!empty($name)) {
+                $dbs[$name] = $name;
+            }
+        }
+
+        return $dbs;
+    }
+
+    /**
+     * 删除数据库
+     *
+     * @param       $db
+     * @param array $options
+     * @return array|object|bool
+     */
+    public static function removeDataBase($db, $options = [])
+    {
+        $ret = (array)static::getConn()->dropDatabase($db, $options);
+        if (!empty($ret['ok'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取所有集合
+     *
+     * @param string $db
+     * @param array  $options
+     * @return array|\MongoDB\Model\CollectionInfoIterator
+     */
+    public static function getCollections($db = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        $colls = [];
+        $collects = static::selectDatabase($db)->listCollections($options);
+        foreach ($collects as $collect) {
+            $name = $collect->getName();
+            if (!empty($name)) {
+                $colls[$name] = $name;
+            }
+        }
+
+        return $colls;
+    }
+
+    /**
+     * 新建集合
+     *
+     * @param string $collection
+     * @param string $db
+     * @param array  $options
+     * @return array|object|bool
+     */
+    public static function createCollection($collection, $db = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        $ret = (array)static::selectDatabase($db)->createCollection($collection, $options);
+        if (!empty($ret['ok'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 删除集合
+     *
+     * @param string $collection
+     * @param string $db
+     * @param array  $options
+     * @return bool
+     */
+    public static function removeCollection($collection, $db = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        $ret = (array)static::selectDatabase($db)->dropCollection($collection, $options);
+        if (!empty($ret['ok'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 获取所有索引
+     *
+     * @param string $db
+     * @param string $collection
+     * @param array  $options
+     * @return array|\MongoDB\Model\IndexInfoIterator
+     */
+    public static function getIndexes($db = '', $collection = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        if (empty($collection)) {
+            $collection = static::$_collection;
+        }
+        $idx = [];
+        $indexs = static::selectCollection($collection, $db)->listIndexes($options);
+        foreach ($indexs as $index) {
+            $name = $index->getName();
+            if (!empty($name)) {
+                $idx[$name] = $name;
+            }
+        }
+
+        return $idx;
+    }
+
+    /**
+     * 创建索引
+     *
+     * @param array  $key
+     * @param string $db
+     * @param string $collection
+     * @param array  $options
+     * @return string
+     */
+    public static function createIndex($key, $db = '', $collection = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        if (empty($collection)) {
+            $collection = static::$_collection;
+        }
+        $ret = (array)static::selectCollection($collection, $db)->createIndex($key, $options);
+        if (!empty($ret['ok'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 删除索引
+     *
+     * @param null   $indexName
+     * @param string $db
+     * @param string $collection
+     * @param array  $options
+     * @return array|object|bool
+     */
+    public static function removeIndexes($indexName = null, $db = '', $collection = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        if (empty($collection)) {
+            $collection = static::$_collection;
+        }
+        if ($indexName === null) {
+            $ret = (array)static::selectCollection($collection, $db)->dropIndexes($options = []);
+        } else {
+            $ret = (array)static::selectCollection($collection, $db)->dropIndex($indexName, $options);
+        }
+        if (!empty($ret['ok'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 聚合操作
+     *
+     * @param        $pipeline
+     * @param string $db
+     * @param string $collection
+     * @param array  $options
+     * @return bool|\Traversable
+     */
+    public static function aggregation($pipeline, $db = '', $collection = '', $options = [])
+    {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
+        if (empty($collection)) {
+            $collection = static::$_collection;
+        }
+        try {
+            $ret = static::selectCollection($collection, $db)->aggregate($pipeline, $options);
+        } catch (\Exception $e) {
+            static::log($e, $pipeline);
+
+            return false;
+        }
+
+        return $ret;
     }
 
     /**
@@ -172,17 +392,6 @@ class MongoModel
     }
 
     /**
-     * 创建索引
-     *
-     * @param array $key
-     * @return string
-     */
-    public static function createIndex($key)
-    {
-        return static::getMongodb(static::$config)->createIndex($key);
-    }
-
-    /**
      * 获取总数量
      *
      * @param array $filter
@@ -192,7 +401,7 @@ class MongoModel
     protected static function getDataCount($filter, $options = [])
     {
         try {
-            $ret = static::getMongodb(static::$config)->count($filter, $options);
+            $ret = static::getMongodb()->count($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
             $ret = 0;
@@ -211,7 +420,7 @@ class MongoModel
     protected static function findOneData($filter, $options = [])
     {
         try {
-            $ret = static::getMongodb(static::$config)->findOne($filter, $options);
+            $ret = static::getMongodb()->findOne($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
             $ret = false;
@@ -233,7 +442,7 @@ class MongoModel
     protected static function findData($filter, $options = [])
     {
         try {
-            $list = static::getMongodb(static::$config)->find($filter, $options);
+            $list = static::getMongodb()->find($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
 
@@ -253,7 +462,7 @@ class MongoModel
     protected static function deleteData($filter, $options = [])
     {
         try {
-            $ret = static::getMongodb(static::$config)->deleteMany($filter, $options);
+            $ret = static::getMongodb()->deleteMany($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
 
@@ -276,7 +485,7 @@ class MongoModel
     protected static function deleteOneData($filter, $options = [])
     {
         try {
-            $ret = static::getMongodb(static::$config)->deleteOne($filter, $options);
+            $ret = static::getMongodb()->deleteOne($filter, $options);
         } catch (\Exception $e) {
             static::log($e, $filter);
 
@@ -299,7 +508,7 @@ class MongoModel
     protected static function insertOneData($document, $options = [])
     {
         try {
-            $ret = static::getMongodb(static::$config)->insertOne($document, $options);
+            $ret = static::getMongodb()->insertOne($document, $options);
         } catch (\Exception $e) {
             static::log($e, $document);
 
@@ -323,7 +532,7 @@ class MongoModel
     protected static function updateOneData($filter, $updates, $options = [])
     {
         try {
-            $ret = static::getMongodb(static::$config)->updateOne($filter, $updates, $options);
+            $ret = static::getMongodb()->updateOne($filter, $updates, $options);
         } catch (\Exception $e) {
             static::log($e, $updates);
 

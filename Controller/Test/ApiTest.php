@@ -13,7 +13,7 @@ class ApiTest extends Controller
     public function index()
     {
         if (__ENV__ == 'DEV') {
-            Api::$apiurl = 'zf.bare.com';
+            Api::$apiurl = 'http://api.bare.com';
         }
         //$url = Api::getUrl('Book/Index/getIndex');
         //$url = Api::getUrl('Book/Index/getList', ['tid' => 1,'offset' => 0]);

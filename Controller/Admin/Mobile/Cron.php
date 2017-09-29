@@ -15,12 +15,12 @@ use Model\Admin\Admin\AdminCron;
 class Cron extends AdminController
 {
     protected static $_list_extra = [
-        AdminCron::EXTRA_LIST_DEL,
+        AdminCron::EXTRA_LIST_DEL, // 显示删除按钮
     ];
 
     protected static $_search_val = [
-        AdminCron::FD_TYPE => AdminCron::TYPE_PUSH,
-        AdminCron::FD_STATUS => AdminCron::STATUS_WAIT
+        AdminCron::FD_TYPE => AdminCron::TYPE_PUSH,    // 搜索表单默认选择推送类型
+        AdminCron::FD_STATUS => AdminCron::STATUS_WAIT // 搜索表单默认选择未发送状态
     ];
 
     public function __construct()

@@ -294,7 +294,7 @@ class Bare
         // 判断hash
         $hash1 = $key . $ver . $method;
         foreach ($_GET as $k => $v) {
-            if ($k != '_v' && $k != 'hash' && $v !== '') {
+            if ($k != API_VAR && $k != 'hash' && $v !== '') {
                 $hash1 .= $v;
             }
         }

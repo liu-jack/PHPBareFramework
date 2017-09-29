@@ -104,7 +104,22 @@ class Test extends Controller
         //        var_dump(getFileExt('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
         //        $image_status = PhotoImage::checkImageByUrl('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png');
         //        var_dump(Upload::saveImg(PathConst::IMG_TEST, $image_status, [0, 450], 1, ['height' => [450 => 290]]));
-        show404();
+//        for ($i = 1; $i < 10; $i++) {
+//            var_dump(MongoModel::createCollection('test_' . $i));
+//            var_dump(MongoModel::removeCollection('test_' . $i));
+//        }
+//        var_dump(MongoModel::createCollection('test_1'));
+//        var_dump(MongoModel::getDataBases());
+//        var_dump(MongoModel::getCollections());
+        $dbs = MongoModel::getDataBases();
+        foreach ($dbs as $v) {
+            var_dump($v);
+            $cols = MongoModel::getCollections($v);
+            foreach ($cols as $vv) {
+                var_dump($vv);
+                var_dump(MongoModel::getIndexes($v, $vv));
+            }
+        }
     }
 
     /**

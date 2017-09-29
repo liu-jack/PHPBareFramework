@@ -12,7 +12,7 @@ class Data extends Controller
 
     public function index()
     {
-        $data = $this->m->exportExcel([1, 2, 3, 4, 5]);
+        $data = $this->_m->exportExcel([1, 2, 3, 4, 5]);
         //var_dump($data);
         //$this->value('data',$data);
         //$this->view();

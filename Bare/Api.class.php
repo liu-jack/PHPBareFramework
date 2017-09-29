@@ -11,7 +11,7 @@ namespace Bare;
 class Api
 {
     // 接口请求地址
-    public static $apiurl = 'http://29shu.iok.la';
+    public static $apiurl = 'http://api.bare.com';
     // appid
     public static $appid = 10;
     //apptype 0:web 1:wap 2:android 3:ios
@@ -40,15 +40,19 @@ class Api
         $hash1 = self::$appkey . self::$verid . $api_method;
         if (!empty($get)) {
             foreach ($get as $k => $v) {
-                if ($k != '_v' && $k != 'hash' && $v !== '') {
+                if ($k != API_VAR && $k != 'hash' && $v !== '') {
                     $hash1 .= $v;
                 }
             }
         }
         $hash = md5($hash1 . self::$apptype . self::$appid . $time);
-        $url = self::$apiurl . '/' . $api_method;
         $query = $get;
-        $query['_v'] = self::$verid;
+        if (defined('URL_MODE') && URL_MODE == 1) {
+            $url = self::$apiurl . '/' . $api_method . '/' . self::$verid;
+        } else {
+            $url = self::$apiurl . '/' . $api_method;
+            $query[API_VAR] = self::$verid;
+        }
         $query['_t'] = self::$apptype;
         $query['appid'] = self::$appid;
         $query['time'] = $time;

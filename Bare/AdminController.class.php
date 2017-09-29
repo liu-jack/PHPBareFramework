@@ -25,7 +25,7 @@ Class AdminController extends Controller
         parent::__construct();
         if ($GLOBALS['_C'] != 'Index') {
             if (!self::isLogin(V_ADMIN)) {
-                $this->alert('请先登录', url('admin/index/login'));
+                $this->alertErr('请先登录', url('admin/index/login'));
             } elseif (!AdminLogin::isHasAuth()) {
                 if (IS_AJAX) {
                     output(403, '没有访问权限');
