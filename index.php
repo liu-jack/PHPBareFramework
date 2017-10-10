@@ -1,6 +1,6 @@
 <?php
 /**
- * 网站入口
+ * 网站入口|API接口入口
  *
  * @author camfee <camfee@yeah.net>
  */

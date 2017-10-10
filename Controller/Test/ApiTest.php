@@ -26,7 +26,8 @@ class ApiTest extends Controller
 //        $url1 = Api::getUrl('Book/Index/getIndex', ['str' => '凡人']);
 //        $url = Api::getUrl('Common/Init/start');
 //        $url = Api::getUrl('Common/Init/checkVersion');
-        $url = Api::getUrl('Common/Init/setDeviceToken');
+//        $url = Api::getUrl('Geo/Geography/getProvinceList');
+        $url = Api::getUrl('Geo/Geography/getAllRegions');
         pre($url);
         die;
         $ret = Api::request($url);

@@ -158,7 +158,7 @@ function parseTemplate($path)
 function compressAll($content, $del_note = true)
 {
     $pattern = [
-        "/(\s|;|\(|\)|\{|\}|\}|:)\/\/(.*)[\\n|\\r\\n|\\r]/isU",/*0 //行注释*/
+        "/(\s|;|\(|\)|\{|\}|\}|[^ps]:)\s*\/\/(.*)[\\n|\\r\\n|\\r]/isU",/*0 //行注释*/
         "/<!--.*-->/isU",/*1 html注释*/
         "/\/\*.*\*\//isU", /*2 块注释*/
         "/[\s]+/", /*3 任何空白字符*/
