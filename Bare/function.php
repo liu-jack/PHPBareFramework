@@ -47,6 +47,46 @@ spl_autoload_register(function ($class) {
 });
 
 /**
+ * 全局错误记录
+ */
+set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+    static $_error_types = [
+        E_ERROR => 'E_ERROR',
+        E_WARNING => 'E_WARNING',
+        E_STRICT => 'E_STRICT',
+        E_USER_ERROR => 'E_USER_ERROR',
+        E_USER_WARNING => 'E_USER_WARNING',
+        E_USER_NOTICE => 'E_USER_NOTICE'
+    ];
+    static $_user_error_map = [
+        E_ERROR => E_USER_ERROR,
+        E_WARNING => E_USER_WARNING,
+        E_STRICT => E_USER_NOTICE
+    ];
+
+    ob_start();
+    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    $backtrace = ob_get_contents();
+    ob_end_clean();
+
+    $errtype = $_error_types[$errno];
+    $info = [
+        'URL: ' . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ''),
+        'REF: ' . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
+        'DATE: ' . date('Y-m-d H:i:s'),
+        'INFO: ' . "错误级别: {$errtype}({$errno}), 文件: {$errfile}, 行号: {$errline}",
+        'MSG: ' . $errstr,
+        'TRACE: ' . $backtrace,
+    ];
+
+    logs($info, 'debug/runtime_log');
+
+    trigger_error("{$errstr} {$errtype}({$errno}) in {$errfile} on line {$errline}",
+        (isset($_user_error_map[$errno]) ? $_user_error_map[$errno] : $errno));
+},
+    (RUNTIME_LOG || IS_ONLINE == false) ? (E_ERROR | E_WARNING | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE) : E_USER_NOTICE);
+
+/**
  * html模板include其他模板函数 模板页面使用
  *
  * @param string $path [模板的路径 默认为
@@ -206,10 +246,8 @@ function compressAll($content, $del_note = true)
 function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
 {
     if ($domain && !is_string($domain)) {
-        $http = $_SERVER['HTTPS'] == "on" ? 'https://' : 'http://';
-        $host = $_SERVER['HTTP_HOST'];
         $port = $_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT'];
-        $domain = $http . $host . $port;
+        $domain = CURRENT__PROTOCOL . CURRENT_HOST . $port;
     }
     if (URL_MODE == 1) {
         $domain .= '/';

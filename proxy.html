@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CrossDomain General Proxy - v1.0</title>
+</head>
+<body>
+
+<script type="text/javascript">
+(function(){
+    var search = location.search.match(/^\?callback=([^&]+)&data=([^&]+)/),
+        parsejson = function(data) {
+            if (!data || typeof data !== "string") {
+                return null;
+            }
+
+            if ( window.JSON && window.JSON.parse ) {
+                return window.JSON.parse(data);
+            }
+            
+            // safe json
+            var check = /^[\],:{}\s]*$/.test(
+                data.replace(/\\(?:["\\\/bfnrt]|u[\da-fA-F]{4})/g, "@")
+                    .replace(/"[^"\\\r\n]*"|true|false|null|-?(?:\d\d*\.|)\d+(?:[eE][\-+]?\d+|)/g, "]")
+                    .replace(/(?:^|:|,)(?:\s*\[)+/g, "")
+            );
+            if (check) {
+                return (new Function("return " + data))();
+            }
+            return null;
+        };
+    if (search && search[2]) {
+        var data = parsejson(decodeURIComponent(search[2]));
+        if (data && typeof top[search[1]] == 'function') {
+            top[search[1]](data);
+        }
+    }
+})();
+</script>
+
+</body>
+</html>

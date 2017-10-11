@@ -8,14 +8,14 @@ $GLOBALS['_C'] = $GLOBALS['_C'] ?? 'Index';
 $GLOBALS['_A'] = $GLOBALS['_A'] ?? 'index';
 // 接口访问配置
 define('API_PATH', 'Api');       // Api路径名
-define('API_VAR', '_v');    // 接口访问区分变量名 $_GET['_v']
+define('API_VAR', '_v');         // 接口访问区分变量名 $_GET['_v']
 // 后台访问配置
 define('ADMIN_PATH', 'Admin');   // 后台路径名
-define('ADMIN_VAR', '_b');  // 后台访问区分变量名 $_GET['_b']
+define('ADMIN_VAR', '_b');       // 后台访问区分变量名 $_GET['_b']
 define('SUPER_ADMIN_GROUP', 29); // 超级管理员分组
 
 define('PAGE_SIZE', 15);         // 分页
-define('PAGE_VAR', 'p');    // 页码参数名
+define('PAGE_VAR', 'p');         // 页码参数名
 
 // 接口配置
 define('API_VERSION', 'v1.0.0'); // 接口版本

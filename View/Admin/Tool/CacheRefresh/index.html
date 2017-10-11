@@ -1,0 +1,71 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <!-- Matter -->
+    <div class="matter">
+        <div class="container">
+
+            <div class="widget wgreen">
+
+                <div class="widget-head">
+                    <div class="pull-left">缓存刷新</div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="widget-content">
+                    <div class="padd">
+
+                        <table class="table table-bordered table-striped" align="center">
+                            <tbody>
+                            <tr>
+                                <td width="50">URL</td>
+                                <td width="90%">
+                                    <textarea class="form-control" id="url"
+                                              style="width: 700px;height: 160px"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-success" id="add_url"><i class="icon-ok"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="widget-foot">
+                    <!-- Footer goes here -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $("#add_url").click(function () {
+        var urls = $('#url').val();
+        if (urls) {
+            $.ajax({
+                url: '{url("index")}',
+                type: 'POST',
+                data: {url: urls},
+                dataType: 'json',
+                success: function (re) {
+                    top.swal(re.data, function () {
+                        if (re.code == 200) {
+                            self.location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
+
+{@view('Public/footer')}

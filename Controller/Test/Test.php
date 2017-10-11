@@ -111,15 +111,16 @@ class Test extends Controller
 //        var_dump(MongoModel::createCollection('test_1'));
 //        var_dump(MongoModel::getDataBases());
 //        var_dump(MongoModel::getCollections());
-        $dbs = MongoModel::getDataBases();
-        foreach ($dbs as $v) {
-            var_dump($v);
-            $cols = MongoModel::getCollections($v);
-            foreach ($cols as $vv) {
-                var_dump($vv);
-                var_dump(MongoModel::getIndexes($v, $vv));
-            }
-        }
+//        $dbs = MongoModel::getDataBases();
+//        foreach ($dbs as $v) {
+//            var_dump($v);
+//            $cols = MongoModel::getCollections($v);
+//            foreach ($cols as $vv) {
+//                var_dump($vv);
+//                var_dump(MongoModel::getIndexes($v, $vv));
+//            }
+//        }
+//        $this->crossOutput('', []);
     }
 
     /**

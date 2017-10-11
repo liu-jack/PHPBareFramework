@@ -244,3 +244,16 @@ function arraySort($arr, $field1, $order1 = SORT_DESC, $field2 = '', $order2 = S
 
     return $arr;
 }
+
+/**
+ * 清除CDN缓存
+ *
+ * @param string|array $urls url地址,支持数组
+ * @return boolean
+ */
+function cdn_cache_purge($urls)
+{
+    $urls = is_array($urls) ? $urls : [$urls];
+
+    return \Bare\Queue::addMulti("CDNCachePurge", $urls);
+}

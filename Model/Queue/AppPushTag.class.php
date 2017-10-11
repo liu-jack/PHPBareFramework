@@ -10,7 +10,7 @@ namespace Model\Queue;
 
 use Classes\Push\JPush;
 
-class AddPushTag extends Queue
+class AppPushTag extends Queue
 {
     public function run($data)
     {

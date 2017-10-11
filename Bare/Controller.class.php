@@ -107,6 +107,41 @@ Class Controller
     }
 
     /**
+     * 跨域输出接口
+     *
+     * @param string       $func   回调函数名
+     * @param array        $data   数据, 建议使用array
+     * @param string|mixed $domain 请求发起域名
+     */
+    public static function crossOutput($func, $data, $domain = DOMAIN_HOST)
+    {
+        $data = rawurlencode(json_encode($data));
+        $time = time();
+
+        if (!preg_match('/[a-z0-9_]+/i', $func)) {
+            $func = 'errorfunc';
+        }
+
+        if (!preg_match('/[a-z0-9\.]+/i', $domain)) {
+            $domain = DOMAIN_HOST;
+        }
+
+        echo <<<EOT
+        <!doctype html> 
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <title>CrossDomain</title>
+        </head>
+        <body>
+            <iframe src="http://{$domain}/proxy.html?callback={$func}&data={$data}&t={$time}"></iframe>
+        </body>
+        </html>
+EOT;
+        exit;
+    }
+
+    /**
      * 登录状态验证
      *
      * @param int  $type 0:web/wap 1:api 2:admin 详见 V_*

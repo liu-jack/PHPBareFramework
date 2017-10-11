@@ -1,0 +1,60 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <!-- Matter -->
+    <div class="matter">
+        <div class="container">
+
+            <div class="widget wgreen">
+
+                <div class="widget-head">
+                    <div class="pull-left">队列详细 - {$queue_name}</div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="widget-content">
+                    <div class="padd">
+
+                        {if (!empty($list))}
+                        <table class="table table-bordered table-striped" align="center">
+                            <tbody>
+                            {foreach ($list as $k =>$v)}
+                            <tr>
+                                <td><textarea style="width: 80%; height: 45px">{$v}</textarea></td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                        {/if}
+
+                        {if (!empty($pages))}
+                        <div class="widget-foot">
+                            <div class="pager pull-left">{$pages_total}</div>
+                            <ul class="pagination pull-right">
+                                {$pages}
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        {/if}
+
+                        <hr/>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-warning go-back"><i class="icon-backward"></i></button>
+                        </div>
+
+                </div>
+            </div>
+            <div class="widget-foot">
+                <!-- Footer goes here -->
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Matter ends -->
+<div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+
+{@view('Public/footer')}

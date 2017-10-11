@@ -17,7 +17,10 @@ define('CACHE_PATH', DATA_PATH . 'cache/');
 define('CACHE_TEMPLATE_PATH', DATA_PATH . 'cache/template/');
 define('UPLOAD_PATH', ROOT_PATH . 'Public/upload/');
 define('UPLOAD_URI', '/Public/upload/');
-define('HTTP_HOST', 'http://' . (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ''));
+define('CURRENT_HOST', !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.29fh.com');
+define('CURRENT__PROTOCOL', empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http://' : 'https://');
+define('DOMAIN_HOST', 'zf.bare.com');
+define('HTTP_HOST', CURRENT__PROTOCOL . CURRENT_HOST);
 define('JS_PATH', HTTP_HOST . '/Public/js/');
 define('CSS_PATH', HTTP_HOST . '/Public/css/');
 define('IMAGES_PATH', HTTP_HOST . '/Public/images/');
@@ -48,17 +51,26 @@ if (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQU
     define('IS_AJAX', false);
 };
 
+// 实时日志开关
+define('RUNTIME_LOG', false);
+
 $env = get_cfg_var('environment');
+define('DEV', 'DEV');
+define('TEST', 'TEST');
+define('ONLINE', 'ONLINE');
 if ($env === 'DEV') {
     // 定义开发环境  
     define('__ENV__', 'DEV');
     define('__KEY__', '86f64532553eeb9111cf66233d6726df');
+    define('IS_ONLINE', false);
 } elseif ($env === 'TEST') {
     // 定义测试环境
     define('__ENV__', 'TEST');
     define('__KEY__', '6facf75d3bac75b1cdfde6d94ee0aaec');
+    define('IS_ONLINE', false);
 } else {
     // 定义线上环境
     define('__ENV__', 'ONLINE');
     define('__KEY__', '1be811d9b9a37d91893b3588e270d519');
+    define('IS_ONLINE', true);
 }

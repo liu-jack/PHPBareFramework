@@ -1,0 +1,78 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">队列管理</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+
+                <table class="table table-bordered table-striped" align="center">
+                    <tbody>
+                    <tr align="center">
+                        <td width="12%">队列简介</td>
+                        <td width="12%">队列名称</td>
+                        <td width="12%">队列数量</td>
+                        <td width="6%">操作</td>
+                    </tr>
+                    {if (!empty($list))}
+                    {foreach ($list as $k =>$v)}
+                    <tr align="center">
+                        <td>{$v.name}</td>
+                        <td>{$v.queue_name}</td>
+                        <td id="size_{$v.queue_name}">{$v.size}</td>
+                        <td>
+                            <a class="btn btn-primary"
+                               href="{url('info', ['queue_name'=> $v['queue_name'],'size'=>$v['size']])}"><i class="icon-list"></i></a>
+                            <a class="btn btn-danger" onclick="removeQueue('{$v.queue_name}')"><i class="icon-remove"></i></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+
+                {if (!empty($pages))}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script>
+    function removeQueue(queue_name) {
+        top.swal({
+            title: "您确定要清除吗？",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            confirmButtonText: "是的，我要清除",
+            cancelButtonText: "取消",
+            confirmButtonColor: "#ec6c62"
+        }, function () {
+            $.post("{url('delete')}", {'queue_name': queue_name}, function (data) {
+                if (data.code == 200) {
+                    top.sweetAlert('操作成功', '', 'success');
+                    $('#size_' + queue_name).html("0");
+                } else {
+                    top.sweetAlert('操作失败', '', 'error');
+                }
+            }, 'json');
+        });
+    }
+</script>
+
+{@view('Public/footer')}
