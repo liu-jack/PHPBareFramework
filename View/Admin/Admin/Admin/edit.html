@@ -60,16 +60,16 @@
             <div class="widget-content">
                 <table class="table table-bordered " align="center">
                     <!-- 一级菜单 -->
-                    {foreach ($menu[0] as $k => $v)}
+                    {foreach $menu[0] as $k => $v}
                     <tr>
                         <td colspan="3" class="col-xs-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" {if (isset($auth[$v['Url']]))}checked="checked"{/if} value="{$v.Url}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
-                                    {if (isset($auth[$v['Url']]))}
+                                    <input type="checkbox" {if isset($auth[$v['Url']])}checked="checked"{/if} value="{$v.Url}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
+                                    {if isset($auth[$v['Url']])}
                                     <span class="label label-primary">个人</span>
                                     {/if}
-                                    {if (isset($group_auth[$v['Url']]))}
+                                    {if isset($group_auth[$v['Url']])}
                                     <span class="label label-success">管理组</span>
                                     {/if}
                                 </label>
@@ -77,17 +77,17 @@
                         </td>
                     </tr>
                     <!-- 二级菜单 -->
-                    {foreach ($menu[$k] as $k2 => $v2)}
+                    {foreach $menu[$k] as $k2 => $v2}
                     <tr>
                         <td><div style="width:20px;"></div></td>
                         <td colspan="2" class="col-xs-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" {if (isset($auth[$v2['Url']]))}checked="checked"{/if} value="{$v2.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
-                                    {if (isset($auth[$v2['Url']]))}
+                                    <input type="checkbox" {if isset($auth[$v2['Url']])}checked="checked"{/if} value="{$v2.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
+                                    {if isset($auth[$v2['Url']])}
                                     <span class="label label-primary">个人</span>
                                     {/if}
-                                    {if (isset($group_auth[$v2['Url']]))}
+                                    {if isset($group_auth[$v2['Url']])}
                                     <span class="label label-success">管理组</span>
                                     {/if}
                                 </label>
@@ -95,18 +95,18 @@
                         </td>
                     </tr>
                     <!-- 三级菜单 -->
-                    {foreach ($menu[$k2] as $k3 => $v3)}
+                    {foreach $menu[$k2] as $k3 => $v3}
                     <tr>
                         <td><div style="width:20px;"></div></td>
                         <td><div style="width:20px;"></div></td>
                         <td colspan="1" class="col-xs-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" {if (isset($auth[$v3['Url']]))}checked="checked"{/if} value="{$v3.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
-                                    {if (isset($auth[$v3['Url']]))}
+                                    <input type="checkbox" {if isset($auth[$v3['Url']])}checked="checked"{/if} value="{$v3.Url}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
+                                    {if isset($auth[$v3['Url']])}
                                     <span class="label label-primary">个人</span>
                                     {/if}
-                                    {if (isset($group_auth[$v3['Url']]))}
+                                    {if isset($group_auth[$v3['Url']])}
                                     <span class="label label-success">管理组</span>
                                     {/if}
                                 </label>

@@ -36,10 +36,10 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">是否完本</div>
                                     <select class="form-control" name="isfinish">
-                                        <option value="" {if(!is_numeric($isfinish))}selected{/if}>全部</option>
-                                        <option value="1" {if($isfinish == 1)}selected{/if}>采集完本</option>
-                                        <option value="2" {if($isfinish == 2)}selected{/if}>确认完本</option>
-                                        <option value="0" {if($isfinish === '0')}selected{/if}>连载</option>
+                                        <option value="" {if !is_numeric($isfinish)}selected{/if}>全部</option>
+                                        <option value="1" {if $isfinish == 1}selected{/if}>采集完本</option>
+                                        <option value="2" {if $isfinish == 2}selected{/if}>确认完本</option>
+                                        <option value="0" {if $isfinish === '0'}selected{/if}>连载</option>
                                     </select>
                                 </div>
                             </td>
@@ -49,9 +49,9 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">状态</div>
                                     <select class="form-control" name="status">
-                                        <option value="" {if($status == 0)}selected{/if}>全部</option>
-                                        <option value="1" {if($status == 1)}selected{/if}>显示</option>
-                                        <option value="2" {if($status == 2)}selected{/if}>隐藏</option>
+                                        <option value="" {if $status == 0}selected{/if}>全部</option>
+                                        <option value="1" {if $status == 1}selected{/if}>显示</option>
+                                        <option value="2" {if $status == 2}selected{/if}>隐藏</option>
                                     </select>
                                 </div>
                             </td>
@@ -90,7 +90,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {foreach($list as $v)}
+                    {foreach $list as $v}
                     <tr>
                         <td>{$v.BookId}</td>
                         <td>{$v.BookName}</td>
@@ -112,7 +112,7 @@
                     {/foreach}
                     </tbody>
                 </table>
-                {if (!empty($pages))}
+                {if !empty($pages)}
                 <div class="widget-foot">
                     <div class="pager pull-left">{$pages_total}</div>
                     <ul class="pagination pull-right">

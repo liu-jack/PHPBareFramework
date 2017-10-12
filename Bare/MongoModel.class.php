@@ -20,7 +20,7 @@ class MongoModel
     // mongodb 实例
     protected static $_mongo = null;
     // mongodb conn
-    private static $_conn = null;
+    protected static $_conn = null;
 
     /**
      * 获取连接实例

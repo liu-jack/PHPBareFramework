@@ -61,7 +61,7 @@
                         <td>操作</td>
                     </tr>
                     <!-- 一级菜单 -->
-                    {foreach ($menu[0] as $k => $v)}
+                    {foreach $menu[0] as $k => $v}
                     <tr class="">
                         <td style="width:50px">
                             <button class="btn btn-info toggle-list" data-mid="{$v['AdminMenuId']}">+</button>
@@ -92,8 +92,8 @@
                         <input type="hidden" class="menu_two" value="0">
                     </tr>
                     <!-- 二级菜单 -->
-                    {if (!empty($menu[$k]))}
-                    {foreach ($menu[$k] as $k2 => $v2)}
+                    {if !empty($menu[$k])}
+                    {foreach $menu[$k] as $k2 => $v2}
                     <tr class="warning list_group_{$v['AdminMenuId']}" style="display:none">
                         <td style="width:50px"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -122,8 +122,8 @@
                         <input type="hidden" class="menu_two" value="{$v2['ParentId']}">
                     </tr>
                     <!-- 三级菜单 -->
-                    {if (!empty($menu[$k2]))}
-                    {foreach ($menu[$k2] as $k3 => $v3)}
+                    {if !empty($menu[$k2])}
+                    {foreach $menu[$k2] as $k3 => $v3}
                     <tr class="success list_group_{$v['AdminMenuId']}" style="display:none">
                         <td style="width:50px"></td>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>

@@ -138,9 +138,9 @@ function parseTemplate($path)
         // 2. {@view('admin/public/header')}
         '@\{\@([\w_]+\([^}]*\))\}@isU',
         // 3. {foreach ($group as $v)}{if(xx)}
-        '@\{(foreach|if)\s*(\([^}]*\))\}@isU',
+        '@\{(foreach|if)\s+([^}]*)\}@isU',
         // 3.1 {elseif(xx)}
-        '@\{(elseif)\s*(\([^}]*\))\}@isU',
+        '@\{(elseif)\s+([^}]*)\}@isU',
         // 4. {else}
         '@\{(else)\}@isU',
         // 5. {/foreach}{/if}
@@ -161,8 +161,8 @@ function parseTemplate($path)
     $replace = [
         '<?php $this->$1?>',
         '<?php $1?>',
-        "<?php $1$2{?>",
-        "<?php }$1$2{?>",
+        "<?php $1($2){?>",
+        "<?php }$1($2){?>",
         "<?php }$1{?>",
         "<?php }?>",
         "<?php echo $1['$2']['$3']?>",

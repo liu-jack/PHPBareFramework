@@ -22,8 +22,8 @@
                                 <td width="12%">集合名称</td>
                                 <td width="6%">操作</td>
                             </tr>
-                            {if (!empty($list))}
-                            {foreach ($list as $k =>$v)}
+                            {if !empty($list)}
+                            {foreach $list as $k =>$v}
                             <tr align="center" id="col_{$k}">
                                 <td>{$v}</td>
                                 <td>
@@ -35,7 +35,7 @@
                             </tbody>
                         </table>
 
-                        {if (!empty($pages))}
+                        {if !empty($pages)}
                         <div class="widget-foot">
                             <div class="pager pull-left">{$pages_total}</div>
                             <ul class="pagination pull-right">

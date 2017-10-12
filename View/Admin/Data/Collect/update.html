@@ -45,8 +45,8 @@
                                     <label class="col-lg-4 control-label">来源名称</label>
                                     <div class="col-lg-8">
                                         <select name="FromSite" class="form-control">
-                                            {foreach($sites as $k=>$v)}
-                                            <option value="{$k}" {if($k ==$info['FromSite'])}selected{/if}>{$v}</option>
+                                            {foreach $sites as $k=>$v}
+                                            <option value="{$k}" {if $k ==$info['FromSite']}selected{/if}>{$v}</option>
                                             {/foreach}
                                         </select>
                                     </div>
@@ -55,9 +55,9 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">采集状态</label>
                                     <div class="col-lg-8">
-                                        {foreach($status_list as $k => $v)}
+                                        {foreach $status_list as $k => $v}
                                         <label>
-                                            <input type="radio" name="Status" value="{$k}" {if($info['Status'] == $k)}checked{/if}> {$v}
+                                            <input type="radio" name="Status" value="{$k}" {if $info['Status'] == $k}checked{/if}> {$v}
                                         </label>
                                         {/foreach}
                                         </div>

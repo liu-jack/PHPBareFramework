@@ -19,7 +19,7 @@
                             <!-- Form starts.  -->
                             <form action="{url('update')}" method="post" class="form-horizontal" role="form">
                                 <input type="hidden" name="id" value="{$info.BookId}"/>
-                                {if(empty($info))}
+                                {if empty($info)}
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">采集地址</label>
                                     <div class="col-lg-8 input-group">
@@ -66,9 +66,9 @@
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">站点来源</label>
                                     <div class="col-lg-8">
-                                        {foreach($sites as $k=>$v)}
+                                        {foreach $sites as $k=>$v}
                                         <label class="checkbox-inline">
-                                            <input type="checkbox" {if(!empty($info['FromSite']) && in_array($k,$info['FromSite']))}checked{/if} name="FromSite[]" value="{$k}"> {$v}
+                                            <input type="checkbox" {if !empty($info['FromSite']) && in_array($k,$info['FromSite'])}checked{/if} name="FromSite[]" value="{$k}"> {$v}
                                         </label>
                                         {/foreach}
                                     </div>
@@ -78,8 +78,8 @@
                                     <label class="col-lg-4 control-label">默认来源</label>
                                     <div class="col-lg-8">
                                         <select name="DefaultFromSite" class="form-control">
-                                            {foreach($sites as $k=>$v)}
-                                            <option value="{$k}" {if($k ==$info['DefaultFromSite'])}selected{/if}>{$v}</option>
+                                            {foreach $sites as $k=>$v}
+                                            <option value="{$k}" {if $k ==$info['DefaultFromSite']}selected{/if}>{$v}</option>
                                             {/foreach}
                                         </select>
                                     </div>
@@ -90,17 +90,17 @@
                                     <div class="col-lg-8">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="IsFinish"  value="0" {if($info['IsFinish'] == 0)}checked{/if}> 连载
+                                                <input type="radio" name="IsFinish"  value="0" {if $info['IsFinish'] == 0}checked{/if}> 连载
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="IsFinish" value="1" {if($info['IsFinish'] == 1)}checked{/if}> 完本
+                                                <input type="radio" name="IsFinish" value="1" {if $info['IsFinish'] == 1}checked{/if}> 完本
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="IsFinish" value="2" {if($info['IsFinish'] == 2)}checked{/if}> 确认完本
+                                                <input type="radio" name="IsFinish" value="2" {if $info['IsFinish'] == 2}checked{/if}> 确认完本
                                             </label>
                                         </div>
                                     </div>
@@ -111,12 +111,12 @@
                                     <div class="col-lg-8">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="Status" value="1" {if(!isset($info['Status'])||$info['Status'] == 1)}checked{/if}> 显示
+                                                <input type="radio" name="Status" value="1" {if !isset($info['Status'])||$info['Status'] == 1}checked{/if}> 显示
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="Status" value="2" {if($info['Status'] == 2)}checked{/if}> 隐藏
+                                                <input type="radio" name="Status" value="2" {if $info['Status'] == 2}checked{/if}> 隐藏
                                             </label>
                                         </div>
                                     </div>

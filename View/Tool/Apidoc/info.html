@@ -2,9 +2,9 @@
 
 <div class="ui text container" style="max-width: none !important;margin-top: 50px;">
     <div class="ui floating message">
-        <h2 class='ui header'>接口：<span {if (!empty($deprecated))}style="text-decoration: line-through"{/if}>{if(!empty($method))}<a href="{uri('apidoc/info', $module.'_'.$class.'_'.$method)}">{$module}/{$class}/{$method}</a>{else}--{/if}</span></h2>
+        <h2 class='ui header'>接口：<span {if !empty($deprecated)}style="text-decoration: line-through"{/if}>{if !empty($method)}<a href="{uri('apidoc/info', $module.'_'.$class.'_'.$method)}">{$module}/{$class}/{$method}</a>{else}--{/if}</span></h2>
         <br/>
-        {if (!empty($tips))}
+        {if !empty($tips)}
         <span class='ui teal tag label'>
             {$tips}
         </span>
@@ -12,12 +12,12 @@
         <div class="ui raised segment">
             <span class="ui red ribbon label">接口说明</span>
             <div class="ui message">
-                <p> {if(!empty($description))}{$description}{/if}</p>
-                <p> 请求方式：{if(!empty($http_type))}{$http_type}{else}GET{/if}</p>
+                <p> {if !empty($description)}{$description}{/if}</p>
+                <p> 请求方式：{if !empty($http_type)}{$http_type}{else}GET{/if}</p>
             </div>
         </div>
 
-        <h3>接口参数 ({if(!empty($http_type))}{$http_type}{else}GET{/if})</h3>
+        <h3>接口参数 ({if !empty($http_type)}{$http_type}{else}GET{/if})</h3>
         <table class="ui red celled striped table" >
             <thead>
             <tr>
@@ -27,13 +27,13 @@
             </tr>
             </thead>
             <tbody>
-            {if (!empty($params))}
-                {if (count($params) > 1 || is_array(current($params)))}
-                    {foreach ($params as $v)}
+            {if !empty($params)}
+                {if count($params) > 1 || is_array(current($params))}
+                    {foreach $params as $v}
                         <tr>
                             <td>{$v['name']}</td>
-                            <td>{if (strpos($v['require'], '必') !== false)}<span style="color:red">必选</span>{else}可选{/if}</td>
-                            <td>{if (isset($v['desc']))}{trim($v['desc'])}{/if}</td>
+                            <td>{if strpos($v['require'], '必') !== false}<span style="color:red">必选</span>{else}可选{/if}</td>
+                            <td>{if isset($v['desc'])}{trim($v['desc'])}{/if}</td>
                         </tr>
                     {/foreach}
                 {else}
@@ -54,7 +54,7 @@
             </tr>
             </thead>
             <tbody>
-            {if (!empty($returns))}
+            {if !empty($returns)}
             <tr>
                 <td>{$returns[0]}</td>
                 <td>{$returns[1]}</td>
@@ -63,7 +63,7 @@
             </tbody>
         </table>
         <div class="ui violet message">
-            <p>{if ($return)}{$return}{/if}</p>
+            <p>{if $return}{$return}{/if}</p>
         </div>
         <div class="ui blue message">
             <strong>温馨提示：</strong> 此接口参数列表根据后台代码自动生成。

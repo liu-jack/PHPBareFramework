@@ -1,0 +1,182 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">新增敏感词</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+
+                <table class="table table-bordered table-striped" align="center" id="list">
+                    <tr>
+                        <td width="150">敏感词</td>
+                        <td width="90%">
+                            <textarea class="form-control" id="keywords" style="width: 400px;height: 120px"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  colspan="2"><button id="add_keywords" type="button" class="btn btn-success"><i class="icon-plus"></i></button></td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">敏感词管理</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+
+                {if !empty($filter)}
+                <table class="table table-bordered table-striped" align="center">
+                    {foreach $filter as $v}
+                    <tr>
+                        <td align="center" width="40px">
+                            <div class="checkbox">
+                                <label><input type="checkbox" class="checkall" name="delid[]" value="{$v.Id}"/></label>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control name" value="{$v.Word}"/>
+                        </td>
+                        <td width="100px">
+                            <div class="btn-group btn-group-sm" role="group" style="width:100px">
+                                <button class="btn btn-warning edit_keywords" mid="{$v.Id}"><i class="icon-pencil"></i></button>
+                                <a href="{url('delete',['id'=>$v['Id']])}" class="btn btn-danger delete"><i class="icon-remove"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    <tr>
+                        <td colspan="3">
+                            <div class="checkbox">
+                                <label><input id="select_all" type="checkbox" value=""/> 全选</label> &nbsp;
+                                <button type="submit" class="btn btn-danger delcheckboxs">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+                {/if}
+
+                {if !empty($pages)}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $("#add_keywords").click(function() {
+        var content = $.trim($('#keywords').val());
+        if (content.length == 0) {
+            top.sweetAlert('出错了', '内容不能为空', 'error');
+            return false;
+        }
+        $.ajax({
+            url: '{url("add")}',
+            type: 'post',
+            data: {content:content},
+            dataType: 'json',
+            success: function (re) {
+                top.swal(re.data, function () {
+                    if(re.code == 200){
+                        self.location.reload();
+                    }
+                });
+            }
+        });
+    });
+
+    //修改
+    $(".edit_keywords").click(function() {
+        var obj = $(this).parent().parent().parent();
+        var name = obj.find(".name").val();
+        var id = $(this).attr("mid");
+        if (name == '') {
+            top.swal('出错了','请填写修改的内容','','error');
+        }else{
+            $.ajax({
+                url: '{url("edit")}',
+                type: 'post',
+                data: {name:name,id:id},
+                dataType: 'json',
+                success: function (re) {
+                    top.swal(re.data,function(){
+                        self.location.reload();
+                    });
+                }
+            })
+        }
+    });
+
+    //删除选中
+    $(".delcheckboxs").click(function() {
+        top.swal({
+            title: '确定要删除吗？',
+            text: '删除后不可恢复！',
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定",
+            closeOnConfirm: false
+        }, function() {
+            var str = '';
+            $("input[name='delid[]']").each(function() {
+                if ($(this).is(':checked')) {
+                    str+=str != ''?',':'';
+                    str+=$(this).val();
+                }
+            });
+
+            if(str) {
+                $.ajax({
+                    url: '{url("deletes")}',
+                    type: 'post',
+                    data: {'id':str},
+                    dataType: 'json',
+                    success: function(re) {
+                        top.swal(re.data,function(){
+                            self.location.reload();
+                        });
+                    }
+                })
+            }
+        })
+    });
+
+    //全选
+    $('#select_all').click(function() {
+        if ($(this).prop('checked')) {
+            $('.checkall').prop('checked', true);
+        } else {
+            $('.checkall').prop('checked', false);
+        }
+    });
+
+    //删除
+    $(".delete").click(function(){
+        var url = $(this).attr("href");
+        top.__confirm('确定要删除吗？','删除后不可恢复！', url, self);
+        return false;
+    });
+</script>
+
+{@view('Public/footer')}

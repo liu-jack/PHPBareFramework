@@ -2,13 +2,13 @@
 
 <div class="ui text container" style="max-width: none !important;margin-top: 50px;">
     <div class="ui floating message">
-        <h1 class="ui header">接口列表 (<span {if (!empty($deprecated))}style="text-decoration: line-through"{/if}>{if(!empty($class))}<a href="{uri('apidoc/methods', $module.'_'.$class)}">{$module}/{$class}</a>{else}--{/if}</span>)</h1>
-        {if (!empty($class_desc) || !empty($class_docs))}
+        <h1 class="ui header">接口列表 (<span {if !empty($deprecated)}style="text-decoration: line-through"{/if}>{if !empty($class)}<a href="{uri('apidoc/methods', $module.'_'.$class)}">{$module}/{$class}</a>{else}--{/if}</span>)</h1>
+        {if !empty($class_desc) || !empty($class_docs)}
         <div class="ui raised segment">
             <span class="ui red ribbon label">类说明</span>
             <div class="ui message">
-                {if(!empty($class_desc))}<p>{$class_desc}</p>{/if}
-                {if(!empty($class_docs))}<p>{$class_docs}</p>{/if}
+                {if !empty($class_desc)}<p>{$class_desc}</p>{/if}
+                {if !empty($class_docs)}<p>{$class_docs}</p>{/if}
             </div>
         </div>
         {/if}
@@ -21,9 +21,9 @@
             </tr>
             </thead>
             <tbody>
-            {if (!empty($methods))}
+            {if !empty($methods)}
             {@$num = 1}
-            {foreach ($methods as $v)}
+            {foreach $methods as $v}
             <tr>
                 <td>{$num}</td>
                 <td><a href="{uri('apidoc/info', $_GET['module'].'_'.$_GET['class'].'_'.$v['method'])}">{$_GET['module']}/{$_GET['class']}/{$v['method']}</a></td>
@@ -36,4 +36,4 @@
         </table>
     </div>
 
-<?php $this->view('Tool/Public/apidoc_footer');?>
+{@view('Tool/Public/apidoc_footer')}

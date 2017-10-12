@@ -24,9 +24,9 @@
                                 <div class="input-group">
                                     <div class="input-group-addon">状态</div>
                                     <select class="form-control" name="status">
-                                        <option value="" {if(empty($status))}selected{/if}>全部</option>
-                                        {foreach($status_list as $k => $v)}
-                                        <option value="{$k}" {if($status == $k)}selected{/if}>{$v}</option>
+                                        <option value="" {if empty($status)}selected{/if}>全部</option>
+                                        {foreach $status_list as $k => $v}
+                                        <option value="{$k}" {if $status == $k}selected{/if}>{$v}</option>
                                         {/foreach}
                                     </select>
                                 </div>
@@ -61,7 +61,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {foreach($list as $v)}
+                    {foreach $list as $v}
                     <tr>
                         <td>{$v.CollectId}</td>
                         <td>{$v.BookId}</td>
@@ -77,7 +77,7 @@
                     {/foreach}
                     </tbody>
                 </table>
-                {if (!empty($pages))}
+                {if !empty($pages)}
                 <div class="widget-foot">
                     <div class="pager pull-left">{$pages_total}</div>
                     <ul class="pagination pull-right">

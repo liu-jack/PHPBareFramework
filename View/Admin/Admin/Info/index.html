@@ -32,7 +32,7 @@
                         <td>服务器时间:</td>
                         <td>{$date}</td>
                     </tr>
-                    {if ($server_addr == '127.0.0.1' || strpos($server_addr, '192.168.') === 0)}
+                    {if $server_addr == '127.0.0.1' || strpos($server_addr, '192.168.') === 0}
                     <tr>
                         <td>服务器文档路径:</td>
                         <td>{$ddir}</td>

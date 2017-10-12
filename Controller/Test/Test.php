@@ -6,6 +6,7 @@ use Bare\Controller;
 use Bare\DB;
 use Bare\ViewModel;
 use Classes\Image\PhotoImage;
+use Classes\Safe\HTMLClean;
 use Common\PathConst;
 use Common\Upload;
 use Model\Mongo\UserData;
@@ -108,6 +109,7 @@ class Test extends Controller
 //            var_dump(MongoModel::createCollection('test_' . $i));
 //            var_dump(MongoModel::removeCollection('test_' . $i));
 //        }
+//        var_dump(MongoModel::createCollection('test'));
 //        var_dump(MongoModel::createCollection('test_1'));
 //        var_dump(MongoModel::getDataBases());
 //        var_dump(MongoModel::getCollections());
@@ -121,6 +123,8 @@ class Test extends Controller
 //            }
 //        }
 //        $this->crossOutput('', []);
+//        pre(get_defined_constants());
+
     }
 
     /**

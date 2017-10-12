@@ -29,8 +29,8 @@
                                         <td>
                                             <select id="app_id" name="app_id" class="form-control" style="width: 300px;">
                                                 <option value="0">请选择需要更新的应用</option>
-                                                {foreach ($app_ids as $k => $v)}
-                                                <option value="{$k}" {if ($info['AppId'] == $k)}selected{/if}>{$v}</option>
+                                                {foreach $app_ids as $k => $v}
+                                                <option value="{$k}" {if $info['AppId'] == $k}selected{/if}>{$v}</option>
                                                 {/foreach}
                                             </select>
                                         </td>
@@ -63,7 +63,7 @@
                                             <div class="form-inline">
                                                 <input type="file" class="form-control" id="appscreen" name="appscreen" style="width: 200px;" />
                                                 <div class="form-group padd">
-                                                    {if (!empty($info['ImgUrl']))}<img src="{$info['ImgUrl']}" style="width: 100px;">{/if}
+                                                    {if !empty($info['ImgUrl'])}<img src="{$info['ImgUrl']}" style="width: 100px;">{/if}
                                                 </div>
                                             </div>
                                         </td>

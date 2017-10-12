@@ -93,4 +93,13 @@ CREATE TABLE IF NOT EXISTS `AdminCron` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='后台 - 定时任务';
 EOT
     ,
+    'create_filter' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Filter` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `Word` varchar(32) DEFAULT NULL COMMENT '唯一关键字',
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Idx_Filter_Word` (`Word`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='后台 - 关键字过滤';
+EOT
+    ,
 ];

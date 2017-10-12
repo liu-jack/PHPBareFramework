@@ -31,9 +31,9 @@
                             <a href="{uri('book', $fromsite.'_'.$bookid, $column[0]['ChapterId'])}" class="cur">立即阅读</a>
                             <?php endif;?>
                             
-                            <a href="javascript:void(0);" class="favBook" data-bid="{$book['BookId']}" >{if ($isfav)}取消收藏{else}收藏本书{/if}</a>
+                            <a href="javascript:void(0);" class="favBook" data-bid="{$book['BookId']}" >{if $isfav}取消收藏{else}收藏本书{/if}</a>
                             
-                            <a href="javascript:void(0);" class="last recmBook" data-bid="{$book['BookId']}" >{if ($isrec)}已推荐{else}推荐本书{/if}</a>
+                            <a href="javascript:void(0);" class="last recmBook" data-bid="{$book['BookId']}" >{if $isrec}已推荐{else}推荐本书{/if}</a>
                             
                         </div>
                     </li>
@@ -49,8 +49,8 @@
             <div class="tab-menu t2 mt15">
                 <a href="javascript:void(0)">
                     <select onchange="location.href=this.value" class="siteselect">
-                        {foreach($fromsites as $k => $v)}
-                        <option {if($k == $fromsite)}selected="selected"{/if} value="{uri('book', $k.'_'.$bookid)}">{$v}</option>
+                        {foreach $fromsites as $k => $v}
+                        <option {if $k == $fromsite}selected="selected"{/if} value="{uri('book', $k.'_'.$bookid)}">{$v}</option>
                         {/foreach}
                     </select>
                 </a>
@@ -58,7 +58,7 @@
             </div>
             <div class="dir_list">
                 <ul class="blist">
-                    {foreach($column as $v)}
+                    {foreach $column as $v}
                         <li><span class="bname"><a href="{uri('book', $fromsite.'_'.$bookid, $v['ChapterId'])}">{$v['ChapterName']}</a></span></li>
                     {/foreach}
                 </ul>

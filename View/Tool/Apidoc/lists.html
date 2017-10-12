@@ -11,9 +11,9 @@
             </tr>
             </thead>
             <tbody>
-            {if (!empty($files))}
+            {if !empty($files)}
             {@$num = 1}
-            {foreach ($files as $v)}
+            {foreach $files as $v}
             <tr>
                 <td>{$num}</td>
                 <td><a href="{uri('apidoc/methods', $_GET['module'].'_'.$v)}">{$v}</a></td>

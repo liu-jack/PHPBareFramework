@@ -32,7 +32,7 @@
                                         <label>
                                             <select name="type" class="form-control" style="width: 200px">
                                                 <option value="0">==选择推送消息类型==</option>
-                                                {foreach ($types as $v)}
+                                                {foreach $types as $v}
                                                 <option value="{$v['TypeId']}">{$v['TypeName']}</option>
                                                 {/foreach}
                                             </select>
@@ -42,7 +42,7 @@
                                 <tr>
                                     <td>推送平台</td>
                                     <td>
-                                        {foreach ($system as $k => $v)}
+                                        {foreach $system as $k => $v}
                                         <label class="checkbox-inline">
                                             <input type="checkbox" name="appid[]" value="{$v['AppId']}"
                                                    checked="checked"/> {$v['AppName']}
@@ -93,7 +93,7 @@
                                         <label>
                                             <select name="type" class="form-control" style="width: 200px">
                                                 <option value="0">==选择推送消息类型==</option>
-                                                {foreach ($types as $v)}
+                                                {foreach $types as $v}
                                                 <option value="{$v['TypeId']}">{$v['TypeName']}</option>
                                                 {/foreach}
                                             </select>
@@ -103,7 +103,7 @@
                                 <tr>
                                     <td>推送平台</td>
                                     <td>
-                                        {foreach ($system as $k => $v)}
+                                        {foreach $system as $k => $v}
                                         <label class="checkbox-inline">
                                             <input type="checkbox" name="appid[]" value="{$v['AppId']}" checked="checked"/> {$v['AppName']}
                                         </label>
@@ -164,7 +164,7 @@
                                         <label>
                                             <select class="form-control input-medium" name="appid" id="persional-where"
                                                     style="width: 200px">
-                                                {foreach ($system as $k => $v)}
+                                                {foreach $system as $k => $v}
                                                 <option value="{$v['AppId']}">{$v['AppName']}</option>
                                                 {/foreach}
                                             </select>
@@ -177,7 +177,7 @@
                                         <label>
                                             <select class="form-control" name="type" style="width: 200px">
                                                 <option value="0">==选择推送消息类型==</option>
-                                                {foreach ($types as $k => $v)}
+                                                {foreach $types as $k => $v}
                                                 <option value="{$v['TypeId']}">{$v['TypeName']}</option>
                                                 {/foreach}
                                             </select>

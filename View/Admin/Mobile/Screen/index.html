@@ -33,8 +33,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {if (!empty($list))}
-                    {foreach($list as $v)}
+                    {if !empty($list)}
+                    {foreach $list as $v}
                     <tr>
                         <td>{$v.Id}</td>
                         <td>{$app_ids[$v['AppId']]}</td>
@@ -47,9 +47,9 @@
                             <a href="{$v.ImgUrl}" target="_blank"><img src="{$v.ImgUrl}" width="100px" alt=""/></a>
                         </td>
                         <td>
-                            {if ($v['StartStatus'] == 1)}
+                            {if $v['StartStatus'] == 1}
                             <span class="label label-primary">未开始</span>
-                            {elseif ($v['StartStatus'] == 2)}
+                            {elseif $v['StartStatus'] == 2}
                             <span class="label label-success">进行中</span>
                             {else}
                             <span class="label label-danger">已结束</span>
@@ -64,7 +64,7 @@
                     {/if}
                     </tbody>
                 </table>
-                {if (!empty($pages))}
+                {if !empty($pages)}
                 <div class="widget-foot">
                     <div class="pager pull-left">{$pages_total}</div>
                     <ul class="pagination pull-right">

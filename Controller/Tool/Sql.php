@@ -183,18 +183,9 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/admin');
-        $create_sql1 = $sqls['create_group'];
-        $create_sql2 = $sqls['create_user'];
-        $create_sql3 = $sqls['create_menu'];
-        $create_sql4 = $sqls['create_log'];
-        $create_sql5 = $sqls['create_sms'];
-        $create_sql6 = $sqls['create_cron'];
-        $this->_m->runAdmin($create_sql1);
-        $this->_m->runAdmin($create_sql2);
-        $this->_m->runAdmin($create_sql3);
-        $this->_m->runAdmin($create_sql4);
-        $this->_m->runAdmin($create_sql5);
-        $this->_m->runAdmin($create_sql6);
+        foreach ($sqls as $k => $v) {
+            $this->_m->runAdmin($v);
+        }
     }
 
     /**
@@ -204,14 +195,9 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/collect');
-        $create_sql1 = $sqls['create_collect_web'];
-        $create_sql2 = $sqls['create_picinfo'];
-        $create_sql3 = $sqls['create_article'];
-        $create_sql4 = $sqls['create_content'];
-        $this->_m->runCollect($create_sql1);
-        $this->_m->runCollect($create_sql2);
-        $this->_m->runCollect($create_sql3);
-        $this->_m->runCollect($create_sql4);
+        foreach ($sqls as $k => $v) {
+            $this->_m->runCollect($v);
+        }
     }
 
     /**
@@ -221,16 +207,9 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/mobile');
-        $create_sql1 = $sqls['create_version'];
-        $create_sql2 = $sqls['create_image'];
-        $create_sql3 = $sqls['create_recommend'];
-        $create_sql4 = $sqls['create_device_adr'];
-        $create_sql5 = $sqls['create_device_ios'];
-        $this->_m->runMobile($create_sql1);
-        $this->_m->runMobile($create_sql2);
-        $this->_m->runMobile($create_sql3);
-        $this->_m->runMobile($create_sql4);
-        $this->_m->runMobile($create_sql5);
+        foreach ($sqls as $k => $v) {
+            $this->_m->runMobile($v);
+        }
     }
 
     /**
@@ -240,9 +219,8 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/collect');
-        $create_sql1 = $sqls['create_atlas'];
-        $create_sql2 = $sqls['create_picture'];
-        $this->_m->runPicture($create_sql1);
-        $this->_m->runPicture($create_sql2);
+        foreach ($sqls as $k => $v) {
+            $this->_m->runPicture($v);
+        }
     }
 }

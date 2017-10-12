@@ -18,8 +18,8 @@
                         <td width="12%">队列数量</td>
                         <td width="6%">操作</td>
                     </tr>
-                    {if (!empty($list))}
-                    {foreach ($list as $k =>$v)}
+                    {if !empty($list)}
+                    {foreach $list as $k =>$v}
                     <tr align="center">
                         <td>{$v.name}</td>
                         <td>{$v.queue_name}</td>
@@ -35,7 +35,7 @@
                     </tbody>
                 </table>
 
-                {if (!empty($pages))}
+                {if !empty($pages)}
                 <div class="widget-foot">
                     <div class="pager pull-left">{$pages_total}</div>
                     <ul class="pagination pull-right">

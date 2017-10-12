@@ -1,4 +1,4 @@
-<?php $this->view('Account/Public/header')?>
+{:view('Account/Public/header')}
 
 <body>
     <div class="header"> 
@@ -26,20 +26,20 @@
                         </div>
                     </li>
                     <li class="item">
-                        <div class="item_box"> <span class="icons icon_code"><img src="<?php echo url('account/user/code')?>" data-url="<?php echo url('account/user/code')?>" id="code_img" /></span>  <span class="item_inp2"><input placeholder="请输入验证码" name="code" id="code" class="t_i" value="" type="text"></span>
+                        <div class="item_box"> <span class="icons icon_code"><img src="{url('account/user/code')}" data-url="{url('account/user/code')}" id="code_img" /></span>  <span class="item_inp2"><input placeholder="请输入验证码" name="code" id="code" class="t_i" value="" type="text"></span>
                         </div>
                     </li>
                     <li class="item">
                         <input id="doreg" class="t_b btn_log" value="注册" type="button">
                     </li>
-                    <li class="item"> <a href="<?php echo url('login')?>" class="t_b btn_reg">已有账号？点此登录</a> 
+                    <li class="item"> <a href="{url('login')}" class="t_b btn_reg">已有账号？点此登录</a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <script src="<?php echo JS_PATH?>jsencrypt.min.js"></script>
-    <script src="<?php echo JS_PATH?>login.js"></script>
+    <script src="{JS_PATH}jsencrypt.min.js"></script>
+    <script src="{JS_PATH}login.js"></script>
     
-<?php $this->view('Account/Public/footer')?>
+{@view('Account/Public/footer')}

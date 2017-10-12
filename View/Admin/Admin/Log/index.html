@@ -98,7 +98,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {foreach($list as $v)}
+                    {foreach $list as $v}
                     <tr>
                         <td>{$v.LogId}</td>
                         <td>{$v.UserId}</td>
@@ -114,7 +114,7 @@
                     {/foreach}
                     </tbody>
                 </table>
-                {if (!empty($pages))}
+                {if !empty($pages)}
                 <div class="widget-foot">
                     <div class="pager pull-left">{$pages_total}</div>
                     <ul class="pagination pull-right">

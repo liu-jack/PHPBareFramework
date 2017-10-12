@@ -94,7 +94,7 @@
         },
         getRandom: function (max) {
             return parseInt(Math.random() * 1000000 % (max));
-        },
+        }
     };
     game.score = {
         basic: 0,
@@ -133,7 +133,7 @@
                     break;
             }
             this.draw();
-        },
+        }
     };
     game.ready = {
         startX: 41.5,
@@ -249,7 +249,7 @@
             if (this.isEmpty(x1, y1)) {
                 if (isClick) game.ready.flyin();
                 return;
-            };
+            }
             //给定一个坐标，看是否有满足的line可以被消除
             //4根线 一  | / \
             //横线
@@ -327,7 +327,7 @@
             ctx.translate(this.startX, this.startY);
             ctx.beginPath();
             for (var i = 0; i <= game.cellCount; i++) {
-                var p1 = i * game.cellWidth;;
+                var p1 = i * game.cellWidth;
                 ctx.moveTo(p1, 0);
                 ctx.lineTo(p1, this.height);
 
@@ -429,7 +429,7 @@
                     }else{
                         distance.push({"i":i,"d":-1});
                     }
-                };
+                }
                 distance.sort(function (a, b) { return a.d - b.d });
                 for (var i = 0; i < child.length; i++) {
                     var d = distance[i];
@@ -485,12 +485,12 @@
         isEmpty: function (x, y) {
             var bubble = this.getBubble(x, y);
             return !bubble.color;
-        },
+        }
     };
     var Cell = function (x, y) {
         this.x = x;
         this.y = y;
-    }
+    };
     var Bubble = function (x, y, color) {
         this.x = x;
         this.y = y;

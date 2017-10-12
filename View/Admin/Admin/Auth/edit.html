@@ -14,37 +14,37 @@
                     <table class="table table-bordered " align="center">
                         <tbody>
                         <!-- 一级菜单 -->
-                        {foreach ($menu[0] as $k => $v)}
+                        {foreach $menu[0] as $k => $v}
                         <tr>
                             <td colspan="3" class="col-xs-12">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" {if (isset($auth[$v['Url']]))}checked="checked"{/if} value="{$v.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
+                                        <input type="checkbox" {if isset($auth[$v['Url']])}checked="checked"{/if} value="{$v.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}"> {$v.Name}
                                     </label>
                                 </div>
                             </td>
                         </tr>
                         <!-- 二级菜单 -->
-                        {foreach ($menu[$k] as $k2 => $v2)}
+                        {foreach $menu[$k] as $k2 => $v2}
                         <tr>
                             <td><div style="width:20px;"></div></td>
                             <td colspan="2" class="col-xs-12">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" {if (isset($auth[$v2['Url']]))}checked="checked"{/if} value="{$v2.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
+                                        <input type="checkbox" {if isset($auth[$v2['Url']])}checked="checked"{/if} value="{$v2.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}"> {$v2.Name}
                                     </label>
                                 </div>
                             </td>
                         </tr>
                         <!-- 三级菜单 -->
-                        {foreach ($menu[$k2] as $k3 => $v3)}
+                        {foreach $menu[$k2] as $k3 => $v3}
                         <tr>
                             <td><div style="width:20px;"></div></td>
                             <td><div style="width:20px;"></div></td>
                             <td colspan="1" class="col-xs-12">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" {if (isset($auth[$v3['Url']]))}checked="checked"{/if} value="{$v3.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
+                                        <input type="checkbox" {if isset($auth[$v3['Url']])}checked="checked"{/if} value="{$v3.AdminMenuId}" name="menu[]" id="g_{$v.AdminMenuId}_{$v2.AdminMenuId}_{$v3.AdminMenuId}"> {$v3.Name}
                                     </label>
                                 </div>
                             </td>

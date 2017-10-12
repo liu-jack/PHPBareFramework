@@ -11,9 +11,9 @@
             </tr>
             </thead>
             <tbody>
-            {if (!empty($dirs))}
+            {if !empty($dirs)}
             {@$num = 1}
-            {foreach ($dirs as $v)}
+            {foreach $dirs as $v}
             <tr>
                 <td>{$num}</td>
                 <td><a href="{uri('apidoc/lists', $v)}">{$v}</a></td>

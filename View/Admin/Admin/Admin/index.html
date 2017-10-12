@@ -58,7 +58,7 @@
                         <td>真实姓名</td>
                         <td>操作</td>
                     </tr>
-                    {foreach ($user as $v)}
+                    {foreach $user as $v}
                     <tr>
                         <td class="col-xs-1">{$v.UserId}</td>
                         <td class="col-xs-2">{$v.GroupName}</td>
@@ -72,7 +72,7 @@
                     </tr>
                     {/foreach}
                 </table>
-                {if (!empty($pages))}
+                {if !empty($pages)}
                 <div class="widget-foot">
                     <div class="pager pull-left">{$pages_total}</div>
                     <ul class="pagination pull-right">

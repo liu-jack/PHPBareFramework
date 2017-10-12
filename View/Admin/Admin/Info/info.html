@@ -60,15 +60,15 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="background:#fff">
-                            {foreach ($menu[0] as $k => $v)}
+                            {foreach $menu[0] as $k => $v}
                             <div class="col-xs-2">
                                 <blockquote>{$v.Name}</blockquote>
-                                {foreach ($menu[$k] as $k2 => $v2)}
+                                {foreach $menu[$k] as $k2 => $v2}
                                 <dl>
                                     <dt>{$v2.Name}</dt>
-                                    {foreach ($menu[$k2] as  $k3 => $v3)}
+                                    {foreach $menu[$k2] as  $k3 => $v3}
                                     <dd>
-                                        {if (isset($auth[$v3['Url']]))}
+                                        {if isset($auth[$v3['Url']])}
                                         <span class="glyphicon icon-ok true"></span>
                                         {else}
                                         <span class="glyphicon icon-remove false"></span>
