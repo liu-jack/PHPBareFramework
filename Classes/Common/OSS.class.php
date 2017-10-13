@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Common;
+namespace Classes\Common;
 
 /**
  *

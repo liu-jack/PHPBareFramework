@@ -82,8 +82,8 @@ Class Controller
     /**
      * 接口数据输出
      *
-     * @param int          $code 返回码 200：成功
-     * @param array|string $data 接口输出的数据
+     * @param int   $code 返回码 200：成功
+     * @param array $data 接口输出的数据
      */
     public static function output($code = 200, $data = [])
     {

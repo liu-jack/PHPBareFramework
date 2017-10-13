@@ -14,7 +14,7 @@ class OSSPathConst
 
     public static function getOssImageUrl()
     {
-        if (__ENV__ != 'ONLINE') {
+        if (!IS_ONLINE) {
             return self::OSS_TEST_IMAGE_URL;
         }
 

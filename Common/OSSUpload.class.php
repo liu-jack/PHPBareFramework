@@ -10,7 +10,7 @@
 namespace Common;
 
 use Classes\Image\PhotoImage;
-use Model\Common\OSS;
+use Classes\Common\OSS;
 
 class OSSUpload
 {

@@ -191,8 +191,6 @@ class test1 extends test2
 
 class test2
 {
-    protected static $class;
-
     public static function test()
     {
         echo static::class;

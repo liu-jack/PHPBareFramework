@@ -198,7 +198,7 @@ function parseTemplate($path)
 function compressAll($content, $del_note = true)
 {
     $pattern = [
-        "/(\s|;|\(|\)|\{|\}|\}|[^ps]:)\s*\/\/(.*)[\\n|\\r\\n|\\r]/isU",/*0 //行注释*/
+        "/(\s|;|\(|\)|\{|\}|\}|[^pst]:)\s*\/\/(.*)(\\n|\\r\\n|\\r)/isU",/*0 //行注释*/
         "/<!--.*-->/isU",/*1 html注释*/
         "/\/\*.*\*\//isU", /*2 块注释*/
         "/[\s]+/", /*3 任何空白字符*/
@@ -580,6 +580,17 @@ function output($code = 200, $data = [])
 }
 
 /**
+ * js回调函数输出
+ *
+ * @param       $callback
+ * @param array $data
+ */
+function callback($callback, $data = [])
+{
+    exit('<script type="text/javascript">' . $callback . '(' . json_encode($data) . ')</script>');
+}
+
+/**
  * 404页面
  *
  * @param string $path
@@ -590,4 +601,20 @@ function show404($path = '')
     header('Content-Type: text/html; charset=UTF-8');
     readfile(!empty($path) ? $path : VIEW_PATH . 'Public/404.html');
     exit;
+}
+
+/**
+ * 自动转换测试环境下的主机名
+ *
+ * @param string $url
+ * @return string
+ */
+function autohost($url)
+{
+    if (__ENV__ == TEST && strpos($_SERVER['HTTP_HOST'], 'test.') !== false && strpos($url,
+            '://test.') === false && strpos($url, 'http') === 0) {
+        return str_replace('://', '://test.', $url);
+    }
+
+    return $url;
 }

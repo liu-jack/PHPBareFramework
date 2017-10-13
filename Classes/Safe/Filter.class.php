@@ -212,7 +212,7 @@ class Filter
                 if (in_array($v, $key_words)) {
                     unset($filter[$k]);
                 } else {
-                    $v = trim($v);
+                    $v = mysqlQuote($v);
                     $sql_value .= "(\"{$v}\"),";
                 }
             }

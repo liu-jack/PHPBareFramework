@@ -135,4 +135,19 @@ Class AdminController extends Controller
         }
         $this->alertErr('参数错误');
     }
+
+    /**
+     * 记录后台日志
+     *
+     * @param string $title    操作名称
+     * @param string $option   操作细分
+     * @param int    $itemid   操作项目id
+     * @param array  $data     操作数据
+     * @param string $itemname 项目名称（数据表名）
+     * @return bool|int|string
+     */
+    public function adminLog($title, $option, $itemid = 0, $data = [], $itemname = '')
+    {
+        return AdminLog::log($title, $option, $itemid, $data, $itemname);
+    }
 }

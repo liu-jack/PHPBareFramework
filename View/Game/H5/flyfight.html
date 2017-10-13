@@ -388,10 +388,10 @@
         // effect in the game)
         //
         function loadGameSounds() {
-            var fileref = document.createElement('script')
-            fileref.setAttribute("type", "text/javascript")
-            //fileref.setAttribute("src", "http://dougx.net/plunder/GameSounds.php")
-            fileref.setAttribute("src", "/Public/statics/game/h5/flyfight/GameSounds.js")
+            var fileref = document.createElement('script');
+            fileref.setAttribute("type", "text/javascript");
+            //fileref.setAttribute("src", "http://dougx.net/plunder/GameSounds.php");
+            fileref.setAttribute("src", "/Public/statics/game/h5/flyfight/GameSounds.js");
 
 
             var agent = navigator.userAgent;
@@ -405,7 +405,7 @@
 
             fileref.onload = function () {
                 g_soundsLoaded = true;
-            }
+            };
 
             document.getElementsByTagName("head")[0].appendChild(fileref)
         }

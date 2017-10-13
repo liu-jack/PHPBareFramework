@@ -251,9 +251,139 @@ function arraySort($arr, $field1, $order1 = SORT_DESC, $field2 = '', $order2 = S
  * @param string|array $urls url地址,支持数组
  * @return boolean
  */
-function cdn_cache_purge($urls)
+function cdnCachePurge($urls)
 {
     $urls = is_array($urls) ? $urls : [$urls];
 
     return \Bare\Queue::addMulti("CDNCachePurge", $urls);
+}
+
+/**
+ * 手工拼接SQL时, 内容转义 (已经连接PDO时, 推荐 PDO::quote)
+ *
+ * @param string $str            要转义的字符串
+ * @param bool   $utf8_safe      是否使用UTF8编码检查, 默认true(开启)
+ * @param bool   $filter_percent 是否转义%, 默认false(关)
+ * @return mixed
+ */
+function mysqlQuote($str, $utf8_safe = true, $filter_percent = false)
+{
+    if (!is_string($str)) {
+        return '';
+    }
+    if ($utf8_safe) {
+        $str = iconv("UTF-8//IGNORE", "UTF-8//IGNORE", $str);
+    }
+    $str = addslashes($str);
+    $search = ["\r", "\n"];
+    $replace = ['\r', '\n'];
+    if ($filter_percent) {
+        $search[] = '%';
+        $replace[] = '\%';
+    }
+
+    return str_replace($search, $replace, $str);
+}
+
+/**
+ * 加密ID
+ *
+ * @param int $id 产品ID(必须为正数)
+ * @return string 加密后的ID
+ */
+function encodeId(int $id): string
+{
+    $salt = sprintf("%02u", $id % 97);
+
+    return base_convert($id . $salt, 10, 36);
+}
+
+/**
+ * 解密ID
+ *
+ * @param string $id 加密后的产品ID
+ * @return int 解密后的ID
+ */
+function decodeId(string $id): int
+{
+    $number = base_convert($id, 36, 10);
+
+    return substr($number, 0, strlen($number) - 2);
+}
+
+/**
+ * 根据给定时间参数与当前时间的差值转化时间格式
+ *
+ *    今天内的时间将格式化为:
+ *       刚刚 / N秒前/ N分钟前 / 半小时前 / N小时前
+ *    昨天/前天内的时间将格式化为:
+ *       (昨天|前天)HH:II
+ *    7 天内的时间将格式化为:
+ *       N天前
+ *    1 年内的时间将格式化为: (此处还存在一点问题，应分为今年内的和年前的，但出于效率考量，暂定为此，以后找到了好的方法再行优化)
+ *       MM-DD HH:II
+ *    1 年前的时间将格式化为:
+ *       YYYY-MM-DD HH:II
+ *
+ * @param string  $datetime     日期时间字符串,支持的格式请参考strtotime
+ * @param boolean $is_timestamp 当$datetime为时间戳时设为true
+ * @return string
+ */
+function dateFormat($datetime, $is_timestamp = false)
+{
+    static $OFFSET = 28800; // 8 小时时差
+    static $ONEDAY = 86400; // 1 天
+    static $REMAINS = 57599; // 86400 - 28800 - 1 秒
+
+    $tformat = 'H:i';
+    $dtformat = 'm-d H:i';
+
+    // 当前时间
+    $now = $_SERVER['REQUEST_TIME'];
+    $seconds = $now % $ONEDAY;
+    $midnight = $now - $seconds + $REMAINS;
+    // 给定日期
+    $timestamp = (is_numeric($datetime) || $is_timestamp) ? $datetime : strtotime($datetime);
+    // 与今日最后一秒时间差
+    $xdiff = $midnight - $timestamp;
+    // 天数差
+    $days = intval($xdiff / $ONEDAY);
+    // 与当前时间的差值
+    $diff = $now - $timestamp;
+    // 补上时差
+    $timestamp += $OFFSET;
+
+    if ($days == 0) {
+        if ($diff > 3600) {
+            return intval($diff / 3600) . '小时前';
+        } elseif ($diff > 1800) {
+            return '半小时前';
+        } elseif ($diff > 60) {
+            return intval($diff / 60) . '分钟前';
+        } elseif ($diff > 0) {
+            return $diff . '秒前';
+        } elseif ($diff == 0) {
+            return '刚刚';
+        }
+    } else {
+        if ($days <= 7) {
+            if ($days == 1) {
+                return '昨天' . gmdate($tformat, $timestamp);
+            } else {
+                if ($days == 2) {
+                    return '前天' . gmdate($tformat, $timestamp);
+                }
+            }
+
+            return $days . '天前' . gmdate($tformat, $timestamp);
+        } else {
+            $this_year = (int)date('Y', $now);
+            $that_year = (int)date('Y', $timestamp);
+            if ($this_year !== $that_year) {
+                $dtformat = 'Y-m-d H:i';
+            }
+        }
+    }
+
+    return gmdate($dtformat, $timestamp);
 }

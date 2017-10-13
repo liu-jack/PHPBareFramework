@@ -1,0 +1,103 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">查询</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <form action="" method="get" name="searchForm" id="searchForm">
+                    <input type="hidden" name="{ADMIN_VAR}" value=""/>
+                    <table class="table table-bordered table-striped" align="center">
+                        <tr>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">标签ID</div>
+                                    <input type="text" class="form-control" name="tagid" placeholder="标签ID" value="{if $tagid}{$tagid}{/if}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2">
+                                <div class="input-group">
+                                    <div class="input-group-addon">标签名称</div>
+                                    <input type="text" class="form-control" name="tagname" placeholder="标签名称" value="{if $tagname}{$tagname}{/if}">
+                                </div>
+                            </td>
+                            <td class="form-group col-xs-2" colspan="3">
+                                <input type="submit" value="搜索" class="btn btn-primary" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">标签管理</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+
+                <table class="table table-bordered table-striped" align="center">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>Icon</th>
+                        <th>封面</th>
+                        <th>操 作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if $list}
+                    {foreach $list as $v}
+                    <tr>
+                        <td width="200px">{$v.TagNameId}</td>
+                        <td>{$v.TagName}</td>
+                        <td><img src="{$v.Icon}" alt="" height="50"/></td>
+                        <td><img src="{$v.Cover}" alt="" height="50"/></td>
+                        <td align="center">
+                            <a href="{url('edit',['id'=>$v['TagNameId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+
+                {if !empty($pages)}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    $("#clearSearchForm").click(function(){
+        $("#searchForm input, #searchForm select").each(function(){
+            $(this).val('');
+            $(this).attr('value','');
+        });
+    });
+    $(".delete").click(function(){
+        var url = $(this).attr("href");
+        top.__confirm('确定要删除吗？','删除后不可恢复！', url, self);
+        return false;
+    });
+</script>
+
+{@view('Public/footer')}
