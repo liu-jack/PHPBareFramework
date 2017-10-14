@@ -8,7 +8,6 @@ namespace Controller\Admin\User;
 
 use Bare\DB;
 use Bare\AdminController;
-use Model\Admin\Admin\AdminLog;
 use Classes\Safe\Filter as CFilter;
 
 class Filter extends AdminController
@@ -49,7 +48,7 @@ class Filter extends AdminController
         $arrid = rtrim($arrid, ',');
         if ($arrid) {
             $query = $dbw->query("delete from " . self::TABLE . " where Id in($arrid)");
-            AdminLog::log('删除敏感词', 'del', 0, $delid, self::TABLE);
+            $this->adminLog('删除敏感词', 'del', 0, $delid, self::TABLE);
             if ($query->rowCount() > 0) {
                 output(200, ['title' => '删除成功', 'type' => 'success']);
             }
@@ -67,7 +66,7 @@ class Filter extends AdminController
             $this->alertErr('删除失败', '', '参数非法');
         } else {
             $dbw->query("delete from " . self::TABLE . " where Id = $id ");
-            AdminLog::log('删除敏感词', 'del', $id, $id, self::TABLE);
+            $this->adminLog('删除敏感词', 'del', $id, $id, self::TABLE);
             $this->alert('删除成功', url('index'));
         }
     }
@@ -85,7 +84,7 @@ class Filter extends AdminController
             }
         }
         if (CFilter::addFilter($data)) {
-            AdminLog::log('添加敏感词', 'add', 0, $keywords, self::TABLE);
+            $this->adminLog('添加敏感词', 'add', 0, $keywords, self::TABLE);
             output(200, ['title' => '添加成功', 'type' => 'success']);
         }
         output(201, ['title' => '添加失败', 'type' => 'error']);
@@ -109,7 +108,7 @@ class Filter extends AdminController
         //修改关键字
         $dbw = DB::pdo(DB::DB_ADMIN_W);
         $re = $dbw->update('Filter', ['Word' => $new], ['Id' => $id]);
-        AdminLog::log('敏感词修改', 'update', $id, $new, self::TABLE);
+        $this->adminLog('敏感词修改', 'update', $id, $new, self::TABLE);
         if ($re !== false) {
             output(200, ['title' => '修改成功', 'type' => 'success']);
         }

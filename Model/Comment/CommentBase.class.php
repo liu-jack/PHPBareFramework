@@ -8,60 +8,36 @@
  * @author     suning <snsnsky@gmail.com>
  */
 
-namespace Comment;
+namespace Model\Comment;
 
-use Common\Bridge;
-use Common\CommonBase;
+use Bare\DB;
+use Bare\CommonModel;
 use Common\DataType;
 
-abstract class CommentBase extends CommonBase
+abstract class CommentBase extends CommonModel
 {
     const LOG_FAIL_PATH = 'Comment/CommentBase/Fail';
     const LOG_SUCC_PATH = 'Comment/CommentBase/Succ';
 
-    // {{{
-    /**
-     * MC缓存KEY: 对象的评论列表
-     */
+    // MC缓存KEY: 对象的评论列表
     const MC_KEY_ITEM_CMTS = 'Comment_Type:%d_Item:%d';
-    /**
-     * MC缓存KEY: 单个评论详情
-     */
+    // MC缓存KEY: 单个评论详情
     const MC_KEY_COMMENT = 'Comment_%d';
-    // }}}
 
     const ENTIRE_TABLE_NAME = 'Comment';
     const SHARD_TABLE_NAME = 'Comment_%02x';
 
-    // {{{
-    /**
-     * 评论类型: 文章
-     */
+    // 评论类型: 文章
     const TYPE_ARTICLE = 1;
 
     protected static $_comment_types = [
         self::TYPE_ARTICLE => 'Article'
     ];
-    // }}}
-
-    // {{{
-    /**
-     * 状态字段值: 已删除
-     *
-     * @var integer
-     */
+    // 状态字段值: 已删除
     const REAL_STATUS_DELETED = 0;
-    /**
-     * 状态字段值: 正常
-     *
-     * @var integer
-     */
+    // 状态字段值: 正常
     const REAL_STATUS_PENDING = 1;
-    /**
-     * 状态字段值: 垃圾评论
-     *
-     * @var integer
-     */
+    // 状态字段值: 垃圾评论
     const REAL_STATUS_SPAM = 2;
 
     protected static $_real_status_map = [
@@ -69,20 +45,13 @@ abstract class CommentBase extends CommonBase
         self::REAL_STATUS_PENDING => '正常',
         self::REAL_STATUS_SPAM => '垃圾',
     ];
-    // }}}
-
-    // {{{
-    /**
-     * 计数字段: 子评论数
-     *
-     * @var integer
-     */
+    //  计数字段: 子评论数
     const COUNT_SUBCOMMENT = 1;
 
     protected static $_count_fields = [
         self::COUNT_SUBCOMMENT => 'SubCommentCnt',
     ];
-    // }}}
+
 
     protected $_app = null;
     protected $_mc = null;
@@ -95,24 +64,24 @@ abstract class CommentBase extends CommonBase
     protected $_commentCount = 0;
 
     protected static $_comment_field_schema = [
-        //'CommentId' => DataType::T_INTEGER_POSITIVE,
-        'ItemId' => DataType::T_INTEGER_POSITIVE,
-        'UserId' => DataType::T_INTEGER_POSITIVE,
-        'ReplyId' => DataType::T_INTEGER_NONNEGATIVE,
-        'Type' => DataType::T_INTEGER_POSITIVE,
-        'AtUserId' => DataType::T_INTEGER_NONNEGATIVE,
-        'Content' => DataType::T_STRING_NONEMPTY,
-        'Platform' => DataType::T_INTEGER_NONNEGATIVE,
-        'Status' => DataType::T_INTEGER_NONNEGATIVE,
-        'SubCommentCnt' => DataType::T_INTEGER_NONNEGATIVE,
-        'ExtraInfo' => DataType::T_ARRAY,
-        'CreateTime' => DataType::T_DATETIME,
+        'CommentId' => self::VAR_TYPE_KEY,
+        'ItemId' => self::VAR_TYPE_INT,
+        'UserId' => self::VAR_TYPE_INT,
+        'ReplyId' => self::VAR_TYPE_INT,
+        'Type' => self::VAR_TYPE_INT,
+        'AtUserId' => self::VAR_TYPE_INT,
+        'Content' => self::VAR_TYPE_STRING,
+        'Platform' => self::VAR_TYPE_INT,
+        'Status' => self::VAR_TYPE_INT,
+        'SubCommentCnt' => self::VAR_TYPE_STRING,
+        'ExtraInfo' => self::VAR_TYPE_ARRAY,
+        'CreateTime' => self::VAR_TYPE_STRING,
     ];
 
     /**
      * 实例化评论对象
      *
-     * @param integer $type 评论的对象类型, 请参考 self::TYPE_* 系列常量
+     * @param integer $type   评论的对象类型, 请参考 self::TYPE_* 系列常量
      * @param integer $itemid 评论对象ID
      * @throws \Exception
      */
@@ -121,7 +90,7 @@ abstract class CommentBase extends CommonBase
         global $app;
 
         $this->_app = $app;
-        $this->_mc = Bridge::memcache(Bridge::MEMCACHE_DEFAULT);
+        $this->_mc = DB::memcache(DB::MEMCACHE_DEFAULT);
 
         $this->_type = $type;
         $this->_itemid = $itemid;
@@ -139,7 +108,7 @@ abstract class CommentBase extends CommonBase
     /**
      * 更新评论主体的评论计数字段
      *
-     * @param integer $count 新的计数, [count | "[+|-]count"]
+     * @param integer $count  新的计数, [count | "[+|-]count"]
      * @param integer $itemid 评论主体ID, >0 时, 表示强制指定, 否则应该使用 $this->_itemid
      * @return mixed
      */
@@ -148,7 +117,7 @@ abstract class CommentBase extends CommonBase
     /**
      * 获取评论实例对象
      *
-     * @param integer $type 对象类型, 请参考 self::TYPE_* 系列常量
+     * @param integer $type   对象类型, 请参考 self::TYPE_* 系列常量
      * @param integer $itemid 对象ID
      * @return CommentBase
      * @throws \Exception
@@ -175,7 +144,7 @@ abstract class CommentBase extends CommonBase
     /**
      * 发表一条评论
      *
-     * @param array $info 评论数据, ['UserId'=>'用户ID','Content'=>'内容','Platform'=>'来源']
+     * @param array $info           评论数据, ['UserId'=>'用户ID','Content'=>'内容','Platform'=>'来源']
      *                              Platform => 0:Web 1:Android 2:iPhone 3:Wap
      * @return array
      */
@@ -192,11 +161,11 @@ abstract class CommentBase extends CommonBase
         $diff = array_diff_key($required_fields, $data);
         // 信息不完整
         if (count($diff) > 0) {
-            return self::$_ret_map[self::RET_CODE_LACK_ARGS] + ['lacks' => $diff];
+            return back(201, '信息不完整');
         }
         // 本期暂不做评论的子评论
-//        $reply_id = isset($data['ReplyId']) ? $data['ReplyId'] : null;
-//        $reply_id = (is_numeric($reply_id) && ($reply_id = (int)$reply_id) > 0) ? $reply_id : 0;
+        //        $reply_id = isset($data['ReplyId']) ? $data['ReplyId'] : null;
+        //        $reply_id = (is_numeric($reply_id) && ($reply_id = (int)$reply_id) > 0) ? $reply_id : 0;
         $reply_id = 0;
 
         $cmt_uid = (int)$data['UserId'];
@@ -206,14 +175,14 @@ abstract class CommentBase extends CommonBase
             $comment = self::getCommentsByIds($reply_id);
 
             if ($comment === null || $comment['Status'] == '0') {
-                return self::$_ret_map[self::RET_CODE_NOT_EXISTS];
+                return back(202, '对象不存在');
             }
 
             $at_uid = (int)$comment['UserId'];
             $cmt_item_id = (int)$comment['ItemId'];
 
             if ($cmt_item_id !== $this->_itemid) {
-                return self::$_ret_map[self::RET_CODE_NOT_MATCH];
+                return back(203, '不匹配');
             }
         }
 
@@ -244,7 +213,7 @@ abstract class CommentBase extends CommonBase
 
         $tables = [self::ENTIRE_TABLE_NAME, self::shardTable($this->_itemid)];
 
-        $db = Bridge::pdo(Bridge::DB_COMMENT_W, [
+        $db = DB::pdo(DB::DB_COMMENT_W, [
             'errorMode' => \PDO::ERRMODE_EXCEPTION,
         ]);
 
@@ -253,37 +222,34 @@ abstract class CommentBase extends CommonBase
 
             foreach ($tables as $table) {
                 $ins_result = $db->insert($table, $data);
-
                 if ($ins_result === false) {
                     break;
                 }
-
                 if (!isset($data['CommentId'])) {
                     $data['CommentId'] = $id = (int)$db->lastInsertId();
                 }
             }
-
             if ($ins_result === false) {
                 $db->rollBack();
             } else {
                 $commit_result = $db->commit();
             }
         } catch (\Exception $e) {
-            runtime_log(self::LOG_FAIL_PATH, array_merge([
+            logs(array_merge([
                 '_time' => date("Y-m-d H:i:s"),
                 '_from' => __CLASS__ . '->' . __METHOD__,
                 '_exception' => $e->getMessage()
-            ], $data));
+            ], $data), self::LOG_FAIL_PATH);
         }
 
         if ($commit_result) {
-//            if ($reply_id > 0) {
-//                // 此条评论若为子评论, 应更新父评论的子评论数
-//                $this->updateCount($reply_id, [self::COUNT_SUBCOMMENT => '+1']);
-//            } else {
-//                //更新评论对象的评论总数
-//
-//            }
+            //            if ($reply_id > 0) {
+            //                // 此条评论若为子评论, 应更新父评论的子评论数
+            //                $this->updateCount($reply_id, [self::COUNT_SUBCOMMENT => '+1']);
+            //            } else {
+            //                //更新评论对象的评论总数
+            //
+            //            }
             $this->updateItemCommentCount('+1');
             // 回复他人评论时, 向目标用户发送消息
             if ($at_uid > 0) {
@@ -298,18 +264,17 @@ abstract class CommentBase extends CommonBase
             }
 
             $mc = $this->_mc;
-
             // 清除MC缓存: 对象的评论列表
             $mc->delete(sprintf(self::MC_KEY_ITEM_CMTS, $this->_type, $this->_itemid));
 
-            $rets = self::$_ret_map[self::RET_CODE_SUCC];
+            $rets = back(200);
             $rets['id'] = $id;
             $rets['at_uid'] = $at_uid;
 
             return $rets;
         }
 
-        return self::$_ret_map[self::RET_CODE_FAIL];
+        return back(299);
     }
 
     /**
@@ -415,21 +380,33 @@ abstract class CommentBase extends CommonBase
     /**
      * 更新评论相关计数字段
      *
-     * @param integer $id 评论ID
-     * @param array $info 要更新的计数字段数据
+     * @param integer $id        评论ID
+     * @param array   $info      要更新的计数字段数据
      *                           [self::COUNT_SUBCOMMENT => [count | "[+|-]count"], ..]
-     * @return bool
+     * @return array
      */
     public function updateCount($id, $info)
     {
-
         return static::_updateCount($this->_itemid, $id, $info);
+    }
+
+    /**
+     * 更新评论相关字段
+     *
+     * @param integer $id   评论ID
+     * @param array   $info 要更新的字段数据
+     *
+     * @return array
+     */
+    public function updateExtData($id, $info)
+    {
+        return static::_updateExtData($this->_itemid, $id, $info);
     }
 
     /**
      * 更新评论状态
      *
-     * @param array $ids 评论ID数组(只能是item下评论ID)
+     * @param array   $ids    评论ID数组(只能是item下评论ID)
      * @param integer $status 新状态
      * @return bool
      */
@@ -448,7 +425,7 @@ abstract class CommentBase extends CommonBase
         }
 
         if (empty($id_map)) {
-            return self::$_ret_map[self::RET_CODE_WRONG_ARGS];
+            return back(201, '参数错误');
         }
 
         $shardTable = self::shardTable($itemid);
@@ -456,7 +433,7 @@ abstract class CommentBase extends CommonBase
         $id_cdn = implode(',', array_keys($id_map));
         $sql = "SELECT CommentId,ReplyId,UserId,Status FROM `{$shardTable}` WHERE ItemId = {$itemid} AND CommentId IN ({$id_cdn})";
 
-        $db = Bridge::pdo(Bridge::DB_COMMENT_W, [
+        $db = DB::pdo(DB::DB_COMMENT_W, [
             'errorMode' => \PDO::ERRMODE_EXCEPTION,
         ]);
 
@@ -465,11 +442,11 @@ abstract class CommentBase extends CommonBase
             $result = $stmt->fetchAll();
 
             if (!is_array($result)) {
-                return self::$_ret_map[self::RET_CODE_FAIL];
+                return back(202, '操作失败');
             }
 
             if (empty($result)) {
-                return self::$_ret_map[self::RET_CODE_SUCC];
+                return back(200);
             }
 
             $mc = $this->_mc;
@@ -501,30 +478,27 @@ abstract class CommentBase extends CommonBase
 
                 try {
                     $db->beginTransaction();
-
                     foreach ($shards as $table) {
                         $upd_sql = "UPDATE `{$table}` SET Status = {$status} WHERE CommentId = {$id}";
                         $upd_result = $db->exec($upd_sql);
-
                         if ($upd_result === false) {
                             break;
                         }
                     }
-
                     if ($upd_result === false) {
                         $db->rollBack();
                     } else {
                         $commit_result = $db->commit();
                     }
                 } catch (\Exception $e) {
-                    runtime_log(self::LOG_FAIL_PATH, [
+                    logs([
                         '_time' => date("Y-m-d H:i:s"),
                         '_from' => __CLASS__ . '->' . __METHOD__,
                         '_exception' => $e->getMessage(),
                         'itemid' => $itemid,
                         'ids' => $ids,
                         'status' => $status
-                    ]);
+                    ], self::LOG_FAIL_PATH);
                 }
 
                 if ($commit_result) {
@@ -533,7 +507,6 @@ abstract class CommentBase extends CommonBase
                         $this->updateCount($replyId, [self::COUNT_SUBCOMMENT => $count]);
                     } else {
                         $count = $this->getCommentCount(true, true);
-
                         // 更新评论对象的评论计数
                         $this->updateItemCommentCount($count);
                     }
@@ -544,15 +517,15 @@ abstract class CommentBase extends CommonBase
             }
         }
 
-        return self::$_ret_map[self::RET_CODE_SUCC];
+        return back(200);
     }
 
     /**
      * 加载当前对象的评论列表
      *
      * @param integer $itemid 评论对象ID
-     * @param integer $type 对象类型
-     * @param array $extra 额外参数
+     * @param integer $type   对象类型
+     * @param array   $extra  额外参数
      *                        EXTRA_REFRESH   - 为true时表示不使用缓存,直接从数据库中取值, 默认为false
      *                        EXTRA_FROM_W    - 是否从写库取数据
      *                        EXTRA_OFFSET    - 此次获取的结果集偏移
@@ -565,7 +538,7 @@ abstract class CommentBase extends CommonBase
 
         $mc_key = sprintf(self::MC_KEY_ITEM_CMTS, $type, $itemid);
 
-        $mc = Bridge::memcache(Bridge::MEMCACHE_DEFAULT);
+        $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
         $cache = $args[self::EXTRA_REFRESH] ? null : $mc->get($mc_key);
 
         // 如果不为空而且不是数组，尝试解压
@@ -579,7 +552,7 @@ abstract class CommentBase extends CommonBase
             $shardTable = self::shardTable($itemid);
 
             $sql = "SELECT CommentId,ReplyId FROM `{$shardTable}` WHERE ItemId = {$itemid} AND Type = {$type} AND Status = 1 ORDER BY CommentId ASC";
-            $db = Bridge::pdo($args[self::EXTRA_FROM_W] ? Bridge::DB_COMMENT_W : Bridge::DB_COMMENT_R);
+            $db = DB::pdo($args[self::EXTRA_FROM_W] ? DB::DB_COMMENT_W : DB::DB_COMMENT_R);
             $stmt = $db->query($sql);
             if ($stmt) {
                 $result = $stmt->fetchAll();
@@ -600,8 +573,8 @@ abstract class CommentBase extends CommonBase
     /**
      * 获取指定ID的评论详情
      *
-     * @param array|int $ids 评论ID列表
-     * @param array $extra 评论扩展参数
+     * @param array|int $ids   评论ID列表
+     * @param array     $extra 评论扩展参数
      * @return array
      */
     public static function getCommentsByIds($ids, $extra = [])
@@ -619,7 +592,7 @@ abstract class CommentBase extends CommonBase
             return [];
         }
 
-        $mc = Bridge::memcache();
+        $mc = DB::memcache();
         $cache = $args[self::EXTRA_REFRESH] ? [] : $mc->get($id_map);
         $rets = $tmp_cache = $nocache_ids = [];
 
@@ -638,7 +611,7 @@ abstract class CommentBase extends CommonBase
             $ids_cdn = implode(',', $nocache_ids);
             $sql = "SELECT * FROM `{$table}` WHERE CommentId IN ({$ids_cdn})";
 
-            $db = Bridge::pdo($args[self::EXTRA_FROM_W] ? Bridge::DB_COMMENT_W : Bridge::DB_COMMENT_R);
+            $db = DB::pdo($args[self::EXTRA_FROM_W] ? DB::DB_COMMENT_W : DB::DB_COMMENT_R);
             $stmt = $db->query($sql);
             if ($stmt) {
                 $result = $stmt->fetchAll();
@@ -670,7 +643,7 @@ abstract class CommentBase extends CommonBase
     /**
      * 批量删除用户的评论数据
      *
-     * @param integer $uid 用户ID
+     * @param integer $uid   用户ID
      * @param integer $range 单次处理删除的评论数
      * @return bool
      */
@@ -680,7 +653,7 @@ abstract class CommentBase extends CommonBase
 
         $sql = "SELECT `CommentId`,`Type`,`ItemId` FROM Comment WHERE UserId = {$uid} AND Status = 1 ORDER BY `ItemId` ASC, `Type` ASC LIMIT {$range}";
 
-        $db = Bridge::pdo(Bridge::DB_COMMENT_W);
+        $db = DB::pdo(DB::DB_COMMENT_W);
 
         do {
             $loop = false;
@@ -719,15 +692,15 @@ abstract class CommentBase extends CommonBase
             }
         } while ($loop);
 
-        return self::$_ret_map[self::RET_CODE_SUCC];
+        return true;
     }
 
     /**
      * 更新指定评论的状态
      *
-     * @param array $ids 评论ID数组
+     * @param array   $ids    评论ID数组
      * @param integer $status 新状态
-     * @return bool
+     * @return array
      */
     public static function updateStatusByCommentIds(array $ids, $status)
     {
@@ -740,7 +713,7 @@ abstract class CommentBase extends CommonBase
         }
 
         if (empty($id_map) || !is_numeric($status) || !isset(self::$_real_status_map[$status])) {
-            return self::$_ret_map[self::RET_CODE_WRONG_ARGS];
+            return back(201, '参数错误');
         }
 
         $entireTable = self::ENTIRE_TABLE_NAME;
@@ -748,26 +721,26 @@ abstract class CommentBase extends CommonBase
         $id_cdn = implode(',', array_keys($id_map));
         $sql = "SELECT CommentId,ItemId,Type,ReplyId,UserId,Status FROM `{$entireTable}` WHERE CommentId IN ({$id_cdn}) AND `Status` != {$status}";
 
-        $db = Bridge::pdo(Bridge::DB_COMMENT_W, [
+        $db = DB::pdo(DB::DB_COMMENT_W, [
             'errorMode' => \PDO::ERRMODE_EXCEPTION,
         ]);
 
         $stmt = $db->query($sql);
         if (!$stmt) {
-            return self::$_ret_map[self::RET_CODE_FAIL];
+            return back(202, '操作失败');
         }
 
         $result = $stmt->fetchAll();
 
         if (!is_array($result)) {
-            return self::$_ret_map[self::RET_CODE_FAIL];
+            return back(203, '操作失败');
         }
 
         if (empty($result)) {
-            return self::$_ret_map[self::RET_CODE_SUCC];
+            return back(200);
         }
 
-        $mc = Bridge::memcache(Bridge::MEMCACHE_DEFAULT);
+        $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
 
         $map = [];
 
@@ -837,13 +810,13 @@ abstract class CommentBase extends CommonBase
                             $commit_result = $db->commit();
                         }
                     } catch (\Exception $e) {
-                        runtime_log(self::LOG_FAIL_PATH, [
+                        logs([
                             '_time' => date("Y-m-d H:i:s"),
                             '_from' => __CLASS__ . '->' . __METHOD__,
                             '_exception' => $e->getMessage(),
                             'ids' => $ids,
                             'status' => $status
-                        ]);
+                        ], self::LOG_FAIL_PATH);
                     }
 
                     if ($commit_result) {
@@ -860,7 +833,6 @@ abstract class CommentBase extends CommonBase
                             } else {
                                 $cmt_update_count += $cmt['_UpdateCount'];
                             }
-
                             // 清除MC缓存: 评论详情
                             $mc->delete(sprintf(self::MC_KEY_COMMENT, $cmt_id));
                         }
@@ -873,42 +845,110 @@ abstract class CommentBase extends CommonBase
                                 ]);
                             }
                         }
-
                         // 更新对象的评论数
                         if ($cmt_update_count !== 0) {
                             $sub = self::getEntity($type, $itemid);
                             $sub->updateItemCommentCount($cmt_update_count, $itemid);
                         }
                     }
-
                     // 清除MC缓存: 该对象的评论列表
                     $mc->delete(sprintf(self::MC_KEY_ITEM_CMTS, $type, $itemid));
                 }
             }
         }
 
-        return self::$_ret_map[self::RET_CODE_SUCC];
+        return back(200);
+    }
+
+    /**
+     * 更新评论相关数据
+     *
+     * @param integer $itemid 评论对象ID
+     * @param integer $id     评论ID
+     * @param array   $info   要更新数据
+     *
+     * @return array
+     */
+    protected static function _updateExtData($itemid, $id, $info)
+    {
+        $data = self::getCommentsByIds($id);
+        if (empty($data)) {
+            return back(201, '对象不存在');
+        }
+        $_info = [];
+        foreach ($info as $k => $v) {
+            if (isset(self::$_comment_field_schema[$k])) {
+                $_info[] = '`' . $k . '` = ' . $v . ' ';
+            }
+        }
+        if (count($_info) < 1) {
+            return back(202, '参数错误');
+        }
+        $newdata = implode(',', $_info);
+        $sql_tpl = "UPDATE `%s` SET {$newdata} WHERE CommentId = {$id}";
+
+        $upd_result = $commit_result = false;
+
+        $db = DB::pdo(DB::DB_COMMENT_W, [
+            'errorMode' => \PDO::ERRMODE_EXCEPTION,
+        ]);
+
+        try {
+            $tables = [self::ENTIRE_TABLE_NAME, self::shardTable($itemid)];
+            $db->beginTransaction();
+            foreach ($tables as $table) {
+                $sql = sprintf($sql_tpl, $table);
+                $upd_result = $db->exec($sql);
+                if ($upd_result === false) {
+                    break;
+                }
+            }
+            if ($upd_result === false) {
+                $db->rollBack();
+            } else {
+                $commit_result = $db->commit();
+            }
+        } catch (\Exception $e) {
+            logs([
+                '_time' => date("Y-m-d H:i:s"),
+                '_from' => __CLASS__ . '->' . __METHOD__,
+                '_exception' => $e->getMessage(),
+                'itemid' => $itemid,
+                'id' => $id,
+                'info' => $info
+            ], self::LOG_FAIL_PATH);
+        }
+
+        if ($commit_result) {
+            $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
+            // 清除MC缓存: 评论详情
+            $mc->delete(sprintf(self::MC_KEY_COMMENT, $id));
+
+            return back(200);
+        }
+
+        return back(299);
     }
 
     /**
      * 更新评论相关计数字段
      *
-     * @param integer $itemid 评论对象ID
-     * @param integer $id 评论ID
-     * @param array $info 要更新的计数字段数据
+     * @param integer $itemid       评论对象ID
+     * @param integer $id           评论ID
+     * @param array   $info         要更新的计数字段数据
      *                              [self::COUNT_SUBCOMMENT => [count | "[+|-]count"], ..]
-     * @return bool
+     * @return array
      */
     protected static function _updateCount($itemid, $id, $info)
     {
         $data = self::getCommentsByIds($id);
         if (empty($data)) {
-            return self::$_ret_map[self::RET_CODE_NOT_EXISTS];
+            return back(201, '对象不存在');
         }
 
         $_info = self::_parseCount($info, self::$_count_fields);
         if (empty($_info)) {
-            return self::$_ret_map[self::RET_CODE_NO_VALID_DATA];
+            return back(201, '数据无效');
         }
 
         $newdata = implode(',', $_info);
@@ -917,50 +957,84 @@ abstract class CommentBase extends CommonBase
 
         $upd_result = $commit_result = false;
 
-        $db = Bridge::pdo(Bridge::DB_COMMENT_W, [
+        $db = DB::pdo(DB::DB_COMMENT_W, [
             'errorMode' => \PDO::ERRMODE_EXCEPTION,
         ]);
 
         try {
             $tables = [self::ENTIRE_TABLE_NAME, self::shardTable($itemid)];
-
             $db->beginTransaction();
-
             foreach ($tables as $table) {
                 $sql = sprintf($sql_tpl, $table);
                 $upd_result = $db->exec($sql);
-
                 if ($upd_result === false) {
                     break;
                 }
             }
-
             if ($upd_result === false) {
                 $db->rollBack();
             } else {
                 $commit_result = $db->commit();
             }
         } catch (\Exception $e) {
-            runtime_log(self::LOG_FAIL_PATH, [
+            logs([
                 '_time' => date("Y-m-d H:i:s"),
                 '_from' => __CLASS__ . '->' . __METHOD__,
                 '_exception' => $e->getMessage(),
                 'itemid' => $itemid,
                 'id' => $id,
                 'info' => $info
-            ]);
+            ], self::LOG_FAIL_PATH);
         }
-
         if ($commit_result) {
-            $mc = Bridge::memcache(Bridge::MEMCACHE_DEFAULT);
-
+            $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
             // 清除MC缓存: 评论详情
             $mc->delete(sprintf(self::MC_KEY_COMMENT, $id));
 
-            return self::$_ret_map[self::RET_CODE_SUCC];
+            return back(200);
         }
 
-        return self::$_ret_map[self::RET_CODE_FAIL];
+        return back(299);
+    }
+
+    /**
+     * 设置为优质评论
+     *
+     * @param $itemid
+     * @param $id
+     * @param $num
+     * @return bool
+     */
+    public static function setGoodComment($itemid, $id, $num = 1)
+    {
+        $num = intval($num);
+        $cmtinfo = self::getCommentsByIds($id);
+        if (!empty($cmtinfo)) {
+            static::_updateExtData($itemid, $id, ['IsGood' => $num]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 取消优质评论
+     *
+     * @param $itemid
+     * @param $id
+     * @return bool
+     */
+    public static function cancelGoodComment($itemid, $id)
+    {
+        $cmtinfo = self::getCommentsByIds($id);
+        if (!empty($cmtinfo)) {
+            static::_updateExtData($itemid, $id, ['IsGood' => 0]);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -1024,16 +1098,7 @@ abstract class CommentBase extends CommonBase
     protected static function _sanitizeFields($info)
     {
         $field_schema = self::$_comment_field_schema;
-
-        $pured = DataType::dataCheck((array)$info, $field_schema);
-
-        $field = 'Status';
-        if (isset($pured[$field])) {
-            $num = $pured[$field];
-            if (!isset(self::$_real_status_map[$num])) {
-                unset($pured[$field]);
-            }
-        }
+        $pured = self::checkFields((array)$info, $field_schema);
 
         return $pured;
     }

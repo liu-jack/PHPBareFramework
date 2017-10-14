@@ -10,7 +10,6 @@ namespace Controller\Admin\Mobile;
 
 use Bare\AdminController;
 use Model\Admin\Admin\AdminCron;
-use Model\Admin\Admin\AdminLog;
 use Model\Mobile\AppPush;
 use Model\Mobile\Device;
 
@@ -252,7 +251,7 @@ class Push extends AdminController
         $ret = AdminCron::add($add_data);
 
         if ($ret !== false) {
-            AdminLog::log('定时推送', 'add', $ret, $add_data, 'AdminCron');
+            $this->adminLog('定时推送', 'add', $ret, $add_data, 'AdminCron');
             output(200, '设置定时推送成功！');
         } else {
             output(201, '设置定时推送失败，请稍后再试！');

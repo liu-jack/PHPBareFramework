@@ -6,7 +6,6 @@
 namespace Controller\Admin\Tool;
 
 use Bare\AdminController;
-use Model\Admin\Admin\AdminLog;
 
 class CacheRefresh extends AdminController
 {
@@ -34,7 +33,7 @@ class CacheRefresh extends AdminController
             }
 
             cdnCachePurge($urls);
-            AdminLog::log('缓存刷新', 'refresh', 0, $urls, 'CDNCachePurge');
+            $this->adminLog('缓存刷新', 'refresh', 0, $urls, 'CDNCachePurge');
             output(200, ['title' => '操作成功', 'type' => 'success']);
         }
 

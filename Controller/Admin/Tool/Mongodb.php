@@ -4,7 +4,6 @@ namespace Controller\Admin\Tool;
 
 use Bare\AdminController;
 use Bare\MongoModel;
-use Model\Admin\Admin\AdminLog;
 
 class Mongodb extends AdminController
 {
@@ -35,7 +34,7 @@ class Mongodb extends AdminController
         $res = MongoModel::removeCollection($name, $db);
 
         if ($res !== false) {
-            AdminLog::log('删除集合', 'del', 0, [$db, $name], 'mongodb');
+            $this->adminLog('删除集合', 'del', 0, [$db, $name], 'mongodb');
             output(200);
         } else {
             output(201);

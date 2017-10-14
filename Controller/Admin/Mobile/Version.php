@@ -7,7 +7,6 @@
 namespace Controller\Admin\Mobile;
 
 use Bare\AdminController;
-use Model\Admin\Admin\AdminLog;
 use Model\Mobile\AppInfo;
 use Model\Mobile\Version as MVersion;
 use Bare\DB;
@@ -78,7 +77,7 @@ class Version extends AdminController
 
         if ($r !== false) {
             AppInfo::removeCache(AppInfo::CACHE_VERSION, $app_id);
-            AdminLog::log('添加手机应用版本', 'add', $r, $data, self::TABLE);
+            $this->adminLog('添加应用版本', 'add', $r, $data, self::TABLE);
             output(200, '添加成功！');
         } else {
             output(201, '操作失败， 请稍后再试！');
@@ -97,7 +96,7 @@ class Version extends AdminController
         $where = ['Id' => $id, 'AppId' => $app_id];
         if ($pdo_w->delete(self::TABLE, $where)) {
             AppInfo::removeCache(AppInfo::CACHE_VERSION, $app_id);
-            AdminLog::log('删除手机应用版本', 'del', $id, $where, self::TABLE);
+            $this->adminLog('删除应用版本', 'del', $id, $where, self::TABLE);
             $this->alert('删除成功！');
         } else {
             $this->alertErr('删除失败', '', '请稍后再试！');

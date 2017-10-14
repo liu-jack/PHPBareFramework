@@ -10,7 +10,6 @@
 namespace Controller\Admin\Data;
 
 use Bare\AdminController;
-use Model\Admin\Admin\AdminLog;
 use Model\Book\Book as MBook;
 use Model\Book\Column;
 use Model\Book\Content;
@@ -114,13 +113,13 @@ class Book extends AdminController
             if (!$ret) {
                 $this->alertErr('修改失败');
             }
-            AdminLog::log('修改书本', 'update', $id, $data, 'Book');
+            $this->adminLog('修改书本', 'update', $id, $data, 'Book');
             $this->alert('修改成功', url('index'));
         } else {
             $data['CreateTime'] = date('Y-m-d H:i:s');
             $id = MBook::addBook($data);
             if ($id) {
-                AdminLog::log('添加书本', 'add', $id, $data, 'Book');
+                $this->adminLog('添加书本', 'add', $id, $data, 'Book');
                 $cdata = [
                     'BookId' => $id,
                     'FromSite' => $data['FromSite']
@@ -181,14 +180,14 @@ class Book extends AdminController
                 if (!$ret) {
                     $this->alertErr('修改章节名称失败');
                 }
-                AdminLog::log('修改书本章节内容', 'update', $cid, $data, 'BookColumn');
+                $this->adminLog('修改书本章节内容', 'update', $cid, $data, 'BookColumn');
             }
             if (!empty($cdata['Content']) && $coid > 0) {
                 $ret = Content::updateContent($bid, $coid, $cdata);
                 if (!$ret) {
                     $this->alertErr('修改内容失败');
                 }
-                AdminLog::log('修改书本章节内容', 'update', $coid, $coid, 'BookContent');
+                $this->adminLog('修改书本章节内容', 'update', $coid, $coid, 'BookContent');
             }
 
             $this->alert('修改成功');

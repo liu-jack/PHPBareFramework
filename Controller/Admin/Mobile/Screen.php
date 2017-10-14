@@ -12,7 +12,6 @@ use Model\Mobile\AppInfo;
 use Classes\Image\PhotoImage;
 use Common\PathConst;
 use Common\Upload;
-use Model\Admin\Admin\AdminLog;
 use Bare\DB;
 use Model\Mobile\ScreenImage;
 
@@ -137,7 +136,7 @@ class Screen extends AdminController
             if ($ret !== false) {
                 // 删除缓存
                 AppInfo::removeCache(AppInfo::CACHE_APP_SCREEN, $appid);
-                AdminLog::log('更新启动图', 'update', $id, $data, self::TABLE_NAME);
+                $this->adminLog('更新启动图', 'update', $id, $data, self::TABLE_NAME);
                 $this->alert('编辑成功！', url('index'));
             }
         } else {
@@ -148,7 +147,7 @@ class Screen extends AdminController
             if (!empty($id)) {
                 // 删除缓存
                 AppInfo::removeCache(AppInfo::CACHE_APP_SCREEN, $appid);
-                AdminLog::log('添加启动图', 'add', $id, $data, self::TABLE_NAME);
+                $this->adminLog('添加启动图', 'add', $id, $data, self::TABLE_NAME);
                 // 上传图片
                 if (!empty($rel)) {
                     $img_url = Upload::saveImg(PathConst::IMG_APP_SCREEN, $rel, PathConst::IMG_APP_SCREEN_SIZE, $id);
@@ -177,7 +176,7 @@ class Screen extends AdminController
 
         if ($pdo_w->update(self::TABLE_NAME, $data, $where)) {
             AppInfo::removeCache(AppInfo::CACHE_APP_SCREEN, $app_id);
-            AdminLog::log('删除启动图', 'update', $id, $data, self::TABLE_NAME);
+            $this->adminLog('删除启动图', 'update', $id, $data, self::TABLE_NAME);
             $this->alert('删除成功！');
         } else {
             $this->alertErr('删除失败', '', '请稍后再试！');

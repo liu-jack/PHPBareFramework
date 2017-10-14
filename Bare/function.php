@@ -377,17 +377,13 @@ function logs($content, $name = '', $log_path = LOG_PATH)
             }
         }
         if (is_array($content)) {
-            if (is_numeric(key($content))) {
-                $content = json_encode($content);
-            } else {
-                $temp = '';
-                foreach ($content as $k => $v) {
-                    if (is_array($v)) {
-                        $v = json_encode($v);
-                    }
-                    $temp .= $k . ': ' . $v . '  ';
+            foreach ($content as $k => &$v) {
+                if (is_array($v)) {
+                    $v = serialize($v);
                 }
-                $content = $temp;
+                if (!is_numeric($k)) {
+                    $v .= $k . ': ' . $v;
+                }
             }
         }
         $dir = trim(dirname($name) != '.' ? dirname($name) : '', '/');
@@ -396,7 +392,7 @@ function logs($content, $name = '', $log_path = LOG_PATH)
         if (!is_dir(dirname($file))) {
             mkdir(dirname($file), 0755, true);
         }
-        $content = $content . ' time: ' . date('Y-m-d H:i:s') . PHP_EOL;
+        $content = date('Y-m-d H:i:s') . "\t" . ltrim(implode("\t", $content)) . PHP_EOL;
         error_log($content, 3, $file);
     }
 }
@@ -617,4 +613,25 @@ function autohost($url)
     }
 
     return $url;
+}
+
+/**
+ * 函数返回码
+ *
+ * @param int          $code 返回码
+ * @param array|string $data 返回数据
+ * @return array
+ */
+function back($code = 200, $data = [])
+{
+    $ret['code'] = $code;
+    if (is_array($data)) {
+        if (!empty($data)) {
+            $ret = array_merge($data, $ret);
+        }
+    } else {
+        $ret['msg'] = $data;
+    }
+
+    return $ret;
 }

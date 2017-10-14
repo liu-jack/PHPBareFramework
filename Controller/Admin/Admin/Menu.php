@@ -11,7 +11,6 @@ namespace Controller\Admin\Admin;
 
 use Bare\AdminController;
 use Model\Admin\Admin\AdminGroup;
-use Model\Admin\Admin\AdminLog;
 use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminMenu;
 
@@ -67,7 +66,7 @@ class Menu extends AdminController
             }
             $ret = AdminMenu::addMenu($data);
             if ($ret) {
-                AdminLog::log('添加菜单', 'add', $ret, $data, 'AdminMenu');
+                $this->adminLog('添加菜单', 'add', $ret, $data, 'AdminMenu');
                 //将此菜单权限加入当前登录管理员所在的权限组
                 $group = AdminGroup::getGroupByIds($_SESSION['_admin_info']['AdminUserGroup']);
                 $group_auth = $group['AdminAuth'];
@@ -77,7 +76,7 @@ class Menu extends AdminController
         } else {
             $ret = AdminMenu::updateMenu($id, $data);
             if ($ret) {
-                AdminLog::log('更新菜单', 'update', $id, $data, 'AdminMenu');
+                $this->adminLog('更新菜单', 'update', $id, $data, 'AdminMenu');
             }
 
         }
@@ -98,7 +97,7 @@ class Menu extends AdminController
 
         $ret = AdminMenu::delMenu($id);
         if ($ret > 0) {
-            AdminLog::log('删除菜单', 'del', $id, $id);
+            $this->adminLog('删除菜单', 'del', $id, $id);
             $this->alertMsg('已删除');
         }
         $this->alertErr('删除失败');

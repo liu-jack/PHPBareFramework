@@ -33,7 +33,7 @@ class Tags extends AdminController
         if (!empty($tag_name)) {
             $where .= " AND `TagName` = '{$tag_name}'";
         }
-        $sql = "SELECT `TagNameId`,`TagName` FROM " . self::TABLE . " WHERE $where ORDER BY TagNameId DESC LIMIT $offset,$limit";
+        $sql = "SELECT `TagNameId` FROM " . self::TABLE . " WHERE $where ORDER BY TagNameId DESC LIMIT $offset,$limit";
         $sql_count = "SELECT count(TagNameId) AS num FROM " . self::TABLE . " WHERE $where";
         $count = $this->readDb($sql_count);
         $count = (int)$count[0]['num'];
@@ -42,19 +42,14 @@ class Tags extends AdminController
             $this->page($count, $limit, $page);
             $page_info['page'] = ceil($count / $limit);
             $page_info['count'] = $count;
-            $list = $this->readDb($sql);
-            if (!empty($list)) {
+            $list_ids = $this->readDb($sql);
+            $list = '';
+            if (!empty($list_ids)) {
                 $tagid = [];
-                foreach ($list as $k => $v) {
+                foreach ($list_ids as $k => $v) {
                     $tagid[$k] = $v['TagNameId'];
                 }
-                $tags = MTags::getTagsByIds($tagid, [MTags::EXTRA_OUTDATA => MTags::EXTRA_OUTDATA_ALL]);
-                if (!empty($tags)) {
-                    foreach ($list as $k => $v) {
-                        $list[$k]['Icon'] = $tags[$v['TagNameId']]['Icon'];
-                        $list[$k]['Cover'] = $tags[$v['TagNameId']]['Cover'];
-                    }
-                }
+                //$list = MTags::getTagsByIds($tagid, [MTags::EXTRA_OUTDATA => MTags::EXTRA_OUTDATA_ALL]);
             }
 
             $this->value('tagid', $tag_id);
@@ -241,36 +236,32 @@ class Tags extends AdminController
      */
     public function uploadBanner()
     {
-        set_time_limit(30);
+        set_time_limit(60);
         $file_name = trim($_POST['file_name']);
         $files = $_FILES[$file_name];
-        $id = (int)$_GET['id'];
-        $order = (int)$_GET['order'];
-        $ver = (int)$_GET['ver'] + 1;
         $callback = 'parent._uploadImg';
-        if ($files && $id) {
-            // 检测图片
+        if (!empty($files)) {
             $status = PhotoImage::checkImage($files, 0, 0, 2097152);
             if ($status['code'] != 0) {
-                callback($callback, ['status' => 201, 'msg' => $status['msg']]);
+                callback($callback, ['code' => 201, 'msg' => $status['msg']]);
             }
 
-            $res = MTags::updateTagBannerImg($id, $status);
+            $res = MTags::updateTagBannerImg($status);
             if ($res) {
                 callback($callback, [
-                    'status' => 200,
+                    'code' => 200,
                     'msg' => '图片上传成功',
                     'data' => [
                         'img_url' => $res,
-                        'auto_img_url' => autohost($res . time()),
+                        'auto_img_url' => autohost($res),
                         'file_name' => $file_name,
                     ]
                 ]);
             } else {
-                callback($callback, ['status' => 202, 'msg' => '上传失败！']);
+                callback($callback, ['code' => 202, 'msg' => '上传失败！']);
             }
         } else {
-            callback($callback, ['status' => 203, 'msg' => '参数不正确！']);
+            callback($callback, ['code' => 203, 'msg' => '参数不正确！']);
         }
     }
 

@@ -216,7 +216,7 @@ class ViewModel extends Model
                 $i++;
             }
         }
-        $sub = '<td class="form-group col-xs-2" colspan="2"><button type="submit" class="btn btn-success"><i class="icon-ok"></i></button> <button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button></td>';
+        $sub = '<td class="form-group col-xs-2" colspan="2"><button type="submit" class="btn btn-primary"><i class="icon-search"></i></button> <button type="reset" id="clearSearchForm" class="btn btn-warning"><i class="icon-refresh"></i></button></td>';
         if ($i % 5 != 1) {
             $form .= $sub;
             $form .= '</tr>';

@@ -37,7 +37,7 @@ define('V_API', 1); // 接口访问
 define('V_ADMIN', 2); // 后台访问
 
 if (php_sapi_name() !== 'cli') {
-    $search = ['/index.php', '/admin.php', '/api.php', VEXT];
+    $search = ['/index.php', '/admin.php', '/api.php', '/m.php', VEXT];
     define('PATH_INFO', trim(str_replace($search, '', $_SERVER['DOCUMENT_URI']), '/'));
     define('IS_CLI', false);
 } else {

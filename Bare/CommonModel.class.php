@@ -16,12 +16,21 @@ class CommonModel
     const VAR_TYPE_ARRAY = 'array';
 
     const LIST_SIZE = 10;
+    const TEN_MINUTE = 600; // 时间: 10 分钟
+    const HALF_HOUR = 1800; // 时间: 30 分钟
+    const ONE_HOUR = 3600; // 时间: 1 小时
+    const HALF_DAY = 43200; // 时间: 半天
+    const ONE_DAY = 86400; // 时间: 1 天
+    const ONE_WEEK = 604800; // 时间: 1 周
+    const SORT_ORDER_ASC = 0; // 排序方式: 升序
+    const SORT_ORDER_DESC = 1; // 排序方式: 降序
     const EXTRA_FROM_W = 'from_w';
     const EXTRA_REFRESH = 'refresh';
     const EXTRA_AVATAR = 'avatar';
     const EXTRA_OFFSET = 'offset';
     const EXTRA_LIMIT = 'limit';
     const EXTRA_STATUS = 'status';
+    const EXTRA_SORT_ORDER = 'sort_order';
 
     protected static $_extra_meta = [
         self::EXTRA_AVATAR => [
@@ -89,7 +98,7 @@ class CommonModel
      */
     protected static function _parseExtras($extra, $metas = null)
     {
-        $metas = empty($metas) ? self::$_extra_meta : $metas;
+        $metas = empty($metas) ? static::$_extra_meta : $metas;
         $args = filter_var_array((array)$extra, $metas);
         foreach ($metas as $fkey => $fval) {
             $val = isset($args[$fkey]) ? $args[$fkey] : null;

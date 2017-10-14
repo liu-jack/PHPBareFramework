@@ -21,7 +21,7 @@
                         <div class="padd">
 
                             <table id="myformtable" class="table table-bordered table-striped" align="center">
-                                    <input type="hidden" id="id" name="id" value="{$info.TagId}" />
+                                    <input type="hidden" id="id" name="id" value="{$info.TagNameId}" />
                                     <tbody>
                                     <tr>
                                         <td>标签名称：</td>
@@ -45,7 +45,7 @@
                                             尺寸最小640*260<br/>
                                         </td>
                                         <td>
-                                            <input type="file" class="file_img" id="cover" name="cover" minW="640" minH="260" maxSize="2048"  data="{$info['Cover']}" accept=".jpg, .png" onchange="verifyImg($(this))" />
+                                            <input type="file" class="file_img" id="cover" name="cover" minW="640" minH="260" maxSize="2048"  data="{$info['Cover']}" accept=".jpg" onchange="verifyImg($(this))" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -56,7 +56,6 @@
                                             <iframe name='upframe' id="upframe" style='display:none'></iframe>
                                         </td>
                                         <td width="80%">
-                                            {if !isset($bannerid)}添加标签时不能修改，请保存后进入编辑再修改{/if}
                                             <table align="center" id="code_show" style="width:100%" class="table table-striped table-bordered">
                                                 {if !empty($info['Banner'])}
                                                 {foreach $info['Banner'] as $key => $item}
@@ -70,7 +69,7 @@
                                                             <div class="input-group-addon">URL地址</div>
                                                             <input class="form-control" type="text" name="url[]" value="{$item.Url}">
                                                         </div>
-                                                        <form action="?do=UploadBanner&id={$info.TagId}&ver={$info.VerId}" enctype="multipart/form-data" method="POST" target="upframe">
+                                                        <form action="{url('uploadBanner', ['id'=>$info['TagNameId']])}" enctype="multipart/form-data" method="POST" target="upframe">
                                                             <div class="input-group">
                                                                 <div class="input-group-addon">选择图片</div>
                                                                 <input class="form-control" type="file" name="img_{$key}" onchange="fileChange('{$key}')">
@@ -96,15 +95,16 @@
                                             <textarea rows="3" cols="2" class="form-control" id="TagDesc" name="TagDesc" placeholder="标签简介" style="width: 400px;">{$info['TagDesc']}</textarea>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>&nbsp;</td>
-                                        <td >
-                                            <input type="submit" id="add_btn" class="btn btn-primary" value="保存" />
-                                            <input type="button" onclick="history.back()" class="btn btn-primary" value="取消" />
-                                        </td>
-                                    </tr>
                                     </tbody>
-                                </table>
+                            </table>
+                            <hr />
+                            <div class="form-group">
+                                <div class="col-lg-offset-1 col-lg-9">
+                                    <button type="submit"class="btn btn-success" id="save_btn"><i class="icon-ok"></i></button> &nbsp;
+                                    <button type="reset" class="btn btn-warning"><i class="icon-refresh"></i></button>  &nbsp;
+                                    <button type="button" class="btn btn-danger go-back"><i class="icon-remove"></i></button>  &nbsp;
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -121,8 +121,8 @@
 <!-- Content ends -->
 <input type="hidden" id="bannerid"  value="{$bannerid}" />
 <script type="text/javascript">
-    var action_url = "{url('uploadBanner')}?id={$info.TagId}&ver={$info.VerId}";
-    $('#add_btn').click(function () {
+    var action_url = "{url('uploadBanner', ['id'=>$info['TagNameId']])}";
+    $('#save_btn').click(function () {
         $('form').remove();
         $('#myformtable').wrap('<form action=\'{url("update")}\' id="myform" method="post" enctype="multipart/form-data"></form>');
         $('#myform').submit();
@@ -144,7 +144,7 @@
             '<div class="input-group-addon">URL地址</div>'+
             '<input class="form-control" type="text" name="url[]" value="">'+
             '</div>'+
-            '<form action="'+action_url+'&order='+ time +'" enctype="multipart/form-data" method="POST" target="upframe">'+
+            '<form action="'+action_url+'" enctype="multipart/form-data" method="POST" target="upframe">'+
             '<div class="input-group">'+
             '<div class="input-group-addon">选择图片</div>'+
             '<input class="form-control" type="file" name="img_' + time + '" onchange="fileChange(' + time + ')">'+
@@ -167,7 +167,7 @@
             $("#code_show").html(tpl);
         }
     }
-    if ($.trim($("#bannerid").val()) == '0') { // 添加默认模版
+    if (!$.trim($("#bannerid").val())) { // 添加默认模版
         addCode(0);
     }
     /**
@@ -175,7 +175,7 @@
      */
     function delCode(index){
         if ($("#code_show tr").length <= 1) {
-            top.swal('出错了', '至少拥有一个Banner图', 'error');
+            top.swal('出错了', '至少显示一个Banner图', 'error');
             return false;
         }
         $("#data_" + index).remove();
@@ -194,7 +194,7 @@
             data = eval('(' + data + ')');
         }
 
-        if (data.status != 200) {
+        if (data.code != 200) {
             top.swal('出错了', data.msg, 'error');
             return false;
         } else {
@@ -236,7 +236,6 @@
     }
     //图片上传初始化
     $(".file_img").each(function () {
-        //var accept = [$(this).attr("accept")];
         var input_obj = {
             showCaption: false,
             showClose: false,
@@ -247,10 +246,8 @@
             language: 'zh', //设置语言
             allowedPreviewTypes: ['image'],
             allowedFileTypes: ['image'],
-            //allowedFileExtensions: accept,//接收的文件后缀
             dropZoneEnabled: false, //拖拽区域
         };
-        //$(this).attr("accept", '.' + accept.join(',.'));
 
         var img_url = $(this).attr("data");
         if (img_url != '') {

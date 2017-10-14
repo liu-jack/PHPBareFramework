@@ -13,7 +13,6 @@ use Classes\Image\Securimage;
 use Model\Admin\Admin\AdminGroup;
 use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminUser;
-use Model\Admin\Admin\AdminLog;
 
 class Index extends AdminController
 {
@@ -74,7 +73,7 @@ class Index extends AdminController
             $ret = AdminUser::updateUser($uid, $data);
 
             if ($ret) {
-                AdminLog::log('修改密码', 'updatePwd', $uid, '', 'AdminUser');
+                $this->adminLog('修改密码', 'updatePwd', $uid, '', 'AdminUser');
                 output(200, '修改成功');
             }
             output(203, '修改失败');
@@ -103,7 +102,7 @@ class Index extends AdminController
             }
             $userinfo = AdminLogin::doLogin($login, $pwd);
             if (!empty($userinfo['UserId'])) {
-                AdminLog::log('登录', 'login', $userinfo['UserId'], '', 'AdminUser');
+                $this->adminLog('登录', 'login', $userinfo['UserId'], '', 'AdminUser');
                 output(200, ['url' => url('admin/index/index')]);
             } else {
                 $code = !empty($userinfo['code']) ? $userinfo['code'] : 205;

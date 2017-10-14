@@ -8,7 +8,6 @@ namespace Controller\Admin\Tool;
 use Bare\DB;
 use Bare\AdminController;
 use Common\RedisConst;
-use Model\Admin\Admin\AdminLog;
 
 class Queue extends AdminController
 {
@@ -49,7 +48,7 @@ class Queue extends AdminController
         $queue_name = trim($_POST['queue_name']);
         $redis = DB::redis(RedisConst::QUEUE_DB_W, RedisConst::QUEUE_DB_INDEX);
         $redis->delete($queue_name);
-        AdminLog::log('清空队列', 'del', 0, $queue_name, 'queue');
+        $this->adminLog('清空队列', 'del', 0, $queue_name, 'queue');
         output(200, ['title' => '操作成功']);
     }
 }

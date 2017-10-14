@@ -11,7 +11,6 @@ namespace Controller\Admin\Admin;
 
 use Bare\AdminController;
 use Model\Admin\Admin\AdminGroup;
-use Model\Admin\Admin\AdminLog;
 use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminUser;
 use Classes\Encrypt\Rsa;
@@ -71,7 +70,7 @@ class Admin extends AdminController
         $ret = AdminUser::addUser($data);
 
         if ($ret > 0) {
-            AdminLog::log('添加管理员', 'add', $ret, $data, 'AdminUser');
+            $this->adminLog('添加管理员', 'add', $ret, $data, 'AdminUser');
             output(200, '添加成功');
         }
         output(203, '添加失败');
@@ -100,7 +99,7 @@ class Admin extends AdminController
 
             $ret = AdminUser::updateUser($uid, $data);
             if ($ret !== false) {
-                AdminLog::log('编辑管理员', 'update', $uid, $data, 'AdminUser');
+                $this->adminLog('编辑管理员', 'update', $uid, $data, 'AdminUser');
                 $this->alert('保存成功', url('index'));
             }
             $this->alertErr('保存失败');
@@ -146,7 +145,7 @@ class Admin extends AdminController
         }
         $ret = AdminUser::delUser($uid);
         if ($ret) {
-            AdminLog::log('删除管理员', 'del', $uid, $uid, 'AdminUser');
+            $this->adminLog('删除管理员', 'del', $uid, $uid, 'AdminUser');
             $this->alertMsg('删除成功');
         }
         $this->alertErr('删除失败，请重试');

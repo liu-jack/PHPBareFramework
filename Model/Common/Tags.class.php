@@ -421,13 +421,20 @@ class Tags extends CommonModel
         return $rets;
     }
 
+    public static function getTagIcon($id, $ext = 'png')
+    {
+        $path_url = getSavePath(PathConst::IMG_TAG_ICON, $id, $ext, PathConst::IMG_TAG_ICON_SIZE);
+
+        return (string)$path_url['url'];
+    }
+
     public static function updateTagIcon($id, $icon)
     {
         $ret = Upload::saveImg(PathConst::IMG_TAG_ICON, $icon, PathConst::IMG_TAG_ICON_SIZE, $id);
         if (is_array($ret) && $ret['status'] == true) {
             self::updateTagVer($id);
 
-            return $ret;
+            return current($ret['thumb']);
         }
 
         return false;
@@ -447,24 +454,32 @@ class Tags extends CommonModel
         return false;
     }
 
+    public static function getTagCover($id, $ext = 'jpg')
+    {
+        $path_url = getSavePath(PathConst::IMG_TAG_COVER, $id, $ext, PathConst::IMG_TAG_COVER_SIZE);
+
+        return (string)$path_url['url'];
+    }
+
     public static function updateTagCover($id, $cover)
     {
         $ret = Upload::saveImg(PathConst::IMG_TAG_COVER, $cover, PathConst::IMG_TAG_COVER_SIZE, $id);
         if (is_array($ret) && $ret['status'] == true) {
             self::updateTagVer($id);
 
-            return $ret;
+            return current($ret['thumb']);
         }
 
         return false;
     }
 
-    public static function updateTagBannerImg($id, $img)
+    public static function updateTagBannerImg($img, $id = 0)
     {
-        $ret = Upload::saveImg(PathConst::IMG_TAG_BANNER, $img, PathConst::IMG_TAG_BANNER_SIZE, $id, PathConst::IMG_TAG_BANNER_EXTRA);
+        $ret = Upload::saveImg(PathConst::IMG_TAG_BANNER, $img, PathConst::IMG_TAG_BANNER_SIZE, $id,
+            PathConst::IMG_TAG_BANNER_EXTRA);
         if (is_array($ret) && $ret['status'] == true) {
 
-            return $ret;
+            return current($ret['thumb']);
         }
 
         return false;
@@ -650,7 +665,7 @@ class Tags extends CommonModel
 
         if (count($no_cache) > 0) {
             $search_tag_ids = implode(',', $no_cache);
-            $sql = "SELECT `TagNameId` `tid`,`TagName`,`VerId`,`Banner`,`TagDesc`, `FollowCount`  FROM `TagName` WHERE TagNameId IN ({$search_tag_ids})";
+            $sql = "SELECT * FROM `TagName` WHERE TagNameId IN ({$search_tag_ids})";
 
             $db = DB::pdo($args[self::EXTRA_FROM_W] ? DB::DB_TAG_W : DB::DB_TAG_R);
 
@@ -661,8 +676,8 @@ class Tags extends CommonModel
                 if (is_array($result) && count($result) > 0) {
                     foreach ($result as $row) {
                         $data = [];
-                        $tagid = (int)$row['tid'];
-                        $data['TagId'] = $row['tid'];
+                        $tagid = (int)$row['TagNameId'];
+                        $data['TagNameId'] = $row['TagNameId'];
                         $data['TagName'] = $row['TagName'];
                         $data['Banner'] = $row['Banner'];
                         $data['VerId'] = $row['VerId'];
@@ -681,16 +696,9 @@ class Tags extends CommonModel
             if ($outmod == self::EXTRA_OUTDATA_ALL) {
                 foreach ($rets as $k => $v) {
                     $rs[$k] = $v;
-                    if ($v['VerId'] > 0) {
-                        $hash = sprintf('%02x', $k % 256);
-                        $rs[$k]['Icon'] = "http://i1.qbtoutiao.com/tag/icon/{$hash}/{$k}_180.png?v={$v['VerId']}";
-                        $rs[$k]['Cover'] = "http://i1.qbtoutiao.com/tag/cover/{$hash}/{$k}_450.jpg?v={$v['VerId']}";
-                    } else {
-                        $rs[$k]['Icon'] = "http://i1.qbtoutiao.com/tag/icon/00/00_180.png";
-                        $rs[$k]['Cover'] = "http://i1.qbtoutiao.com/tag/cover/00/00_450.jpg";
-                    }
+                    $rs[$k]['Icon'] = self::getTagIcon($v['TagNameId']) . '?v=' . $v['VerId'];
+                    $rs[$k]['Cover'] = self::getTagCover($v['TagNameId']) . '?v=' . $v['VerId'];
                     $rs[$k]['Banner'] = unserialize($v['Banner']);
-
                 }
             } else {
                 foreach ($rets as $k => $v) {

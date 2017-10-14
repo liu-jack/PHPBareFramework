@@ -10,23 +10,20 @@
 namespace Controller\Admin\Data;
 
 use Bare\AdminController;
+use Bare\DB;
+use Model\Comment\CommentBase;
+use Model\Mobile\AppPush;
 
 class Comment extends AdminController
 {
-    public function index()
-    {
-
-    }
-
     const TABLE = 'Comment';
     private static $isGood = [
         1 => '一般',
         2 => '优质'
     ];
 
-    public function doDefault()
+    public function index()
     {
-        $smarty = $this->app->page();
         $status = $_GET['status'];
         $type = $_GET['type'];
         $userid = intval($_GET['userid']);
@@ -36,7 +33,6 @@ class Comment extends AdminController
         $is_good = trim($_GET['is_good']);
 
         $where = [];
-
         if (isset($status)) {
             $where['Status'] = intval($status);
         } else {
@@ -45,7 +41,6 @@ class Comment extends AdminController
         if (isset($type) && $type != -100) {
             $where['Type'] = intval($type);
         }
-
         if (!empty($userid)) {
             $where['UserId'] = $userid;
         }
@@ -66,16 +61,17 @@ class Comment extends AdminController
             $where['CreateTime <='] = $end_time;
         }
 
-        $page = max(1, intval($_GET['page']));
-        $pdo_r = Bridge::pdo(Bridge::DB_COMMENT_R);
+        $page = max(1, intval($_GET[PAGE_VAR]));
+        $pdo_r = DB::pdo(DB::DB_COMMENT_R);
+        $limit = PAGE_SIZE;
 
         $total = $pdo_r->clear()->select('count(CommentId)')->from(self::TABLE)->where($where)->getValue();
 
         if ($total > 0) {
-            $data = $pdo_r->clear()->select('*')->from(self::TABLE)->where($where)->order('CommentId DESC')
-                ->limit(($page - 1) * self::PAGE_SIZE, self::PAGE_SIZE)->getAll();
+            $data = $pdo_r->clear()->select('*')->from(self::TABLE)->where($where)->order('CommentId DESC')->limit(($page - 1) * $limit,
+                $limit)->getAll();
 
-            $pagination = $this->pagination($total, self::PAGE_SIZE, $page);
+            $this->page($total, $limit, $page);
 
             foreach ($data as $k => $v) {
                 if ($v['IsGood'] < 100) {
@@ -85,25 +81,24 @@ class Comment extends AdminController
                 }
             }
 
-            $smarty->value('data', $data);
-            $smarty->value('pagination', $pagination);
+            $this->value('data', $data);
         }
 
         /*
-         * 来源平台0. Web 1. Android 2. iPhone 3. Wap
+         * 来源平台0. Web 2. Android 3. iPhone 1. Wap
          */
-        $platform = ['0' => 'Web', '1' => 'Android', '2' => 'iPhone', '3' => 'Wap'];
+        $platform = [APP_TYPE_WEB => 'Web', APP_TYPE_ADR => 'Android', APP_TYPE_IOS => 'iPhone', APP_TYPE_WAP => 'Wap'];
 
-        $types = Comment\CommentBase::getCommentTypes();
-        $statuss = Comment\CommentBase::getRealStatusMap();
-        $subcommentcnt = Comment\CommentBase::getCountFields();
+        $types = CommentBase::getCommentTypes();
+        $statuss = CommentBase::getRealStatusMap();
+        $subcommentcnt = CommentBase::getCountFields();
         $status_color = [
             0 => 'style="color:blue"',
             1 => 'style="color:green"',
             2 => 'style="color:gray"'
         ];
 
-        $smarty->value('searchdata', [
+        $this->value('searchdata', [
             'Type' => isset($type) ? $type : -100,
             'Status' => isset($status) ? intval($status) : 1,
             'UserId' => $userid,
@@ -113,36 +108,34 @@ class Comment extends AdminController
             'end_time' => $end_time
         ]);
 
-        $smarty->value('status_color', $status_color);
-        $smarty->value('platform', $platform);
-        $smarty->value('type', $types);
-        $smarty->value('status', $statuss);
-        $smarty->value("subcommentcnt, $subcommentcnt");
-        $smarty->output("comment/manage.tpl");
+        $this->value('status_color', $status_color);
+        $this->value('platform', $platform);
+        $this->value('type', $types);
+        $this->value('status', $statuss);
+        $this->value("subcommentcnt", $subcommentcnt);
+        $this->view();
     }
 
-    public function doDelete()
+    public function delete()
     {
         if (strstr($_POST['id'], ',')) {
             $id = explode(',', $_POST['id']);
         } else {
             $id[] = $_POST['id'];
         }
-
-        $status = Comment\CommentBase::REAL_STATUS_DELETED;
-        $rs = Comment\CommentBase::updateStatusByCommentIds($id, $status);
-        if ($rs['code'] == Comment\CommentBase::RET_CODE_SUCC) {
-            $this->adminLog('修改状态', 0, 'delete', serialize($id));
-
-            self::output(['title' => '删除成功', 'type' => 'success']);
+        $status = CommentBase::REAL_STATUS_DELETED;
+        $rs = CommentBase::updateStatusByCommentIds($id, $status);
+        if ($rs['code'] == 200) {
+            $this->adminLog('修改状态', 'del', $id, $id, self::TABLE);
+            output(200, ['title' => '删除成功', 'type' => 'success']);
         }
-        self::output(['title' => '删除失败', 'type' => 'error']);
+        output(201, ['title' => '删除失败', 'type' => 'error']);
     }
 
     /**
      * 优质评论
      */
-    public function doQuality()
+    public function quality()
     {
         $cash = 100;//奖励的金币
         $comment_id = intval($_POST['comment_id']);//接收评论ID
@@ -151,37 +144,34 @@ class Comment extends AdminController
         $re = CommentBase::setGoodComment($item_id, $comment_id, $cash);
 
         if ($re) {
-            AppPush::pushByUserId($user_id, AppPush::PUSH_TYPE_WALLET, '你的评论被评为优质评论，获得100金币', [AppPush::EXTRA_FIELD_TYPE => AppPush::VAL_TYPE_COIN]);
-            $this->adminLog('优质评论', $comment_id, 'update', serialize($cash));
-            self::output(['type' => 'success']);
+            AppPush::pushByUserId($user_id, AppPush::PUSH_TYPE_MSG, '你的评论被评为优质评论，获得100金币');
+            $this->adminLog('优质评论', 'update', $comment_id, $cash, self::TABLE);
+            output(200, ['type' => 'success']);
         } else {
-            self::output(['type' => 'error']);
+            output(201, ['type' => 'error']);
         }
     }
 
     /**
      * 取消优质评论
      */
-    public function doOrdinary()
+    public function unOrdinary()
     {
         $comment_id = intval($_POST['comment_id']);//接收评论ID
         $item_id = intval($_POST['item_id']);//接收评论对象的编号
         $user_id = $_POST['user_id'];
 
-        $pdo = Bridge::pdo(Bridge::DB_COMMENT_R);
-        $money = $pdo->from('Comment')
-            ->select("IsGood")
-            ->where(['CommentId' => $comment_id])
-            ->getOne();
+        $pdo = DB::pdo(DB::DB_COMMENT_R);
+        $money = $pdo->from('Comment')->select("IsGood")->where(['CommentId' => $comment_id])->getOne();
 
         $re = CommentBase::cancelGoodComment($item_id, $comment_id);
 
         if ($re) {
-            //            AppPush::pushByUserId($user_id, AppPush::PUSH_TYPE_WALLET, '你的评论被取消优质评论，扣除100金币', [AppPush::EXTRA_FIELD_TYPE => AppPush::VAL_TYPE_COIN]);
-            $this->adminLog('取消优质评论', $comment_id, 'update', serialize($money['IsGood']));
-            self::output(['type' => 'success']);
+            AppPush::pushByUserId($user_id, AppPush::PUSH_TYPE_MSG, '你的评论被取消优质评论，扣除100金币');
+            $this->adminLog('取消优质评论', 'update', $comment_id, $money['IsGood'], self::TABLE);
+            output(200, ['type' => 'success']);
         } else {
-            self::output(['type' => 'error']);
+            output(201, ['type' => 'error']);
         }
     }
 }

@@ -128,7 +128,7 @@ Class AdminController extends Controller
         if ($id > 0) {
             $ret = $this->_m->delete($id);
             if ($ret !== false) {
-                AdminLog::log('删除' . $this->_m::TABLE_REMARK, 'del', $id, $id, $this->_m::TABLE);
+                $this->adminLog('删除' . $this->_m::TABLE_REMARK, 'del', $id, $id, $this->_m::TABLE);
                 $this->alert('删除成功');
             }
             $this->alertErr('删除失败');

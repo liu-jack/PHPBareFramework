@@ -11,7 +11,6 @@ namespace Controller\Admin\Admin;
 
 use Bare\AdminController;
 use Model\Admin\Admin\AdminGroup;
-use Model\Admin\Admin\AdminLog;
 use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminUser;
 
@@ -37,7 +36,7 @@ class Auth extends AdminController
         }
         $ret = AdminGroup::addGroup(['GroupName' => $name]);
         if ($ret) {
-            AdminLog::log('添加权限组', 'add', $ret, $name, 'AdminGroup');
+            $this->adminLog('添加权限组', 'add', $ret, $name, 'AdminGroup');
             $this->alertMsg('添加成功');
         }
         $this->alertErr('添加失败');
@@ -54,7 +53,7 @@ class Auth extends AdminController
         if (isset($_POST['menu'])) {
             $ret = AdminGroup::updateGroup($id, ['AdminAuth' => $_POST['menu']]);
             if ($ret !== false) {
-                AdminLog::log('编辑权限组', 'update', $id, $_POST['menu'], 'AdminGroup');
+                $this->adminLog('编辑权限组', 'update', $id, $_POST['menu'], 'AdminGroup');
                 $this->alert('保存成功', url('index'));
             } else {
                 $this->alertErr('保存失败');
@@ -84,7 +83,7 @@ class Auth extends AdminController
         }
         $ret = AdminGroup::delGroup($id);
         if ($ret) {
-            AdminLog::log('删除权限组', 'del', $id, $id, 'AdminGroup');
+            $this->adminLog('删除权限组', 'del', $id, $id, 'AdminGroup');
             $this->alert('删除成功');
         }
         $this->alertErr('删除失败');

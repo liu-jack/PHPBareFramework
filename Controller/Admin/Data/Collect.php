@@ -10,7 +10,6 @@
 namespace Controller\Admin\Data;
 
 use Bare\AdminController;
-use Model\Admin\Admin\AdminLog;
 use Model\Book\Book as MBook;
 use Model\Book\Collect as MCollect;
 
@@ -109,12 +108,12 @@ class Collect extends AdminController
             if (!$ret) {
                 $this->alertErr('修改失败');
             }
-            AdminLog::log('修改采集', 'update', $id, $data, 'BookCollect');
+            $this->adminLog('修改采集', 'update', $id, $data, 'BookCollect');
             $this->alert('修改成功', url('index'));
         } else {
             $id = MCollect::addCollect($data);
             if ($id) {
-                AdminLog::log('添加采集', 'add', $id, $data, 'BookCollect');
+                $this->adminLog('添加采集', 'add', $id, $data, 'BookCollect');
                 $this->alert('添加采集成功', url('index'));
             } else {
                 $this->alertErr('添加采集失败');
