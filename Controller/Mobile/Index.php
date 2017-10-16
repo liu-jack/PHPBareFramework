@@ -21,9 +21,9 @@ class Index extends Controller
         if (strpos($agent, 'micromessenger') !== false) {
             if (strpos($agent, 'iphone') !== false || strpos($agent, 'ipad') !== false || strpos($agent,
                     'ios') !== false) {
-                $this->view('Mobile/Public/download-iphone');
+                $this->show('Mobile/Public/download-iphone');
             } else {
-                $this->view('Mobile/Public/download-android');
+                $this->show('Mobile/Public/download-android');
             }
         }
 

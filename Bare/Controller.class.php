@@ -69,6 +69,18 @@ Class Controller
     }
 
     /**
+     * html模板加载函数
+     *
+     * @param string $path
+     * @param string $ext
+     */
+    public function show($path = '', $ext = VEXT)
+    {
+        $this->view($path, $ext);
+        exit;
+    }
+
+    /**
      * 赋值到模板
      *
      * @param string $name 保存到前端模板的变量名

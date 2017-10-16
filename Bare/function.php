@@ -385,6 +385,8 @@ function logs($content, $name = '', $log_path = LOG_PATH)
                     $v .= $k . ': ' . $v;
                 }
             }
+        } else {
+            $content = [$content];
         }
         $dir = trim(dirname($name) != '.' ? dirname($name) : '', '/');
         $base = basename($name);

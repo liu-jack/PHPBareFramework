@@ -20,6 +20,7 @@
                     <div class="widget-content">
                         <div class="padd">
 
+                            <form action="{url('update')}" method="post" id="myform" class="form-horizontal" role="form">
                             <table id="myformtable" class="table table-bordered table-striped" align="center">
                                     <input type="hidden" id="id" name="id" value="{$info.TagNameId}" />
                                     <tbody>
@@ -105,6 +106,7 @@
                                     <button type="button" class="btn btn-danger go-back"><i class="icon-remove"></i></button>  &nbsp;
                                 </div>
                             </div>
+                            </form>
 
                         </div>
                     </div>
