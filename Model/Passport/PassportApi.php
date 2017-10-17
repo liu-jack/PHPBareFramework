@@ -9,6 +9,7 @@ namespace Model\Passport;
 
 use Classes\Encrypt\Blowfish;
 use Model\Account\User as AUser;
+use Model\Mobile\Device;
 
 class PassportApi
 {
@@ -16,7 +17,7 @@ class PassportApi
      * 登录
      *
      * @param string $name 用户名
-     * @param string $pwd 密码
+     * @param string $pwd  密码
      * @return array
      */
     public static function login($name, $pwd)
@@ -38,21 +39,13 @@ class PassportApi
     /**
      * 获取SSID, 并开启session
      *
-     * @param array $user 用户信息
+     * @param array  $user      用户信息
      * @param string $device_id 设备ID
      * @return string
      */
     public static function getSSID($user, $device_id)
     {
-        $str = sprintf(
-            '%s|%s|%s',
-            sprintf(
-                "%u",
-                crc32(trim($device_id))
-            ),
-            $user['UserId'],
-            (int)$user['LoginCount']
-        );
+        $str = sprintf('%s|%s|%s', sprintf("%u", crc32(trim($device_id))), $user['UserId'], (int)$user['LoginCount']);
         $ssid = self::encode($str);
         session_id($ssid);
         session_start();
@@ -82,18 +75,15 @@ class PassportApi
         ];
 
         // 自动更新设备用户关系
-//        $info = Device::getDeviceInfo($GLOBALS['g_appid'], $GLOBALS['g_deviceid']);
-//        if ($info['Id'] && $info['UserId'] != $user['UserId']) {
-//            $ios_token = isset($info['iOSToken']) ? $info['iOSToken'] : '';
-//            Device::initDevice(
-//                $GLOBALS['g_appid'],
-//                $GLOBALS['g_deviceid'],
-//                $info['Channel'],
-//                $info['Token'],
-//                $user['UserId'],
-//                $ios_token
-//            );
-//        }
+        if (in_array($GLOBALS[G_APP_ID], [APP_APPID_ADR, APP_APPID_IOS])) {
+            $info = Device::getDeviceInfo($GLOBALS[G_APP_ID], $GLOBALS[G_DEVICE_ID]);
+            if ($info['Id'] && $info['UserId'] != $user['UserId']) {
+                $ios_token = isset($info['iOSToken']) ? $info['iOSToken'] : '';
+                Device::initDevice($GLOBALS[G_APP_ID], $GLOBALS[G_DEVICE_ID], $info['Channel'], $info['Token'],
+                    $user['UserId'], $ios_token);
+            }
+        }
+
         return $result;
     }
 
@@ -127,6 +117,7 @@ class PassportApi
                 }
             }
         }
+
         return false;
     }
 }
