@@ -30,6 +30,22 @@ CREATE TABLE IF NOT EXISTS `User` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 EOT
     ,
+    'create_passport_connect' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Connect` (
+  `ConnectId` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `PlatformId` tinyint(3) unsigned NOT NULL COMMENT '第三方平台 20: 新浪微博 22: QQ 26: 微信 ',
+  `SiteId` int(11) unsigned NOT NULL COMMENT '站点ID 1000000',
+  `OpenId` varchar(128) NOT NULL DEFAULT '' COMMENT '开放平台唯一ID',
+  `UnionId` varchar(128) DEFAULT NULL COMMENT '多平台统一ID(预留)',
+  `CreateTime` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ConnectId`),
+  UNIQUE KEY `Connect_OpenId_SiteId` (`OpenId`,`PlatformId`,`SiteId`) USING BTREE,
+  UNIQUE KEY `Connect_UserId_SiteId` (`UserId`,`SiteId`,`PlatformId`) USING BTREE,
+  KEY `UnionId` (`UnionId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='第三方连接通行证 1.0';
+EOT
+    ,
     'create_account' => <<<EOT
 CREATE TABLE IF NOT EXISTS `User` (
   `Id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -47,6 +63,25 @@ CREATE TABLE IF NOT EXISTS `User` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UserId` (`Userid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+EOT
+    ,
+    'create_connect' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Connect` (
+  `ConnectId` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `SiteId` int(11) unsigned NOT NULL COMMENT '站点ID. 见类中定义',
+  `AccessToken` varchar(255) NOT NULL DEFAULT '' COMMENT '授权信息',
+  `RefreshToken` varchar(255) NOT NULL DEFAULT '' COMMENT '授权更新密码 (OAuth 2.0)',
+  `OpenId` varchar(128) NOT NULL DEFAULT '' COMMENT '开放平台唯一ID',
+  `UnionId` varchar(128) NOT NULL DEFAULT ''  COMMENT '多平台统一ID(预留)',
+  `NickName` varchar(32) NOT NULL DEFAULT '' COMMENT '开放平台的昵称',
+  `ExpiredAt` datetime NOT NULL COMMENT 'Token过期时间',
+  `UpdatedAt` datetime NOT NULL COMMENT 'Token更新时间',
+  `CreateTime` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ConnectId`),
+  UNIQUE KEY `Connect_UserId_SiteId` (`UserId`,`SiteId`) USING BTREE,
+  UNIQUE KEY `Connect_OpenId_SiteId` (`OpenId`,`SiteId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='第三方连接表';
 EOT
     ,
 

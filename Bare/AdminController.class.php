@@ -83,7 +83,9 @@ Class AdminController extends Controller
         $list_search = $this->_m->createSearch(static::$_search_val);
         $list_title = '列表';
         $list_list = $this->_m->createList($list, static::$_list_extra);
+        $list_add = $this->_m->getListAdd(static::$_list_extra);
 
+        $this->value('list_add', $list_add);
         $this->value('list_search', $list_search);
         $this->value('list_title', $list_title);
         $this->value('list_list', $list_list);

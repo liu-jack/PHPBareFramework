@@ -17,7 +17,7 @@ class PathConst
     const IMG_EXT_WEBP = 'webp';
     const IMG_SIZE_0 = 0;
     const IMG_SIZE_450 = 450;
-    const IMG_SIZE_H_290 = 290;
+    const IMG_SIZE_290 = 290;
     const IMG_EXTRA_HEIGHT = 'height';
     const IMG_EXTRA_QUALITY = 'quality'; // 1-100 default:85
     const IMG_EXTRA_POSITION = 'position'; // top|middle|bottom default:middle
@@ -36,7 +36,12 @@ class PathConst
     const IMG_TAG_BANNER_SIZE = self::IMG_SIZE_450;
     const IMG_TAG_BANNER_EXTRA = [
         self::IMG_EXTRA_HEIGHT => [
-            self::IMG_TAG_BANNER_SIZE => self::IMG_SIZE_H_290
+            self::IMG_TAG_BANNER_SIZE => self::IMG_SIZE_290
         ]
     ];
+    // 相册
+    const IMG_ATLAS_COVER = 'atlas/cover';
+    const IMG_ATLAS_COVER_SIZE = self::IMG_SIZE_0;
+    const IMG_ATLAS_PHOTO = 'atlas/photo';
+    const IMG_ATLAS_PHOTO_SIZE = self::IMG_SIZE_0;
 }

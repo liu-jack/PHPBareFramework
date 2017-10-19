@@ -9,13 +9,9 @@
 namespace Controller\Api\Passport;
 
 use Bare\Controller;
-use Passport\PassportBase;
-use PassportApi\ISiteType;
-use PassportApi\ApiBase;
-use PassportApi\QCoin;
 use PassportApi\Connect;
-use Passport\Register;
-use Encrypt\Rsa;
+use Model\Passport\Register;
+use Classes\Encrypt\Rsa;
 
 /**
  * 通行证- 用户接口
@@ -26,8 +22,6 @@ use Encrypt\Rsa;
  */
 class User extends Controller
 {
-    use PassportBase;
-
     /**
      * 注册新用户
      *

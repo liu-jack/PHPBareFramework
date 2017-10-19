@@ -4,7 +4,7 @@ namespace Controller\Collect;
 
 use Bare\Controller;
 use Classes\Net\Collects;
-use Model\Picture\{
+use Model\Collect\{
     Atlas, Picture
 };
 

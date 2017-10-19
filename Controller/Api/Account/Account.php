@@ -2,26 +2,21 @@
 /**
  * Account.class.php
  *
- * @author xiaoshucheng <xiaomail666@163.com>
- *
- * $Id$
  */
 
-namespace MobileApi\Passport;
+namespace Controller\Api\Account;
 
-
-use MobileApi\Lib\ApiBase;
-use Passport\Account as AcountInfo;
+use Bare\Controller;
+use Model\Account\User as AUser;
 
 
 /**
  * 用户 - 用户账号相关
  *
- * @package Passport
- * @author  xiaoshucheng <xiaomail666@163.com>
- * @since   1.0.0 2016-03-15
+ * @author  camfee <camfee@foxmail.com>
+ * @since   1.0.0 2017-10-19
  */
-class Account extends ApiBase
+class Account extends Controller
 {
     /**
      * 账号信息
@@ -45,7 +40,7 @@ class Account extends ApiBase
     public function accountInfo(){
         $uid = $this->isLogin(true);
 
-        $userInfo = AcountInfo::getUserById($uid);
+        $userInfo = AUser::getUserById($uid);
         $result['Mobile'] = $userInfo['Mobile'];
         $result['Password'] = empty($userInfo['Password'])?0:1;
 

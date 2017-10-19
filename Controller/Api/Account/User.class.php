@@ -2,32 +2,25 @@
 /**
  * User.class.php
  *
- * @author suning <snsnsky@gmail.com>
- *
- * $Id$
  */
 
-namespace MobileApi\Passport;
+namespace Controller\Api\Account;
 
-use Center\UserInvite;
-use \MobileApi\Lib\Passport;
-use \MobileApi\Lib\ApiBase;
-use \MobileApi\Lib\Device;
-use \Passport\Account;
-use \Passport\Register;
-use \Notice\Sms;
-use \Center\User as UserInfo;
-use \HXApi\HXReg;
-use \Passport\Login;
+use Bare\Controller;
+use Model\Mobile\Device;
+use Model\Passport\PassportApi;
+use Model\Passport\User as PUser;
+use Model\Passport\Register;
+use Notice\Sms;
+use Model\Passport\Login;
 
 /**
  * 通行证 - 手机登录/注册
  *
- * @package Passport
- * @author  suning <snsnsky@gmail.com>
- * @since   1.0.0 2016-02-24
+ * @author  camfee <camfee@foxmail.com>
+ * @since   1.0.0 2017-10-19
  */
-class User extends ApiBase
+class User extends Controller
 {
     /**
      * 发送短信验证码
@@ -38,7 +31,7 @@ class User extends ApiBase
      *    mobile:  手机号码
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * 异常状态
@@ -70,7 +63,7 @@ class User extends ApiBase
 
             case Sms::SMS_TYPE_MODIFY_MOBILE:
                 $uid = $this->isLogin(true);
-                $uid0 = Account::isMobileExists($mobile);
+                $uid0 = PUser::isMobileExists($mobile);
                 if ($uid == $uid0) {
                     $this->output(206, '你已绑定该号码！');
                 }
@@ -108,7 +101,7 @@ class User extends ApiBase
      *  code:   验证码
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -117,11 +110,6 @@ class User extends ApiBase
      *        'Auth': '认证字符串',
      *        'UserId': 用户ID,
      *        'UserNick': '用户昵称', // 昵称为空时, 暂缓注册AUTH, 进入头像昵称设置页
-     *        'Hx': {
-     *             'User' => '环信用户名', // 未激活时为空
-     *             'Pwd' => '环信密码',    // 未激活时为空
-     *         },
-     *        'SkipAddBaby': 1 //是否跳过添加小孩，1:跳过    0:不跳过
      *    }
      * }
      *
@@ -140,8 +128,7 @@ class User extends ApiBase
             $this->output(201, '手机号码格式不正确');
         }
 
-        $uid = Account::isMobileExists($mobile);
-
+        $uid = PUser::isMobileExists($mobile);
         if (Sms::verifySms($mobile, Sms::SMS_TYPE_LOGIN, $code) || ($mobile === '13888888888' && $code == '914275')) {
             if ($uid == false) {
                 // 注册用户
@@ -149,96 +136,23 @@ class User extends ApiBase
                     'Mobile' => $mobile,
                     'UserName' => Register::getRandomName(),
                     'Password' => '',
-                    'FromPlatform' => $GLOBALS['g_appid'] == MOBILE_APPID_IPHONE ? Register::REG_PLATFORM_IPHONE : Register::REG_PLATFORM_ANDROID,
-                    'FromProduct' => Register::REG_FROM_QINXIN,
+                    'FromPlatform' => $GLOBALS[G_APP_ID] == APP_APPID_IOS ? Register::REG_PLATFORM_IPHONE : Register::REG_PLATFORM_ANDROID,
+                    'FromProduct' => Register::REG_FROM_PASSPORT,
                     'FromWay' => Register::REG_WAY_MOBILE
                 ]);
-
                 if (!$user['UserId']) {
                     $this->output(204, '注册失败, 请稍后再试');
                 }
-
-                // 激活环信
-                HXReg::regHX($user['UserId'], true);
-
             } else {
-                $user = Account::getUserById($uid);
+                $user = PUser::getUserByIds($uid);
                 Login::updateLoginInfo($uid);
             }
 
-            $result = Passport::getLoginInfo($user);
-
-            //用来获取我的邀请信息，判断是否存在邀请我为父母的人
-            $inviteList = UserInvite::getInviteMeListByMobile($mobile);
-            $SkipAddBaby = 0;
-            foreach ($inviteList as $k => $v) {
-                if (in_array($v['RelationType'], ['1', '2'])) {
-                    $SkipAddBaby = 1;
-                    break;
-                }
-            }
-
-            //用来获取微信邀请我的信息，判断是否存在邀请我为父母的人
-            if ($SkipAddBaby == 0) {
-                $WXInviteList = UserInvite::getWxInviteMeList($mobile);
-                foreach ($WXInviteList as $k => $v) {
-                    if (in_array($v['RelationType'], ['1', '2'])) {
-                        $SkipAddBaby = 1;
-                        break;
-                    }
-                }
-            }
-
-            $result['SkipAddBaby'] = $SkipAddBaby;
-
+            $result = PassportApi::getLoginInfo($user);
             $this->output(200, $result);
         }
 
         $this->output(202, '验证码输入错误');
-    }
-
-    /**
-     * 获取登录用户的环信账号
-     *
-     * <pre>
-     * GET 方式
-     * </pre>
-     *
-     * @return string json
-     *
-     * <pre>
-     * {
-     *    "Status": 200,
-     *    "Result": {
-     *        'User': '环信用户名', // 未激活时为空, 此时客户端聊天功能不可用
-     *        'Pwd': '环信密码      // 未激活时为空, 此时客户端聊天功能不可用
-     *    }
-     * }
-     *
-     * </pre>
-     */
-    public function getHxInfo()
-    {
-        $uid = $this->isLogin(true);
-
-        $result = [
-            'User' => '',
-            'Pwd' => ''
-        ];
-
-        if ($uid > 0) {
-            $userinfo = UserInfo::getUserById($uid);
-
-            if ($userinfo['HXStatus'] == 1) {
-                $hx = UserInfo::getHxAccount($uid);
-                $result = [
-                    'User' => $hx['name'],
-                    'Pwd' => $hx['pwd']
-                ];
-            }
-        }
-
-        $this->output(200, $result);
     }
 
     /**
@@ -248,7 +162,7 @@ class User extends ApiBase
      * GET 方式
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -266,7 +180,7 @@ class User extends ApiBase
             }
             unset($_SESSION);
 
-            $appid = $GLOBALS['g_appid'];
+            $appid = $GLOBALS[G_APP_ID];
             Device::unbindDevice($appid, $uid);
         }
 
@@ -282,7 +196,7 @@ class User extends ApiBase
      * pwd2: 确认密码 // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -327,13 +241,13 @@ class User extends ApiBase
             $this->output(202, '密码长度限制在6~16个字符之间！');
         }
 
-        $rel = Account::updatePassword($uid, $password1);
+        $rel = PUser::updatePassword($uid, $password1);
         if (!$rel) {
             $this->output(203, '设置失败，请稍后再试！');
         }
 
-        $userInfo = Account::getUserById($uid);
-        $userInfo = Passport::getLoginInfo($userInfo);
+        $userInfo = PUser::getUserByIds($uid);
+        $userInfo = PassportApi::getLoginInfo($userInfo);
         $this->output(200, $userInfo);
     }
 
@@ -347,7 +261,7 @@ class User extends ApiBase
      * mobile: 手机号码
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -356,10 +270,6 @@ class User extends ApiBase
      *        'Auth': '认证字符串',
      *        'UserId': 用户ID,
      *        'UserNick': '用户昵称', // 昵称为空时, 暂缓注册AUTH, 进入头像昵称设置页
-     *        'Hx': {
-     *             'User' => '环信用户名', // 未激活时为空
-     *             'Pwd' => '环信密码',    // 未激活时为空
-     *         }
      *    }
      * }
      *
@@ -383,7 +293,7 @@ class User extends ApiBase
             $this->output(201, '无效的手机号码！');
         }
 
-        $uid0 = Account::isMobileExists($mobile);
+        $uid0 = PUser::isMobileExists($mobile);
         if ($uid == $uid0) {
             $this->output(202, '你已绑定该号码！');
         }
@@ -397,10 +307,10 @@ class User extends ApiBase
         }
 
         if (Sms::verifySms($mobile, Sms::SMS_TYPE_MODIFY_MOBILE, $code)) {
-            $result = Account::updateMobile($uid, $mobile);
+            $result = PUser::updateMobile($uid, $mobile);
             if ($result === true) {
-                $userInfo = Account::getUserById($uid);
-                $userInfo = Passport::getLoginInfo($userInfo);
+                $userInfo = PUser::getUserByIds($uid);
+                $userInfo = PassportApi::getLoginInfo($userInfo);
                 $this->output(200, $userInfo);
             }
             $this->output(205, '修改失败,请稍后再试！');
@@ -417,7 +327,7 @@ class User extends ApiBase
      * pwd: 密码          // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -426,11 +336,6 @@ class User extends ApiBase
      *        'Auth': '认证字符串',
      *        'UserId': 用户ID,
      *        'UserNick': '用户昵称', // 昵称为空时, 暂缓注册AUTH, 进入头像昵称设置页
-     *        'Hx': {
-     *             'User' => '环信用户名', // 未激活时为空
-     *             'Pwd' => '环信密码',    // 未激活时为空
-     *         }
-     *        "SkipAddBaby": 1 //是否跳过添加小孩，1:跳过    0:不跳过
      *    }
      * }
      *
@@ -461,38 +366,15 @@ class User extends ApiBase
             $this->output(202, '密码长度限制在6~16个字符之间！');
         }
 
-        $uid = Account::isMobileExists($mobile);
+        $uid = PUser::isMobileExists($mobile);
 
         if (!($uid > 0)) {
             $this->output(203, '手机号或密码错误');
         }
 
-        $result = Passport::login($mobile, $pwd);
+        $result = PassportApi::login($mobile, $pwd);
         if ($result[0] == 200) {
-            //用来获取我的邀请信息，判断是否存在邀请我为父母的人
-            $inviteList = UserInvite::getInviteMeListByMobile($mobile);
-            $SkipAddBaby = 0;
-            foreach ($inviteList as $k => $v) {
-                if (in_array($v['RelationType'], ['1', '2'])) {
-                    $SkipAddBaby = 1;
-                    break;
-                }
-            }
-
-            //用来获取微信邀请我的信息，判断是否存在邀请我为父母的人
-            if ($SkipAddBaby == 0) {
-                $WXInviteList = UserInvite::getWxInviteMeList($mobile);
-                foreach ($WXInviteList as $k => $v) {
-                    if (in_array($v['RelationType'], ['1', '2'])) {
-                        $SkipAddBaby = 1;
-                        break;
-                    }
-                }
-            }
-
             $data = $result[1];
-            $data['SkipAddBaby'] = $SkipAddBaby;
-
             $this->output($result[0], $data);
         }
 

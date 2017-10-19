@@ -14,19 +14,21 @@ use Bare\ViewModel;
 use Common\PathConst;
 use Common\Upload;
 
-class Atlas extends ViewModel
+class Photo extends ViewModel
 {
+    const FD_PHOTO_ID = 'PhotoId';
     const FD_ATLAS_ID = 'AtlasId';
     const FD_TITLE = 'Title';
     const FD_DESCRIPTION = 'Description';
-    const FD_COVER = 'Cover';
-    const FD_ATLAS_TIME = 'AtlasTime';
+    const FD_IMG_URL = 'ImgUrl';
+    const FD_PHOTO_TIME = 'PhotoTime';
+    const FD_PHOTO_ADDRESS = 'PhotoAddress';
     const FD_CREATE_TIME = 'CreateTime';
     const EX_FD_START_TIME = 'StartTime';
     const EX_FD_END_TIME = 'EndTime';
 
-    const TABLE = 'Atlas';
-    const TABLE_REMARK = '相册';
+    const TABLE = 'Photo';
+    const TABLE_REMARK = '相片';
     // 配置文件
     protected static $_conf = [
         // 必选, 数据库连接(来自DBConfig配置), w: 写, r: 读
@@ -38,11 +40,19 @@ class Atlas extends ViewModel
         self::CF_TABLE => self::TABLE,
         // 必选, 字段信息
         self::CF_FIELDS => [
-            self::FD_ATLAS_ID => [
+            self::FD_PHOTO_ID => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_HIDDEN,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FORM_FIELD_NAME => '序号',
+            ],
+            self::FD_ATLAS_ID => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_KEY,
+                self::FIELD_SEARCH_TYPE => self::FORM_SELECT,
+                self::FIELD_FORM_TYPE => self::FORM_SELECT,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FORM_RADIO_OPTION => [],
+                self::FORM_FIELD_NAME => '相册ID',
             ],
             self::FD_TITLE => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
@@ -57,17 +67,23 @@ class Atlas extends ViewModel
                 self::FIELD_FORM_TYPE => self::FORM_TEXTAREA,
                 self::FORM_FIELD_NAME => '描述',
             ],
-            self::FD_COVER => [
+            self::FD_IMG_URL => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_IMG,
-                self::FORM_FIELD_NAME => '封面',
+                self::FORM_FIELD_NAME => '相片',
             ],
-            self::FD_ATLAS_TIME => [
+            self::FD_PHOTO_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TIME,
-                self::FORM_FIELD_NAME => '相册时间',
+                self::FORM_FIELD_NAME => '相片时间',
+            ],
+            self::FD_PHOTO_ADDRESS => [
+                self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
+                self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
+                self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
+                self::FORM_FIELD_NAME => '相片地址',
             ],
             self::FD_CREATE_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
@@ -77,17 +93,17 @@ class Atlas extends ViewModel
             ],
             self::EX_FD_START_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => self::FD_ATLAS_TIME,
+                self::FIELD_MAP => self::FD_PHOTO_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '>=',
-                self::FORM_FIELD_NAME => '相册开始时间',
+                self::FORM_FIELD_NAME => '相片开始时间',
             ],
             self::EX_FD_END_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
-                self::FIELD_MAP => self::FD_ATLAS_TIME,
+                self::FIELD_MAP => self::FD_PHOTO_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '<=',
-                self::FORM_FIELD_NAME => '相册结束时间',
+                self::FORM_FIELD_NAME => '相片结束时间',
             ],
         ],
         // 可选, MC连接参数
@@ -111,15 +127,15 @@ class Atlas extends ViewModel
      */
 
     /**
-     * 上传封面
+     * 上传相片
      *
-     * @param array $cover
+     * @param array $photo
      * @param int   $id
      * @return bool|mixed
      */
-    public static function uploadCover($cover, $id = 0)
+    public static function uploadPhoto($photo, $id = 0)
     {
-        $ret = Upload::saveImg(PathConst::IMG_ATLAS_COVER, $cover, PathConst::IMG_ATLAS_COVER_SIZE, $id);
+        $ret = Upload::saveImg(PathConst::IMG_ATLAS_PHOTO, $photo, PathConst::IMG_ATLAS_PHOTO_SIZE, $id);
         if (is_array($ret) && $ret['status'] == true) {
             return current($ret['thumb']);
         }

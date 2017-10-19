@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Picture;
+namespace Model\Collect;
 
 use Bare\DB;
 use Bare\Model;

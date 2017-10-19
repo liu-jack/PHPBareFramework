@@ -82,6 +82,8 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/user');
+        $create_sql_connect = $sqls['create_passport_connect'];
+        $this->_m->runPassport($create_sql_connect);
         $create_sql = $sqls['create_passport'];
         $this->_m->runPassport($create_sql);
         for ($i = 0; $i < 256; $i++) {
@@ -99,6 +101,8 @@ class Sql extends Controller
     {
         need_cli();
         $sqls = config('sql/user');
+        $create_sql_connect = $sqls['create_connect'];
+        $this->_m->runAccount($create_sql_connect);
         $create_sql = $sqls['create_account'];
         $this->_m->runAccount($create_sql);
         for ($i = 0; $i < 256; $i++) {
@@ -218,7 +222,7 @@ class Sql extends Controller
     public function picture()
     {
         need_cli();
-        $sqls = config('sql/collect');
+        $sqls = config('sql/picture');
         foreach ($sqls as $k => $v) {
             $this->_m->runPicture($v);
         }

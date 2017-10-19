@@ -20,11 +20,13 @@ class ViewModel extends Model
     const LIST_VAL_SHOW = true;              // 在列表显示
     const EXTRA_LIST_EDIT = 'edit';          // 列表显示编辑
     const EXTRA_LIST_DEL = 'delete';         // 列表显示删除
+    const EXTRA_LIST_ADD = 'add';            // 列表显示新增
     // form表单
     const FORM_INPUT_TEXT = 'text';
     const FORM_INPUT_TIME = 'datetime';
     const FORM_INPUT_PASSWORD = 'password';
     const FORM_INPUT_HIDDEN = 'hidden';
+    const FORM_INPUT_IMG = 'images';
     const FORM_INPUT_FILE = 'file';
     const FORM_INPUT_RADIO = 'radio';
     const FORM_RADIO_OPTION = 'radio_option';
@@ -129,6 +131,15 @@ class ViewModel extends Model
      */
 
     /**
+     * @param $extra
+     * @return string
+     */
+    public static function getListAdd($extra)
+    {
+        return in_array(static::EXTRA_LIST_ADD, $extra) ? static::EXTRA_LIST_ADD : '';
+    }
+
+    /**
      * 生成where条件
      *
      * @param array $val
@@ -195,8 +206,14 @@ class ViewModel extends Model
                         $form .= '<td class="form-group col-xs-2"><div class="input-group"><div class="input-group-addon">' . $v[self::FORM_FIELD_NAME] . '</div><select name="' . $k . '" class="form-control">';
                         $form .= '<option value="" ' . (empty($_val) && $_val !== 0 ? 'selected' : '') . '>全部</option>';
                         $option = !empty($v[self::FORM_SELECT_OPTION]) ? $v[self::FORM_SELECT_OPTION] : (!empty($v[self::FORM_RADIO_OPTION]) ? $v[self::FORM_RADIO_OPTION] : $v[self::FORM_CHECKBOX_OPTION]);
-                        foreach ($option as $kk => $vv) {
-                            $form .= '<option value="' . $kk . '" ' . ($_val === $kk ? 'selected' : '') . '>' . $vv . '</option>';
+                        if (empty($option)) {
+                            $method = 'get' . $k . 'Option';
+                            $option = static::$method();
+                        }
+                        if (!empty($option)) {
+                            foreach ($option as $kk => $vv) {
+                                $form .= '<option value="' . $kk . '" ' . ($_val === $kk ? 'selected' : '') . '>' . $vv . '</option>';
+                            }
                         }
                         $form .= '</select></div></td>';
                         break;
@@ -313,8 +330,18 @@ class ViewModel extends Model
                     case self::FORM_INPUT_HIDDEN:
                         $form .= '<input type="hidden" name="' . $k . '" id="' . $k . '" value="' . (isset($val[$k]) ? $val[$k] : '') . '">';
                         break;
+                    case self::FORM_INPUT_FILE:
+                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="file" class="form-control" name="' . $k . '" id="' . $k . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div>';
+                        break;
+                    case self::FORM_INPUT_IMG:
+                        $form .= '<div class="form-inline"><div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="file" class="form-control" name="' . $k . '" id="' . $k . '" value="' . (!empty($val[$k]) ? $val[$k] : '') . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div> &nbsp; <div class="form-group"><div class="col-lg-8"><a target="_blank" href="' . (!empty($val[$k]) ? $val[$k] : '') . '"><img style="max-width: 465px" src="' . (!empty($val[$k]) ? $val[$k] : '') . '"/></a></div></div></div><br>';
+                        break;
                     case self::FORM_INPUT_RADIO:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8">';
+                        if (empty($v[self::FORM_RADIO_OPTION])) {
+                            $method = 'get' . $k . 'Option';
+                            $v[self::FORM_RADIO_OPTION] = static::$method();
+                        }
                         foreach ($v[self::FORM_RADIO_OPTION] as $kk => $vv) {
                             $form .= '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $kk . '" ' . (isset($val[$k]) && $val[$k] === $kk ? 'checked' : '') . '> ' . $vv . ' </label></div>';
                         }
@@ -322,6 +349,10 @@ class ViewModel extends Model
                         break;
                     case self::FORM_INPUT_CHECKBOX:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8">';
+                        if (empty($v[self::FORM_CHECKBOX_OPTION])) {
+                            $method = 'get' . $k . 'Option';
+                            $v[self::FORM_CHECKBOX_OPTION] = static::$method();
+                        }
                         foreach ($v[self::FORM_CHECKBOX_OPTION] as $kk => $vv) {
                             $form .= '<label class="checkbox-inline"><input type="checkbox" ' . (isset($val[$k]) && $val[$k] === $kk ? 'checked' : '') . ' name="' . $k . '[]" value="' . $kk . '"> ' . $vv . ' </label>';
                         }
@@ -329,6 +360,10 @@ class ViewModel extends Model
                         break;
                     case self::FORM_SELECT:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><select name="' . $k . '" id="' . $k . '" class="form-control">';
+                        if (empty($v[self::FORM_SELECT_OPTION])) {
+                            $method = 'get' . $k . 'Option';
+                            $v[self::FORM_SELECT_OPTION] = static::$method();
+                        }
                         foreach ($v[self::FORM_SELECT_OPTION] as $kk => $vv) {
                             $form .= '<option value="' . $kk . '" ' . (isset($val[$k]) && $val[$k] === $kk ? 'selected' : '') . '>' . $vv . '</option>';
                         }

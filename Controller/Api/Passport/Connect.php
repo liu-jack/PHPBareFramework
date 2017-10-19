@@ -8,23 +8,17 @@
 
 namespace Controller\Api\Passport;
 
-use Passport\PassportBase;
-use PassportApi\ISiteType;
-use PassportApi\ApiBase;
-use PassportApi\Connect as Con;
-use Passport\Register;
+use Bare\Controller;
+use Model\Passport\Register;
 
 /**
  * 通行证- 第三方用户接口
  *
- * @package Passport
  * @author  周剑锋 <camfee@foxmail.com>
  * @since   1.0.0 2016-11-25
  */
-class Connect extends ApiBase implements ISiteType
+class Connect extends Controller
 {
-    use PassportBase;
-
     /**
      * 第三方用户 注册
      *
