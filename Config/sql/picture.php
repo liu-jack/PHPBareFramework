@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `Atlas` (
   `CreateTime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`AtlasId`),
   KEY `Idx_AtlasTime` (`AtlasTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='相册表';
 EOT
     ,
     'create_photo' => <<<EOT

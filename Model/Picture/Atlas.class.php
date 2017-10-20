@@ -47,6 +47,7 @@ class Atlas extends ViewModel
             self::FD_TITLE => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_STRING,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TEXT,
+                self::SEARCH_WHERE_OP => 'LIKE',
                 self::FIELD_LIST_TYPE => self::LIST_VAL_SHOW,
                 self::FIELD_FORM_TYPE => self::FORM_INPUT_TEXT,
                 self::FORM_FIELD_NAME => '标题',
@@ -80,14 +81,14 @@ class Atlas extends ViewModel
                 self::FIELD_MAP => self::FD_ATLAS_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '>=',
-                self::FORM_FIELD_NAME => '相册开始时间',
+                self::FORM_FIELD_NAME => '开始时间',
             ],
             self::EX_FD_END_TIME => [
                 self::FIELD_VAR_TYPE => self::VAR_TYPE_HIDDEN,
                 self::FIELD_MAP => self::FD_ATLAS_TIME,
                 self::FIELD_SEARCH_TYPE => self::FORM_INPUT_TIME,
                 self::SEARCH_WHERE_OP => '<=',
-                self::FORM_FIELD_NAME => '相册结束时间',
+                self::FORM_FIELD_NAME => '结束时间',
             ],
         ],
         // 可选, MC连接参数
@@ -100,6 +101,10 @@ class Atlas extends ViewModel
     // 新增必须字段
     protected static $_add_must_fields = [
         self::FD_TITLE => 1,
+    ];
+    // 不可修改字段
+    protected static $_un_modify_fields = [
+        self::FD_ATLAS_ID => 1,
     ];
 
     /**

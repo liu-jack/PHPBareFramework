@@ -6,29 +6,29 @@ $config = [
     'DEV' => [
         'mysql' => [
             'create' => [
-                'db' => ['host' => '10.7.10.253', 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
+                'db' => ['host' => '127.0.0.1', 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
             ],
             'default' => [
-                'w' => ['host' => '10.7.10.253', 'user' => 'camfee', 'password' => 'camfee29'],
-                'r' => ['host' => '10.7.10.253', 'user' => 'camfee', 'password' => 'camfee29'],
+                'w' => ['host' => '127.0.0.1', 'user' => 'camfee', 'password' => 'camfee29'],
+                'r' => ['host' => '127.0.0.1', 'user' => 'camfee', 'password' => 'camfee29'],
             ],
         ],
         'memcache' => [
             'default' => [
-                ['host' => '10.7.10.253', 'port' => 11211]
+                ['host' => '127.0.0.1', 'port' => 11211]
             ]
         ],
         'redis' => [
             'default' => [
-                'w' => ['host' => '10.7.10.253', 'port' => 6379],
-                'r' => ['host' => '10.7.10.253', 'port' => 6379],
+                'w' => ['host' => '127.0.0.1', 'port' => 6379],
+                'r' => ['host' => '127.0.0.1', 'port' => 6379],
             ]
         ],
         'search' => [
-            'default' => ['host' => '10.7.10.253', 'port' => 9200],
+            'default' => ['host' => '127.0.0.1', 'port' => 9200],
         ],
         'mongodb' => [
-            'default' => ['host' => '10.7.10.253', 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
+            'default' => ['host' => '127.0.0.1', 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
         ]
     ],
     'TEST' => [

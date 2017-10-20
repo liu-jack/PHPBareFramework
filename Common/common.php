@@ -46,7 +46,7 @@ function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
             $v = intval($v);
             $url = UPLOAD_URI . "{$path}/{$hash1}/{$hash2}/{$name}_{$v}.{$ext}";
             $return[$v] = [
-                'url' => HTTP_HOST . $url,
+                'url' => $url,
                 'path' => ROOT_PATH . ltrim($url, '/')
             ];
         }
@@ -54,7 +54,7 @@ function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
         $size = intval($size);
         $url = UPLOAD_URI . "{$path}/{$hash1}/{$hash2}/{$name}_{$size}.{$ext}";
         $return = [
-            'url' => HTTP_HOST . $url,
+            'url' => $url,
             'path' => ROOT_PATH . ltrim($url, '/')
         ];
     }

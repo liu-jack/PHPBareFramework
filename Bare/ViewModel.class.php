@@ -270,23 +270,27 @@ class ViewModel extends Model
         $form .= '</tr></thead><tbody>';
         foreach ($list as $kk => $vv) {
             $form .= '<tr>';
-            foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
-                $option = [];
-                if (!empty($v[self::FIELD_LIST_TYPE])) {
-                    if (!empty($v[self::FORM_RADIO_OPTION])) {
-                        $option = $v[self::FORM_RADIO_OPTION];
-                    } elseif (!empty($v[self::FORM_CHECKBOX_OPTION])) {
-                        $option = $v[self::FORM_CHECKBOX_OPTION];
-                    } elseif (!empty($v[self::FORM_SELECT_OPTION])) {
-                        $option = $v[self::FORM_SELECT_OPTION];
+            foreach (static::$_conf[self::CF_FIELDS] as $k3 => $v3) {
+                if (!empty($v3[self::FIELD_LIST_TYPE])) {
+                    $option = [];
+                    $method = 'get' . $k3 . 'Option';
+                    if (isset($v3[self::FORM_RADIO_OPTION])) {
+                        $option = !empty($v3[self::FORM_RADIO_OPTION]) ? $v3[self::FORM_RADIO_OPTION] : static::$method();
+                    } elseif (isset($v3[self::FORM_CHECKBOX_OPTION])) {
+                        $option = !empty($v3[self::FORM_CHECKBOX_OPTION]) ? $v3[self::FORM_CHECKBOX_OPTION] : static::$method();
+                    } elseif (isset($v3[self::FORM_SELECT_OPTION])) {
+                        $option = !empty($v3[self::FORM_SELECT_OPTION]) ? $v3[self::FORM_SELECT_OPTION] : static::$method();
                     }
-                    $form .= '<td>' . (!empty($option[$vv[$k]]) ? $option[$vv[$k]] : $vv[$k]) . '</td>';
+                    if ($v3[self::FIELD_FORM_TYPE] == self::FORM_INPUT_IMG) {
+                        $vv[$k3] = '<a target="_blank" href="' . $vv[$k3] . '"><img src="' . $vv[$k3] . '" style="max-width: 100px"/></a>';
+                    }
+                    $form .= '<td>' . (!empty($option[$vv[$k3]]) ? $option[$vv[$k3]] : $vv[$k3]) . '</td>';
                 }
             }
             if (!empty($extra)) {
                 $form .= '<td>';
-                foreach ($extra as $k => $v) {
-                    switch ($v) {
+                foreach ($extra as $k4 => $v4) {
+                    switch ($v4) {
                         case self::EXTRA_LIST_EDIT:
                             $form .= '<a href="' . url(self::EXTRA_LIST_EDIT,
                                     ['id' => $vv[$primary_key]]) . '" class="btn btn-warning"><i class="icon-pencil"></i></a>';
@@ -317,24 +321,30 @@ class ViewModel extends Model
         $form = '';
         foreach (static::$_conf[self::CF_FIELDS] as $k => $v) {
             if (isset($v[self::FIELD_FORM_TYPE])) {
+                $_val = $val[$k] ?? '';
+                if ($_val !== '') {
+                    if ($v[self::FIELD_VAR_TYPE] == self::VAR_TYPE_INT) {
+                        $_val = intval($_val);
+                    }
+                }
                 switch ($v[self::FIELD_FORM_TYPE]) {
                     case self::FORM_INPUT_TEXT:
-                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="text" class="form-control" name="' . $k . '" id="' . $k . '" value="' . (isset($val[$k]) ? $val[$k] : '') . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div>';
+                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="text" class="form-control" name="' . $k . '" id="' . $k . '" value="' . $_val . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div>';
                         break;
                     case self::FORM_INPUT_TIME:
-                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="text" class="form-control" name="' . $k . '" id="' . $k . '" value="' . (isset($val[$k]) ? $val[$k] : '') . '" readonly onFocus="WdatePicker({startDate:\'%y-%M-%d %H:%m:%s\',dateFmt:\'yyyy-MM-dd HH:mm:ss\'})"></div></div>';
+                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="text" class="form-control" name="' . $k . '" id="' . $k . '" value="' . $_val . '" readonly onFocus="WdatePicker({startDate:\'%y-%M-%d %H:%m:%s\',dateFmt:\'yyyy-MM-dd HH:mm:ss\'})"></div></div>';
                         break;
                     case self::FORM_INPUT_PASSWORD:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="password" class="form-control" name="' . $k . '" id="' . $k . '" value=""></div></div>';
                         break;
                     case self::FORM_INPUT_HIDDEN:
-                        $form .= '<input type="hidden" name="' . $k . '" id="' . $k . '" value="' . (isset($val[$k]) ? $val[$k] : '') . '">';
+                        $form .= '<input type="hidden" name="' . $k . '" id="' . $k . '" value="' . $_val . '">';
                         break;
                     case self::FORM_INPUT_FILE:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="file" class="form-control" name="' . $k . '" id="' . $k . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div>';
                         break;
                     case self::FORM_INPUT_IMG:
-                        $form .= '<div class="form-inline"><div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="file" class="form-control" name="' . $k . '" id="' . $k . '" value="' . (!empty($val[$k]) ? $val[$k] : '') . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div> &nbsp; <div class="form-group"><div class="col-lg-8"><a target="_blank" href="' . (!empty($val[$k]) ? $val[$k] : '') . '"><img style="max-width: 465px" src="' . (!empty($val[$k]) ? $val[$k] : '') . '"/></a></div></div></div><br>';
+                        $form .= '<div class="form-inline"><div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><input type="file" class="form-control" name="' . $k . '" id="' . $k . '" placeholder="' . $v[self::FORM_FIELD_NAME] . '"></div></div> &nbsp; <div class="form-group"><div class="col-lg-8"><a target="_blank" href="' . $_val . '"><img style="max-width: 465px" src="' . $_val . '"/></a></div></div></div><br>';
                         break;
                     case self::FORM_INPUT_RADIO:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8">';
@@ -343,7 +353,7 @@ class ViewModel extends Model
                             $v[self::FORM_RADIO_OPTION] = static::$method();
                         }
                         foreach ($v[self::FORM_RADIO_OPTION] as $kk => $vv) {
-                            $form .= '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $kk . '" ' . (isset($val[$k]) && $val[$k] === $kk ? 'checked' : '') . '> ' . $vv . ' </label></div>';
+                            $form .= '<div class="radio"><label><input type="radio" name="' . $k . '" value="' . $kk . '" ' . ($_val === $kk ? 'checked' : '') . '> ' . $vv . ' </label></div>';
                         }
                         $form .= '</div></div>';
                         break;
@@ -354,7 +364,7 @@ class ViewModel extends Model
                             $v[self::FORM_CHECKBOX_OPTION] = static::$method();
                         }
                         foreach ($v[self::FORM_CHECKBOX_OPTION] as $kk => $vv) {
-                            $form .= '<label class="checkbox-inline"><input type="checkbox" ' . (isset($val[$k]) && $val[$k] === $kk ? 'checked' : '') . ' name="' . $k . '[]" value="' . $kk . '"> ' . $vv . ' </label>';
+                            $form .= '<label class="checkbox-inline"><input type="checkbox" ' . ($_val === $kk ? 'checked' : '') . ' name="' . $k . '[]" value="' . $kk . '"> ' . $vv . ' </label>';
                         }
                         $form .= '</div></div>';
                         break;
@@ -365,12 +375,12 @@ class ViewModel extends Model
                             $v[self::FORM_SELECT_OPTION] = static::$method();
                         }
                         foreach ($v[self::FORM_SELECT_OPTION] as $kk => $vv) {
-                            $form .= '<option value="' . $kk . '" ' . (isset($val[$k]) && $val[$k] === $kk ? 'selected' : '') . '>' . $vv . '</option>';
+                            $form .= '<option value="' . $kk . '" ' . ($_val === $kk ? 'selected' : '') . '>' . $vv . '</option>';
                         }
                         $form .= '</select></div></div>';
                         break;
                     case self::FORM_TEXTAREA:
-                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><textarea class="form-control" name="' . $k . '" id="' . $k . '" rows="5" placeholder="' . $v[self::FORM_FIELD_NAME] . '">' . (isset($val[$k]) ? $val[$k] : '') . '</textarea></div></div>';
+                        $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><textarea class="form-control" name="' . $k . '" id="' . $k . '" rows="5" placeholder="' . $v[self::FORM_FIELD_NAME] . '">' . $_val . '</textarea></div></div>';
                         break;
                     case self::FORM_EDITOR:
                         $form .= '<div class="form-group"><label class="col-lg-4 control-label">' . $v[self::FORM_FIELD_NAME] . '</label><div class="col-lg-8"><textarea class="cleditor" name="' . $k . '" id="' . $k . '">' . (isset($val[$k]) ? $val[$k] : '') . '</textarea></div></div>';

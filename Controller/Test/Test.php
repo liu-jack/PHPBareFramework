@@ -26,6 +26,7 @@ use Bare\MongoModel;
 use Model\Admin\Admin\AdminLogin;
 use Model\Collect\CollectBook77 as Collect77;
 use Model\Mongo\Test as MTest;
+use Model\Picture\Photo;
 
 /**
  * 测试用控制器
@@ -124,7 +125,7 @@ class Test extends Controller
 //        }
 //        $this->crossOutput('', []);
 //        pre(get_defined_constants());
-
+//        var_dump(Photo::getListByAtlasId(1, 0, 2));
     }
 
     /**

@@ -90,7 +90,7 @@ class MemcacheDB
      * 在cache中获取键为$key的项的值
      *
      * @param string|array $key 键值
-     * @return string 如果该项不存在，则返回false
+     * @return string|array 如果该项不存在，则返回false
      * @access public
      */
     public function get($key)

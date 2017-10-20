@@ -63,9 +63,9 @@ class MemcachedDB
     /**
      * 在cache中设置键为$key的项的值，如果该项不存在，则新建一个项
      *
-     * @param mixed  $key    如果$var为null,$key必为数组，设置方式为['key' => 'value', ...],如$var不为null, $key值必为string
-     * @param string $var    值, 如果此值不为null,则$key必为string。设置将会返回false.[增加此参数只为兼容之前方法中的设置]
-     * @param int    $expire 到期秒数
+     * @param mixed        $key    如果$var为null,$key必为数组，设置方式为['key' => 'value', ...],如$var不为null, $key值必为string
+     * @param string|array $var    值, 如果此值不为null,则$key必为string。设置将会返回false.[增加此参数只为兼容之前方法中的设置]
+     * @param int          $expire 到期秒数
      * @return bool 如果成功则返回 TRUE，失败则返回 FALSE。
      * @access public
      */
