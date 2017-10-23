@@ -1,4 +1,4 @@
-<?php
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * 共用函数库
  */
@@ -92,7 +92,7 @@ function cover($id, $ver = -1, $ext = '.jpg')
     $base = 'book/cover/%02x/%02x/%d' . $ext;
     $url = UPLOAD_URI . sprintf($base, $id % 256, $id % 255, $id);
     if ($ver >= 0) {
-        return HTTP_HOST . $url . '?v=' . $ver;
+        return IMG_HOST . $url . '?v=' . $ver;
     } else {
         return ROOT_PATH . substr($url, 1);
     }
@@ -110,9 +110,9 @@ function cover($id, $ver = -1, $ext = '.jpg')
 function contentImg($id, $fid, $ver = -1, $ext = '.gif')
 {
     $base = 'book/content/%02x/%02x/%s' . $ext;
-    $url = UPLOAD_PATH . sprintf($base, $fid % 256, $id % 256, $fid . '_' . $id);
+    $url = UPLOAD_URI . sprintf($base, $fid % 256, $id % 256, $fid . '_' . $id);
     if ($ver >= 0) {
-        return $url . '?v=' . $ver;
+        return IMG_HOST . $url . '?v=' . $ver;
     } else {
         return ROOT_PATH . $url;
     }
@@ -134,7 +134,7 @@ function head($userid, $size = 100, $ver = 0)
     $size = isset($allow_size[$size]) ? $size : '100';
     $ver = $ver > 0 ? '?v=' . $ver : '';
 
-    return "http://{$_SERVER['HTTP_HOST']}/Public/upload/head/{$hash1}/{$hash2}/{$userid}_{$size}.jpg{$ver}";
+    return IMG_HOST . UPLOAD_URI . "head/{$hash1}/{$hash2}/{$userid}_{$size}.jpg{$ver}";
 }
 
 /**

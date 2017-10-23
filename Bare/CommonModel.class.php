@@ -74,7 +74,7 @@ class CommonModel
                     switch ($fields[$k]) {
                         case self::VAR_TYPE_KEY:
                         case self::VAR_TYPE_INT:
-                            $v = (int)$v;
+                            $v = is_array($v)? $v : intval($v);
                             break;
                         case self::VAR_TYPE_ARRAY:
                             $v = is_array($v) ? serialize($v) : $v;

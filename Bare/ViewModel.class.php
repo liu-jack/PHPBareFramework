@@ -282,7 +282,7 @@ class ViewModel extends Model
                         $option = !empty($v3[self::FORM_SELECT_OPTION]) ? $v3[self::FORM_SELECT_OPTION] : static::$method();
                     }
                     if ($v3[self::FIELD_FORM_TYPE] == self::FORM_INPUT_IMG) {
-                        $vv[$k3] = '<a target="_blank" href="' . $vv[$k3] . '"><img src="' . $vv[$k3] . '" style="max-width: 100px"/></a>';
+                        $vv[$k3] = '<a target="_blank" href="' . $vv[$k3] . '"><img src="' . $vv[$k3] . '" width="150"/></a>';
                     }
                     $form .= '<td>' . (!empty($option[$vv[$k3]]) ? $option[$vv[$k3]] : $vv[$k3]) . '</td>';
                 }

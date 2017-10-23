@@ -53,7 +53,7 @@ abstract class Queue
         $log = [
             'Killed',
             __CLASS__,
-            json_encode($this->lastdata)
+            $this->lastdata
         ];
         logs($log, 'Queue/QueueKillInfo');
         exit;

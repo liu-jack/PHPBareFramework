@@ -1,4 +1,4 @@
-<?php
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * Created by PhpStorm.
  * User: camfee

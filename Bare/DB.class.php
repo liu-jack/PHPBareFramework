@@ -2,6 +2,8 @@
 
 namespace Bare;
 
+defined('ROOT_PATH') or exit('Access deny');
+
 use Config\DBConfig;
 use Bare\DB\{
     PDODB, MemcachedDB, MemcacheDB, RedisDB, ElasticSearch as ESDB, MongodbDB, FileDB

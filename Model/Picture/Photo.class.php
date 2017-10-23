@@ -180,7 +180,7 @@ class Photo extends ViewModel
                 $mc->set($mc_key, $data);
             }
         }
-        if ($limit > 0 && count($data['data']) > $limit) {
+        if ($limit > 0) {
             $data['data'] = array_slice($data['data'], $offset, $limit);
         }
 

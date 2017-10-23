@@ -38,6 +38,7 @@ class Index extends Controller
         $list = [];
         if (!empty($list_info['data'])) {
             $list = Photo::getInfoByIds($list_info['data']);
+            $list = array_values($list);
         }
         if (IS_AJAX) {
             output(200, $list);

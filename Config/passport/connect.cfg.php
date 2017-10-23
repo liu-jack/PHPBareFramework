@@ -1,8 +1,6 @@
-<?php
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * 第三方连接 - 配置
- *
- * @author suning <snsnsky@gmail.com>
  *
  */
 

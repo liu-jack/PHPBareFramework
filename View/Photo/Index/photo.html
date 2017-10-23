@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>{$atlas.Title}</title>
     <link rel="stylesheet" href="{STATICS_CSS}style.css">
+    <link rel="stylesheet" href="{CSS_PATH}viewer.min.css" type="text/css"/>
     <script type="text/javascript" src="{JS_PATH}jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="{JS_PATH}viewer.min.js"></script>
     <script type="text/javascript">
         window.onload = function () {
             //运行瀑布流主函数
@@ -88,6 +90,8 @@
                     everyH[minIndex] += boxs[i].offsetHeight;//更新最小列的高度
                 }
             }
+            //图片缩放
+            $('#wrap').viewer();
         }
 
         /**
@@ -177,7 +181,5 @@
     {/foreach}
     {/if}
 </div>
-
-
 </body>
 </html>

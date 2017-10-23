@@ -1,4 +1,4 @@
-<?php
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * oss.cfg.php 阿里云OSS配置
  */

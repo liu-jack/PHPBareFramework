@@ -145,7 +145,7 @@ class Bare
         $GLOBALS['_MPATH'] = ADMIN_PATH . '/' . $GLOBALS['_M'] . '/' . $GLOBALS['_C'];
         $GLOBALS['_NAMESPACE'] = '\\' . ADMIN_PATH . '\\' . $GLOBALS['_M'] . '\\' . $GLOBALS['_C'];
         // 静态文件路径定义
-        $s_path = HTTP_HOST . STATICS_URI . strtolower(ADMIN_PATH);
+        $s_path = STATICS_HOST . STATICS_URI . strtolower(ADMIN_PATH);
         if (is_dir(ROOT_PATH . STATICS_URI . strtolower(ADMIN_PATH) . '/' . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']))) {
             $s_path .= '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']);
         } elseif (is_dir(ROOT_PATH . STATICS_URI . strtolower(ADMIN_PATH) . '/' . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']))) {
@@ -169,7 +169,7 @@ class Bare
         $GLOBALS['_NAMESPACE'] = '\\' . $GLOBALS['_M'] . '\\' . $GLOBALS['_C'];
 
         // 静态文件路径定义
-        $s_path = HTTP_HOST . STATICS_URI . strtolower($GLOBALS['_M']);
+        $s_path = STATICS_HOST . STATICS_URI . strtolower($GLOBALS['_M']);
         if (is_dir(ROOT_PATH . STATICS_URI . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']))) {
             $s_path .= '/' . strtolower($GLOBALS['_C']) . '/' . strtolower($GLOBALS['_A']);
         } elseif (is_dir(ROOT_PATH . STATICS_URI . strtolower($GLOBALS['_M']) . '/' . strtolower($GLOBALS['_C']))) {

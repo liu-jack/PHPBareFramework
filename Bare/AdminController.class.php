@@ -68,7 +68,7 @@ Class AdminController extends Controller
         $this->page(intval($list_info['count']), $limit, $page);
         $list = [];
         if (!empty($list_info['data'])) {
-            $_sub_fields = ['Content', 'Log', 'Info', 'CronData'];
+            $_sub_fields = ['Content', 'Log', 'Info', 'CronData', 'Description'];
             foreach ($list_info['data'] as $k => $v) {
                 $list[$k] = $v;
                 foreach ($_sub_fields as $sv) {

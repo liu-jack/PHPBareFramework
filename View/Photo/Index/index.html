@@ -6,23 +6,76 @@
     <meta name="keywords" content="{$seo['key']}">
     <meta name="description" content="{$seo['desc']}">
     <style>
-        *,html,body{margin: 0;padding: 0;}
-        body{background: #A3C293}
-        .container{width: 1000px; margin: 29px auto; overflow: hidden;}
-        .container a.floating{display: block; float: left; width: 225px; height: 150px; border: solid 1px #e3e3e3; border-radius: 5px; margin: 6px 0 6px 18px; cursor: pointer; background: #ffefaa;text-decoration: none; color: #2c2c2c;}
-        .container a img{width: 225px; height: 150px;}
-        .container a:hover{text-decoration: none; color: #ff5bd1}
-        .container .floating .header{margin-top:50px;width: 225px; height: 50px; text-align: center; line-height: 50px; text-overflow: ellipsis; white-space:nowrap; overflow: hidden;}
+        * {
+            padding: 0;
+            margin: 0
+        }
+        body{
+            background: #FDCFCF;
+        }
+        #con {
+            background: #ffc0cb;
+            width: 980px;
+            margin: 60px auto;
+            border-radius: 25px;
+            box-shadow: 5px 5px 10px #000;
+            padding: 20px;
+            -moz-column-count: 4;
+            -moz-column-gap: 30px;
+            -moz-column-rule: 0px solid #ff0000;
+            -webkit-column-count: 4;
+            -webkit-column-gap: 30px;
+            -webkit-column-rule: 0px solid #ff0000;
+            -o-column-count: 4;
+            -o-column-gap: 30px;
+            -o-column-rule: 0px solid #ff0000;
+        }
+        #con .pic {
+            background: #ffffff;
+            width: 188px;
+            min-height: 100px;
+            box-shadow: 2px 2px 6px #b5b5b5;
+            padding: 20px 15px;
+            margin: 10px;
+            display: inline-block
+        }
+        #con h3 {
+            border-bottom: 1px solid #ddd;
+            line-height: 30px;
+            text-align: center;
+            padding: 5px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            -moz-text-overflow: ellipsis;
+            -webkit-text-overflow: ellipsis;
+        }
+        #con h3 a {
+            text-decoration: none;
+            color: #999;
+        }
+        #con p {
+            font-size: 12px;
+            color: #666;
+            line-height: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            -moz-text-overflow: ellipsis;
+            -webkit-text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
+<div id="con">
     {foreach $list as $k => $v}
-    <a class="floating" title="{$v.Title}" href="{url('photo',['aid'=>$v['AtlasId']])}">
-        <img src="{$v.Cover}">
-        <h1 class="header">{$v.Title}</h1>
-    </a>
+    <div class="pic">
+        <a title="{$v.Title}" href="{url('photo',['aid'=>$v['AtlasId']])}"><img src="{$v.Cover}" width="188px"/></a>
+        <h3><a title="{$v.Title}" href="{url('photo',['aid'=>$v['AtlasId']])}">{$v.Title}</a></h3>
+        <p>{$v.Description}</p>
+    </div>
     {/foreach}
 </div>
 </body>
