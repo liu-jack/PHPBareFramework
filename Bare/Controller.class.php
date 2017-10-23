@@ -346,7 +346,7 @@ EOT;
         $html = '<li><a href="' . sprintf($urls, 1) . '"><span>&laquo;</span></a></li>';
         $url = sprintf($urls, 1);
         if ($max == $pages && $min > 1) {
-            $html .= '<li><a href="' . $url . '">1</a></li><li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li>';
+            $html .= '<li><a href="' . $url . '">1</a></li><li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . (stripos($burl, '?') === false ? '?' : '&') . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li>';
         }
         for ($n = $min; $n <= $max; $n++) {
             $url = sprintf($urls, $n);
@@ -359,7 +359,7 @@ EOT;
 
         $url = sprintf($urls, $pages);
         if ($max < $pages) {
-            $html .= '<li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . '?' . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li><li><a href="' . $url . '">' . $pages . '</a></li>';
+            $html .= '<li><a><input type="text" class="form-control" onkeydown="if(event.keyCode==13){var __pagesize=this.value;var url=\'' . $burl . (stripos($burl, '?') === false ? '?' : '&') . $page_key . '=\'+__pagesize+\')\';location.href=url}"></a></li><li><a href="' . $url . '">' . $pages . '</a></li>';
         }
         $html .= '<li><a href="' . $url . '"><span>&raquo;</span></a></li>';
         if ($pages <= 1) {
