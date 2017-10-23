@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=480,user-scalable=yes,uc-user-scalable=yes,target-densitydpi=high-dpi"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <script language="javascript" type="text/javascript" src="{STATICS_JS}jj.js"></script>
+    <script>var  img_path = '{STATICS_IMG}';</script>
+    <script language="javascript" type="text/javascript" src="{STATICS_JS}min.js"></script>
+    <title>{$seo['title']}</title>
+    <meta name="keywords" content="{$seo['key']}">
+    <meta name="description" content="{$seo['desc']}">
+    <style>
+        body{margin:0px; background-color:#434243; color:#6A6A6A;}
+        .bandiv{float:left; width:100%; background-color:#DBD1BB;}
+        .bandiv div{padding:10px; text-align:left;}
+    </style>
+</head>
+<body onload="main()" id="0">
+<div style="text-align:center;">
+    <canvas id="jsGameScreen">
+    </canvas>
+</div>
+
+
+{@view('Game/Public/nav')}
+
+</body>
+</html>

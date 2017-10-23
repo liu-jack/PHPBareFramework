@@ -32,6 +32,9 @@ class Index extends Controller
     {
         $atlasid = $_POST['aid'] ? intval($_POST['aid']) : intval($_GET['aid']);
         $atlas = Atlas::getInfoByIds($atlasid);
+        if (empty($atlas)) {
+            $this->alertErr('参数错误', url('index'));
+        }
         $offset = intval($_POST['offset']);
         $limit = 50;
         $list_info = Photo::getListByAtlasId($atlasid, $offset, $limit);

@@ -247,7 +247,7 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
 {
     if ($domain && !is_string($domain)) {
         $port = $_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT'];
-        $domain = CURRENT__PROTOCOL . CURRENT_HOST . $port;
+        $domain = CURRENT_PROTOCOL . CURRENT_HOST . $port;
     }
     if (URL_MODE == 1) {
         $domain .= '/';

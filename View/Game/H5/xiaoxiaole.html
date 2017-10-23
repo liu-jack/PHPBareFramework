@@ -1,0 +1,29 @@
+﻿<!DOCTYPE>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8">
+    <script type="text/javascript">
+        var SpilGamesBrandTimer = +new Date(),
+            _SPTimer={w:{},start:function(a){this.w[(a||"_")]=+new Date()},end:function(a){window._gaq=window._gaq||[],a=a||"_";if(this.w[a]){
+            }}};
+        _SPTimer.start('pageLoad');
+    </script>
+
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="robots" content="index,follow">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <title>{$seo['title']}</title>
+    <meta name="keywords" content="{$seo['key']}">
+    <meta name="description" content="{$seo['desc']}">
+    <style type="text/css"> * { padding: 0px; margin: 0px; cursor: default; } body { font: 12px/20px Palatino; }</style>
+
+</head>
+<body>
+
+<div id="spilgames-root"></div>
+<script>var img_path = '{STATICS_IMG}';</script>
+<script type="text/javascript" src="{STATICS_JS}game.min.js"></script>
+
+{@view('Game/Public/nav')}
+
+</body></html>

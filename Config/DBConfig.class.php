@@ -1,4 +1,4 @@
-<?php defined('ROOT_PATH') or exit('Access deny');
+<?php
 /**
  * 数据库连接配置
  */
