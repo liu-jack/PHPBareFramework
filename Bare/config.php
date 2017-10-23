@@ -1,4 +1,4 @@
-3<?php defined('ROOT_PATH') or exit('Access deny');
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * 系统配置
  */
