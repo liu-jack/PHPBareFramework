@@ -7,7 +7,7 @@
 
 namespace controls\MobileApi\Common;
 
-use MobileApi\ApiBase;
+use Bare\Controller;
 use MobileApi\DataFormat;
 use Common\Tags as CTags;
 use Search\Tag as STag;
@@ -19,7 +19,7 @@ use Favorite\TagFavorite;
  * @author  周剑锋 <camfee@foxmail.com>
  * @date   1.0.0 2017-02-8
  */
-class Tag extends ApiBase
+class Tag extends Controller
 {
 
     /**
