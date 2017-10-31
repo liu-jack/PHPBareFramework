@@ -237,7 +237,7 @@ class Column extends Model
             }
             $mc->set($mkeypn, $column, self::MC_TIME);
         }
-        $rcolumn = array_flip($column);
+        $rcolumn = !empty($column) ? array_flip($column) : [];
         $cur = !empty($column[$cid]) ? $column[$cid] : 1;
         $prev = !empty($rcolumn[$cur - 1]) ? $rcolumn[$cur - 1] : 0;
         $next = !empty($rcolumn[$cur + 1]) ? $rcolumn[$cur + 1] : 0;
