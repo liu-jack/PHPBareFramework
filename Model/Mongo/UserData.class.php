@@ -49,6 +49,11 @@ class UserData extends MongoModel
             $id = (int)$id;
             if ($id > 0) {
                 $bids[] = $id;
+                self::update($uid, [
+                    '$pull' => [
+                        self::FIELD_BOOK_READ_HISTORY => $id
+                    ]
+                ], true);
             }
         }
 

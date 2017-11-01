@@ -257,7 +257,7 @@ class Column extends Model
      */
     public static function getReadRecord($uid, $fid, $bid)
     {
-        $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $fid, $bid);
+        $key = sprintf(self::RD_READ_RECORD, $uid, $fid, $bid);
         $redis = DB::redis(RedisConst::BOOK_DB_R, RedisConst::BOOK_DB_INDEX);
         $ret = $redis->get($key);
 
@@ -275,7 +275,7 @@ class Column extends Model
      */
     public static function setReadRecord($uid, $fid, $bid, $cid)
     {
-        $key = sprintf(self::RD_BOOK_RECOMMEND, $uid, $fid, $bid);
+        $key = sprintf(self::RD_READ_RECORD, $uid, $fid, $bid);
         $redis = DB::redis(RedisConst::BOOK_DB_W, RedisConst::BOOK_DB_INDEX);
 
         return $redis->set($key, $cid, self::RD_TIME);
