@@ -671,6 +671,7 @@ abstract class Model
         $conf = &static::$_conf;
         if (!isset($conf[static::CF_PRIMARY_KEY]) || $conf[static::CF_PRIMARY_KEY] == '') {
             $conf[static::CF_FIELDS_ARRAY] = [];
+            $conf[static::CF_FIELDS_JSON] = [];
             $conf[static::CF_MC_TIME] = empty($conf[static::CF_MC_TIME]) ? 0 : $conf[static::CF_MC_TIME];
             $flag = true;
             foreach ($conf[static::CF_FIELDS] as $k => $v) {
