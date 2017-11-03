@@ -28,6 +28,7 @@ abstract class Model
     const CF_RD_TIME = 'redis_expire';
     const CF_PRIMARY_KEY = '_primary_key';
     const CF_FIELDS_ARRAY = '_fields_array';
+    const CF_FIELDS_JSON = '_fields_json';
     const CF_USE_MC = '_use_memcache';
 
     /**
@@ -65,6 +66,7 @@ abstract class Model
     const VAR_TYPE_INT = 'int';
     const VAR_TYPE_STRING = 'string';
     const VAR_TYPE_ARRAY = 'array';
+    const VAR_TYPE_JSON = 'json';
     const VAR_TYPE_PASSWORD = 'password';
     const VAR_TYPE_HIDDEN = 'hidden';
 
@@ -644,6 +646,11 @@ abstract class Model
                         $v[$x] = unserialize($v[$x]);
                     }
                 }
+                foreach (static::$_conf[static::CF_FIELDS_JSON] as $x) {
+                    if (!empty($v[$x])) {
+                        $v[$x] = json_decode($v[$x], true);
+                    }
+                }
             }
 
             return $ret;
@@ -666,7 +673,6 @@ abstract class Model
             $conf[static::CF_FIELDS_ARRAY] = [];
             $conf[static::CF_MC_TIME] = empty($conf[static::CF_MC_TIME]) ? 0 : $conf[static::CF_MC_TIME];
             $flag = true;
-
             foreach ($conf[static::CF_FIELDS] as $k => $v) {
                 if (is_array($v)) {
                     $v = $v[static::FIELD_VAR_TYPE];
@@ -676,23 +682,20 @@ abstract class Model
                     $flag = false;
                 } elseif ($v == static::VAR_TYPE_ARRAY) {
                     $conf[static::CF_FIELDS_ARRAY][$k] = $k;
+                } elseif ($v == static::VAR_TYPE_JSON) {
+                    $conf[static::CF_FIELDS_JSON][$k] = $k;
                 }
             }
-
             $conf[static::CF_USE_MC] = !empty($conf[static::CF_MC]) && !empty($conf[static::CF_MC_KEY]);
-
             if ($flag) {
                 throw new \Exception('primary_key not set');
             }
-
             if (empty($conf[static::CF_DB][static::CF_DB_W]) || empty($conf[static::CF_DB][static::CF_DB_R])) {
                 throw new \Exception('db is empty!');
             }
-
             if (empty($conf[static::CF_TABLE])) {
                 throw new \Exception('tablename is empty!');
             }
-
             if (count($conf[static::CF_FIELDS]) == 0) {
                 throw new \Exception('fields is empty!');
             }
@@ -728,6 +731,9 @@ abstract class Model
                             break;
                         case static::VAR_TYPE_ARRAY:
                             $v = is_array($v) ? serialize($v) : $v;
+                            break;
+                        case static::VAR_TYPE_JSON:
+                            $v = is_array($v) ? json_encode($v) : $v;
                             break;
                         case static::VAR_TYPE_PASSWORD:
                             $v = !empty($v) ? password_hash($v, PASSWORD_DEFAULT) : $v;
