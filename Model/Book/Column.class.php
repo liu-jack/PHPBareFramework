@@ -12,7 +12,6 @@ class Column extends Model
     const MC_BOOK_PREV_NEXT = 'BOOK_PREV_NEXT:%d:%d'; // FromId,BookId
     const MC_TIME = 86400;
     // 阅读/推荐redis记录
-    const RD_DB_INDEX = 9;
     const RD_READ_RECORD = 'READ_RECORD:%d:%d:%d'; // UserId,FromId,BookId
     const RD_BOOK_RECOMMEND = 'BOOK_RECOMMEND:%d:%d'; // UserId,BookId
     const RD_TIME = 31536000;

@@ -9,7 +9,7 @@
 namespace Controller\Api\Passport;
 
 use Bare\Controller;
-use PassportApi\Connect;
+use Model\Passport\Connect;
 use Model\Passport\Register;
 use Classes\Encrypt\Rsa;
 
@@ -27,14 +27,14 @@ class User extends Controller
      *
      * <pre>
      * POST
-     * account： 帐号，        必选，               用户名(4-16位字符)|手机|邮箱
-     * type:     注册类型，    必选，               0：邮件注册|1：手机注册|3：用户名注册
-     * platform: 注册平台,     必选，               0：web|1：Android|2：iPhone|3：wap
-     * password: 密码,         用户名|邮箱注册必选，rsa加密
-     * ip:       用户的IP地址，必选，               无法获取时传当前服务器IP
+     *   account： 必选，帐号， 用户名(4-16位字符)|手机|邮箱
+     *   type:     必选，注册类型， 0：邮件注册|1：手机注册|3：用户名注册
+     *   platform: 必选，注册平台,  0：web|1：Android|2：iPhone|3：wap
+     *   password: 可选,密码, 用户名|邮箱注册必选，rsa加密
+     *   ip:       必选，用户的IP地址， 无法获取时传当前服务器IP
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -133,12 +133,12 @@ class User extends Controller
      *
      * <pre>
      * POST
-     * account： 账户，         必选，用户名、手机、邮箱三选一
-     * password: 密码,          必选，rsa加密 （手机号码用验证码登录时,密码传空,不用RSA加密）
-     * ip:       用户的IP地址， 必选，无法获取时传当前服务器IP
+     *   account：  必选，账户，        用户名、手机、邮箱三选一
+     *   password: 必选，密码,          rsa加密 （手机号码用验证码登录时,密码传空,不用RSA加密）
+     *   ip:       必选，用户的IP地址， 无法获取时传当前服务器IP
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -161,7 +161,7 @@ class User extends Controller
      */
     public function login()
     {
-        $rsa_key = loadconf('passport/rsa/' . $GLOBALS['g_appid']);
+        $rsa_key = config('passport/rsa/' . $GLOBALS['g_appid']);
         $login_name = trim($_POST['account']);
         $password = trim($_POST['password']);
         $ip = trim($_POST['ip']);
@@ -225,13 +225,13 @@ class User extends Controller
      *
      * <pre>
      * POST
-     * userid：      用户id，        必选
-     * old_password：原密码，        必选，rsa加密(没有原密码时传空，不加密)
-     * password：    新密码，        必选，rsa加密
-     * forget:       是否忘记原密码，可选，1：是 0：否 (忘记密码时原密码时传空，不加密)
+     *   userid：      必选,用户id，
+     *   old_password：必选，原密码， rsa加密(没有原密码时传空，不加密)
+     *   password：    必选，新密码， rsa加密
+     *   forget:       可选，是否忘记原密码，1：是 0：否 (忘记密码时原密码时传空，不加密)
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -307,10 +307,10 @@ class User extends Controller
      *
      * <pre>
      * GET
-     * username：用户名，必选
+     *  username：必选,用户名
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -348,11 +348,11 @@ class User extends Controller
      *
      * <pre>
      * GET
-     * mobile:     手机号码，   必选
-     * checkbind: 是否检查绑定，可选，0：不检查 1：检查
+     *   mobile:     必选, 手机号码
+     *   checkbind:  可选，是否检查绑定，0：不检查 1：检查
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -421,11 +421,11 @@ class User extends Controller
      *
      * <pre>
      * GET
-     * email:      邮箱，       必选
-     * checkbind: 是否检查绑定，可选，0：不检查 1：检查
+     *   email:      必选,邮箱
+     *   checkbind:  可选，是否检查绑定，0：不检查 1：检查
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -493,10 +493,10 @@ class User extends Controller
      *
      * <pre>
      * GET
-     * userid：用户id，必选，多个用','隔开，最多不超过100个
+     *  userid：必选，用户id，多个用','隔开，最多不超过100个
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -573,175 +573,11 @@ class User extends Controller
     }
 
     /**
-     * 增加用户亲币数量
-     *
-     * <pre>
-     * POST
-     * userid: 用户id，      必选
-     * type:   类型ID，      必选，自定义类型，用于区分获得渠道，范围 [1,99]
-     * coin:   亲币数量，    必选，不能负数 范围[1-5000] (超出范围时单独联系开放权限)
-     * title:  亲币获得说明，必选，例：签到/红包活动等
-     * ip:     用户IP地址，  必选，无法获取时传当前服务器IP
-     * </pre>
-     *
-     * @return string json
-     *
-     * <pre>
-     * {
-     *     "Status": 200,
-     *     "Result": {
-     *          "QCoin": 150, // 增加后的亲币数
-     *      }
-     * }
-     * 异常状态
-     * 201: 类型错误
-     * 202: 用户id错误
-     * 203: 亲币数量错误
-     * 204: 亲币获得说明必选
-     * 205: 增加亲币失败
-     * 206：达到每天发放亲币数限制
-     * </pre>
-     */
-    public function addUserCoin()
-    {
-        $uid = (int)$_POST['userid'];
-        $siteid = $GLOBALS['g_appid'];
-        $type = (int)$_POST['type'];
-        $coin = (int)$_POST['coin'];
-        $title = trim($_POST['title']);
-        $ip = trim($_POST['ip']);
-        if ($type < 1 || $type > 99) {
-            $this->output(201, '类型错误');
-        }
-        if ($uid <= 0) {
-            $this->output(202, '用户id错误');
-        }
-        if ($coin <= 0 || $coin > 5000) {
-            $this->output(203, '亲币数量错误');
-        }
-        if (empty($title)) {
-            $this->output(204, '亲币获得说明必选');
-        }
-        if (!self::isIp($ip)) {
-            $ip = $this->clientIp();
-        }
-
-        $r = QCoin::addQCoin($uid, $siteid, $type, $coin, $title, $ip);
-        if ($r === true) {
-            $qcoin = QCoin::getUserCoin($uid);
-            $this->output(200, ['QCoin' => $qcoin]);
-        } else {
-            if ($r == -1) {
-                $this->output(206, '达到每天发放亲币数限制');
-            }
-            $this->output(205, '增加亲币失败');
-        }
-    }
-
-    /**
-     * 扣除用户亲币数量
-     *
-     * <pre>
-     * POST
-     * userid: 用户id，      必选
-     * type:   类型ID，      必选，自定义类型，用于区分获得渠道，范围 [101,200]
-     * coin:   亲币数量，    必选，不能负数 范围[1-5000] (超出范围时单独联系开放权限)
-     * title:  亲币扣除说明，必选，例：购买/兑换活动等
-     * ip:     用户IP地址，  必选，无法获取时传当前服务器IP
-     * </pre>
-     *
-     * @return string json
-     *
-     * <pre>
-     * {
-     *     "Status": 200,
-     *     "Result": {
-     *          "QCoin": 150, // 扣除后的亲币数
-     *      }
-     * }
-     * 异常状态
-     * 201: 类型错误
-     * 202: 用户id错误
-     * 203: 亲币数量错误
-     * 204: 亲币扣除说明必选
-     * 205: 扣除亲币失败
-     * 206：扣除数量超过用户拥有亲币数
-     * </pre>
-     */
-    public function deductUserCoin()
-    {
-        $uid = (int)$_POST['userid'];
-        $siteid = $GLOBALS['g_appid'];
-        $type = (int)$_POST['type'];
-        $coin = (int)$_POST['coin'];
-        $title = trim($_POST['title']);
-        $ip = trim($_POST['ip']);
-        if ($type < 101 || $type > 200) {
-            $this->output(201, '类型错误');
-        }
-        if ($uid <= 0) {
-            $this->output(202, '用户id错误');
-        }
-        if ($coin <= 0 || $coin > 5000) {
-            $this->output(203, '亲币数量错误');
-        }
-        if (empty($title)) {
-            $this->output(204, '亲币扣除说明必选');
-        }
-        if (!self::isIp($ip)) {
-            $ip = $this->clientIp();
-        }
-
-        $r = QCoin::deductQCoin($uid, $siteid, $type, $coin, $title, $ip);
-        if ($r === true) {
-            $qcoin = QCoin::getUserCoin($uid);
-            $this->output(200, ['QCoin' => $qcoin]);
-        } else {
-            if ($r === -1) {
-                $this->output(206, '扣除数量超过用户拥有亲币数');
-            }
-            $this->output(205, '扣除亲币失败');
-        }
-    }
-
-    /**
-     * 获取实时亲币数量(尽量少调用此接口，可用info获取)
-     *
-     * <pre>
-     * GET
-     * userid:  用户id，必选
-     * </pre>
-     *
-     * @return string json
-     *
-     * <pre>
-     * {
-     *     "Status": 200,
-     *     "Result": {
-     *          "QCoin": 150, // 亲币数
-     *      }
-     * }
-     * 异常状态
-     * 201: 参数错误：userid缺失
-     * </pre>
-     */
-    public function getUserCoin()
-    {
-        $uid = (int)$_GET['userid'];
-        if ($uid < 1) {
-            $this->output(201, '参数错误：userid');
-        }
-
-        $qcoin = QCoin::getUserCoin($uid);
-        $this->output(200, ['QCoin' => $qcoin]);
-    }
-
-    /**
      * 检查手机号码是否注册(多个)
      *
      * <pre>
      * POST
-     * mobiles:    手机号码， 必选, 用英文半角逗号分隔，最多2000个
+     *   mobiles: 必选, 手机号码， 用英文半角逗号分隔，最多2000个
      * </pre>
      *
      * @return string|void

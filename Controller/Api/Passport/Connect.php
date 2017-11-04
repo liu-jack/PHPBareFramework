@@ -24,15 +24,15 @@ class Connect extends Controller
      *
      * <pre>
      * POST
-     * openid : 第三方开放平台唯一ID，必选
-     * type:   帐号类型ID, 必选, 20：新浪微博|22：QQ|26：微信|27:web微信
-     * platform:  注册平台, 必选， 0：web|1：Android|2：iPhone|3：wap
-     * unionid: 第三方多平台统一ID，可选
-     * ip: 用户的IP地址，必选，无法获取时传当前服务器IP
-     * bind: 要绑定的手机号或邮箱，可选
+     *   openid :  必选, 第三方开放平台唯一ID
+     *   type:     必选, 帐号类型ID, 20：新浪微博|22：QQ|26：微信|27:web微信
+     *   platform: 必选， 注册平台,0：web|1：Android|2：iPhone|3：wap
+     *   unionid:  可选, 第三方多平台统一ID
+     *   ip:       必选，用户的IP地址，无法获取时传当前服务器IP
+     *   bind:     可选, 要绑定的手机号或邮箱
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -158,12 +158,12 @@ class Connect extends Controller
      *
      * <pre>
      * POST
-     * openid : 第三方开放平台唯一ID，必选
-     * type:   帐号类型ID, 必选, 20：新浪微博|22：QQ|26：微信
-     * ip: 用户的IP地址，必选，无法获取时传当前服务器IP
+     *   openid : 必选, 第三方开放平台唯一ID
+     *   type:    必选, 帐号类型ID, 20：新浪微博|22：QQ|26：微信
+     *   ip:      必选，用户的IP地址，无法获取时传当前服务器IP
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -215,13 +215,13 @@ class Connect extends Controller
      *
      * <pre>
      * POST
-     * openid:  第三方开放平台唯一ID，必选
-     * type:   帐号类型ID, 必选, 20：新浪微博|22：QQ|26：微信
-     * mobile: 要绑定的手机号码，手机/邮箱必选一，可以都选
-     * email: 要绑定的邮箱，手机/邮箱必选一
+     *   openid: 必选, 第三方开放平台唯一ID
+     *   type:   必选, 帐号类型ID, 20：新浪微博|22：QQ|26：微信
+     *   mobile: 必选, 要绑定的手机号码，手机/邮箱必选一，可以都选
+     *   email:  必选, 要绑定的邮箱，手机/邮箱必选一
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -294,13 +294,13 @@ class Connect extends Controller
      *
      * <pre>
      * POST
-     * openid:  要绑定的第三方开放平台唯一ID，必选
-     * type:   要绑定的帐号类型ID, 必选, 20：新浪微博|22：QQ|26：微信
-     * uid:  要绑定到的用户id(当前登录的用户id)，必选
-     * unionid: 第三方多平台统一ID，绑定微信必选
+     *   openid:  必选, 要绑定的第三方开放平台唯一ID
+     *   type:    必选, 要绑定的帐号类型ID,  20：新浪微博|22：QQ|26：微信
+     *   uid:     必选, 要绑定到的用户id(当前登录的用户id)
+     *   unionid: 可选, 第三方多平台统一ID，绑定微信必选
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -380,12 +380,12 @@ class Connect extends Controller
      *
      * <pre>
      * POST
-     * openid:  第三方开放平台唯一ID，必选
-     * type:   帐号类型ID, 必选, 20：新浪微博|22：QQ|26：微信
-     * uid:  要解绑的用户id，必选
+     *   openid: 必选, 第三方开放平台唯一ID
+     *   type:   必选, 帐号类型ID, 必选, 20：新浪微博|22：QQ|26：微信
+     *   uid:    必选, 要解绑的用户id
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {
@@ -437,10 +437,10 @@ class Connect extends Controller
      *
      * <pre>
      * GET
-     * uid:  用户id，必选
+     *   uid: 必选, 用户id
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {

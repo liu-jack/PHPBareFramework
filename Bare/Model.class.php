@@ -86,6 +86,8 @@ abstract class Model
     const EXTRA_MC = 'mc';
     const EXTRA_MC_KEY = 'mc_key';
     const EXTRA_MC_TIME = 'mc_expire';
+    const EXTRA_LIST_KEY = 'list_key_field';
+    const EXTRA_LIST_VAL = 'list_val_field';
 
     // 模块类型, MC模式
     const MOD_TYPE_MEMCACHE = 1;
@@ -537,8 +539,28 @@ abstract class Model
                     static::$_conf[static::CF_PRIMARY_KEY], $extra[static::EXTRA_ORDER]);
                 $data = [];
                 if (is_array($ret)) {
-                    foreach ($ret as $v) {
-                        $data[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v[static::$_conf[static::CF_PRIMARY_KEY]];
+                    if (!empty($extra[self::EXTRA_LIST_KEY])) {
+                        if (!empty($extra[self::EXTRA_LIST_VAL])) {
+                            if (is_array($extra[self::EXTRA_LIST_VAL])) {
+                                foreach ($ret as $v) {
+                                    foreach ($extra[self::EXTRA_LIST_VAL] as $lv) {
+                                        $data[$v[$extra[self::EXTRA_LIST_KEY]]][$lv] = $v[$lv];
+                                    }
+                                }
+                            } else {
+                                foreach ($ret as $v) {
+                                    $data[$v[$extra[self::EXTRA_LIST_KEY]]] = $v[$extra[self::EXTRA_LIST_VAL]];
+                                }
+                            }
+                        } else {
+                            foreach ($ret as $v) {
+                                $data[$v[$extra[self::EXTRA_LIST_KEY]]] = $v;
+                            }
+                        }
+                    } else {
+                        foreach ($ret as $v) {
+                            $data[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v[static::$_conf[static::CF_PRIMARY_KEY]];
+                        }
                     }
                     $mc->set($key, $data, $extra[static::EXTRA_MC_TIME]);
                 }

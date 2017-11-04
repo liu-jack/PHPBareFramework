@@ -170,27 +170,44 @@ class Book extends AdminController
     {
         $bid = !empty($_POST['bid']) ? intval($_POST['bid']) : intval($_GET['bid']);
         $cid = !empty($_POST['cid']) ? intval($_POST['cid']) : intval($_GET['cid']);
-
+        $fid = !empty($_POST['fid']) ? intval($_POST['fid']) : intval($_GET['fid']);
+        $data['ChapterName'] = trim($_POST['ChapterName']);
+        $cdata['Content'] = trim($_POST['Content']);
         if (!empty($_POST['bid']) && !empty($_POST['cid'])) {
-            $coid = intval($_POST['coid']);
-            $data['ChapterName'] = trim($_POST['ChapterName']);
-            $cdata['Content'] = trim($_POST['Content']);
+            $tid = intval($_POST['tid']);
             if (!empty($data['ChapterName'])) {
                 $ret = Column::updateColumn($bid, $cid, $data);
                 if (!$ret) {
                     $this->alertErr('修改章节名称失败');
                 }
-                $this->adminLog('修改书本章节内容', 'update', $cid, $data, 'BookColumn');
+                $this->adminLog('修改章节', 'update', $cid, $data, 'BookColumn');
             }
-            if (!empty($cdata['Content']) && $coid > 0) {
-                $ret = Content::updateContent($bid, $coid, $cdata);
-                if (!$ret) {
+            if (!empty($cdata['Content']) && $tid > 0) {
+                $ret = Content::updateContent($bid, $tid, $cdata);
+                if ($ret === false) {
                     $this->alertErr('修改内容失败');
                 }
-                $this->adminLog('修改书本章节内容', 'update', $coid, $coid, 'BookContent');
+                $this->adminLog('修改内容', 'update', $tid, $tid, 'BookContent');
+                $this->alert('修改成功');
             }
-
-            $this->alert('修改成功');
+            $this->alertErr('修改失败');
+        } elseif (!empty($_POST['bid']) && !empty($_POST['fid'])) {
+            if (!empty($data['ChapterName']) && !empty($cdata['Content'])) {
+                $data['BookId'] = $bid;
+                $data['FromId'] = $fid;
+                $cid = Column::addColumn($bid, $data);
+                if (empty($cid)) {
+                    $this->alertErr('新增章节失败');
+                }
+                $this->adminLog('新增章节', 'add', $cid, $data, 'BookColumn');
+                $cdata['ChapterId'] = $cid;
+                $ret = Content::addContent($bid, $cdata);
+                if ($ret === false) {
+                    $this->alertErr('新增内容失败');
+                }
+                $this->adminLog('新增内容', 'add', $ret, $ret, 'BookContent');
+                $this->alert('新增成功');
+            }
         }
 
         $column = Column::getColumnById($bid, $cid);

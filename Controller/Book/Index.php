@@ -122,11 +122,10 @@ class Index extends Controller
         $brkey = sprintf(self::CK_BOOK_RECOMMEND, $bid);
         $isrec = !empty($_COOKIE[$brkey]) ? $_COOKIE[$brkey] : 0;
         $isfav = 0;
-        if ($uid = $this->isLogin()) {
+        if ($uid = $this->isLogin(V_WEB)) {
             if (BookFavorite::isFavorite($uid, $bid)) {
                 $isfav = 1;
             }
-            UserData::userReadBook($uid, $bid); // 记录书本阅读历史
             $rdbk1 = intval(Column::getReadRecord($uid, $fid, $bid)); // 获取章节记录
             if ($rdbk1 > $rdbk) {
                 $rdbk = $rdbk1;
@@ -168,12 +167,14 @@ class Index extends Controller
         $prev = $prev_next['prev'];
         $next = $prev_next['next'];
         $percent = $prev_next['percent'];
-
         // 记录章节阅读历史
         $ckey = sprintf(self::CK_READ_RECORD, $fid, $bid);
         setcookie($ckey, $cid, time() + self::CK_TIME, '/');
-        if ($uid = $this->isLogin()) {
+        if ($uid = $this->isLogin(V_WEB)) {
             Column::setReadRecord($uid, $fid, $bid, $cid);
+            if (preg_match('#/[\d]+_[\d]+(\.html)?$#isU', $_SERVER['HTTP_REFERER'])) {
+                UserData::userReadBook($uid, $bid); // 记录书本阅读历史
+            }
         }
 
         $seo = [

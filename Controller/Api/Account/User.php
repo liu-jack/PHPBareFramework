@@ -27,8 +27,8 @@ class User extends Controller
      *
      * <pre>
      * POST:
-     *    type:    类型, 1:登录并注册、4:修改手机号码
-     *    mobile:  手机号码
+     *    type:    必选，类型, 1:登录并注册、4:修改手机号码
+     *    mobile:  必选，手机号码
      * </pre>
      *
      * @return string|void json
@@ -97,8 +97,8 @@ class User extends Controller
      *
      * <pre>
      * POST:
-     *  mobile: 手机号码
-     *  code:   验证码
+     *  mobile: 必选，手机号码
+     *  code:   必选，验证码
      * </pre>
      *
      * @return string|void json
@@ -159,7 +159,7 @@ class User extends Controller
      * 退出登录 (不能省略接口调用)
      *
      * <pre>
-     * GET 方式
+     * GET
      * </pre>
      *
      * @return string|void json
@@ -192,8 +192,8 @@ class User extends Controller
      *
      * <pre>
      * POST
-     * pwd1: 密码     // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
-     * pwd2: 确认密码 // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
+     * pwd1: 必选，密码     // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
+     * pwd2: 必选，确认密码 // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
      * </pre>
      *
      * @return string|void json
@@ -257,8 +257,8 @@ class User extends Controller
      *
      * <pre>
      * POST
-     * code: 验证码
-     * mobile: 手机号码
+     * code:   必选，验证码
+     * mobile: 必选，手机号码
      * </pre>
      *
      * @return string|void json
@@ -323,8 +323,8 @@ class User extends Controller
      *
      * <pre>
      * POST
-     * mobile: 手机号码
-     * pwd: 密码          // 通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
+     * mobile: 必选，手机号码
+     * pwd:    必选，密码  通过base64(RSA(时间戳|密码))加密, 时间戳精确到秒(10位)
      * </pre>
      *
      * @return string|void json

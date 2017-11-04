@@ -22,10 +22,10 @@ class Account extends Controller
      * 账号信息
      *
      * <pre>
-     * GET
+     *  GET
      * </pre>
      *
-     * @return string json
+     * @return string|void json
      *
      * <pre>
      * {

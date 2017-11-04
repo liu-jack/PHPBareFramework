@@ -107,6 +107,7 @@
                         <td>
                             <a href="{url('edit', ['id'=>$v['BookId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
                             <a href="{url('column', ['bid'=>$v['BookId'], 'fid'=>$v['DefaultFromSite']])}" class="btn btn-info"><i class="icon-list"></i></a>
+                            <a href="{url('content', ['bid'=>$v['BookId'], 'fid'=>$v['DefaultFromSite']])}" class="btn btn-success"><i class="icon-plus"></i></a>
                         </td>
                     </tr>
                     {/foreach}

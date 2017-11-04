@@ -22,14 +22,14 @@
 
         <div class="chapter" id="chapter">
             <div class="chapter-inner">
-                <p class="chapname"><span class="bname" id="chaptitle">{$column['ChapterName']} ({$percent})</span><!--<span class="binfo" id="chapbname"><?php echo $book['BookName']?></span>-->
+                <p class="chapname"><span class="bname" id="chaptitle">{$column['ChapterName']} ({$percent})</span><!--<span class="binfo" id="chapbname">{$book['BookName']}</span>-->
                 </p>
-                <p id="chapcont"><?php echo $content['Content']?></p>
+                <p id="chapcont">{$content['Content']}</p>
             </div>
         </div>
         <div class="chaplink">
             <?php if($prev):?>
-            <a href="<{uri('book', $fromsite.'_'.$bookid, $prev)}" class="prevchap bggy" id="btn_prev">上一章</a>
+            <a href="{uri('book', $fromsite.'_'.$bookid, $prev)}" class="prevchap bggy" id="btn_prev">上一章</a>
             <?php endif;?>
             <?php if($next):?>
             <a href="{uri('book', $fromsite.'_'.$bookid, $next)}" class="nextchap bgye" id="btn_next">下一章</a>
