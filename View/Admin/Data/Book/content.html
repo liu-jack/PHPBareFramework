@@ -17,11 +17,20 @@
                         <div class="padd">
 
                             <!-- Form starts.  -->
-                            <form action="" method="post" class="form-horizontal" role="form">
+                            <form action="?_b=1&p={{$_GET.p}" method="post" class="form-horizontal" role="form">
                                 <input type="hidden" name="bid" value="{if !empty($info['BookId'])}{$info.BookId}{else}{$_GET.bid}{/if}"/>
                                 <input type="hidden" name="cid" value="{$info.ChapterId}"/>
                                 <input type="hidden" name="tid" value="{$info.ContentId}"/>
-                                <input type="hidden" name="fid" value="{$_GET.fid}"/>
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">来源</label>
+                                    <div class="col-lg-8">
+                                        <select name="fid" class="form-control">
+                                            {foreach $sites as $k=>$v}
+                                            <option value="{$k}" {if $k ==$_GET['fid']}selected{/if}>{$v}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-lg-4 control-label">章节名</label>
                                     <div class="col-lg-8">

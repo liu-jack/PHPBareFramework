@@ -145,7 +145,7 @@ class Book extends AdminController
     {
         $page = max(1, intval($_GET[PAGE_VAR]));
         $bid = intval($_GET['bid']);
-        $fid = !empty($_GET['fid']) ? intval($_GET['fid']) : 77;
+        $fid = intval($_GET['fid']);
         $limit = PAGE_SIZE;
         $offset = ($page - 1) * $limit;
 
@@ -188,7 +188,7 @@ class Book extends AdminController
                     $this->alertErr('修改内容失败');
                 }
                 $this->adminLog('修改内容', 'update', $tid, $tid, 'BookContent');
-                $this->alert('修改成功');
+                $this->alert('修改成功', url('column', [PAGE_VAR => $_GET[PAGE_VAR], 'bid' => $bid, 'fid' => $fid]));
             }
             $this->alertErr('修改失败');
         } elseif (!empty($_POST['bid']) && !empty($_POST['fid'])) {
@@ -206,14 +206,16 @@ class Book extends AdminController
                     $this->alertErr('新增内容失败');
                 }
                 $this->adminLog('新增内容', 'add', $ret, $ret, 'BookContent');
-                $this->alert('新增成功');
+                $this->alert('新增成功', url('column', [PAGE_VAR => $_GET[PAGE_VAR], 'bid' => $bid, 'fid' => $fid]));
             }
         }
 
         $column = Column::getColumnById($bid, $cid);
         $content = Content::getContentByChapterId($bid, $cid);
         $info = array_merge($column, $content);
+        $sites = config('book/sites');
 
+        $this->value('sites', $sites);
         $this->value('info', $info);
         $this->view();
     }
