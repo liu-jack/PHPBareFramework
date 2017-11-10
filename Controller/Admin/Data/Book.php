@@ -93,6 +93,7 @@ class Book extends AdminController
     public function update()
     {
         $id = intval($_POST['id']);
+        $page = max(1, intval($_GET[PAGE_VAR]));
         if (empty($_POST['BookName']) || empty($_POST['Author'])) {
             $this->alertErr('书名与作者都不能空');
         }
@@ -114,7 +115,7 @@ class Book extends AdminController
                 $this->alertErr('修改失败');
             }
             $this->adminLog('修改书本', 'update', $id, $data, 'Book');
-            $this->alert('修改成功', url('index'));
+            $this->alert('修改成功', url('index', [PAGE_VAR => $page]));
         } else {
             $data['CreateTime'] = date('Y-m-d H:i:s');
             $id = MBook::addBook($data);

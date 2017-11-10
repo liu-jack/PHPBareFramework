@@ -85,6 +85,7 @@ class Collect extends AdminController
     public function update()
     {
         $id = intval($_POST['id']);
+        $page = max(1, intval($_GET[PAGE_VAR]));
         $sites = config('book/sites');
         if (empty($_POST['Url'])) {
             $this->alertErr('采集地址不能空');
@@ -109,7 +110,7 @@ class Collect extends AdminController
                 $this->alertErr('修改失败');
             }
             $this->adminLog('修改采集', 'update', $id, $data, 'BookCollect');
-            $this->alert('修改成功', url('index'));
+            $this->alert('修改成功', url('index', [PAGE_VAR => $page]));
         } else {
             $id = MCollect::addCollect($data);
             if ($id) {
