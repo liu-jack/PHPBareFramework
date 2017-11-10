@@ -20,12 +20,14 @@ class Collects
 
     /**
      * 内容
+     *
      * @var
      */
     private $content;
 
     /**
      * 正则匹配结果
+     *
      * @var
      */
     private $match;
@@ -42,10 +44,10 @@ class Collects
     /**
      * 获取网页内容
      *
-     * @param $url string 网址
-     * @param array $extra cookie:文件名 referer:来源 isheader:是否获取头文件 header:头文件 nobody:是否获取内容
-     * @param int $timeout
-     * @param int $times 跳转次数
+     * @param       $url     string 网址
+     * @param array $extra   cookie:文件名 referer:来源 isheader:是否获取头文件 header:头文件 nobody:是否获取内容 post:post请求
+     * @param int   $timeout 超时时间
+     * @param int   $times   301|302 跳转次数
      * @return $this
      */
     public function get($url, $extra = [], $timeout = 30, $times = 5)
@@ -60,6 +62,10 @@ class Collects
         curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
         curl_setopt($ch, CURLOPT_HEADER, isset($extra['isheader']) ? $extra['isheader'] : false);
         curl_setopt($ch, CURLOPT_NOBODY, isset($extra['nobody']) ? $extra['nobody'] : false);
+        if (!empty($extra['post'])) {
+            curl_setopt($ch, CURLOPT_POST, true); // enable posting
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $extra['post']); // post files
+        }
         // ip
         $ip = mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 255) . '.' . mt_rand(0, 254);
         $header = [
@@ -121,6 +127,7 @@ class Collects
             $output = iconv($encode, "UTF-8//IGNORE", $output);
         }
         $this->content = $output;
+
         return $this;
 
     }
@@ -129,7 +136,7 @@ class Collects
      * 截取文本
      *
      * @param $start string 开始为准
-     * @param $end string 结束位置
+     * @param $end   string 结束位置
      * @return $this
      */
     public function subText($start, $end)
@@ -137,6 +144,7 @@ class Collects
         $temp1 = explode($start, $this->content);
         $temp2 = explode($end, $temp1[1]);
         $this->content = $temp2[0];
+
         return $this;
     }
 
@@ -156,6 +164,7 @@ class Collects
             preg_match($v, $this->content, $out);
             $this->match[$k] = !empty($out[1]) ? trim($out[1]) : '';
         }
+
         return $this;
     }
 
@@ -177,6 +186,7 @@ class Collects
         } else {
             $this->match = '';
         }
+
         return $this;
     }
 
@@ -195,6 +205,7 @@ class Collects
         } else {
             $this->match = trim(strip_tags($this->match, $keep));
         }
+
         return $this;
     }
 
@@ -212,6 +223,7 @@ class Collects
                 $this->match[$k] = iconv("UTF-8", "GBK//IGNORE", $v);
             }
         }
+
         return $this;
     }
 
@@ -223,6 +235,7 @@ class Collects
     public function getMatch($getstr = false)
     {
         $match = $this->match;
+
         return $getstr ? current($match) : $match;
     }
 
@@ -275,6 +288,7 @@ class Collects
             $fp = fopen($path, 'a');
             fwrite($fp, $img);
             fclose($fp);
+
             return $path;
         } else {
             return false;
@@ -346,11 +360,13 @@ class Collects
         } else {
             $info = getimagesize($url);
         }
+
         return $info;
     }
 
     /**
      * 获取图片宽高
+     *
      * @param $type
      * @param $data
      * @return array|bool
