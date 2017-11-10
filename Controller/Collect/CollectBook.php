@@ -12,14 +12,10 @@ use Model\Book\{
 };
 use Model\Collect\CollectBook77 as Collect77;
 use Model\Collect\CollectBook83 as Collect83;
+use Model\Collect\CollectBook8 as Collect8;
 
 class CollectBook extends Controller
 {
-    public static function getBookByUrl(string $url, int $from_site = Collect77::FROM_ID_77)
-    {
-
-    }
-
     /**
      * 书本单本整本采集 php index.php Collect/CollectBook/index/id/1/step/1
      */
@@ -28,7 +24,7 @@ class CollectBook extends Controller
         need_cli();
         $id = intval($_GET['id']);
         $step = intval($_GET['step']);
-
+        //var_dump(table($id));die;
         if ($id > 0) {
             $res = Collect::getCollects([], 0, 1);
             $max = max(1, $res['data'][0]['CollectId']);
@@ -48,6 +44,9 @@ class CollectBook extends Controller
                             case Collect83::FROM_ID_83:
                                 Collect83::getBookColumn($res['BookId'], $res['Url'], $book);
                                 break;
+                            case Collect8::FROM_ID_8:
+                                Collect8::getBookColumn($res['BookId'], $res['Url'], $book);
+                                break;
                         }
                     }
                 }
@@ -62,34 +61,40 @@ class CollectBook extends Controller
     }
 
     /**
-     * 书本列表采集 php index.php Collect/CollectBook/book
+     * 书本列表采集 php index.php Collect/CollectBook/book/site/8
      */
     public function book()
     {
         need_cli();
+        $site = !empty($_GET['site']) ? intval($_GET['site']) : 77;
         $page = [];
-        Collect77::book($page);
+        $class_name = 'Model\Collect\CollectBook' . $site;
+        $class_name::book($page);
     }
 
     /**
-     * 章节内容采集 php index.php Collect/CollectBook/content/id/1
+     * 章节内容采集 php index.php Collect/CollectBook/content/id/1/site/8
      */
     public function content()
     {
         need_cli();
         $id = intval($_GET['id']);
-        Collect77::column($id);
+        $site = !empty($_GET['site']) ? intval($_GET['site']) : 77;
+        $class_name = 'Model\Collect\CollectBook' . $site;
+        $class_name::column($id);
     }
 
     /**
-     * 章节内容采集 php index.php Collect/CollectBook/contentOne/id/6418
+     * 章节内容采集 php index.php Collect/CollectBook/contentOne/id/6418/site/8
      */
     public function contentOne()
     {
         need_cli();
         $id = intval($_GET['id']);
         $step = isset($_GET['step']) ? intval($_GET['step']) : 0;
-        Collect77::column($id, $step);
+        $site = !empty($_GET['site']) ? intval($_GET['site']) : 77;
+        $class_name = 'Model\Collect\CollectBook' . $site;
+        $class_name::column($id, $step);
 
     }
 

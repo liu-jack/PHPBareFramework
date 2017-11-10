@@ -16,6 +16,8 @@ class CollectBookBase
     const BASE_URL_77 = 'http://www.xiaoshuo77.com';
     const FROM_ID_83 = 83;
     const BASE_URL_83 = 'http://m.83zw.com';
+    const FROM_ID_8 = 8;
+    const BASE_URL_8 = 'http://www.mzhu8.com';
 
     public static $log_book_path = 'collect/book/book_';
     public static $log_book_err_path = 'collect/book/book_err_';
