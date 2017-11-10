@@ -10,8 +10,8 @@
                 <div class="clearfix"></div>
             </div>
             <div class="widget-content">
-                <form action="" method="get" name="searchForm" id="searchForm">
-                    <input type="hidden" name="{ADMIN_VAR}" value=""/>
+                <form action="{url('index')}" method="get" name="searchForm" id="searchForm">
+                    <input type="hidden" name="{ADMIN_VAR}" value="1"/>
                     <table class="table table-bordered table-striped" align="center">
                         <tr>
                             <td class="form-group col-xs-2">
@@ -71,7 +71,7 @@
                         <td>{$v.StatusName}</td>
                         <td>{$v.CollectTime}</td>
                         <td>
-                            <a href="{url('edit', ['id'=>$v['CollectId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
+                            <a href="{url('edit', ['id'=>$v['CollectId'],'p'=>$_GET[PAGE_VAR]])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
                         </td>
                     </tr>
                     {/foreach}

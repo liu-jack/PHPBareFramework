@@ -139,7 +139,7 @@ Class Controller
         }
 
         echo <<<EOT
-        <!doctype html> 
+        <!doctype html>
         <html>
         <head>
         <meta charset="utf-8">
@@ -329,10 +329,11 @@ EOT;
     public function page($count, $per, $now, $return = false)
     {
         $page_key = defined('PAGE_VAR') ? PAGE_VAR : 'p'; //分页传值的key
-        $_GET[$page_key] = '%d';
-        $urls = url($GLOBALS['_URL'], $_GET);
-        unset($_GET[$page_key]);
-        $burl = url($GLOBALS['_URL'], array_filter($_GET));
+        $get = $_GET;
+        $get[$page_key] = '%d';
+        $urls = url($GLOBALS['_URL'], $get);
+        unset($get[$page_key]);
+        $burl = url($GLOBALS['_URL'], array_filter($get));
         $now = max(1, $now);
         $pages = intval(ceil($count / $per));
         $min = 1;

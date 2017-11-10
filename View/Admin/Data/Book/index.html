@@ -10,8 +10,8 @@
                 <div class="clearfix"></div>
             </div>
             <div class="widget-content">
-                <form action="" method="get" name="searchForm" id="searchForm">
-                    <input type="hidden" name="{ADMIN_VAR}" value=""/>
+                <form action="{url('index')}" method="get" name="searchForm" id="searchForm">
+                    <input type="hidden" name="{ADMIN_VAR}" value="1"/>
                     <table class="table table-bordered table-striped" align="center">
                         <tr>
                             <td class="form-group col-xs-2">
@@ -105,7 +105,7 @@
                         <td>{$v.UpdateTime}</td>
                         <td>{$v.CreateTime}</td>
                         <td>
-                            <a href="{url('edit', ['id'=>$v['BookId']])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
+                            <a href="{url('edit', ['id'=>$v['BookId'],'p'=>$_GET[PAGE_VAR]])}" class="btn btn-warning"><i class="icon-pencil"></i></a>
                             <a href="{url('column', ['bid'=>$v['BookId'], 'fid'=>$v['DefaultFromSite']])}" class="btn btn-info"><i class="icon-list"></i></a>
                             <a href="{url('content', ['bid'=>$v['BookId'], 'fid'=>$v['DefaultFromSite']])}" class="btn btn-success"><i class="icon-plus"></i></a>
                         </td>

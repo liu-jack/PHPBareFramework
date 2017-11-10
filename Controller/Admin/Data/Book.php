@@ -32,7 +32,7 @@ class Book extends AdminController
             $where['BookId'] = $book_id;
         }
         if (!empty($book_name)) {
-            $where['BookName LIKE'] = "%{$book_name}%";
+            $where['BookName LIKE'] = "%$book_name%";
         }
         if (!empty($author)) {
             $where['Author LIKE'] = "%$author%";
