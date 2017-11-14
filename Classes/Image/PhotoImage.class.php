@@ -484,7 +484,7 @@ class PhotoImage
         }
         // 给图片信息加上水印信息
         if ($watermark == true) {
-            if (method_exists('\Common\PhotoImage', $watermark_type)) {
+            if (method_exists('\Classes\Image\PhotoImage', $watermark_type)) {
                 self::$watermark_type($image_color, $new_width, $new_height);
             } else {
                 self::_watermark($image_color, $new_width, $new_height);
@@ -749,13 +749,13 @@ class PhotoImage
     /**
      * 生成水印
      *
-     * @param object $im     图片资源
+     * @param mixed  $im     图片资源
      * @param string $width  图片资源的宽度
      * @param string $height 图片资源的高度
      *
      * @return object|boolean        图片资源
      */
-    private static function _watermark(& $im, $width, $height)
+    private static function _watermark(&$im, $width, $height)
     {
         $water_path = ROOT_PATH . 'Public/images/waterimg_min.png';
         if (file_exists($water_path)) {
@@ -772,7 +772,7 @@ class PhotoImage
     /**
      * 加透明层
      *
-     * @param object $im     图片资源
+     * @param mixed  $im     图片资源
      * @param string $width  图片资源的宽度
      * @param string $height 图片资源的高度
      *
@@ -901,7 +901,7 @@ class PhotoImage
      * 生成BMP图片资源
      *
      * @param string $filename 图片文件名
-     * @return res|boolean        成功返回图片资源,失败返回false
+     * @return mixed|boolean        成功返回图片资源,失败返回false
      */
     public static function imagecreatefrombmp($filename)
     {

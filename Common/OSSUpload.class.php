@@ -25,7 +25,20 @@ class OSSUpload
     public static function saveFile($filename, $uri, $itemid = 0)
     {
         $path = PhotoImage::getImageHash($itemid);
-        $imageType = PhotoImage::getImageType($filename);
+        if (strpos($filename, 'data:image/') === 0) {
+            if (strpos($filename, 'data:image/png;base64') === 0) {
+                $imageType = 'png';
+            } elseif (strpos($filename, 'data:image/gif;base64') === 0) {
+                $imageType = 'gif';
+            } else {
+                $imageType = 'jpg';
+            }
+        } else {
+            $imageType = PhotoImage::getImageType($filename);
+            if (empty($imageType)) {
+                $imageType = 'jpg';
+            }
+        }
         if (empty($itemid)) {
             $md5 = $itemid . '_' . substr(md5(__KEY__ . $itemid . ''), -6);
         } else {
@@ -33,7 +46,15 @@ class OSSUpload
         }
         $savePath = $uri . "{$path['hash1']}/{$path['hash2']}/{$md5}.$imageType";
 
-        $res = OSS::PutFile($savePath, $filename, config('oss/oss')['bucket']);
+        if (stripos($filename, 'http') === 0) {
+            $content = file_get_contents($filename);
+            $res = OSS::SaveFile($savePath, $content, config('oss/oss')['bucket']);
+        } elseif (stripos($filename, 'data:image/') === 0) {
+            $res = OSS::SaveFile($savePath, base64_decode(substr($filename, strpos($filename, ';base64,') + 8)),
+                config('oss/oss')['bucket']);
+        } else {
+            $res = OSS::PutFile($savePath, $filename, config('oss/oss')['bucket']);
+        }
         if (empty($res)) {
             logs("getActUrl failed,, {$filename}", __CLASS__);
 

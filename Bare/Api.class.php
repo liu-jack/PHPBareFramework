@@ -1,6 +1,6 @@
 <?php
 /**
- * API共用基类
+ * API调用共用基类
  *
  * @package    Bare
  * @author     周剑锋 <camfee@foxmail.com>

@@ -392,8 +392,8 @@ EOT;
                 'API Error',
                 "API Class Name:{$args[0]}",
                 "API Function Name:{$method}",
-                "GET:" . json_encode($_GET),
-                "POST:" . json_encode($_POST),
+                "GET:" . serialize($_GET),
+                "POST:" . serialize($_POST),
             ], 'Api/CallFailed');
         }
         show404();

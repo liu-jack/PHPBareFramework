@@ -62,4 +62,29 @@ class OSS
         return false;
     }
 
+    /**
+     * 上传单个文件至OSS
+     *
+     * @param string $path    OSS服务器上路径及文件名
+     * @param string $content 文件流内容
+     * @param string $bucket  OSS区块名称
+     * @return bool
+     *
+     */
+    public static function SaveFile($path, $content, $bucket)
+    {
+        $ossClient = self::getOssClient();
+        try {
+            $res = $ossClient->putObject($bucket, $path, $content);
+        } catch (OssException $e) {
+            $exception = $e->getMessage();
+            logs(__METHOD__ . " path: [" . $path . "], exception: {$exception} @ ", self::LOG_FAIL_PATH);
+        }
+        if (!empty($res['info']['http_code'])) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
