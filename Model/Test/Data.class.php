@@ -7,16 +7,16 @@ class Data
 
     /**
      * 导出excel数据表
+     *
      * @author zhoujf
      */
     public function exportExcel($list)
     {
         set_time_limit(0);
-
         // //导出 .xls 格式
-        $filename = mb_convert_encoding('测试数据(' . date("YmdHis") . ')', "GB2312", "UTF-8");
+        $filename = mb_convert_encoding('测试数据-' . date("YmdHis"), "GB2312", "UTF-8");
         $filename_type = 'xls';
-        header("Content-Type: application/vnd.ms-excel");
+        header("Content-type: application/vnd.ms-excel");
         Header("Accept-Ranges:bytes");
         Header("Content-Disposition:attachment;filename=" . $filename . "." . $filename_type);  //$filename导出的文件名
         header("Pragma: no-cache");
@@ -70,7 +70,7 @@ EOT;
                //echo mb_convert_encoding($excel_str,"GB2312","UTF-8");die;
                header("Content-type:application/octet-stream");
                header("Accept-Ranges:bytes");
-               header('Content-Type: application/vnd.ms-excel');
+               header('Content-type: application/vnd.ms-excel');
                header('Content-Disposition: attachment;filename="' . mb_convert_encoding('来宾报名数据', "GB2312", "UTF-8") . '(' . date('YmdHis') . ').csv"');
                header('Cache-Control: max-age=0');
                header("Expires: 0");
