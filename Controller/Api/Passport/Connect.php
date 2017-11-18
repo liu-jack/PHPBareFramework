@@ -14,6 +14,7 @@ use Model\Passport\Register;
 /**
  * 通行证- 第三方用户接口
  *
+ * @package Passport
  * @author  周剑锋 <camfee@foxmail.com>
  * @since   1.0.0 2016-11-25
  */

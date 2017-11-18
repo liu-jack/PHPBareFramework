@@ -16,6 +16,7 @@ use Favorite\TagFavorite;
 /**
  * 标签类
  *
+ * @package Common
  * @author  周剑锋 <camfee@foxmail.com>
  * @date   1.0.0 2017-02-8
  */

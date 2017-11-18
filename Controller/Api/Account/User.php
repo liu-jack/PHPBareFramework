@@ -17,6 +17,7 @@ use Model\Passport\Login;
 /**
  * 通行证 - 手机登录/注册
  *
+ * @package Account
  * @author  camfee <camfee@foxmail.com>
  * @since   1.0.0 2017-10-19
  */

@@ -13,6 +13,7 @@ use Model\Mobile\Device;
 /**
  * 客户端启动相关
  *
+ * @package Common
  * @author camfee<camfee@foxmail.com>
  * @date   2017-07-21
  *

@@ -1,4 +1,9 @@
 <?php
+/**
+ * 测试用类
+ *
+ * @author camfee<camfee@foxmail.com>
+ */
 
 namespace Controller\Api\Test;
 
@@ -7,8 +12,9 @@ use Bare\Controller;
 /**
  * 测试用类
  *
- * @author camfee<camfee@foxmail.com>
- * @date 2017-07-21 16:17
+ * @package    Test
+ * @author     camfee<camfee@foxmail.com>
+ * @date       2017-07-21 16:17
  * @deprecated since v1.1.0
  *
  */

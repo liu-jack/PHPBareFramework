@@ -1,11 +1,16 @@
 <?php
+/**
+ * 书本信息相关接口
+ *
+ * @author camfee<camfee@foxmail.com>
+ */
 
 namespace Controller\Api\Book;
 
 use Bare\Controller;
-use Model\Book\{
-    Book, Column, Content
-};
+use Model\Book\Book;
+use Model\Book\Column;
+use Model\Book\Content;
 use Model\Favorite\BookFavorite;
 use Model\Account\User as AUser;
 use Model\Search\BookSearch as SBook;
@@ -13,8 +18,9 @@ use Model\Search\BookSearch as SBook;
 /**
  * 书本信息相关接口
  *
- * @author camfee<camfee@foxmail.com>
- * @date   2017-07-21 14:55
+ * @package Book
+ * @author  camfee<camfee@foxmail.com>
+ * @date    2017-07-21 14:55
  *
  */
 class Index extends Controller

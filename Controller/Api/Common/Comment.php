@@ -13,6 +13,7 @@ use Model\Tool\DataFormat;
 /**
  * 公用服务 - 评论 系统
  *
+ * @package Common
  * @author  周剑锋 <camfee@foxmail.com>
  * @date    2017-01-12 v1.0.0
  *

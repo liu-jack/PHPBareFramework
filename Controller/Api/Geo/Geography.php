@@ -14,6 +14,7 @@ use Classes\Geography\Province;
 /**
  * 省/市/区 地理信息
  *
+ * @package Geo
  * @author camfee<camfee@foxmail.com>
  * @date 2017-07-21
  *

@@ -1,5 +1,7 @@
 <?php
 /**
+ * 阿里云获取授权接口
+ *
  * @author  周剑锋 <camee@foxmail.com>
  * @since   1.0.4 2017-10-24
  */
@@ -11,7 +13,7 @@ use Bare\Controller;
 /**
  * 阿里云获取临时token接口
  *
- * @package Tool
+ * @package Common
  * @author  周剑锋 <camee@foxmail.com>
  * @since   1.0.4 2017-10-24
  */

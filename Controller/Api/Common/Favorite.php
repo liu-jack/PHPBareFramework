@@ -11,6 +11,7 @@ use Model\Book\Book;
 /**
  * 公用服务 - 赞/收藏/喜欢 系统
  *
+ * @package Common
  * @author 周剑锋 <camfee@foxmail.com>
  * @date   2017-01-03 v1.0.0
  *

@@ -13,6 +13,7 @@ use Model\Account\User as AUser;
 /**
  * 用户 - 用户账号相关
  *
+ * @package Account
  * @author  camfee <camfee@foxmail.com>
  * @since   1.0.0 2017-10-19
  */
