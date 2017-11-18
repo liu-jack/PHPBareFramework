@@ -63,6 +63,56 @@ function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
 }
 
 /**
+ * 获取|保存 文件路径
+ *
+ * @param string    $path   路径
+ * @param int       $itemid 项目id
+ * @param string    $ext    图片保存扩展名
+ * @param int|array $size   图片裁剪大小
+ * @return mixed|string
+ */
+function getSavePath2($path, $itemid = 0, $ext = 'jpg', $size = 0)
+{
+    if (IS_ONLINE) {
+        $base_dir = '/data/prj_jinguo/';
+        $img_host = 'http://img.bare.com/';
+    } else {
+        $base_dir = UPLOAD_PATH . 'temp/';
+        $img_host = 'http://img.bare.com/';
+    }
+    if ($itemid) {
+        $hash1 = sprintf("%02x", $itemid % 256);
+        $hash2 = sprintf("%02x", $itemid / 256 % 256);
+        $name = $itemid . '_' . substr(md5(__KEY__ . $itemid), -6);
+    } else {
+        $time = time();
+        $hash1 = date('Ym', $time);
+        $hash2 = date('d', $time);
+        $name = mt_rand(10, 99) . '_' . substr(md5(__KEY__ . uniqid()), -6);
+    }
+    if (is_array($size)) {
+        $return = [];
+        foreach ($size as $v) {
+            $v = intval($v);
+            $url = $img_host . "{$path}/{$hash1}/{$hash2}/{$name}_{$v}.{$ext}";
+            $return[$v] = [
+                'url' => $url,
+                'path' => $base_dir . ltrim($url, '/')
+            ];
+        }
+    } else {
+        $size = intval($size);
+        $url = $img_host . "{$path}/{$hash1}/{$hash2}/{$name}_{$size}.{$ext}";
+        $return = [
+            'url' => $url,
+            'path' => $base_dir . ltrim($url, '/')
+        ];
+    }
+
+    return $return;
+}
+
+/**
  * 获取文件扩展名
  *
  * @param string $filepath
