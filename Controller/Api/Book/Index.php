@@ -27,7 +27,7 @@ class Index extends Controller
 {
     const FROM_ID = 77;
     // 排行榜
-    private static $type_seach = [
+    private static $type_search = [
         101 => SBook::TOP_VIEW,
         102 => SBook::TOP_LIKE,
         103 => SBook::TOP_FINISH,
@@ -228,7 +228,7 @@ class Index extends Controller
         $typename = $types[$tid];
 
         if ($tid > 100) {
-            $list_ids = SBook::getBookTop(self::$type_seach[$tid], $offset, $limit);
+            $list_ids = SBook::getBookTop(self::$type_search[$tid], $offset, $limit);
         } else {
             $list_ids = SBook::getBookByTypeName($typename, $offset, $limit);
         }
@@ -506,7 +506,6 @@ class Index extends Controller
      *
      * @author     camfee<camfee@foxmail.com>
      * @date       2017-07-21 14:46
-     * @deprecated since v1.3.0
      * @return void|string 返回json数据
      *
      * <pre>
