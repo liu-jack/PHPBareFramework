@@ -11,7 +11,7 @@ server {
 	root  /home/camfee/www/www.bare.com;
 	index index.html index.htm index.php;
 
-  add_header Access-Control-Allow-Headers AUTH;
+    add_header Access-Control-Allow-Headers AUTH;
 
 	if (!-e $request_filename) {
 		rewrite ^/([\w\/]+)/(v[0-9\.]+)$ /index.php/$1?_v=$2 last;
@@ -32,11 +32,13 @@ server {
     }
 
 	location ~ \.php(.*)$  {
+		index index.php;
+        try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-		fastcgi_intercept_errors on;
-		fastcgi_index index.php;
-		include fastcgi.conf;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
 	}
 }
 
@@ -52,11 +54,13 @@ server {
 		rewrite ^(.*)$ /m.php$1 last;
 	}
 	location ~ \.php(.*)$  {
-	  #fastcgi_pass  127.0.0.1:9000;
-	  fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-		fastcgi_intercept_errors on;
-		fastcgi_index index.php;
-		include fastcgi.conf;
+		index index.php;
+        try_files $uri =404;
+		#fastcgi_pass  127.0.0.1:9000;
+		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
 	}
 }
 
@@ -70,11 +74,13 @@ server {
 		rewrite ^(.*)$ /admin.php$1 last;
 	}
 	location ~ \.php(.*)$  {
-	  #fastcgi_pass  127.0.0.1:9000;
-	  fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-		fastcgi_intercept_errors on;
-		fastcgi_index index.php;
-		include fastcgi.conf;
+		index index.php;
+        try_files $uri =404;
+		#fastcgi_pass  127.0.0.1:9000;
+		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
 	}
 }
 
@@ -89,10 +95,12 @@ server {
 	}
 
 	location ~ \.php(.*)$  {
+		index index.php;
+        try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-		fastcgi_intercept_errors on;
-		fastcgi_index index.php;
-		include fastcgi.conf;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
 	}
 }

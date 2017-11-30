@@ -51,3 +51,32 @@ server {
     }
 
 }
+
+server {
+    listen  80;
+    server_name api.feeqoo.com;
+    index index.html index.htm index.php;
+    root  /data/www/jinguo/code/api;
+
+    rewrite /(v[0-9\.]+)/([\w\/]+) /index.php?_v=$1&_method=$2 last;
+
+    location / {
+        root /data/www/jinguo/code/api;
+        index index.php;
+
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Headers X-Requested-With;
+        add_header Access-Control-Allow-Methods GET,POST,OPTIONS;
+        add_header Access-Control-Allow-Headers AUTH;
+
+        try_files $uri =404;
+        #fastcgi_pass    unix__tmp_php_cgi_sock;
+        fastcgi_pass    unix:/tmp/php-cgi.sock;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
+    }
+
+    access_log  /data/logs/www/api.feeqoo.com.log jflog;
+}
+
