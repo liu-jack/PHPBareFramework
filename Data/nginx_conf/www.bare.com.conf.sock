@@ -32,13 +32,11 @@ server {
     }
 
 	location ~ \.php(.*)$  {
-		index index.php;
-        try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-        include         fastcgi_params;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
+		fastcgi_intercept_errors on;
+        fastcgi_index index.php;
+        include fastcgi.conf;
 	}
 }
 
@@ -54,13 +52,11 @@ server {
 		rewrite ^(.*)$ /m.php$1 last;
 	}
 	location ~ \.php(.*)$  {
-		index m.php;
-        try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-        include         fastcgi_params;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
+		fastcgi_intercept_errors on;
+        fastcgi_index m.php;
+        include fastcgi.conf;
 	}
 }
 
@@ -74,13 +70,11 @@ server {
 		rewrite ^(.*)$ /admin.php$1 last;
 	}
 	location ~ \.php(.*)$  {
-		index admin.php;
-        try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-        include         fastcgi_params;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
+		fastcgi_intercept_errors on;
+        fastcgi_index admin.php;
+        include fastcgi.conf;
 	}
 }
 
@@ -95,12 +89,10 @@ server {
 	}
 
 	location ~ \.php(.*)$  {
-		index index.php;
-        try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
-        include         fastcgi_params;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param   SCRIPT_NAME $fastcgi_script_name;
+		fastcgi_intercept_errors on;
+        fastcgi_index index.php;
+        include fastcgi.conf;
 	}
 }
