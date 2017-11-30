@@ -54,7 +54,7 @@ server {
 		rewrite ^(.*)$ /m.php$1 last;
 	}
 	location ~ \.php(.*)$  {
-		index index.php;
+		index m.php;
         try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
@@ -74,7 +74,7 @@ server {
 		rewrite ^(.*)$ /admin.php$1 last;
 	}
 	location ~ \.php(.*)$  {
-		index index.php;
+		index admin.php;
         try_files $uri =404;
 		#fastcgi_pass  127.0.0.1:9000;
 		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
