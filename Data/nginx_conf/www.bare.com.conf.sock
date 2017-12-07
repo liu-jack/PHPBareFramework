@@ -7,7 +7,7 @@ server {
 
 server {
 	listen       80;
-	server_name  zf.bare.com 29shu.iok.la;
+	server_name  zf.bare.com 29shu.iok.la 127.0.0.1 192.168.1.102;
 	root  /home/camfee/www/www.bare.com;
 	index index.html index.htm index.php;
 
