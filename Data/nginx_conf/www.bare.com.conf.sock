@@ -23,7 +23,7 @@ server {
 		break;
 	}
 
-	location ~* \.(eot|ttf|woff|svg|otf)$ {
+	location ~* \.(eot|ttf|woff|svg|otf|js|css|jpg|png|gif|webp)$ {
 		if ($request_method = GET) {
 	         add_header Access-Control-Allow-Origin $http_origin;
 	         add_header Access-Control-Allow-Headers X-Requested-With;
@@ -33,7 +33,7 @@ server {
 
 	location ~ \.php(.*)$  {
 		#fastcgi_pass  127.0.0.1:9000;
-		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
+		fastcgi_pass  unix:/dev/shm/php-fpm.sock;
 		fastcgi_intercept_errors on;
         fastcgi_index index.php;
         include fastcgi.conf;
@@ -53,7 +53,7 @@ server {
 	}
 	location ~ \.php(.*)$  {
 		#fastcgi_pass  127.0.0.1:9000;
-		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
+		fastcgi_pass  unix:/dev/shm/php-fpm.sock;
 		fastcgi_intercept_errors on;
         fastcgi_index m.php;
         include fastcgi.conf;
@@ -71,7 +71,7 @@ server {
 	}
 	location ~ \.php(.*)$  {
 		#fastcgi_pass  127.0.0.1:9000;
-		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
+		fastcgi_pass  unix:/dev/shm/php-fpm.sock;
 		fastcgi_intercept_errors on;
         fastcgi_index admin.php;
         include fastcgi.conf;
@@ -90,7 +90,7 @@ server {
 
 	location ~ \.php(.*)$  {
 		#fastcgi_pass  127.0.0.1:9000;
-		fastcgi_pass  unix:/dev/shm/php7.0-fpm.sock;
+		fastcgi_pass  unix:/dev/shm/php-fpm.sock;
 		fastcgi_intercept_errors on;
         fastcgi_index index.php;
         include fastcgi.conf;
