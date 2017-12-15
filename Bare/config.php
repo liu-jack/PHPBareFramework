@@ -66,14 +66,17 @@ if ($env === 'DEV') {
     define('__ENV__', 'DEV');
     define('__KEY__', '86f64532553eeb9111cf66233d6726df');
     define('IS_ONLINE', false);
+    define('__IP__', '127.0.0.1');
 } elseif ($env === 'TEST') {
     // 定义测试环境
     define('__ENV__', 'TEST');
     define('__KEY__', '6facf75d3bac75b1cdfde6d94ee0aaec');
     define('IS_ONLINE', false);
+    define('__IP__', '127.0.0.1');
 } else {
     // 定义线上环境
     define('__ENV__', 'ONLINE');
     define('__KEY__', '1be811d9b9a37d91893b3588e270d519');
     define('IS_ONLINE', true);
+    define('__IP__', '127.0.0.1');
 }

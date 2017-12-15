@@ -91,20 +91,24 @@ class DBConfig
     const REDIS_QUEUE_W = 9;
     const REDIS_MOBILE_R = 10;
     const REDIS_MOBILE_W = 11;
+    const REDIS_NOTICE_R = 12;
+    const REDIS_NOTICE_W = 13;
 
     protected static $_redis_cfgs = [
         self::REDIS_DEFAULT_R => 'default',
         self::REDIS_DEFAULT_W => 'default',
-        self::REDIS_PASSPORT_R => 'default',
-        self::REDIS_PASSPORT_W => 'default',
-        self::REDIS_ACCOUNT_R => 'default',
-        self::REDIS_ACCOUNT_W => 'default',
-        self::REDIS_OTHER_R => 'default',
-        self::REDIS_OTHER_W => 'default',
-        self::REDIS_QUEUE_R => 'default',
-        self::REDIS_QUEUE_W => 'default',
-        self::REDIS_MOBILE_R => 'default',
-        self::REDIS_MOBILE_W => 'default',
+        self::REDIS_PASSPORT_R => 'passport',
+        self::REDIS_PASSPORT_W => 'passport',
+        self::REDIS_ACCOUNT_R => 'account',
+        self::REDIS_ACCOUNT_W => 'account',
+        self::REDIS_OTHER_R => 'other',
+        self::REDIS_OTHER_W => 'other',
+        self::REDIS_QUEUE_R => 'queue',
+        self::REDIS_QUEUE_W => 'queue',
+        self::REDIS_MOBILE_R => 'mobile',
+        self::REDIS_MOBILE_W => 'mobile',
+        self::REDIS_NOTICE_R => 'notice',
+        self::REDIS_NOTICE_W => 'notice',
     ];
 
     /**
