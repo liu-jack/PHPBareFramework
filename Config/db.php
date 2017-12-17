@@ -27,32 +27,32 @@ $config = [
         ],
         'redis' => [
             'default' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7380],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7380],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6380],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6380],
             ],
             'passport' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7381],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7381],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6381],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6381],
             ],
             'account' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7382],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7382],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6382],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6382],
             ],
             'queue' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7383],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7383]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6383],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6383]
             ],
             'mobile' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7384],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7384]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6384],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6384]
             ],
             'notice' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7385],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7385]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6385],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6385]
             ],
             'other' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 7386],
-                'r' => ['host' => __REDIS_IP__, 'port' => 7386]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6386],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6386]
             ]
         ],
         'search' => [
