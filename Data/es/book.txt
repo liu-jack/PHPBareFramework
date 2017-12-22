@@ -1,0 +1,38 @@
+## 创建mapping
+curl -XPUT http://127.0.0.1:9200/29shu_book_v1?pretty -d '
+{
+    "settings": {
+        "number_of_shards": 5,
+        "number_of_replicas": 1
+    },
+    "mappings": {
+        "list": {
+            "properties" : {
+                "id" : { "type" : "long" },
+                "bookname" : { "type": "text", "term_vector" : "with_positions_offsets"},
+                "author" : { "type": "text"},
+                "type" : { "type": "long" },
+                "typename" : { "type": "text"},
+                "description": { "type": "text", "term_vector" : "with_positions_offsets"},
+                "words" : { "type": "long" },
+                "viewcount" : { "type": "long" },
+                "likecount" : { "type": "long" },
+                "commentcount" : { "type": "long" },
+                "favoritecount": {"type": "long"},
+                "finish" : { "type": "long" },
+                "status" : { "type": "long" },
+                "updatetime" : { "type": "date", "format": "yyyy-MM-dd HH:mm:ss" },
+                "createtime" : { "type": "date", "format": "yyyy-MM-dd HH:mm:ss" }
+            }
+        }
+    }
+}'
+
+设置别名
+curl -XPOST http://127.0.0.1:9200/_aliases -d '
+{
+    "actions": [
+        { "remove":    { "index": "29shu_book_v1", "alias": "29shu_book" }},
+        { "add":    { "index": "29shu_book_v2", "alias": "29shu_book" }}
+    ]
+}'
