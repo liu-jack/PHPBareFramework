@@ -104,6 +104,20 @@ abstract class Model
     const CACHE_LIST_FIELDS = 'fields';
     const UPDATE_DEL_CACHE_LIST = false; // 更新是否清除列表缓存
     protected static $_cache_list_keys;
+    const MC_LIST_DEMO_1 = 'MC_LIST_DEMO_1';
+    const MC_LIST_DEMO_2 = 'MC_LIST_DEMO_2:{Id}';
+    const MC_LIST_DEMO_3 = 'MC_LIST_DEMO_3:{Id}:{UserId}';
+    private static $_cache_list_keys_demo = [
+        self::MC_LIST_DEMO_1 => self::CACHE_LIST_TYPE_MC,
+        self::MC_LIST_DEMO_2 => [
+            self::CACHE_LIST_TYPE => self::CACHE_LIST_TYPE_MC,
+            self::CACHE_LIST_FIELDS => 'Id',
+        ],
+        self::MC_LIST_DEMO_3 => [
+            self::CACHE_LIST_TYPE => self::CACHE_LIST_TYPE_MC,
+            self::CACHE_LIST_FIELDS => ['Id', 'UserId']
+        ],
+    ];
     // 新增必须字段 field => 1
     protected static $_add_must_fields;
     // 不可修改字段 field => 1
@@ -111,6 +125,60 @@ abstract class Model
         'Id' => 1,
     ];
     protected static $_suffix_field;
+
+    /**
+     * 获取列表
+     *
+     * @param $id
+     * @return array
+     */
+    protected static function getDemoList($id)
+    {
+        $where = [
+            'Id' => $id,
+            'Status' => 1
+        ];
+        $extra = [
+            self::EXTRA_MOD_TYPE => self::MOD_TYPE_MEMCACHE,
+            self::EXTRA_MC_KEY => self::MC_LIST_DEMO_2,
+            self::EXTRA_MC_TIME => 86400,
+            self::EXTRA_FIELDS => '*',
+            self::EXTRA_LIST_KEY => 'Id',
+            self::EXTRA_LIST_VAL => '',
+            self::EXTRA_ORDER => '',
+        ];
+
+        return self::getDataByFields($where, $extra);
+    }
+
+    /**
+     * 获取Id列表
+     *
+     * @param     $uid
+     * @param int $offset
+     * @param int $limit
+     * @return array
+     */
+    protected static function getDemoIdList($uid, $offset = 0, $limit = 10)
+    {
+        $where = [
+            'Id' => $uid,
+            'Status' => 1
+        ];
+        $extra = [
+            self::EXTRA_MOD_TYPE => self::MOD_TYPE_MEMCACHE,
+            self::EXTRA_MC_KEY => self::MC_LIST_DEMO_2,
+            self::EXTRA_MC_TIME => 86400,
+            self::EXTRA_ORDER => '',
+        ];
+        $data = self::getDataByFields($where, $extra);
+
+        if (!empty($data['data'])) {
+            $data['data'] = array_slice($data['data'], $offset, $limit);
+        }
+
+        return $data;
+    }
 
     /**
      * 添加
@@ -593,6 +661,30 @@ abstract class Model
         }
 
         return ['count' => $count, 'data' => $data];
+    }
+
+    /**
+     * 获取pdo实例
+     *
+     * @param bool $w
+     * @return DB\PDODB|bool
+     */
+    protected static function getPdo($w = false)
+    {
+        static $pdo_w, $pdo_r;
+        if ($w) {
+            if (empty($pdo_w)) {
+                $pdo_w = DB::pdo(static::$_conf['db']['w']);
+            }
+
+            return $pdo_w;
+        } else {
+            if (empty($pdo_r)) {
+                $pdo_r = DB::pdo(static::$_conf['db']['r']);
+            }
+
+            return $pdo_r;
+        }
     }
 
     /**
