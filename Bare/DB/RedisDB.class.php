@@ -60,8 +60,9 @@ class RedisDB extends \Redis
      * @param string|array $host    Redis服务器的主机名或IP地址
      * @param integer      $dbindex 数据库索引号
      * @param integer      $timeout 超时时间
+     * @param string|bool  $auth    授权
      */
-    public function __construct($host = 'localhost', $dbindex = 0, $timeout = self::TIMEOUT)
+    public function __construct($host = 'localhost', $dbindex = 0, $timeout = self::TIMEOUT, $auth = false)
     {
         parent::__construct();
         if (is_array($host)) {
@@ -72,6 +73,12 @@ class RedisDB extends \Redis
             $port = self::PORT;
         }
         $this->connect($host, $port, $timeout);
+        if ($auth) {
+            $ret = $this->auth($auth);
+            if (empty($ret)) {
+                throw new \RuntimeException("redis auth error, host: {$host}, port: {$port}, auth: {$auth}", 1);
+            }
+        }
         $this->select($dbindex);
     }
 

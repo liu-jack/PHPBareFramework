@@ -185,8 +185,9 @@ class DB extends DBConfig
             }
 
             self::_checkConnectionParams([$params], 'redis');
+            $auth = isset($params['auth']) ? $params['auth'] : false;
 
-            $_static[$key] = new RedisDB($params, $dbindex, $timeout);
+            $_static[$key] = new RedisDB($params, $dbindex, $timeout, $auth);
         }
 
         return $_static[$key];

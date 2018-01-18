@@ -27,32 +27,32 @@ $config = [
         ],
         'redis' => [
             'default' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6380],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6380],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6380, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6380, 'auth' => ''],
             ],
             'passport' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6381],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6381],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6381, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6381, 'auth' => ''],
             ],
             'account' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6382],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6382],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6382, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6382, 'auth' => ''],
             ],
             'queue' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6383],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6383]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6383, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6383, 'auth' => '']
             ],
             'mobile' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6384],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6384]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6384, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6384, 'auth' => '']
             ],
             'notice' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6385],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6385]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6385, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6385, 'auth' => '']
             ],
             'other' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6386],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6386]
+                'w' => ['host' => __REDIS_IP__, 'port' => 6386, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6386, 'auth' => '']
             ]
         ],
         'search' => [
@@ -79,8 +79,8 @@ $config = [
         ],
         'redis' => [
             'default' => [
-                'w' => ['host' => __REDIS_IP__, 'port' => 6379],
-                'r' => ['host' => __REDIS_IP__, 'port' => 6379],
+                'w' => ['host' => __REDIS_IP__, 'port' => 6379, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6379, 'auth' => ''],
             ]
         ],
         'search' => [
@@ -114,12 +114,12 @@ $config = [
         ],
         'redis' => [
             'default' => [
-                'w' => ['host' => '192.168.1.105', 'port' => 6379],
-                'r' => ['host' => '192.168.1.105', 'port' => 6379]
+                'w' => ['host' => '192.168.1.105', 'port' => 6379, 'auth' => ''],
+                'r' => ['host' => '192.168.1.105', 'port' => 6379, 'auth' => '']
             ],
             'other' => [
-                'w' => ['host' => '192.168.1.111', 'port' => 6379],
-                'r' => ['host' => '192.168.1.111', 'port' => 6379]
+                'w' => ['host' => '192.168.1.111', 'port' => 6379, 'auth' => ''],
+                'r' => ['host' => '192.168.1.111', 'port' => 6379, 'auth' => '']
             ],
         ],
         'search' => [

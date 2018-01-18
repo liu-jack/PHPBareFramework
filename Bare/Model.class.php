@@ -64,6 +64,7 @@ abstract class Model
     // 主键/字段类型
     const VAR_TYPE_KEY = 'PRIMARY KEY';
     const VAR_TYPE_INT = 'int';
+    const VAR_TYPE_FLOAT = 'float';
     const VAR_TYPE_STRING = 'string';
     const VAR_TYPE_ARRAY = 'array';
     const VAR_TYPE_JSON = 'json';
@@ -375,8 +376,7 @@ abstract class Model
             if (count($nocache_ids) > 0) {
                 $data = static::getFromDb($nocache_ids, $db, $suffix);
                 foreach ($data as $v) {
-                    $mc->set(sprintf(static::$_conf[static::CF_MC_KEY], $v[static::$_conf[static::CF_PRIMARY_KEY]]), $v,
-                        static::$_conf[static::CF_MC_TIME]);
+                    $mc->set(sprintf(static::$_conf[static::CF_MC_KEY], $v[static::$_conf[static::CF_PRIMARY_KEY]]), $v, static::$_conf[static::CF_MC_TIME]);
                     $data_cache[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v;
                 }
             }
@@ -535,8 +535,7 @@ abstract class Model
             $data = $mc->get($key);
             if (!is_array($data)) {
                 $pdo = DB::pdo($extra[static::EXTRA_DB]);
-                $ret = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where,
-                    static::$_conf[static::CF_PRIMARY_KEY], $extra[static::EXTRA_ORDER]);
+                $ret = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where, static::$_conf[static::CF_PRIMARY_KEY], $extra[static::EXTRA_ORDER]);
                 $data = [];
                 if (is_array($ret)) {
                     if (!empty($extra[self::EXTRA_LIST_KEY])) {
@@ -583,8 +582,7 @@ abstract class Model
             }
 
             if ($extra[static::EXTRA_GET_RET] == 1 && ($count == -1 || $count > 0)) {
-                $data = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where, $extra[static::EXTRA_FIELDS],
-                    $extra[static::EXTRA_ORDER], $limit);
+                $data = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where, $extra[static::EXTRA_FIELDS], $extra[static::EXTRA_ORDER], $limit);
             }
         }
 
@@ -608,15 +606,13 @@ abstract class Model
         static $redis_w, $redis_r;
         if ($w) {
             if (empty($redis_w)) {
-                $redis_w = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_W],
-                    static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
+                $redis_w = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_W], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
             }
 
             return $redis_w;
         } else {
             if (empty($redis_r)) {
-                $redis_r = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_R],
-                    static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
+                $redis_r = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_R], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
             }
 
             return $redis_r;
@@ -751,6 +747,9 @@ abstract class Model
                         case static::VAR_TYPE_KEY:
                         case static::VAR_TYPE_INT:
                             $v = is_array($v) ? $v : intval($v);
+                            break;
+                        case static::VAR_TYPE_FLOAT:
+                            $v = is_array($v) ? $v : floatval($v);
                             break;
                         case static::VAR_TYPE_ARRAY:
                             $v = is_array($v) ? serialize($v) : $v;
