@@ -28,7 +28,7 @@ class RedisCenterUser extends RedisDB
      */
     public static function getKey($uid)
     {
-        $arr = ['QBTC_User_' . sprintf('%02x', $uid % 256), $uid];
+        $arr = ['C_User_' . sprintf('%02x', $uid % 256), $uid];
 
         return parent::getKey($arr);
     }

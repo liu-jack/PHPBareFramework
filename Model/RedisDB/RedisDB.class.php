@@ -88,6 +88,8 @@ class RedisDB
     }
 
     /**
+     * 加载多个数据
+     *
      * @param array $keys keys数组
      * @return array
      */

@@ -40,6 +40,12 @@ class RedisQueue
         return self::$_instance[$queueName];
     }
 
+    /**
+     * 添加数据到队列
+     *
+     * @param $data
+     * @return bool|int
+     */
     public function push($data)
     {
         try {
@@ -51,16 +57,29 @@ class RedisQueue
         }
     }
 
+    /**
+     * 获取队列长度
+     *
+     * @return int
+     */
     public function len()
     {
         return $this->_redis->lLen($this->_queueName);
     }
 
+    /**
+     * 清空队列
+     */
     public function clear()
     {
         $this->_redis->delete($this->_queueName);
     }
 
+    /**
+     * 队列出栈
+     *
+     * @return bool|mixed|string
+     */
     public function pop()
     {
         try {
@@ -77,6 +96,12 @@ class RedisQueue
         }
     }
 
+    /**
+     * 获取redis队列实例
+     *
+     * @param bool $write
+     * @return DB\RedisDB
+     */
     public function getRedis($write = true)
     {
         return DB::redis($write ? DB::REDIS_SYNC_EVENT_W : DB::REDIS_SYNC_EVENT_R, self::DB_INDEX);
