@@ -54,8 +54,14 @@ if (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQU
     define('IS_AJAX', false);
 };
 
-// 实时日志开关
+// 实时日志开关配置
 define('RUNTIME_LOG', false);
+defined('JF_LOG_DEBUG') || define('JF_LOG_DEBUG', 0);
+defined('JF_LOG_INFO') || define('JF_LOG_INFO', 1);
+defined('JF_LOG_NOTICE') || define('JF_LOG_NOTICE', 2);
+defined('JF_LOG_WARNING') || define('JF_LOG_WARNING', 3);
+defined('JF_LOG_ERROR') || define('JF_LOG_ERROR', 4);
+defined('JF_LOG_CRITICAL') || define('JF_LOG_CRITICAL', 5);
 
 $env = get_cfg_var('environment');
 define('DEV', 'DEV');
@@ -66,17 +72,20 @@ if ($env === 'DEV') {
     define('__ENV__', 'DEV');
     define('__KEY__', '86f64532553eeb9111cf66233d6726df');
     define('IS_ONLINE', false);
+    define('__LOG_LEVEL__', JF_LOG_DEBUG);
     define('__IP__', '127.0.0.1');
 } elseif ($env === 'TEST') {
     // 定义测试环境
     define('__ENV__', 'TEST');
     define('__KEY__', '6facf75d3bac75b1cdfde6d94ee0aaec');
     define('IS_ONLINE', false);
+    define('__LOG_LEVEL__', JF_LOG_DEBUG);
     define('__IP__', '127.0.0.1');
 } else {
     // 定义线上环境
     define('__ENV__', 'ONLINE');
     define('__KEY__', '1be811d9b9a37d91893b3588e270d519');
     define('IS_ONLINE', true);
+    define('__LOG_LEVEL__', JF_LOG_INFO);
     define('__IP__', '127.0.0.1');
 }

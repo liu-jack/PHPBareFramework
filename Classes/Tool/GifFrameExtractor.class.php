@@ -7,7 +7,7 @@
  *
  */
 
-namespace Model\Tool;
+namespace Classes\Tool;
 
 /**
  * Extract the frames (and their duration) of a GIF

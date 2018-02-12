@@ -81,10 +81,8 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
     logs($info, 'debug/runtime_log');
 
-    trigger_error("{$errstr} {$errtype}({$errno}) in {$errfile} on line {$errline}",
-        (isset($_user_error_map[$errno]) ? $_user_error_map[$errno] : $errno));
-},
-    (RUNTIME_LOG || IS_ONLINE == false) ? (E_ERROR | E_WARNING | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE) : E_USER_NOTICE);
+    trigger_error("{$errstr} {$errtype}({$errno}) in {$errfile} on line {$errline}", (isset($_user_error_map[$errno]) ? $_user_error_map[$errno] : $errno));
+}, (RUNTIME_LOG || IS_ONLINE == false) ? (E_ERROR | E_WARNING | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE) : E_USER_NOTICE);
 
 /**
  * html模板include其他模板函数 模板页面使用
@@ -400,6 +398,17 @@ function logs($content, $name = '', $log_path = LOG_PATH)
 }
 
 /**
+ * 调试日志
+ *
+ * @param        $content
+ * @param string $name
+ */
+function debug_log($content, $name = 'debug/debug')
+{
+    logs($content, $name);
+}
+
+/**
  * 必须cli模式运行
  *
  * @param string $msg     退出信息
@@ -609,8 +618,7 @@ function show404($path = '')
  */
 function autohost($url)
 {
-    if (__ENV__ == TEST && strpos($_SERVER['HTTP_HOST'], 'test.') !== false && strpos($url,
-            '://test.') === false && strpos($url, 'http') === 0) {
+    if (__ENV__ == TEST && strpos($_SERVER['HTTP_HOST'], 'test.') !== false && strpos($url, '://test.') === false && strpos($url, 'http') === 0) {
         return str_replace('://', '://test.', $url);
     }
 

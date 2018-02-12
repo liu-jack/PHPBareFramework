@@ -1,10 +1,11 @@
 <?php
-
 /**
  * 每3分运行后台定时推送
  *
  * @author camfee<camfee@foxmail.com>
  */
+
+namespace Controller\Cron;
 
 use Bare\Controller;
 use Model\Mobile\AppPush;
@@ -30,11 +31,9 @@ class SetTimePush extends Controller
                 if ($v[AdminCron::FD_CRON_TIME] <= date('Y-m-d H:i:s', time() + 180)) {
                     $cron_data = unserialize($v[AdminCron::FD_CRON_DATA]);
                     if (!empty($cron_data['tag'])) { // 按用户类型推送
-                        $ret = AppPush::pushTag($cron_data['tag'], $cron_data['type'], $cron_data['msg'],
-                            $cron_data['data'], $cron_data['platform']);
+                        $ret = AppPush::pushTag($cron_data['tag'], $cron_data['type'], $cron_data['msg'], $cron_data['data'], $cron_data['platform']);
                     } else { // 全体推送
-                        $ret = AppPush::pushAll($cron_data['type'], $cron_data['msg'], $cron_data['data'],
-                            $cron_data['platform']);
+                        $ret = AppPush::pushAll($cron_data['type'], $cron_data['msg'], $cron_data['data'], $cron_data['platform']);
                     }
                     if ($ret) {
                         AdminCron::update($v[AdminCron::FD_CRON_ID], [AdminCron::FD_STATUS => AdminCron::STATUS_OK]);

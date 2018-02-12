@@ -93,6 +93,10 @@ class DBConfig
     const REDIS_MOBILE_W = 11;
     const REDIS_NOTICE_R = 12;
     const REDIS_NOTICE_W = 13;
+    const REDIS_SYNC_EVENT_R = 14;
+    const REDIS_SYNC_EVENT_W = 15;
+    const REDIS_DB_CACHE_R = 16;
+    const REDIS_DB_CACHE_W = 17;
 
     protected static $_redis_cfgs = [
         self::REDIS_DEFAULT_R => 'default',
@@ -109,6 +113,8 @@ class DBConfig
         self::REDIS_MOBILE_W => 'mobile',
         self::REDIS_NOTICE_R => 'notice',
         self::REDIS_NOTICE_W => 'notice',
+        self::REDIS_SYNC_EVENT_R => 'default',
+        self::REDIS_SYNC_EVENT_W => 'default',
     ];
 
     /**

@@ -11,6 +11,7 @@
 namespace Model\Mobile;
 
 use Bare\DB;
+use Config\DBConfig;
 
 class RecomData
 {
@@ -24,6 +25,11 @@ class RecomData
     const MC_KEY = 'RecomData_';
     //表名
     const DB_TABLE_NAME = 'RecomData';
+    // redis 配置
+    const REDIS_DB_W = DBConfig::REDIS_DEFAULT_W;
+    const REDIS_DB_R = DBConfig::REDIS_DEFAULT_R;
+    const REDIS_DB_INDEX = 10;
+    const REDIS_KEY = 'RecomData:';
 
     /**
      * 按key获取数据
@@ -106,5 +112,63 @@ class RecomData
         }
 
         return false;
+    }
+
+    /**
+     * 按key获取数据
+     *
+     * @param string|array $key KEY见self::KEY_CONFIG
+     * @return array             ['key1' => [], 'key2' => [], ...]
+     *
+     */
+    public static function getRedisData($key)
+    {
+        $data = [];
+        $keys = is_array($key) ? $key : [$key];
+        foreach ($keys as $v) {
+            $data[$v] = self::getRedis()->get(self::REDIS_KEY . $v);
+        }
+        foreach ($data as &$v) {
+            $v = unserialize($v) ? unserialize($v) : $v;
+        }
+
+        return is_array($key) ? $data : $data[$key];
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param string       $key    要设置的key,见self::KEY_CONFIG
+     * @param array|string $data   要设置的数据, 不同key数据自定义, 见self::KEY_CONFIG
+     * @param string       $prefix 要设置的key 前缀
+     * @return bool
+     */
+    public static function setRedisData($key, $data, $prefix = '')
+    {
+        $conf = self::KEY_CONFIG;
+        if (!isset($conf[$key]) && !isset($conf[$prefix])) {
+            return false;
+        }
+        $data = is_array($data) ? serialize($data) : $data;
+
+        return self::getRedis(true)->set(self::REDIS_KEY . $key, $data);
+    }
+
+    private static function getRedis($w = true)
+    {
+        static $redis_w, $redis_r;
+        if ($w) {
+            if (empty($redis_w)) {
+                $redis_w = DB::redis(self::REDIS_DB_W, self::REDIS_DB_INDEX);
+            }
+
+            return $redis_w;
+        } else {
+            if (empty($redis_r)) {
+                $redis_r = DB::redis(self::REDIS_DB_R, self::REDIS_DB_INDEX);
+            }
+
+            return $redis_r;
+        }
     }
 }
