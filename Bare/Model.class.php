@@ -194,7 +194,7 @@ abstract class Model
         }
         $ret = false;
         if (!empty($data)) {
-            if (empty($data['CreateTime'])) {
+            if (empty($data[0]) && empty($data['CreateTime'])) {
                 $data['CreateTime'] = date('Y-m-d H:i:s');
             }
             $ret = static::addData($data, $ignore, table($data[static::$_suffix_field] ?? ''));
@@ -674,13 +674,13 @@ abstract class Model
         static $pdo_w, $pdo_r;
         if ($w) {
             if (empty($pdo_w)) {
-                $pdo_w = DB::pdo(static::$_conf['db']['w']);
+                $pdo_w = DB::pdo(static::$_conf[self::CF_DB][self::CF_DB_W]);
             }
 
             return $pdo_w;
         } else {
             if (empty($pdo_r)) {
-                $pdo_r = DB::pdo(static::$_conf['db']['r']);
+                $pdo_r = DB::pdo(static::$_conf[self::CF_DB][self::CF_DB_R]);
             }
 
             return $pdo_r;
