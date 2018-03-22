@@ -199,7 +199,11 @@ abstract class Model
             }
             $ret = static::addData($data, $ignore, table($data[static::$_suffix_field] ?? ''));
             if (!empty(static::$_cache_list_keys) && $ret !== false) {
-                $data[key(static::$_conf[static::CF_FIELDS])] = $ret;
+                if (empty($data[0])) {
+                    $data[key(static::$_conf[static::CF_FIELDS])] = $ret;
+                } else {
+                    $data = $data[0];
+                }
                 static::delListCache($data);
             }
         }

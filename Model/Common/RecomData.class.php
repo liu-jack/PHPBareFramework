@@ -11,23 +11,17 @@
 namespace Model\Mobile;
 
 use Bare\DB;
-use Config\DBConfig;
+use Config\RDConfig;
 
-class RecomData
+class RecomData extends RDConfig
 {
-    const APP_TEST = 'app_test';
-    // 支持的访问key数据
-    const KEY_CONFIG = [
-        self::APP_TEST => 'app test',
-    ];
-
     // MC KEY 推荐数据
     const MC_KEY = 'RecomData_';
     //表名
     const DB_TABLE_NAME = 'RecomData';
     // redis 配置
-    const REDIS_DB_W = DBConfig::REDIS_DEFAULT_W;
-    const REDIS_DB_R = DBConfig::REDIS_DEFAULT_R;
+    const REDIS_DB_W = DB::REDIS_DEFAULT_W;
+    const REDIS_DB_R = DB::REDIS_DEFAULT_R;
     const REDIS_DB_INDEX = 10;
     const REDIS_KEY = 'RecomData:';
 
@@ -129,7 +123,7 @@ class RecomData
             $data[$v] = self::getRedis()->get(self::REDIS_KEY . $v);
         }
         foreach ($data as &$v) {
-            $v = unserialize($v) ? unserialize($v) : $v;
+            $v = unserialize($v) != false ? unserialize($v) : $v;
         }
 
         return is_array($key) ? $data : $data[$key];
