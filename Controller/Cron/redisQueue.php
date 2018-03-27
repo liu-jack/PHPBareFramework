@@ -1,10 +1,7 @@
 <?php
 /**
  * redisQueue.php
- * Created by IntelliJ IDEA.
  *
- * Date: 2018/1/13
- * Time: 21:56
  */
 
 namespace Controller\Cron;

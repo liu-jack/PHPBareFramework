@@ -17,6 +17,7 @@ class RecomData extends RDConfig
 {
     // MC KEY 推荐数据
     const MC_KEY = 'RecomData_';
+    const MC_TIME = 86400;
     //表名
     const DB_TABLE_NAME = 'RecomData';
     // redis 配置
@@ -63,7 +64,7 @@ class RecomData extends RDConfig
                 foreach ($no_cache_data as $v) {
                     $cont = isset($v['Content']) ? unserialize($v['Content']) : [];
                     $data[$v['RecomType']] = $cont;
-                    $mc->set(self::MC_KEY . $v['RecomType'], $cont);
+                    $mc->set(self::MC_KEY . $v['RecomType'], $cont, self::MC_TIME);
                 }
             }
         }
@@ -100,7 +101,7 @@ class RecomData extends RDConfig
             if (empty($data)) {
                 $mc->delete(self::MC_KEY . $key);
             }
-            $mc->set(self::MC_KEY . $key, $data);
+            $mc->set(self::MC_KEY . $key, $data, self::MC_TIME);
 
             return true;
         }

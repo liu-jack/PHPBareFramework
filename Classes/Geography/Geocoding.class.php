@@ -83,7 +83,7 @@ class Geocoding
         if (empty($lng) || empty($lat)) {
             return false;
         }
-        $mc = DB::memcache(DB::MEMCACHE_MOBILE);
+        $mc = DB::memcache(DB::MEMCACHE_DEFAULT);
         $mckey = self::MC_LBS_KEY . $lng . "_" . $lat;
         if ($cache) {
             $res = $mc->get($mckey);

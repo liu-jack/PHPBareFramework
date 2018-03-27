@@ -137,18 +137,18 @@ class Index extends AdminController
     }
 
     /*
-     * 创建超级管理员 php index.php admin/index/addAdminUser
+     * 创建超级管理员 php index.php admin/index/addAdminUser/_b/1/user/camfee/pwd/camfee
      */
     public function addAdminUser()
     {
         need_cli();
         $groupid = defined('SUPER_ADMIN_GROUP') ? SUPER_ADMIN_GROUP : 29;
-        $username = 'camfee';
+        $username = $_GET['user'] ?? 'camfee';
         $user = AdminUser::getUserByName($username);
         if (empty($user)) {
             $user = [
                 'UserName' => $username,
-                'Password' => 'camfee29',
+                'Password' => $_GET['pwd'] ?? 'camfee29',
                 'RealName' => '管理员',
                 'UserGroup' => $groupid
             ];

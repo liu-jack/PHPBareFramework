@@ -21,6 +21,7 @@ class User extends CommonModel
     const RD_PFX = 'UNA:';
     // MC 前缀定义
     const MC_PFX = 'AU:';
+    const MC_TIME = 86400;
     // 表名/分表名
     const ENTIRE_TABLE_NAME = 'User';
     const SHARD_TABLE_NAME = 'User_%02x';
@@ -546,7 +547,7 @@ class User extends CommonModel
                 if ($stmt) {
                     $data = $stmt->fetch();
                     if (is_array($data) && isset($data['UserId'])) {
-                        $mc->set($mc_key, $data);
+                        $mc->set($mc_key, $data, self::MC_TIME);
                         $static_cache[$id] = $data;
                     }
                 }
@@ -615,7 +616,7 @@ class User extends CommonModel
                 if (is_array($result) && count($result) > 0) {
                     foreach ($result as $row) {
                         $id = (int)$row['UserId'];
-                        $mc->set($id_map[$id], $row);
+                        $mc->set($id_map[$id], $row, self::MC_TIME);
                         $static_cache[$id] = $cache[$id] = $row;
                     }
                     unset($result);

@@ -13,11 +13,11 @@ $config = [
     'DEV' => [
         'mysql' => [
             'create' => [
-                'db' => ['host' => __MYSQL_IP__, 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee29']
+                'db' => ['host' => __MYSQL_IP__, 'port' => 3306, 'user' => 'camfee', 'password' => 'camfee']
             ],
             'default' => [
-                'w' => ['host' => __MYSQL_IP__, 'user' => 'camfee', 'password' => 'camfee29'],
-                'r' => ['host' => __MYSQL_IP__, 'user' => 'camfee', 'password' => 'camfee29'],
+                'w' => ['host' => __MYSQL_IP__, 'user' => 'camfee', 'password' => 'camfee'],
+                'r' => ['host' => __MYSQL_IP__, 'user' => 'camfee', 'password' => 'camfee'],
             ],
         ],
         'memcache' => [
@@ -59,7 +59,7 @@ $config = [
             'default' => ['host' => __SEARCH_IP__, 'port' => 9200],
         ],
         'mongodb' => [
-            'default' => ['host' => __MONGODB_IP__, 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
+            'default' => ['host' => __MONGODB_IP__, 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee']
         ]
     ],
     'TEST' => [

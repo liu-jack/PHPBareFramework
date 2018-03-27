@@ -1,6 +1,7 @@
 <?php
 /**
  * Math.class.php
+ * 数学
  *
  * @author camfee <camfee@foxmail.com>
  * @date   18-3-3 下午3:34

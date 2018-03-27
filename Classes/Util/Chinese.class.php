@@ -70,7 +70,7 @@ class Chinese
             $cache = $mc->get($key);
             if (!is_array($cache) || empty($cache)) {
                 $cache = unserialize(file_get_contents(PINYIN_MAP));
-                $mc->set($key, $cache);
+                $mc->set($key, $cache, 86400);
             }
             if (!empty($cache)) {
                 $_static = $cache;

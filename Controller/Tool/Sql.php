@@ -136,11 +136,10 @@ class Sql extends Controller
     public function application()
     {
         need_cli();
-        //        $sql = '';
-        //        for ($i = 0; $i < 256; $i++) {
-        //            $this->_m->runApplication($sql);
-        //            echo $i . PHP_EOL;
-        //        }
+        $sqls = config('sql/application');
+        foreach ($sqls as $k => $v) {
+            $this->_m->runApplication($v);
+        }
     }
 
     /**
