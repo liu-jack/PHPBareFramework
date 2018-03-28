@@ -14,6 +14,7 @@ define('DATA_PATH', ROOT_PATH . 'Data/');
 define('LOG_PATH', DATA_PATH . 'log/');
 define('FONT_PATH', DATA_PATH . 'font/');
 define('CACHE_PATH', DATA_PATH . 'cache/');
+define('TEMP_PATH', DATA_PATH . 'temp/');
 define('CACHE_TEMPLATE_PATH', DATA_PATH . 'cache/template/');
 define('UPLOAD_PATH', ROOT_PATH . 'Public/upload/');
 define('UPLOAD_URI', '/Public/upload/');
