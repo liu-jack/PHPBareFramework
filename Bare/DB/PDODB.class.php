@@ -210,7 +210,7 @@ class PDODB extends PDO
     /**
      * 链式查询 - 指定查询条件
      *
-     * @param array $where 查询条件
+     * @param array|string $where 查询条件
      * @return $this
      */
     public function where($where)

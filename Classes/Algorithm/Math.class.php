@@ -13,6 +13,8 @@ namespace Classes\Algorithm;
 
 class Math
 {
+    const EARTH_RADIUS = 6371000; // 地球半径 m
+
     /**
      * 一元一次 ax + b = 0
      *
@@ -43,5 +45,22 @@ class Math
         $x2 = -$b + sqrt($d);
 
         return ['x1' => $x1, 'x2' => $x2];
+    }
+
+    /**
+     * 球面上两点的距离
+     *
+     * @param array $c1 [0=>经度, 1=>纬度]
+     * @param array $c2 [0=>经度, 1=>纬度]
+     * @param int   $r  球体半径
+     * @return float|int
+     */
+    public static function dot2dot($c1, $c2, $r = self::EARTH_RADIUS)
+    {
+        $c1 = array_map('deg2rad', $c1);
+        $c2 = array_map('deg2rad', $c2);
+        $t = cos($c1[1]) * cos($c2[1]) * cos($c1[0] - $c2[0]) + sin($c1[1]) * sin($c2[1]);
+
+        return $r * acos($t);
     }
 }
