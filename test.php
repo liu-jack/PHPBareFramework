@@ -27,8 +27,8 @@ class test
 //        $cs_cz = Area::getAreasDistance('长沙', '郴州');
 //        $yz_cz = Area::getAreasDistance('永州', '郴州');
 //        pre($cs_yz, $cs_hy, $yz_hy, $cs_cz, $yz_cz);
-        pre(Area::getAreaNear('长沙'));
-        pre(Area::getAreaRange('长沙', 10));
+//        pre(Area::getAreaNear('长沙'));
+        pre(Area::getAreaRange('长沙', 50));
 
     }
 }
