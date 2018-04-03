@@ -3,7 +3,9 @@
  *  发送消息
  */
 
-namespace Model\Queue;
+namespace Queue\Queues;
+
+use Queue\Queue;
 
 class SendNotice extends Queue
 {

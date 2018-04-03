@@ -22,10 +22,11 @@ spl_autoload_register(function ($class) {
             'Config/' => 1,
             'Controller/' => 1,
             'Model/' => 1,
-            'Common/' => 1
+            'Common/' => 1,
+            'Queue/' => 1,
         ];
         $class_prefix = substr($class, 0, strpos($class, '/') + 1);
-        if (!empty($class_dirs[$class_prefix])) {
+        if (isset($class_dirs[$class_prefix])) {
             if (strpos($class, 'Controller/') === 0) {
                 $class_file = ROOT_PATH . $class . '.php';
             } else {
@@ -35,10 +36,9 @@ spl_autoload_register(function ($class) {
             $class_file = LIB_PATH . $class . '.php';
             $class_file2 = LIB_PATH . $class . '.class.php';
         }
-
         if (is_file($class_file)) {
             include($class_file);
-        } elseif (!empty($class_file2) && is_file($class_file2)) {
+        } elseif (isset($class_file2) && is_file($class_file2)) {
             include($class_file2);
         }
         // 无论成功失败, 自动加载只进行一次

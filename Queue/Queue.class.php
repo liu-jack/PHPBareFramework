@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Queue;
+namespace Queue;
 
 abstract class Queue
 {

@@ -3,7 +3,9 @@
  * 发送手机短信队列
  */
 
-namespace Model\Queue;
+namespace Queue\Queues;
+
+use Queue\Queue;
 
 class SendSMS extends Queue
 {

@@ -3,9 +3,10 @@
  * App推送队列
  */
 
-namespace Model\Queue;
+namespace Queue\Queues;
 
 use Classes\Push\JPush;
+use Queue\Queue;
 
 class AppPush extends Queue
 {

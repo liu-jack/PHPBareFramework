@@ -6,9 +6,10 @@
  * Time: 15:50
  */
 
-namespace Model\Queue;
+namespace Queue\Queues;
 
 use Model\Search\BookSearch as SBook;
+use Queue\Queue;
 
 class SearchBook extends Queue
 {

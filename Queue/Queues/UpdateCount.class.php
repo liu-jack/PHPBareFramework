@@ -6,9 +6,10 @@
  * Time: 15:50
  */
 
-namespace Model\Queue;
+namespace Queue\Queues;
 
 use Model\Book\Book;
+use Queue\Queue;
 
 class UpdateCount extends Queue
 {

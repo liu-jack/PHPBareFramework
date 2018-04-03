@@ -6,9 +6,10 @@
  *
  */
 
-namespace Model\Queue;
+namespace Queue\Queues;
 
 use Classes\Push\JPush;
+use Queue\Queue;
 
 class AppPushTag extends Queue
 {
