@@ -21,6 +21,7 @@ class test
         $i = 0;
         while (true) {
             $i++;
+            sleep(5);
             if (function_exists('pcntl_signal_dispatch')) {
                 pcntl_signal_dispatch();
             }

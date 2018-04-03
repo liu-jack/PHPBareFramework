@@ -17,15 +17,15 @@ spl_autoload_register(function ($class) {
     $class = trim(strtr($class, '\\', '/'), '/');
     if (!isset($class_map[$class])) {
         $class_dirs = [
-            'Bare/' => 1,
-            'Classes/' => 1,
-            'Config/' => 1,
-            'Controller/' => 1,
-            'Model/' => 1,
-            'Common/' => 1,
-            'Queue/' => 1,
+            'Bare' => 1,
+            'Classes' => 1,
+            'Config' => 1,
+            'Controller' => 1,
+            'Model' => 1,
+            'Common' => 1,
+            'Queue' => 1,
         ];
-        $class_prefix = substr($class, 0, strpos($class, '/') + 1);
+        $class_prefix = substr($class, 0, strpos($class, '/'));
         if (isset($class_dirs[$class_prefix])) {
             if (strpos($class, 'Controller/') === 0) {
                 $class_file = ROOT_PATH . $class . '.php';

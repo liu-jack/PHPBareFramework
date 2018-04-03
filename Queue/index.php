@@ -17,9 +17,7 @@ class index
         need_cli();
         global $argv;
         if (empty($argv[1])) {
-            echo "Param Error!\n";
-            echo "Usage: php Queue/index.php ModelName\n";
-            exit;
+            exit("usage: php index.php [QueueName]\n");
         }
         $class_name = trim($argv[1]);
         $class_file = QUEUE_PATH . 'Queues/' . $class_name . CEXT;

@@ -5,7 +5,6 @@
  *
  * @author  camfee
  *
- * $Id$
  */
 
 // 程序根目录
@@ -21,7 +20,7 @@ require COMMON_PATH . 'common.php';
 // 应用类
 require CORE_PATH . 'App.class.php';
 
-if (!defined('NO_SESSION') && defined('SESSION') && SESSION) {
+if (defined('SESSION') && SESSION) {
     session_start();
 }
 
