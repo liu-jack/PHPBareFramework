@@ -36,4 +36,22 @@ CREATE TABLE IF NOT EXISTS `Payment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='支付订单表1.0';
 EOT
     ,
+    'create_address' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Address` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `UserId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `Country` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '国别 0：中国',
+  `Province` varchar(20) NOT NULL DEFAULT '' COMMENT '省份',
+  `City` varchar(50) NOT NULL DEFAULT '' COMMENT '城市',
+  `Area` varchar(50) NOT NULL DEFAULT '' COMMENT '区县',
+  `Address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `IsDefault` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否默认地址 0：否 1：是',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '状态 0：隐藏 1：显示',
+  `UpdateTime` datetime DEFAULT NULL COMMENT '最后修改时间',
+  `CreateTime` datetime DEFAULT NULL COMMENT '添加时间',
+  PRIMARY KEY (`Id`),
+  KEY `Idx_UserId` (`UserId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户地址表';
+EOT
+    ,
 ];
