@@ -1,6 +1,6 @@
 <?php
 
-require '../app.inc.php';
+require dirname(__DIR__) . '/app.inc.php';
 
 /**
  * 队列控制器

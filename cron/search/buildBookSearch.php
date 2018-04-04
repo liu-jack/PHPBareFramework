@@ -6,7 +6,7 @@
  * Time: 16:25
  */
 
-require '../../app.inc.php';
+require dirname(dirname(__DIR__)) . '/app.inc.php';
 
 use Bare\DB;
 use Model\Search\BookSearch as SBook;

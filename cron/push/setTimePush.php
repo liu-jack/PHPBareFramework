@@ -5,7 +5,7 @@
  * @author camfee<camfee@foxmail.com>
  */
 
-require '../../app.inc.php';
+require dirname(dirname(__DIR__)) . '/app.inc.php';
 
 use Model\Mobile\AppPush;
 use Model\Admin\Admin\AdminCron;

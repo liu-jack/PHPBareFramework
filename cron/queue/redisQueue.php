@@ -4,7 +4,7 @@
  *
  */
 
-require '../../app.inc.php';
+require dirname(dirname(__DIR__)) . '/app.inc.php';
 
 use Model\RedisDB\RedisQueue as RQ;
 

@@ -7,7 +7,7 @@
  *
  */
 
-require '../../app.inc.php';
+require dirname(dirname(__DIR__)) . '/app.inc.php';
 
 use Bare\DB;
 
