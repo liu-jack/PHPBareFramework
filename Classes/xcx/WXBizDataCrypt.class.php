@@ -79,4 +79,19 @@ class WXBizDataCrypt
         return ErrorCode::$OK;
         */
     }
+    /*
+    public static function decodeData($encryptedData, $iv, $sessionKey)
+    {
+    $appId = 'wxe8004d9b2efb7baf';
+    $pc = new \lib\plugins\xcx\WXBizDataCrypt($appId, $sessionKey);
+
+    $errCode = $pc->decryptData($encryptedData, $iv, $info);
+
+    if ($errCode == 0) {
+    return json_decode($info, true);
+    }
+
+    return ['code' => $errCode, 'data' => $info];
+    }
+     */
 }

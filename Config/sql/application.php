@@ -54,4 +54,43 @@ CREATE TABLE IF NOT EXISTS `Address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户地址表';
 EOT
     ,
+    'create_product' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Product` (
+  `ProductId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ShopId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商家id 默认0',
+  `CateId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分类id',
+  `Title` varchar(255) NOT NULL DEFAULT '' COMMENT '商品名称',
+  `Cover` varchar(255) NOT NULL DEFAULT '' COMMENT '封面图',
+  `Pictures` varchar(2048) NOT NULL DEFAULT '' COMMENT '商品图集',
+  `OriginPrice` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '原价',
+  `Price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '商品价格',
+  `DiscountPrice` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '折扣价',
+  `GroupPrice` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '拼团价格',
+  `IsGroup` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否开启团购 0：否 1：是',
+  `GroupNum` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '拼团人数',
+  `Content` text NOT NULL COMMENT '图文详情',
+  `BuyCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '购买人数',
+  `CollectCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收藏人数',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '商品状态 0：隐藏 1：显示',
+  `UpdateTime` datetime DEFAULT NULL,
+  `CreateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`ProductId`),
+  KEY `Idx_ShopId` (`ShopId`) USING BTREE,
+  KEY `Idx_CateId` (`CateId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品表';
+EOT
+    ,
+    'create_product_cate' => <<<EOT
+CREATE TABLE IF NOT EXISTS `ProudctCategory` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ParentId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '父级分类id',
+  `Title` varchar(20) NOT NULL DEFAULT '' COMMENT '分类名称',
+  `Cover` varchar(255) NOT NULL DEFAULT '' COMMENT '封面',
+  `Sort` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '排序 大的排在前',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '状态 0：隐藏 1：显示',
+  `CreateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类表';
+EOT
+    ,
 ];
