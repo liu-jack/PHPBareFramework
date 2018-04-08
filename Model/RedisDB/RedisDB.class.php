@@ -13,16 +13,22 @@ namespace Model\RedisDB;
 
 use Bare\DB;
 
-class RedisDB
+abstract class RedisDB
 {
     // 通行证
     const REDIS_DB_INDEX_PASSPORT = 0;
     // 用户中心
     const REDIS_DB_INDEX_ACCOUNT = 1;
 
-    const REDIS_DB_INDEX = 0;
+    const REDIS_DB_INDEX = self::REDIS_DB_INDEX_PASSPORT;
+    const REDIS_DB = DB::REDIS_DB_CACHE_W;
+    const TABLE_NAME = 'User';
+    const MYSQL_DB = DB::DB_PASSPORT_W;
+    const PRIMARY_KEY = 'UserId';
+
     const REDIS_DB_READ = DB::REDIS_DB_CACHE_R;
     const REDIS_DB_WRITE = DB::REDIS_DB_CACHE_W;
+
 
     const FIELD_REDIS_KEY = 'RedisKey';
     const FIELD_REDIS_DB = 'RedisDb';
@@ -38,28 +44,47 @@ class RedisDB
     private $_redis = null;
 
     /**
-     * @param int $redisDb
-     * @param int $dbIndex
-     * @return RedisDB
+     * @param int    $redis_db
+     * @param int    $db_index
+     * @param string $class
+     * @return mixed|RedisDB
      */
-    public static function instance($redisDb = self::REDIS_DB_READ, $dbIndex = 0)
+    public static function instance($redis_db = self::REDIS_DB_READ, $db_index = 0, $class = __CLASS__)
     {
-        if (empty(self::$_instance[$redisDb][$dbIndex])) {
-            self::$_instance[$redisDb][$dbIndex] = new static($redisDb, $dbIndex);
+        if (empty(self::$_instance[$redis_db][$db_index][$class])) {
+            self::$_instance[$redis_db][$db_index][$class] = new static($redis_db, $db_index);
         }
 
-        return self::$_instance[$redisDb][$dbIndex];
+        return self::$_instance[$redis_db][$db_index][$class];
     }
 
-    public function __construct($redisDb, $dbIndex)
+    /**
+     * 生成Key
+     *
+     * @param $arr array 数组, 第一个必须是表名
+     *
+     * @return string
+     */
+    public static function getKey($arr)
     {
-        if ($redisDb == 0) {
-            $redisDb = static::REDIS_DB_WRITE;
+        return implode(":", $arr);
+    }
+
+    /**
+     * RedisDB constructor.
+     *
+     * @param $redis_db
+     * @param $db_index
+     */
+    public function __construct($redis_db, $db_index)
+    {
+        if ($redis_db == 0) {
+            $redis_db = static::REDIS_DB_WRITE;
         }
-        if ($dbIndex == 0) {
-            $dbIndex = static::REDIS_DB_INDEX;
+        if ($db_index == 0) {
+            $db_index = static::REDIS_DB_INDEX;
         }
-        $this->_redis = DB::redis($redisDb, $dbIndex);
+        $this->_redis = DB::redis($redis_db, $db_index);
     }
 
     /**
@@ -206,55 +231,41 @@ class RedisDB
     }
 
     /**
-     * 生成Key
-     *
-     * @param $arr array 数组, 第一个必须是表名
-     *
-     * @return string
-     */
-    public static function getKey($arr)
-    {
-        return implode(":", $arr);
-    }
-
-    /**
      * 同步数据到mysql，异步操作
      *
-     * @param string $redisKey     redis的Key
-     * @param int    $db           Bridge::DB_XXXXX_W
-     * @param string $tableName    表名
-     * @param string $primaryKey   主键值名称
-     * @param string $primaryValue 主键值
-     * @param array  $fields       修改的那几个字段
-     * @param int    $redisDbIndex RedisDb index
-     * @param int    $redisDb      RedisDb
+     * @param string $redis_key      redis的Key
+     * @param string $primary_value  主键值
+     * @param array  $fields         修改的那几个字段
+     * @param string $table_name     表名
+     * @param int    $db             Bridge::DB_XXXXX_W
+     * @param string $primary_key    主键值名称
+     * @param int    $redis_db_index RedisDb index
+     * @param int    $redis_db       RedisDb
      */
     public function async(
-        $redisKey,
-        $db,
-        $tableName,
-        $primaryKey,
-        $primaryValue,
+        $redis_key,
+        $primary_value,
         $fields,
-        $redisDbIndex = self::REDIS_DB_INDEX_PASSPORT,
-        $redisDb = 0
+        $table_name = self::TABLE_NAME,
+        $db = self::MYSQL_DB,
+        $primary_key = self::PRIMARY_KEY,
+        $redis_db_index = self::REDIS_DB_INDEX,
+        $redis_db = self::REDIS_DB
     ) {
-        if ($redisDb == 0) {
-            $redisDb = static::REDIS_DB_WRITE;
+        if ($redis_db == 0) {
+            $redis_db = static::REDIS_DB_WRITE;
         }
         RedisQueue::instance(RedisQueue::TYPE_ASYNC_TABLES)->push([
-            self::FIELD_REDIS_KEY => $redisKey,
-            self::FIELD_REDIS_DB => $redisDb,
-            self::FIELD_REDIS_DB_INDEX => $redisDbIndex,
-
+            self::FIELD_REDIS_KEY => $redis_key,
+            self::FIELD_REDIS_DB => $redis_db,
+            self::FIELD_REDIS_DB_INDEX => $redis_db_index,
             self::FIELD_DB_PARAM => $db,
-            self::FIELD_DB_TABLE_NAME => $tableName,
-            self::FIELD_PRIMARY_KEY => $primaryKey,
-            self::FIELD_PRIMARY_VALUE => $primaryValue,
+            self::FIELD_DB_TABLE_NAME => $table_name,
+            self::FIELD_PRIMARY_KEY => $primary_key,
+            self::FIELD_PRIMARY_VALUE => $primary_value,
             self::FIELD_FIELDS => $fields,
         ]);
     }
-
 
     /**
      * 设置异步更新标志
@@ -267,7 +278,6 @@ class RedisDB
     {
         DB::redis($redisDb, $redisDbIndex)->hSet($redisKey, self::FIELD_SYNC_FLAG, time() + 300);
     }
-
 
     /**
      * 检查是否需要异步更新
