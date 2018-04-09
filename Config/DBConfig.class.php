@@ -113,8 +113,10 @@ class DBConfig
         self::REDIS_MOBILE_W => 'mobile',
         self::REDIS_NOTICE_R => 'notice',
         self::REDIS_NOTICE_W => 'notice',
-        self::REDIS_SYNC_EVENT_R => 'default',
-        self::REDIS_SYNC_EVENT_W => 'default',
+        self::REDIS_SYNC_EVENT_R => 'queue',
+        self::REDIS_SYNC_EVENT_W => 'queue',
+        self::REDIS_DB_CACHE_R => 'cache',
+        self::REDIS_DB_CACHE_W => 'cache',
     ];
 
     /**

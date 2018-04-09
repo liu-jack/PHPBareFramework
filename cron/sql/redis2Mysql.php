@@ -18,7 +18,7 @@ use Model\RedisDB\RedisQueue;
 class redis2Mysql
 {
     /**
-     * 同步redis数据到MySQL php redis2Mysql.php
+     * 同步redis数据到MySQL * /5 * * * * php redis2Mysql.php 300
      *
      * @return bool
      */
@@ -32,7 +32,7 @@ class redis2Mysql
 
             return false;
         }
-        $sleep = 1;
+        $sleep = 5;
         if (count($argv) > 2) {
             $sleep = (int)$argv[2];
         }
@@ -86,12 +86,15 @@ class redis2Mysql
                 ]);
 
                 if ($ret === false) {
-                    var_dump($pdo_w->select(implode(",", $fields))->from($tableName)->where([$primaryKey => $primaryValue])->getOne());
+                    $data = $pdo_w->select(implode(",", $fields))->from($tableName)->where([$primaryKey => $primaryValue])->getOne();
+                    pre($data);
                     fwrite(STDERR, "fileds:" . json_encode($fields, JSON_UNESCAPED_UNICODE) . "\n");
                     fwrite(STDERR, "result:" . json_encode($result, JSON_UNESCAPED_UNICODE) . "\n");
                     fwrite(STDERR, "Key:" . json_encode($primaryKey, JSON_UNESCAPED_UNICODE) . "\n");
                     fwrite(STDERR, "VAL:" . json_encode($primaryValue, JSON_UNESCAPED_UNICODE) . "\n");
                     fwrite(STDERR, "update " . json_encode($info, JSON_UNESCAPED_UNICODE) . " failed\n===================\n");
+                    $info['ErrorMsg'] = 'update mysql fail';
+                    logs($info, 'cron/sql/' . __CLASS__);
                 }
             } catch (\Exception $exception) {
                 var_dump($exception);
