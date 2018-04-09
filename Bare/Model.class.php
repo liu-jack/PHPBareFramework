@@ -202,7 +202,7 @@ abstract class Model
             $ret = static::addData($data, $ignore, table($data[static::$_suffix_field] ?? ''));
             if (!empty(static::$_cache_list_keys) && $ret !== false) {
                 if (empty($data[0])) {
-                    $data[key(static::$_conf[static::CF_FIELDS])] = $ret;
+                    $data[static::$_conf[static::CF_PRIMARY_KEY]] = $ret;
                 } else {
                     $data = $data[0];
                 }
@@ -375,16 +375,16 @@ abstract class Model
         $ret = $pdo->insert(static::$_conf[static::CF_TABLE] . $suffix, $rows, $options);
         if ($ret !== false) {
             if ($ret > 0) {
-                return $pdo->lastInsertId();
+                $id = $pdo->lastInsertId();
             } else {
-                return 0;
+                $id = 0;
             }
         }
         $pdo->close();
         DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
         $pdo = null;
 
-        return false;
+        return isset($id) ? $id : false;
 
     }
 

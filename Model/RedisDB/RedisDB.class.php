@@ -128,7 +128,7 @@ abstract class RedisDB
         if (!empty($result)) {
             $keys = array_values($keys);
             foreach ($result as $k => $v) {
-                if (!empty($v)) {
+                if (!is_null($v)) {
                     $data[$keys[$k]] = $v;
                 }
             }
