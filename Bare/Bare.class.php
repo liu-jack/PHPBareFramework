@@ -244,17 +244,8 @@ class Bare
             'version' => $ver,
             'time' => $time
         ];
-        if (in_array($app_type, [APP_TYPE_WEB, APP_TYPE_WAP]) && empty($fields['deviceid'])) {
-            if (empty($fields['deviceid'])) {
-                unset($fields['deviceid']);
-            }
-            if (empty($fields['channel'])) {
-                unset($fields['channel']);
-            }
-        }
-
         foreach ($fields as $k => $v) {
-            if (empty($v) && $v !== 0) {
+            if (empty($v) && $v != 0) {
                 if ($k == 'deviceid' && $method == 'Common/Init/start') {
                     continue;
                 }
@@ -292,13 +283,14 @@ class Bare
         }
 
         // 判断hash
-        $hash1 = $key . $ver . $method;
+        $hash_str = $key . $ver . $method;
+        ksort($_GET);
         foreach ($_GET as $k => $v) {
             if ($k != API_VAR && $k != 'hash' && $v !== '') {
-                $hash1 .= $v;
+                $hash_str .= $v;
             }
         }
-        $real_hash = md5($hash1);
+        $real_hash = md5($hash_str);
         if ($real_hash != $hash) {
             // HASH值错误
             self::apiError(505);

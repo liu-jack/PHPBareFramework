@@ -7,6 +7,8 @@ sudo redis-server /etc/redis/6383.conf
 sudo redis-server /etc/redis/6384.conf
 sudo redis-server /etc/redis/6385.conf
 sudo redis-server /etc/redis/6386.conf
+sudo redis-server /etc/redis/6387.conf
+sudo redis-server /etc/redis/6388.conf
 # dev
 sudo redis-server /etc/redis/7379.conf
 sudo redis-server /etc/redis/7380.conf

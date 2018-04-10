@@ -14,10 +14,14 @@ class Api
     public static $apiurl = 'http://api.bare.com';
     // appid
     public static $appid = 10;
-    //apptype 0:web 1:wap 2:android 3:ios
+    //apptype 0:web 1:wap 2:android 3:ios 4:xcx
     public static $apptype = 0;
     // 接口版本
     public static $verid;
+    // 渠道来源
+    public static $channel = 'default';
+    // 设备id
+    public static $deviceid = 0;
     // 接口appkey
     protected static $appkey;
     // rsa公钥
@@ -36,16 +40,8 @@ class Api
         self::$appkey = self::getAppKey();
         self::$verid = self::getVerId();
         $time = time();
-        //hash=md5(APPKEY + 版本号 + 模块名/类名/方法 + $_GET);
-        $hash1 = self::$appkey . self::$verid . $api_method;
-        if (!empty($get)) {
-            foreach ($get as $k => $v) {
-                if ($k != API_VAR && $k != 'hash' && $v !== '') {
-                    $hash1 .= $v;
-                }
-            }
-        }
-        $hash = md5($hash1 . self::$apptype . self::$appid . $time);
+        //hash=md5(APPKEY + 版本号 + 模块名/类名/方法 + ksort($_GET));
+        $hash_str = self::$appkey . self::$verid . $api_method;
         $query = $get;
         if (defined('URL_MODE') && URL_MODE == 1) {
             $url = self::$apiurl . '/' . $api_method . '/' . self::$verid;
@@ -55,8 +51,18 @@ class Api
         }
         $query['_t'] = self::$apptype;
         $query['appid'] = self::$appid;
+        $query['channel'] = self::$channel;
+        $query['deviceid'] = self::$deviceid;
         $query['time'] = $time;
-        $query['hash'] = $hash;
+        ksort($query);
+        if (!empty($query)) {
+            foreach ($query as $k => $v) {
+                if ($k != API_VAR && $k != 'hash' && $v !== '') {
+                    $hash_str .= $v;
+                }
+            }
+        }
+        $query['hash'] = md5($hash_str);
 
         return $url . '?' . http_build_query($query);
     }
@@ -72,17 +78,21 @@ class Api
     public static function request($url, $data = [], $timeout = 15)
     {
         $time_start = microtime(true);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // stop verifying certificate
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        if (!empty($data)) {
-            curl_setopt($curl, CURLOPT_POST, true); // enable posting
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data); // post files
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // stop verifying certificate
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if (!empty($data['header'])) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $data['header']); // 加入header
+            unset($data['header']);
         }
-        $res = curl_exec($curl);
-        curl_close($curl);
+        if (!empty($data)) {
+            curl_setopt($ch, CURLOPT_POST, true); // enable posting
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // post files
+        }
+        $res = curl_exec($ch);
+        curl_close($ch);
         $res = json_decode($res, true);
         if (empty($res['Code']) || !is_array($res)) {
             $log['url'] = $url;

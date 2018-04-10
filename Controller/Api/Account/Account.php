@@ -38,13 +38,12 @@ class Account extends Controller
      * }
      * </pre>
      */
-    public function accountInfo(){
-        $uid = $this->isLogin(true);
+    public function accountInfo()
+    {
+        $uid = $this->isLogin();
 
         $userInfo = AUser::getUserById($uid);
-        $result['Mobile'] = $userInfo['Mobile'];
-        $result['Password'] = empty($userInfo['Password'])?0:1;
 
-        $this->output(200, $result);
+        $this->output(200, $userInfo);
     }
 }

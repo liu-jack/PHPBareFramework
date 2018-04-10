@@ -160,7 +160,7 @@ EOT;
      * @param bool $auto 接口未登录是否退出程序
      * @return int
      */
-    public static function isLogin($type = V_WEB, $auto = false)
+    public static function isLogin($type = V_API, $auto = true)
     {
         switch ($type) {
             case V_WEB:  // 网站登录验证

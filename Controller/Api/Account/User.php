@@ -11,7 +11,7 @@ use Model\Mobile\Device;
 use Model\Passport\PassportApi;
 use Model\Passport\User as PUser;
 use Model\Passport\Register;
-use Notice\Sms;
+use Model\Mobile\Sms;
 use Model\Passport\Login;
 
 /**
@@ -133,16 +133,16 @@ class User extends Controller
         if (Sms::verifySms($mobile, Sms::SMS_TYPE_LOGIN, $code) || ($mobile === '13888888888' && $code == '914275')) {
             if ($uid == false) {
                 // 注册用户
-                $user = Register::addUser(Register::REG_TYPE_MOBILE, [
+                $user = Register::addUser([
                     'Mobile' => $mobile,
                     'UserName' => Register::getRandomName(),
                     'Password' => '',
-                    'FromPlatform' => $GLOBALS[G_APP_ID] == APP_APPID_IOS ? Register::REG_PLATFORM_IPHONE : Register::REG_PLATFORM_ANDROID,
+                    'FromPlatform' => isset(Register::$appid_reg_platform[$GLOBALS[G_APP_ID]]) ? Register::$appid_reg_platform[$GLOBALS[G_APP_ID]] : Register::REG_PLATFORM_WEB,
                     'FromProduct' => Register::REG_FROM_PASSPORT,
                     'FromWay' => Register::REG_WAY_MOBILE
-                ]);
+                ], Register::REG_TYPE_MOBILE);
                 if (!$user['UserId']) {
-                    $this->output(204, '注册失败, 请稍后再试');
+                    $this->output(204, '注册失败, 请稍后再试' . $user['msg']);
                 }
             } else {
                 $user = PUser::getUserByIds($uid);

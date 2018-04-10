@@ -18,6 +18,7 @@ class Register extends Passport
     const REG_PLATFORM_WAP = 1;            // Wap 站
     const REG_PLATFORM_ANDROID = 2;        // Android 手机
     const REG_PLATFORM_IPHONE = 3;         // iPhone 手机
+    const REG_PLATFORM_XCX = 4;         // 小程序
 
     // 注册产品来源
     const REG_FROM_PASSPORT = 0;           // 通行证
@@ -33,6 +34,19 @@ class Register extends Passport
     const REG_TYPE_MOBILE = 2;             // 手机注册
 
     /**
+     * appid注册平台map
+     *
+     * @var array
+     */
+    public static $appid_reg_platform = [
+        APP_APPID_WEB => self::REG_PLATFORM_WEB,
+        APP_APPID_WAP => self::REG_PLATFORM_WAP,
+        APP_APPID_ADR => self::REG_PLATFORM_ANDROID,
+        APP_APPID_IOS => self::REG_PLATFORM_IPHONE,
+        APP_APPID_XCX => self::REG_PLATFORM_XCX,
+    ];
+
+    /**
      * 注册平台
      *
      * @var array
@@ -42,6 +56,7 @@ class Register extends Passport
         self::REG_PLATFORM_WAP => 'wap',
         self::REG_PLATFORM_ANDROID => 'Android',
         self::REG_PLATFORM_IPHONE => 'iPhone',
+        self::REG_PLATFORM_XCX => 'xcx',
     ];
 
     /**
@@ -80,15 +95,15 @@ class Register extends Passport
         $data['Mobile'] = trim($data['Mobile']);
         $data['Password'] = trim($data['Password']);
 
-        if (empty(self::$reg_platform[$data['FromPlatform']])) {
+        if (!isset(self::$reg_platform[$data['FromPlatform']])) {
             return ['code' => 211, 'msg' => 'FromPlatform 不符合定义'];
         }
 
-        if (empty(self::$reg_from[$data['FromProduct']])) {
+        if (!isset(self::$reg_from[$data['FromProduct']])) {
             return ['code' => 212, 'msg' => 'FromProduct 不符合定义'];
         }
 
-        if (empty(self::$reg_way[$data['FromWay']])) {
+        if (!isset(self::$reg_way[$data['FromWay']])) {
             return ['code' => 213, 'msg' => 'FromWay 不符合定义'];
         }
 

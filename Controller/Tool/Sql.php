@@ -226,4 +226,23 @@ class Sql extends Controller
             $this->_m->runPicture($v);
         }
     }
+
+    /**
+     * 标签表管理 php index.php Tool/Sql/update
+     */
+    public function update()
+    {
+        need_cli();
+        $sqls = 'ALTER TABLE `User` CHANGE COLUMN `Userid` `UserId`  bigint(20) UNSIGNED NOT NULL COMMENT \'用户ID\' AFTER `Id`';
+        $search = '`User`';
+        $repalce = '`User_';
+        $func = 'runAccount';
+
+        for ($i = 0; $i < 256; $i++) {
+            $suff = sprintf('%02x', $i);
+            $sql = str_replace($search, $repalce . $suff . '`', $sqls);
+            $this->_m->$func($sql);
+            echo $i . PHP_EOL;
+        }
+    }
 }

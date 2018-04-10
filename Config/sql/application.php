@@ -93,4 +93,39 @@ CREATE TABLE IF NOT EXISTS `ProudctCategory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类表';
 EOT
     ,
+    'create_group_buy' => <<<EOT
+CREATE TABLE IF NOT EXISTS `GroupBuy` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `ProductId` int(11) unsigned NOT NULL COMMENT '商品id',
+  `GroupPrice` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '团购价格',
+  `GroupCount` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '需要拼团人数',
+  `JoinCount` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '加入团人数',
+  `UserId` int(11) unsigned NOT NULL COMMENT '用户编号',
+  `Status` tinyint(4) unsigned NOT NULL COMMENT '状态：1拼团进行中，2拼团成功，3拼团失败',
+  `ExpireTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '拼团有效期',
+  `StartTime` datetime NOT NULL COMMENT '团购开始时间',
+  `EndTime` datetime NOT NULL COMMENT '团购结束时间',
+  `SuccessTime` datetime NOT NULL COMMENT '拼团成功时间',
+  `CreateTime` datetime NOT NULL COMMENT '添加时间',
+  PRIMARY KEY (`Id`),
+  KEY `Idx_EndTime` (`EndTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='团购';
+EOT
+    ,
+    'create_group_list' => <<<EOT
+CREATE TABLE IF NOT EXISTS `GroupBuyList` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `GroupId` int(11) unsigned NOT NULL COMMENT '团编号',
+  `UserId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `Type` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '成员类型:1团长，2成员',
+  `PayState` int(10) unsigned NOT NULL COMMENT '支付状态:1已支付，0未支付',
+  `PayTime` datetime DEFAULT NULL COMMENT '支付时间',
+  `CreateTime` datetime NOT NULL COMMENT '添加时间',
+  PRIMARY KEY (`Id`),
+  KEY `Idx_GroupId` (`GroupId`) USING BTREE,
+  KEY `Idx_UserId` (`UserId`) USING BTREE,
+  KEY `Idx_CreateTime` (`CreateTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='团购成员';
+EOT
+    ,
 ];

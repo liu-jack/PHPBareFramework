@@ -35,10 +35,10 @@ class test
             'Province' => '湖南',
             'City' => '长沙',
             'Area' => '芙蓉区',
-            'Address' => '人民东路58号2',
+            'Address' => '人民东路58号3',
         ];
         //        var_dump(Address::add($add));
-//        var_dump(Address::setDefault(2, 1));
+        //        var_dump(Address::setDefault(2, 1));
         pre(Address::getListByUid(1));
 
     }

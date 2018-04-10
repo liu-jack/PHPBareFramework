@@ -27,11 +27,11 @@ class User extends Controller
      *
      * <pre>
      * POST
-     *   account： 必选，帐号， 用户名(4-16位字符)|手机|邮箱
-     *   type:     必选，注册类型， 0：邮件注册|1：手机注册|3：用户名注册
-     *   platform: 必选，注册平台,  0：web|1：Android|2：iPhone|3：wap
-     *   password: 可选,密码, 用户名|邮箱注册必选，rsa加密
-     *   ip:       必选，用户的IP地址， 无法获取时传当前服务器IP
+     *   account:  必选, 帐号,      用户名(4-16位字符)|手机|邮箱
+     *   type:     必选, 注册类型,   0：邮件注册|1：手机注册|3：用户名注册
+     *   platform: 必选, 注册平台,   0：web|1：Android|2：iPhone|3：wap
+     *   password: 可选, 密码,      用户名|邮箱注册必选，rsa加密
+     *   ip:       必选, 用户的IP地, 无法获取时传当前服务器IP
      * </pre>
      *
      * @return string|void json
