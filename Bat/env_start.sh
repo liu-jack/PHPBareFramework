@@ -11,6 +11,8 @@ sudo redis-server /etc/redis/6383.conf
 sudo redis-server /etc/redis/6384.conf
 sudo redis-server /etc/redis/6385.conf
 sudo redis-server /etc/redis/6386.conf
+sudo redis-server /etc/redis/6387.conf
+sudo redis-server /etc/redis/6388.conf
 #sudo service mongodb restart
 sudo mongod --config /etc/mongodb.conf &
 sudo service elasticsearch restart

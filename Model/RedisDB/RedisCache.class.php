@@ -12,22 +12,18 @@
 namespace Model\RedisDB;
 
 use Bare\DB;
+use Common\RedisConst;
 
-abstract class RedisDB
+abstract class RedisCache
 {
-    // 通行证
-    const REDIS_DB_INDEX_PASSPORT = 0;
-    // 用户中心
-    const REDIS_DB_INDEX_ACCOUNT = 1;
-
-    const REDIS_DB_INDEX = self::REDIS_DB_INDEX_PASSPORT;
-    const REDIS_DB = DB::REDIS_DB_CACHE_W;
+    const REDIS_DB_INDEX = RedisConst::PASSPORT_INDEX;
+    const REDIS_DB = RedisConst::CACHE_DB_W;
     const TABLE_NAME = 'User';
     const MYSQL_DB = DB::DB_PASSPORT_W;
-    const PRIMARY_KEY = 'UserId';
+    const PRIMARY_KEY = 'Id';
 
-    const REDIS_DB_READ = DB::REDIS_DB_CACHE_R;
-    const REDIS_DB_WRITE = DB::REDIS_DB_CACHE_W;
+    const REDIS_DB_READ = RedisConst::CACHE_DB_R;
+    const REDIS_DB_WRITE = RedisConst::CACHE_DB_W;
 
 
     const FIELD_REDIS_KEY = 'RedisKey';
@@ -47,7 +43,7 @@ abstract class RedisDB
      * @param int    $redis_db
      * @param int    $db_index
      * @param string $class
-     * @return mixed|RedisDB
+     * @return mixed|RedisCache
      */
     public static function instance($redis_db = self::REDIS_DB_READ, $db_index = 0, $class = __CLASS__)
     {
@@ -230,6 +226,43 @@ abstract class RedisDB
         return $this->_redis->del($key);
     }
 
+
+    /**
+     * 添加到列表 右侧入队
+     *
+     * @param $key string  缓存名
+     * @param $id  string 数据id（主键）
+     * @return int
+     */
+    public function rPush($key, $id)
+    {
+        return $this->_redis->rpush($key, $id);
+    }
+
+    /**
+     * 检查给定 key 是否存在
+     */
+    public function exists($key)
+    {
+        return $this->_redis->exists($key);
+    }
+
+    /**
+     * 返回列表 key 的长度
+     */
+    public function lLen($key)
+    {
+        return $this->_redis->llen($key);
+    }
+
+    /**
+     * 返回列表 key 中指定区间内的元素
+     */
+    public function lRange($key, $offset, $row)
+    {
+        return $this->_redis->lrange($key, $offset, $row);
+    }
+
     /**
      * 同步数据到mysql，异步操作
      *
@@ -288,7 +321,7 @@ abstract class RedisDB
      *
      * @return bool
      */
-    private function checkNeedAsync($redisDb, $redisDbIndex, $redisKey)
+    public function checkNeedAsync($redisDb, $redisDbIndex, $redisKey)
     {
         $t = DB::redis($redisDb, $redisDbIndex)->hGet($redisKey, self::FIELD_SYNC_FLAG);
         if ($t == false) {

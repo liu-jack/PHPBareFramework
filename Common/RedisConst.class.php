@@ -37,4 +37,13 @@ class RedisConst
     const FAST_DB_R = DBConfig::REDIS_OTHER_R;
     const FAST_DB_W = DBConfig::REDIS_OTHER_W;
     const FAST_DB_INDEX = 0;
+    // 数据表同步队列
+    const SYNC_DB_R = DBConfig::REDIS_SYNC_EVENT_R;
+    const SYNC_DB_W = DBConfig::REDIS_SYNC_EVENT_W;
+    const SYNC_DB_INDEX = 1;
+    // 数据表缓存
+    const CACHE_DB_R = DBConfig::REDIS_DB_CACHE_R;
+    const CACHE_DB_W = DBConfig::REDIS_DB_CACHE_W;
+    const PASSPORT_INDEX = 0; // 通行证
+    const GROUP_BUY_INDEX = 10; // 团购
 }

@@ -255,7 +255,7 @@ class Index extends Controller
      */
     public function shelf()
     {
-        $uid = $this->isLogin();
+        $uid = $this->isLogin(V_WEB);
         if (empty($uid)) {
             redirect(url('account/user/login', '', true));
         }
@@ -295,7 +295,7 @@ class Index extends Controller
      */
     public function history()
     {
-        $uid = $this->isLogin();
+        $uid = $this->isLogin(V_WEB);
         if (empty($uid)) {
             redirect(url('account/user/login', '', true));
         }
@@ -342,7 +342,7 @@ class Index extends Controller
      */
     public function favorite()
     {
-        $uid = $this->isLogin();
+        $uid = $this->isLogin(V_WEB);
         if (empty($uid)) {
             output(551, ['url' => url('account/user/login')]);
         }

@@ -1,0 +1,9 @@
+#
+# book collect
+00 22 * * * php /home/camfee/www/www.bare.com/index.php Collect/CollectBook/book
+15 22 * * * php /home/camfee/www/www.bare.com/index.php Collect/CollectBook/index/id/1/step/1
+#redis sync to mysql
+*/5 * * * * php /home/camfee/www/www.bare.com/cron/sql/redis2Mysql.php 300
+# group buy
+* * * * * php /home/camfee/www/www.bare.com/cron/group/closeGroupBuy.php 60
+* * * * * php /home/camfee/www/www.bare.com/cron/group/deleteGroupMember.php 60

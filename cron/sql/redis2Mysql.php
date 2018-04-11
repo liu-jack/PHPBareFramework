@@ -12,7 +12,7 @@
 require dirname(dirname(__DIR__)) . '/app.inc.php';
 
 use Bare\DB;
-use Model\RedisDB\RedisDB;
+use Model\RedisDB\RedisCache;
 use Model\RedisDB\RedisQueue;
 
 class redis2Mysql
@@ -52,20 +52,20 @@ class redis2Mysql
             }
 
             try {
-                $key = $info[RedisDB::FIELD_REDIS_KEY];
-                $tableName = $info[RedisDB::FIELD_DB_TABLE_NAME];
-                $primaryKey = $info[RedisDB::FIELD_PRIMARY_KEY];
-                $primaryValue = $info[RedisDB::FIELD_PRIMARY_VALUE];
-                $fields = $info[RedisDB::FIELD_FIELDS];
-                $dbParam = $info[RedisDB::FIELD_DB_PARAM];
+                $key = $info[RedisCache::FIELD_REDIS_KEY];
+                $tableName = $info[RedisCache::FIELD_DB_TABLE_NAME];
+                $primaryKey = $info[RedisCache::FIELD_PRIMARY_KEY];
+                $primaryValue = $info[RedisCache::FIELD_PRIMARY_VALUE];
+                $fields = $info[RedisCache::FIELD_FIELDS];
+                $dbParam = $info[RedisCache::FIELD_DB_PARAM];
 
-                $redisDb = isset($info[RedisDB::FIELD_REDIS_DB]) ? (int)$info[RedisDB::FIELD_REDIS_DB] : 0;
-                $redisDbIndex = isset($info[RedisDB::FIELD_REDIS_DB_INDEX]) ? (int)$info[RedisDB::FIELD_REDIS_DB_INDEX] : 0;
+                $redisDb = isset($info[RedisCache::FIELD_REDIS_DB]) ? (int)$info[RedisCache::FIELD_REDIS_DB] : 0;
+                $redisDbIndex = isset($info[RedisCache::FIELD_REDIS_DB_INDEX]) ? (int)$info[RedisCache::FIELD_REDIS_DB_INDEX] : 0;
 
                 if (empty($fields)) {
-                    $result = RedisDB::instance($redisDb, $redisDbIndex)->load($key);
+                    $result = RedisCache::instance($redisDb, $redisDbIndex)->load($key);
                 } else {
-                    $result = RedisDB::instance($redisDb, $redisDbIndex)->getMulti($key, $fields);
+                    $result = RedisCache::instance($redisDb, $redisDbIndex)->getMulti($key, $fields);
                 }
 
                 if (empty($result)) {
@@ -76,8 +76,8 @@ class redis2Mysql
                 if (isset($result[$primaryKey])) {
                     unset($result[$primaryKey]);
                 }
-                if (isset($result[RedisDB::FIELD_SYNC_FLAG])) {
-                    unset($result[RedisDB::FIELD_SYNC_FLAG]);
+                if (isset($result[RedisCache::FIELD_SYNC_FLAG])) {
+                    unset($result[RedisCache::FIELD_SYNC_FLAG]);
                 }
 
                 $pdo_w = DB::pdo($dbParam);

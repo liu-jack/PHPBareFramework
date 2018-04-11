@@ -61,6 +61,15 @@ abstract class Model
             self::CF_RD_KEY => '', // 可选, redis KEY, "KeyName:%d", %d会用主键ID替代
         ],
     ];
+
+    /**
+     * @see \Bare\Model::add() 新增
+     * @see \Bare\Model::update() 更新
+     * @see \Bare\Model::getInfoByIds() 按主键id查询
+     * @see \Bare\Model::getList() 条件查询
+     * @see \Bare\Model::delete() 删除
+     */
+
     // 主键/字段类型
     const VAR_TYPE_KEY = 'PRIMARY KEY';
     const VAR_TYPE_INT = 'int';

@@ -3,23 +3,11 @@
  * 删除拼团支付超时成员 定时脚本 每分钟运行一次
  */
 
-if (php_sapi_name() != 'cli') {
-    exit('cron must run in cli mode!');
-}
+require(dirname(dirname(__DIR__)) . "/app.inc.php");
 
-set_time_limit(0);
-ini_set('memory_limit', '2048M');
-
-use lib\core\Action;
-use MinApp\QBVip\QBGroupMember;
-
-require(dirname(dirname(dirname(__DIR__))) . "/common.inc.php");
-
-class deletePaymentTimeOutMember extends Action
+class deleteGroupMember
 {
-    const TABLE_NAME = 'QBGroupMember';
-
-    public function doDefault()
+    public function doIndex()
     {
         global $argv;
         $duration = !empty($argv[1]) ? (int)($argv[1]) : 60;

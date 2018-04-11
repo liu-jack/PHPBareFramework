@@ -68,6 +68,9 @@ CREATE TABLE IF NOT EXISTS `Product` (
   `GroupPrice` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '拼团价格',
   `IsGroup` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否开启团购 0：否 1：是',
   `GroupNum` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '拼团人数',
+  `GroupStartTime` datetime DEFAULT NULL COMMENT '团购开始时间',
+  `GroupEndTime` datetime DEFAULT NULL COMMENT '团购结束时间',
+  `Inventory` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '库存',
   `Content` text NOT NULL COMMENT '图文详情',
   `BuyCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '购买人数',
   `CollectCount` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收藏人数',
@@ -96,13 +99,15 @@ EOT
     'create_group_buy' => <<<EOT
 CREATE TABLE IF NOT EXISTS `GroupBuy` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `ProductId` int(11) unsigned NOT NULL COMMENT '商品id',
+  `ProductId` int(11) unsigned NOT NULL COMMENT '套餐编号',
   `GroupPrice` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '团购价格',
   `GroupCount` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '需要拼团人数',
   `JoinCount` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '加入团人数',
   `UserId` int(11) unsigned NOT NULL COMMENT '用户编号',
   `Status` tinyint(4) unsigned NOT NULL COMMENT '状态：1拼团进行中，2拼团成功，3拼团失败',
-  `ExpireTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '拼团有效期',
+  `ExpireTime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '拼团有效期 s',
+  `ActStartTime` datetime NOT NULL COMMENT '商品团购活动开始时间',
+  `ActEndTime` datetime NOT NULL COMMENT '商品团购活动结束时间',
   `StartTime` datetime NOT NULL COMMENT '团购开始时间',
   `EndTime` datetime NOT NULL COMMENT '团购结束时间',
   `SuccessTime` datetime NOT NULL COMMENT '拼团成功时间',
@@ -118,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `GroupBuyList` (
   `GroupId` int(11) unsigned NOT NULL COMMENT '团编号',
   `UserId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `Type` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '成员类型:1团长，2成员',
-  `PayState` int(10) unsigned NOT NULL COMMENT '支付状态:1已支付，0未支付',
+  `PayState` tinyint(4) unsigned NOT NULL COMMENT '支付状态:1已支付，0未支付',
   `PayTime` datetime DEFAULT NULL COMMENT '支付时间',
   `CreateTime` datetime NOT NULL COMMENT '添加时间',
   PRIMARY KEY (`Id`),
@@ -126,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `GroupBuyList` (
   KEY `Idx_UserId` (`UserId`) USING BTREE,
   KEY `Idx_CreateTime` (`CreateTime`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='团购成员';
+
 EOT
     ,
 ];

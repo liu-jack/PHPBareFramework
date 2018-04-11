@@ -11,15 +11,15 @@
 namespace Model\Application;
 
 use Bare\Model;
-use Bare\DB;
+use Config\DBConfig;
 
 class Product extends Model
 {
     protected static $_conf = [
         // 必选, 数据库代码 (来自DB配置), w: 写, r: 读
         self::CF_DB => [
-            self::CF_DB_W => DB::DB_APPLICATION_W,
-            self::CF_DB_R => DB::DB_APPLICATION_R
+            self::CF_DB_W => DBConfig::DB_APPLICATION_W,
+            self::CF_DB_R => DBConfig::DB_APPLICATION_R
         ],
         // 必选, 数据表名
         self::CF_TABLE => 'Product',
@@ -37,6 +37,9 @@ class Product extends Model
             'DiscountPrice' => self::VAR_TYPE_STRING,
             'IsGroup' => self::VAR_TYPE_INT,
             'GroupNum' => self::VAR_TYPE_INT,
+            'GroupStartTime' => self::VAR_TYPE_STRING,
+            'GroupEndTime' => self::VAR_TYPE_STRING,
+            'Inventory' => self::VAR_TYPE_INT,
             'Content' => self::VAR_TYPE_STRING,
             'BuyCount' => self::VAR_TYPE_INT,
             'CollectCount' => self::VAR_TYPE_INT,
@@ -45,7 +48,7 @@ class Product extends Model
             'CreateTime' => self::VAR_TYPE_STRING,
         ],
         // 可选, MC连接参数
-        self::CF_MC => DB::MEMCACHE_DEFAULT,
+        self::CF_MC => DBConfig::MEMCACHE_DEFAULT,
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
         self::CF_MC_KEY => 'Product:%d',
         // 可选, 超时时间, 默认不过期
@@ -77,6 +80,18 @@ class Product extends Model
     public static function updateBuyCount($id, $num = 1)
     {
         return self::update($id, ['BuyCount' => ['BuyCount', '+' . $num]]);
+    }
+
+    /**
+     * 更新商品库存
+     *
+     * @param     $id
+     * @param int $num
+     * @return bool
+     */
+    public static function updateInventory($id, $num = -1)
+    {
+        return self::update($id, ['Inventory' => ['Inventory', '+' . $num]]);
     }
 
     /**

@@ -8,14 +8,14 @@
  *
  */
 
-use Bare\DB;
+namespace Bare;
 
 abstract class RedisModel
 {
     /**
-     * @var \Model\RedisDB\RedisDB
+     * @return \Model\RedisDB\RedisCache
      */
-    protected static $redis_instance = null; // redis缓存实例
+    abstract protected static function instance();
 
     /**
      * 基础配置文件
@@ -49,6 +49,15 @@ abstract class RedisModel
         // 可选, 数据表分表前缀 User_%s
         self::CF_PREFIX_TABLE => '',
     ];
+
+    /**
+     * @see \Bare\RedisModel::add() 新增
+     * @see \Bare\RedisModel::update() 更新
+     * @see \Bare\RedisModel::updateCount() 更新计数
+     * @see \Bare\RedisModel::getInfoByIds() 按主键id查询
+     * @see \Bare\RedisModel::getList() 条件查询
+     * @see \Bare\RedisModel::delete() 删除
+     */
 
     const CF_DB = 'db';
     const CF_DB_W = 'w';
@@ -117,9 +126,9 @@ abstract class RedisModel
         $id_arr = !is_array($ids) ? [$ids] : $ids;
         $redis_key = [];
         foreach ($id_arr as $id) {
-            $redis_key[$id] = static::$redis_instance->getKey($id);
+            $redis_key[$id] = static::instance()->getKey($id);
         }
-        $redis_data = static::$redis_instance->loads($redis_key);
+        $redis_data = static::instance()->loads($redis_key);
         $_cache = $nocache_ids = [];
         foreach ($redis_key as $id => $v) {
             if (empty($redis_data[$id])) {
@@ -133,7 +142,7 @@ abstract class RedisModel
             if (!empty($lists)) {
                 foreach ($lists as $v) {
                     $_cache[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v;
-                    static::$redis_instance->save($nocache_ids[$v[static::$_conf[static::CF_PRIMARY_KEY]]], $v);
+                    static::instance()->save($nocache_ids[$v[static::$_conf[static::CF_PRIMARY_KEY]]], $v);
                 }
             }
         }
@@ -230,9 +239,9 @@ abstract class RedisModel
             }
         }
         $rows = static::checkParams($rows);
-        $redis_key = static::$redis_instance->getKey($id);
-        $ret = static::$redis_instance->save($redis_key, $rows);
-        static::$redis_instance->async($redis_key, $id, array_keys($rows));
+        $redis_key = static::instance()->getKey($id);
+        $ret = static::instance()->save($redis_key, $rows);
+        static::instance()->async($redis_key, $id, array_keys($rows));
         if (empty($ret)) {
             return false;
         }
@@ -247,6 +256,46 @@ abstract class RedisModel
     }
 
     /**
+     * 更新计数
+     *
+     * @param      $id
+     * @param      $rows
+     * @param bool $filter
+     * @return bool
+     */
+    public static function updateCount($id, $rows, $filter = true)
+    {
+        if (!empty(static::$_un_modify_fields)) {
+            if ($filter) {
+                $rows = array_diff_key($rows, static::$_un_modify_fields);
+            } else {
+                $intersect_key = array_intersect_key($rows, static::$_un_modify_fields);
+                if (count($intersect_key) > 0) {
+                    return false;
+                }
+            }
+        }
+        $rows = static::checkParams($rows);
+        $redis_key = static::instance()->getKey($id);
+        $ret = false;
+        foreach ($rows as $field => $inc) {
+            $ret = static::instance()->hIncrBy($redis_key, $field, $inc);
+        }
+        static::instance()->async($redis_key, $id, array_keys($rows));
+        if ($ret === false) {
+            return false;
+        }
+        if (!empty(static::$_cache_list_keys) && $ret !== false && !empty(static::UPDATE_DEL_CACHE_LIST)) {
+            $info = static::getInfoByIds($id);
+            if (!empty($info)) {
+                static::delListCache($info);
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * 删除
      *
      * @param $id
@@ -258,7 +307,7 @@ abstract class RedisModel
         if (!empty(static::$_cache_list_keys)) {
             $info = static::getInfoByIds($id);
         }
-        $res = static::$redis_instance->del(static::$redis_instance->getKey($id));
+        $res = static::instance()->del(static::instance()->getKey($id));
         $ret = self::getPdo(true)->delete(static::tableName($id), [
             static::$_conf[static::CF_PRIMARY_KEY] => $id
         ]);

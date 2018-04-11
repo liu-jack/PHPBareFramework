@@ -1,22 +1,25 @@
 <?php
 /**
- * 用户中心redis缓存
+ * RedisGroupBuy.class.php
+ * 拼团 redis 缓存
  *
- * @author camfee<camfee@foxmail.com>
+ * @author camfee <camfee@foxmail.com>
+ * @date   18-4-11 下午2:24
  *
  */
 
 namespace Model\RedisDB;
 
-use Bare\DB;
+use Common\RedisConst;
+use Config\DBConfig;
 
-class RedisCenterUser extends RedisCache
+class RedisGroupBuy extends RedisCache
 {
-    const REDIS_DB = DB::REDIS_DB_CACHE_W;
-    const REDIS_DB_INDEX = self::REDIS_DB_INDEX_ACCOUNT;
-    const TABLE_NAME = 'User';
-    const MYSQL_DB = DB::DB_ACCOUNT_W;
-    const PRIMARY_KEY = 'UserId';
+    const REDIS_DB = RedisConst::CACHE_DB_W;
+    const REDIS_DB_INDEX = RedisConst::GROUP_BUY_INDEX;
+    const TABLE_NAME = 'GroupBuy';
+    const MYSQL_DB = DBConfig::DB_APPLICATION_W;
+    const PRIMARY_KEY = 'Id';
 
     /**
      * 获取redis缓存实例

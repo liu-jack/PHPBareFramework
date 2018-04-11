@@ -12,7 +12,7 @@ class Music extends Controller
 
     public function index()
     {
-        $uid = $this->isLogin();
+        $uid = $this->isLogin(V_WEB);
         if (IS_ONLINE && empty($uid)) {
             redirect(url('account/user/login', '', true));
         }
