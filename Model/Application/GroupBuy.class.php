@@ -115,11 +115,11 @@ class GroupBuy extends RedisModel
     {
         $redis_key = str_replace('{ProductId}', $pid, self::REDIS_PRODUCT_GROUP_LIST);
         $redis = self::getRedis(true);
-        $ids = unserialize($redis->get($redis_key));
+        $ids = $redis->getS($redis_key);
         if ($ids === false) {
             $ids_list = self::getList(['ProductId' => $pid, 'Status' => self::STATUS_START]);
             $ids = isset($ids_list['data']) ? $ids_list['data'] : [];
-            $redis->set($redis_key, serialize($ids), self::$_conf[self::CF_RD][self::CF_RD_TIME]);
+            $redis->setS($redis_key, $ids, self::$_conf[self::CF_RD][self::CF_RD_TIME]);
         }
 
         return $ids;

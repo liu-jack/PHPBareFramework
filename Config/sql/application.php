@@ -8,32 +8,34 @@
  */
 
 return [
-    'create_payment' => <<<EOT
-CREATE TABLE IF NOT EXISTS `Payment` (
-  `PaymentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    'create_order' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Order` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `AppId` int(11) unsigned NOT NULL COMMENT '应用Id',
+  `AppType` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '应用类型 0：web 1:wap 2:android 3:ios 4:xcx',
   `DeviceId` varchar(64) NOT NULL COMMENT '设备ID',
   `UserId` int(11) unsigned NOT NULL COMMENT '用户Id',
   `GoodsInfo` varchar(256) NOT NULL COMMENT '支付商品信息',
-  `SN` varchar(64) NOT NULL COMMENT '支付流水号,自己生成',
+  `OrderNo` varchar(64) NOT NULL COMMENT '支付流水号,自己生成',
   `ProductId` int(11) unsigned NOT NULL COMMENT '商品ID',
-  `PaymentType` tinyint(4) unsigned NOT NULL COMMENT '支付平台: 0 appstore, 1 支付宝, 2 微信js 3 微信app 4 微信小程序',
+  `PayType` tinyint(4) unsigned NOT NULL COMMENT '支付平台: 0 appstore, 1 支付宝, 2 微信js 3 微信app 4 微信小程序',
   `TradeNo` varchar(64) DEFAULT NULL COMMENT '交易号',
   `TotalFee` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '支付金额',
-  `ThirdSN` varchar(64) DEFAULT NULL COMMENT '第三方支付流水号',
+  `ThirdNo` varchar(64) DEFAULT NULL COMMENT '第三方支付流水号',
   `Content` text COMMENT '其他支付信息',
   `Status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '支付状态，0 等待支付， 1支付成功， 2 支付中，3 取消支付，4 支付失败',
+  `GoodsStatus` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '物流状态 0：等待发货 1：已发货 2：确认收货 3：已退货',
   `CreateTime` datetime NOT NULL COMMENT '创建时间',
   `UpdateTime` datetime NOT NULL COMMENT '最后状态更新时间',
-  `FAId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '来源AppId id',
   `InviteUserId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '邀请用户Id',
   `Channel` varchar(64) NOT NULL DEFAULT '' COMMENT '来源渠道',
   `Coupon` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '优惠金额 单位分',
   `GroupId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '团购id',
-  PRIMARY KEY (`PaymentId`),
-  KEY `Idx_SN` (`SN`) USING BTREE,
-  KEY `Idx_ThirdSN_Type` (`ThirdSN`,`PaymentType`) USING BTREE,
-  KEY `Idx_CreateTimeStatus` (`CreateTime`,`Status`) USING BTREE
+  `AddressId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址id',
+  PRIMARY KEY (`Id`),
+  KEY `Idx_CreateTimeStatus` (`CreateTime`,`Status`) USING BTREE,
+  KEY `Idx_OrderNo` (`OrderNo`) USING BTREE,
+  KEY `Idx_ThirdNo_Type` (`ThirdNo`,`PayType`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='支付订单表1.0';
 EOT
     ,
@@ -46,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `Address` (
   `City` varchar(50) NOT NULL DEFAULT '' COMMENT '城市',
   `Area` varchar(50) NOT NULL DEFAULT '' COMMENT '区县',
   `Address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
+  `Mobile` varchar(20) NOT NULL DEFAULT '' COMMENT '手机号码',
   `IsDefault` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否默认地址 0：否 1：是',
   `Status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '状态 0：隐藏 1：显示',
   `UpdateTime` datetime DEFAULT NULL COMMENT '最后修改时间',
@@ -60,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `Product` (
   `ProductId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ShopId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商家id 默认0',
   `CateId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分类id',
+  `Type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '商品类型 0：实体 1：虚拟服务',
   `Title` varchar(255) NOT NULL DEFAULT '' COMMENT '商品名称',
   `Cover` varchar(255) NOT NULL DEFAULT '' COMMENT '封面图',
   `Pictures` varchar(2048) NOT NULL DEFAULT '' COMMENT '商品图集',
@@ -85,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `Product` (
 EOT
     ,
     'create_product_cate' => <<<EOT
-CREATE TABLE IF NOT EXISTS `ProudctCategory` (
+CREATE TABLE IF NOT EXISTS `ProductCate` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ParentId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '父级分类id',
   `Title` varchar(20) NOT NULL DEFAULT '' COMMENT '分类名称',

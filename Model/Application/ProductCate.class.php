@@ -13,7 +13,7 @@ namespace Model\Application;
 use Bare\Model;
 use Bare\DB;
 
-class ProductCategory extends Model
+class ProductCate extends Model
 {
     protected static $_conf = [
         // 必选, 数据库代码 (来自DB配置), w: 写, r: 读
@@ -22,7 +22,7 @@ class ProductCategory extends Model
             self::CF_DB_R => DB::DB_APPLICATION_R
         ],
         // 必选, 数据表名
-        self::CF_TABLE => 'ProductCategory',
+        self::CF_TABLE => 'ProductCate',
         // 必选, 字段信息
         self::CF_FIELDS => [
             'Id' => self::VAR_TYPE_KEY,
@@ -36,7 +36,7 @@ class ProductCategory extends Model
         // 可选, MC连接参数
         self::CF_MC => DB::MEMCACHE_DEFAULT,
         // 可选, MC KEY, "KeyName:%d", %d会用主键ID替代
-        self::CF_MC_KEY => 'ProductCategory:%d',
+        self::CF_MC_KEY => 'ProductCate:%d',
         // 可选, 超时时间, 默认不过期
         self::CF_MC_TIME => 86400,
         // 可选, redis (来自DB配置), w: 写, r: 读

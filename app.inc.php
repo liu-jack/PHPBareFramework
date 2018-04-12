@@ -7,6 +7,10 @@
  *
  */
 
+// 检测PHP环境
+if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+    die('require PHP >= 7.0.0 !');
+}
 // 程序根目录
 define('ROOT_PATH', __DIR__ . '/');
 // 加载系统配置

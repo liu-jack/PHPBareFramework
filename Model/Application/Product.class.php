@@ -28,6 +28,7 @@ class Product extends Model
             'ProductId' => self::VAR_TYPE_KEY,
             'ShopId' => self::VAR_TYPE_INT,
             'CateId' => self::VAR_TYPE_INT,
+            'Type' => self::VAR_TYPE_INT,
             'Title' => self::VAR_TYPE_STRING,
             'Cover' => self::VAR_TYPE_STRING,
             'Pictures' => self::VAR_TYPE_ARRAY,

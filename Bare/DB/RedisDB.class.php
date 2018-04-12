@@ -88,6 +88,30 @@ class RedisDB extends \Redis
     }
 
     /**
+     * 保存序列化数据
+     *
+     * @param     $key
+     * @param     $value
+     * @param int $timeout
+     * @return bool
+     */
+    public function setS($key, $value, $timeout = 0)
+    {
+        return parent::set($key, serialize($value), $timeout);
+    }
+
+    /**
+     * 获取序列化数据
+     *
+     * @param $key
+     * @return mixed
+     */
+    public function getS($key)
+    {
+        return unserialize(parent::get($key));
+    }
+
+    /**
      * 检查给定数组中的元素是否为指定集合的成员
      *
      * @param string $key    集合的key

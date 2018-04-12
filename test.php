@@ -58,9 +58,10 @@ class test
         //        ]));
         //        var_dump(GroupBuy::createGroupBuy(1, 1));
         //        var_dump(GroupBuy::startGroupBuy(1));
-//        \Bare\DB::memcache()->flush();
-//        var_dump(GroupBuyList::addMember(1, 2));
-//        pre(GroupBuy::getInfoByIds(1),GroupBuyList::getGroupList(1));
+        //        \Bare\DB::memcache()->flush();
+        //        var_dump(GroupBuyList::addMember(1, 2));
+        //        pre(GroupBuy::getInfoByIds(1),GroupBuyList::getGroupList(1));
+        pre(GroupBuy::getProductGroup(1));
 
     }
 }

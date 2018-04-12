@@ -759,7 +759,7 @@ abstract class Model
      * 获取redis实例
      *
      * @param bool $w
-     * @return \Redis
+     * @return \Bare\DB\RedisDB
      */
     protected static function getRedis($w = false)
     {

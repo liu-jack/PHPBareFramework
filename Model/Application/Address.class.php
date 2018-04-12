@@ -32,6 +32,7 @@ class Address extends Model
             'City' => self::VAR_TYPE_STRING,
             'Area' => self::VAR_TYPE_STRING,
             'Address' => self::VAR_TYPE_STRING,
+            'Mobile' => self::VAR_TYPE_STRING,
             'IsDefault' => self::VAR_TYPE_INT,
             'Status' => self::VAR_TYPE_INT,
             'UpdateTime' => self::VAR_TYPE_STRING,
@@ -59,6 +60,14 @@ class Address extends Model
      * @see \Bare\Model::getList() 条件查询
      * @see \Bare\Model::delete() 删除
      */
+
+    protected static $_add_must_fields = [
+        'Province' => 1,
+        'City' => 1,
+        'Area' => 1,
+        'Address' => 1,
+        'Mobile' => 1,
+    ];
 
     // 列表缓存数组
     const UPDATE_DEL_CACHE_LIST = true; // 更新是否清除列表缓存
