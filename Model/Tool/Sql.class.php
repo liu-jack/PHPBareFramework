@@ -115,4 +115,13 @@ class Sql
 
         return self::$pdo->exec($sql);
     }
+
+    public function runPayment($sql)
+    {
+        if (empty(self::$pdo)) {
+            self::$pdo = DB::pdo(DB::DB_PICTURE_W);
+        }
+
+        return self::$pdo->exec($sql);
+    }
 }

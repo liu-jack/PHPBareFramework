@@ -42,6 +42,8 @@ class DBConfig
     const DB_MOBILE_W = 27;
     const DB_PICTURE_R = 28;
     const DB_PICTURE_W = 29;
+    const DB_PAYMENT_R = 30;
+    const DB_PAYMENT_W = 31;
 
     protected static $_db_cfgs = [
         self::DB_BARE_R => ['name' => 'default', 'db' => 'bare'],
@@ -74,6 +76,8 @@ class DBConfig
         self::DB_MOBILE_W => ['name' => 'default', 'db' => 'zf_mobile'],
         self::DB_PICTURE_R => ['name' => 'default', 'db' => 'zf_picture'],
         self::DB_PICTURE_W => ['name' => 'default', 'db' => 'zf_picture'],
+        self::DB_PAYMENT_R => ['name' => 'default', 'db' => 'zf_payment'],
+        self::DB_PAYMENT_W => ['name' => 'default', 'db' => 'zf_payment'],
     ];
 
     /**

@@ -28,3 +28,6 @@ php index.php Tool/Sql/admin
 # 采集
 php index.php Tool/Sql/collect
 php index.php Tool/Sql/picture
+
+# 支付平台
+php index.php Tool/Sql/payment

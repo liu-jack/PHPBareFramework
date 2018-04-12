@@ -228,6 +228,18 @@ class Sql extends Controller
     }
 
     /**
+     * 支付平台管理 php index.php Tool/Sql/payment
+     */
+    public function payment()
+    {
+        need_cli();
+        $sqls = config('sql/payment');
+        foreach ($sqls as $k => $v) {
+            $this->_m->runPayment($v);
+        }
+    }
+
+    /**
      * 标签表管理 php index.php Tool/Sql/update
      */
     public function update()
