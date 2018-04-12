@@ -423,6 +423,7 @@ class QBGroupMember
 
     /**
      * 获取用户的参团
+     *
      * @param $userId
      * @return array
      */

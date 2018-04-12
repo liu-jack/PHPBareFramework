@@ -70,6 +70,12 @@ class Product extends Model
      * @see \Bare\Model::delete() 删除
      */
 
+    protected static $_add_must_fields = [
+        'Title' => 1,
+        'Price' => 1,
+        'Inventory' => 1,
+    ];
+
     /**
      * 更新商品购买数
      *

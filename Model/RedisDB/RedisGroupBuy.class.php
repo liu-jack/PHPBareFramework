@@ -37,14 +37,12 @@ class RedisGroupBuy extends RedisCache
     /**
      * 获取缓存key
      *
-     * @param int $uid
+     * @param int $gid
      * @return string
      */
-    public static function getKey($uid)
+    public static function getKey($gid)
     {
-        $arr = ['CUser_' . sprintf('%02x', $uid % 256), $uid];
-
-        return parent::getKey($arr);
+        return parent::getKey([self::TABLE_NAME, $gid]);
     }
 
     /**

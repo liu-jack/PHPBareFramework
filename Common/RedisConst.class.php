@@ -29,6 +29,10 @@ class RedisConst
     const BOOK_DB_R = DBConfig::REDIS_DEFAULT_R;
     const BOOK_DB_W = DBConfig::REDIS_DEFAULT_W;
     const BOOK_DB_INDEX = 0;
+    // 团购缓存
+    const GROUP_DB_R = DBConfig::REDIS_DEFAULT_R;
+    const GROUP_DB_W = DBConfig::REDIS_DEFAULT_W;
+    const GROUP_DB_INDEX = 1;
     // 手机app
     const MOBILE_DB_R = DBConfig::REDIS_MOBILE_R;
     const MOBILE_DB_W = DBConfig::REDIS_MOBILE_W;

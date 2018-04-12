@@ -10,6 +10,7 @@
 namespace Model\Application;
 
 use Bare\RedisModel;
+use Common\RedisConst;
 use Config\DBConfig;
 use Model\RedisDB\RedisGroupBuy;
 
@@ -18,7 +19,7 @@ class GroupBuy extends RedisModel
     /**
      * @return mixed|\Model\RedisDB\RedisGroupBuy
      */
-    protected static function instance()
+    protected static function redisCache()
     {
         return RedisGroupBuy::instance();
     }
@@ -61,31 +62,15 @@ class GroupBuy extends RedisModel
         self::CF_MC_TIME => 86400,
         // 可选, redis (来自DB配置), w: 写, r: 读
         self::CF_RD => [
-            self::CF_DB_W => '',
-            self::CF_DB_R => '',
-            self::CF_RD_INDEX => 0,
-            self::CF_RD_TIME => 86400,
+            self::CF_DB_W => RedisConst::GROUP_DB_W,
+            self::CF_DB_R => RedisConst::GROUP_DB_R,
+            self::CF_RD_INDEX => RedisConst::GROUP_DB_INDEX,
+            self::CF_RD_TIME => 3600,
             self::CF_RD_KEY => '', // 可选, redis KEY, "KeyName:%d", %d会用主键ID替代
         ],
         // 可选, 数据表分表前缀 User_%s
         self::CF_PREFIX_TABLE => '',
     ];
-
-    protected static $_add_must_fields = [
-        'ProductId' => 1,
-        'UserId' => 1,
-        'GroupCount' => 1,
-        'ActStartTime' => 1,
-        'ActEndTime' => 1,
-        'CreateTime' => 1,
-    ];
-
-    const GROUP_BUY_EXPIRE = 86400; // 团购有效期 s
-    // 状态
-    const STATUS_DEFAULT = 0;//默认
-    const STATUS_START = 1;//拼团开始
-    const STATUS_SUCCESS = 2;//拼团成功
-    const STATUS_FAILURE = 3;//拼团失败
 
     /**
      * @see \Bare\RedisModel::add() 新增
@@ -95,6 +80,50 @@ class GroupBuy extends RedisModel
      * @see \Bare\RedisModel::getList() 条件查询
      * @see \Bare\RedisModel::delete() 删除
      */
+
+    protected static $_add_must_fields = [
+        'ProductId' => 1,
+        'UserId' => 1,
+        'GroupCount' => 1,
+        'ActStartTime' => 1,
+        'ActEndTime' => 1,
+    ];
+
+    const GROUP_BUY_EXPIRE = 86400; // 团购有效期 s
+    // 状态
+    const STATUS_DEFAULT = 0;//默认
+    const STATUS_START = 1;//拼团开始
+    const STATUS_SUCCESS = 2;//拼团成功
+    const STATUS_FAILURE = 3;//拼团失败
+
+    const UPDATE_DEL_CACHE_LIST = true; // 更新是否清除列表缓存
+    const REDIS_PRODUCT_GROUP_LIST = 'REDIS_PRODUCT_GROUP_LIST:{ProductId}';
+    protected static $_cache_list_keys = [
+        self::REDIS_PRODUCT_GROUP_LIST => [
+            self::CACHE_LIST_TYPE => self::CACHE_LIST_TYPE_REDIS,
+            self::CACHE_LIST_FIELDS => 'ProductId',
+        ],
+    ];
+
+    /**
+     * 获取商品拼团中团购
+     *
+     * @param $pid
+     * @return array|mixed
+     */
+    public static function getProductGroup($pid)
+    {
+        $redis_key = str_replace('{ProductId}', $pid, self::REDIS_PRODUCT_GROUP_LIST);
+        $redis = self::getRedis(true);
+        $ids = unserialize($redis->get($redis_key));
+        if ($ids === false) {
+            $ids_list = self::getList(['ProductId' => $pid, 'Status' => self::STATUS_START]);
+            $ids = isset($ids_list['data']) ? $ids_list['data'] : [];
+            $redis->set($redis_key, serialize($ids), self::$_conf[self::CF_RD][self::CF_RD_TIME]);
+        }
+
+        return $ids;
+    }
 
     /**
      * 创建团购（创建支付订单时）
@@ -133,13 +162,13 @@ class GroupBuy extends RedisModel
      */
     public static function startGroupBuy($id)
     {
-        $goup = self::getInfoByIds($id);
-        if (empty($goup) && $goup['Status'] != self::STATUS_DEFAULT) {
+        $group = self::getInfoByIds($id);
+        if (empty($group) && $group['Status'] != self::STATUS_DEFAULT) {
             return false;
         }
         $now = time();
-        $end_time = strtotime($goup['ActEndTime']);
-        $expire = $now + $goup['ExpireTime'];
+        $end_time = strtotime($group['ActEndTime']);
+        $expire = $now + $group['ExpireTime'];
         $act_end_time = min($end_time, $expire);
         $update = [
             'Status' => self::STATUS_START,
@@ -148,7 +177,12 @@ class GroupBuy extends RedisModel
             'JoinCount' => 1,
         ];
 
-        return self::update($id, $update);
+        $ret = self::update($id, $update);
+        if ($ret) {
+            GroupBuyList::addLeader($id, $group['UserId']);
+        }
+
+        return $ret;
     }
 
     /**

@@ -5,6 +5,8 @@
 
 require(dirname(dirname(__DIR__)) . "/app.inc.php");
 
+use Model\Application\GroupBuyList;
+
 class deleteGroupMember
 {
     public function doIndex()
@@ -23,10 +25,11 @@ class deleteGroupMember
                 break;
             }
 
-            $members = QBGroupMember::getPaymentTimeoutMembers();
+            $members_list = GroupBuyList::getTimeoutPay($offset, $limit);
+            $members = $members_list['data'];
             echo 'offset:[' . $offset . '],limit:[' . $limit . '],count:[' . count($members) . "]\n";
             foreach ($members as $member) {
-                QBGroupMember::deletePaymentTimeoutMember($member[QBGroupMember::FIELD_ID], $member[QBGroupMember::FIELD_GROUP_ID], $member[QBGroupMember::FIELD_USER_ID]);
+                GroupBuyList::deleteTimeoutPay($member['Id']);
             }
             $offset += $limit;
 
@@ -35,7 +38,6 @@ class deleteGroupMember
                 $offset = 0;
             }
         } while (true);
-
     }
 }
 

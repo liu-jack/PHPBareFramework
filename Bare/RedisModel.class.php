@@ -15,7 +15,7 @@ abstract class RedisModel
     /**
      * @return \Model\RedisDB\RedisCache
      */
-    abstract protected static function instance();
+    abstract protected static function redisCache();
 
     /**
      * 基础配置文件
@@ -126,9 +126,9 @@ abstract class RedisModel
         $id_arr = !is_array($ids) ? [$ids] : $ids;
         $redis_key = [];
         foreach ($id_arr as $id) {
-            $redis_key[$id] = static::instance()->getKey($id);
+            $redis_key[$id] = static::redisCache()->getKey($id);
         }
-        $redis_data = static::instance()->loads($redis_key);
+        $redis_data = static::redisCache()->loads($redis_key);
         $_cache = $nocache_ids = [];
         foreach ($redis_key as $id => $v) {
             if (empty($redis_data[$id])) {
@@ -142,7 +142,7 @@ abstract class RedisModel
             if (!empty($lists)) {
                 foreach ($lists as $v) {
                     $_cache[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v;
-                    static::instance()->save($nocache_ids[$v[static::$_conf[static::CF_PRIMARY_KEY]]], $v);
+                    static::redisCache()->save($nocache_ids[$v[static::$_conf[static::CF_PRIMARY_KEY]]], $v);
                 }
             }
         }
@@ -182,9 +182,18 @@ abstract class RedisModel
         if ($limit > 0) {
             $offset_limit = [$offset, $limit];
         }
-        $data = static::getPdo()->find(static::tableName(), $where, $fields, $order, $offset_limit);
+        $count = static::getPdo()->select('COUNT(*)')->from(static::tableName())->where($where)->getValue();
+        $list = static::getPdo()->find(static::tableName(), $where, $fields, $order, $offset_limit);
+        $data = [];
+        if (!empty($list) && $fields == static::$_conf[static::CF_PRIMARY_KEY]) {
+            foreach ($list as $v) {
+                $data[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v[static::$_conf[static::CF_PRIMARY_KEY]];
+            }
+        } else {
+            $data = $list;
+        }
 
-        return $data;
+        return ['count' => $count, 'data' => $data];
     }
 
     /**
@@ -198,6 +207,9 @@ abstract class RedisModel
     {
         if (!empty(static::$_add_must_fields) && count(array_diff_key(static::$_add_must_fields, $rows)) > 0) {
             return false;
+        }
+        if (empty($rows[0]) && empty($rows['CreateTime'])) {
+            $rows['CreateTime'] = date('Y-m-d H:i:s');
         }
         $rows = static::checkParams($rows);
         $ret = self::getPdo(true)->insert(static::tableName(), $rows, ['ignore' => $ignore]);
@@ -239,9 +251,9 @@ abstract class RedisModel
             }
         }
         $rows = static::checkParams($rows);
-        $redis_key = static::instance()->getKey($id);
-        $ret = static::instance()->save($redis_key, $rows);
-        static::instance()->async($redis_key, $id, array_keys($rows));
+        $redis_key = static::redisCache()->getKey($id);
+        $ret = static::redisCache()->save($redis_key, $rows);
+        static::redisCache()->async($redis_key, $id, array_keys($rows));
         if (empty($ret)) {
             return false;
         }
@@ -276,12 +288,12 @@ abstract class RedisModel
             }
         }
         $rows = static::checkParams($rows);
-        $redis_key = static::instance()->getKey($id);
+        $redis_key = static::redisCache()->getKey($id);
         $ret = false;
         foreach ($rows as $field => $inc) {
-            $ret = static::instance()->hIncrBy($redis_key, $field, $inc);
+            $ret = static::redisCache()->hIncrBy($redis_key, $field, $inc);
         }
-        static::instance()->async($redis_key, $id, array_keys($rows));
+        static::redisCache()->async($redis_key, $id, array_keys($rows));
         if ($ret === false) {
             return false;
         }
@@ -307,7 +319,7 @@ abstract class RedisModel
         if (!empty(static::$_cache_list_keys)) {
             $info = static::getInfoByIds($id);
         }
-        $res = static::instance()->del(static::instance()->getKey($id));
+        $res = static::redisCache()->del(static::redisCache()->getKey($id));
         $ret = self::getPdo(true)->delete(static::tableName($id), [
             static::$_conf[static::CF_PRIMARY_KEY] => $id
         ]);

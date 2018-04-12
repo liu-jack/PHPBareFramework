@@ -545,6 +545,12 @@ class MongoModel
         return true;
     }
 
+    /**
+     * 错误日志
+     *
+     * @param \Exception $e
+     * @param string     $data
+     */
     protected static function log(\Exception $e, $data = '')
     {
         $log = [

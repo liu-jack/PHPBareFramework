@@ -11,6 +11,9 @@ use Classes\Algorithm\Sort;
 use Classes\Algorithm\Math;
 use Model\Application\Area;
 use Model\Application\Address;
+use Model\Application\GroupBuy;
+use Model\Application\GroupBuyList;
+use Model\Application\Product;
 
 class test
 {
@@ -30,16 +33,34 @@ class test
         //        pre($cs_yz, $cs_hy, $yz_hy, $cs_cz, $yz_cz);
         //        pre(Area::getAreaNear('长沙'));
         //        pre(Area::getAreaRange('汝城', 60));
-        $add = [
-            'UserId' => 1,
-            'Province' => '湖南',
-            'City' => '长沙',
-            'Area' => '芙蓉区',
-            'Address' => '人民东路58号3',
-        ];
+        //        $add = [
+        //            'UserId' => 1,
+        //            'Province' => '湖南',
+        //            'City' => '长沙',
+        //            'Area' => '芙蓉区',
+        //            'Address' => '人民东路58号3',
+        //        ];
         //        var_dump(Address::add($add));
         //        var_dump(Address::setDefault(2, 1));
-        pre(Address::getListByUid(1));
+        //        pre(Address::getListByUid(1));
+        //        $now = time();
+        //        $start = date('Y-m-d H:i:s', $now);
+        //        $end = date('Y-m-d H:i:s', $now + 86400 * 10);
+        //        var_dump(Product::add([
+        //            'Title' => 'test1',
+        //            'Price' => 1,
+        //            'GroupPrice' => 0.5,
+        //            'IsGroup' => 1,
+        //            'GroupNum' => 2,
+        //            'Inventory' => 100,
+        //            'GroupStartTime' => $start,
+        //            'GroupEndTime' => $end
+        //        ]));
+        //        var_dump(GroupBuy::createGroupBuy(1, 1));
+        //        var_dump(GroupBuy::startGroupBuy(1));
+//        \Bare\DB::memcache()->flush();
+//        var_dump(GroupBuyList::addMember(1, 2));
+//        pre(GroupBuy::getInfoByIds(1),GroupBuyList::getGroupList(1));
 
     }
 }

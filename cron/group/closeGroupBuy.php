@@ -27,7 +27,8 @@ class closeGroupBuy
                 break;
             }
 
-            $group_ids = GroupBuy::getTimeoutGroupBuy($offset, $limit);
+            $group_list = GroupBuy::getTimeoutGroupBuy($offset, $limit);
+            $group_ids = $group_list['data'];
             echo 'offset:[' . $offset . '],limit:[' . $limit . '],count:[' . count($group_ids) . "]\n";
             foreach ($group_ids as $id) {
                 GroupBuy::groupBuyFailure($id);

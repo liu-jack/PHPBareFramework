@@ -14,7 +14,7 @@ namespace Model\RedisDB;
 use Bare\DB;
 use Common\RedisConst;
 
-abstract class RedisCache
+class RedisCache
 {
     const REDIS_DB_INDEX = RedisConst::PASSPORT_INDEX;
     const REDIS_DB = RedisConst::CACHE_DB_W;
@@ -122,7 +122,7 @@ abstract class RedisCache
         }
         $data = [];
         if (!empty($result)) {
-            $keys = array_values($keys);
+            $keys = array_keys($keys);
             foreach ($result as $k => $v) {
                 if (!is_null($v)) {
                     $data[$keys[$k]] = $v;
