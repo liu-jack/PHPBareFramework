@@ -10,7 +10,7 @@
 return [
     'create_order' => <<<EOT
 CREATE TABLE IF NOT EXISTS `Order` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+ `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `AppId` int(11) unsigned NOT NULL COMMENT '应用Id',
   `AppType` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '应用类型 0：web 1:wap 2:android 3:ios 4:xcx',
   `DeviceId` varchar(64) NOT NULL COMMENT '设备ID',
@@ -23,15 +23,16 @@ CREATE TABLE IF NOT EXISTS `Order` (
   `TotalFee` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '支付金额',
   `ThirdNo` varchar(64) DEFAULT NULL COMMENT '第三方支付流水号',
   `Content` text COMMENT '其他支付信息',
-  `Status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '支付状态，0 等待支付， 1支付成功， 2 支付中，3 取消支付，4 支付失败',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '支付状态，0 等待支付， 1支付成功， 2 支付中，3 取消支付，4 支付失败 5 退款成功',
   `GoodsStatus` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '物流状态 0：等待发货 1：已发货 2：确认收货 3：已退货',
-  `CreateTime` datetime NOT NULL COMMENT '创建时间',
-  `UpdateTime` datetime NOT NULL COMMENT '最后状态更新时间',
   `InviteUserId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '邀请用户Id',
   `Channel` varchar(64) NOT NULL DEFAULT '' COMMENT '来源渠道',
   `Coupon` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '优惠金额 单位分',
   `GroupId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '团购id',
   `AddressId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址id',
+  `PayTime` datetime NOT NULL COMMENT '支付时间',
+  `RefundTime` datetime DEFAULT NULL COMMENT '退款时间',
+  `CreateTime` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`Id`),
   KEY `Idx_CreateTimeStatus` (`CreateTime`,`Status`) USING BTREE,
   KEY `Idx_OrderNo` (`OrderNo`) USING BTREE,

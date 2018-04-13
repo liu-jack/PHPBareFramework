@@ -45,13 +45,14 @@ class Order extends Model
             'Content' => self::VAR_TYPE_STRING,
             'Status' => self::VAR_TYPE_INT,
             'GoodsStatus' => self::VAR_TYPE_INT,
-            'CreateTime' => self::VAR_TYPE_STRING,
-            'UpdateTime' => self::VAR_TYPE_STRING,
             'InviteUserId' => self::VAR_TYPE_INT,
             'Channel' => self::VAR_TYPE_STRING,
             'Coupon' => self::VAR_TYPE_INT,
             'GroupId' => self::VAR_TYPE_INT,
             'AddressId' => self::VAR_TYPE_INT,
+            'PayTime' => self::VAR_TYPE_STRING,
+            'RefundTime' => self::VAR_TYPE_STRING,
+            'CreateTime' => self::VAR_TYPE_STRING,
         ],
         // 可选, MC连接参数
         self::CF_MC => DBConfig::MEMCACHE_DEFAULT,
@@ -158,5 +159,4 @@ class Order extends Model
 
         return self::update($pay_info['Id'], $info);
     }
-
 }

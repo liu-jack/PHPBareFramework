@@ -437,3 +437,36 @@ function dateFormat($datetime, $is_timestamp = false)
 
     return gmdate($dtformat, $timestamp);
 }
+
+/**
+ * 字符串转为id
+ *
+ * @param $str
+ * @return float|int
+ */
+function str2int($str)
+{
+    $hex_str = substr_replace($str, '', 4, 2);
+    $res = base_convert($hex_str, 36, 16);
+
+    return hexdec($res) - pow(10, 11);
+}
+
+/**
+ * id转为字符串
+ *
+ * @param        $id
+ * @param string $key
+ * @return string
+ */
+function int2str($id, $key = 'www.29fh.com')
+{
+    $id = intval(pow(10, 11) + intval($id));
+    $hex_id = dechex($id);
+    $md5 = substr(md5($key . (string)$hex_id), -2);
+    $hex_str = base_convert($hex_id, 16, 36);
+    $hex_len = strlen($hex_str);
+    $res = substr($hex_str, 0, 4) . $md5 . substr($hex_str, -($hex_len - 4));
+
+    return strtoupper($res);
+}

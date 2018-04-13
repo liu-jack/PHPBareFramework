@@ -61,7 +61,13 @@ class test
         //        \Bare\DB::memcache()->flush();
         //        var_dump(GroupBuyList::addMember(1, 2));
         //        pre(GroupBuy::getInfoByIds(1),GroupBuyList::getGroupList(1));
-        pre(GroupBuy::getProductGroup(1));
+        //        pre(GroupBuy::getProductGroup(1));
+        //        $sn = \Model\Payment\Order::generateOrderNo(int2str(1));
+        //                pre(date('YmdHis'), $sn, strlen($sn));
+        //        pre(md5(microtime(true) . md5(microtime(true))));
+        $id = 9393953;//pow(10, 11);
+        $str = int2str($id);
+        pre($id, $str, str2int($str));
 
     }
 }
