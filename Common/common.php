@@ -461,12 +461,12 @@ function str2int($str)
  */
 function int2str($id, $key = 'www.29fh.com')
 {
-    $id = intval(pow(10, 11) + intval($id));
+    $id = pow(10, 11) + intval($id);
     $hex_id = dechex($id);
-    $md5 = substr(md5($key . (string)$hex_id), -2);
+    $md5_str = substr(md5($key . (string)$hex_id), -2);
     $hex_str = base_convert($hex_id, 16, 36);
     $hex_len = strlen($hex_str);
-    $res = substr($hex_str, 0, 4) . $md5 . substr($hex_str, -($hex_len - 4));
+    $res = substr($hex_str, 0, 4) . $md5_str . substr($hex_str, -($hex_len - 4));
 
     return strtoupper($res);
 }

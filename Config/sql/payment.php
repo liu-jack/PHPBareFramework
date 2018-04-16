@@ -17,13 +17,25 @@ CREATE TABLE IF NOT EXISTS `Application` (
   `AppName` varchar(50) NOT NULL DEFAULT '' COMMENT '应用名称',
   `AppDesc` varchar(255) NOT NULL DEFAULT '' COMMENT '应用描述',
   `AppType` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '应用类型',
-  `RsaPublicKey` varchar(255) NOT NULL DEFAULT '' COMMENT 'rsa 公钥 路径',
-  `RsaPrivateKey` varchar(255) NOT NULL DEFAULT '' COMMENT 'rsa秘钥 路径',
-  `RsaType` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT 'rsa 加密类型 1：RSA 2:RSA256',
+  `MerchantId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商户id',
   `UpdateTime` datetime DEFAULT NULL,
   `CreateTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`AppId`)
+  PRIMARY KEY (`AppId`),
+  KEY `Idx_UserId` (`UserId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户应用表';
+EOT
+    ,
+    'create_merchant' => <<<EOT
+CREATE TABLE IF NOT EXISTS `Merchant` (
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '商户id',
+  `UserId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+  `RsaPublicKey` varchar(255) NOT NULL COMMENT 'rsa公钥 路径',
+  `RsaPrivateKey` varchar(255) NOT NULL COMMENT 'rsa私钥 路径',
+  `RsaType` tinyint(4) unsigned NOT NULL DEFAULT '2' COMMENT 'rsa 加密类型 1：RSA 2:RSA256',
+  `UpdateTime` datetime DEFAULT NULL,
+  `CreateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 EOT
     ,
     'create_user' => <<<EOT
