@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `Order` (
   `NotifyUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '通知地址',
   `CreateIp` varchar(50) NOT NULL DEFAULT '' COMMENT 'ip地址',
   `ExpireTime` datetime NOT NULL COMMENT '有效截止日期',
-  `Status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '状态 0：待支付 1：支付成功 2：取消支付 3：已退款',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '状态 0：待支付 1：支付成功 2：取消支付 3:支付失败 4：已退款',
   `NotifyStatus` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '通知状态 0:待通知 1：通知成功 2：通知失败',
   `NotifyTimes` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '通知次数',
   `OrderNo` varchar(64) NOT NULL DEFAULT '' COMMENT '平台订号',

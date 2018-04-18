@@ -119,7 +119,7 @@ class Sql
     public function runPayment($sql)
     {
         if (empty(self::$pdo)) {
-            self::$pdo = DB::pdo(DB::DB_PICTURE_W);
+            self::$pdo = DB::pdo(DB::DB_PAYMENT_W);
         }
 
         return self::$pdo->exec($sql);

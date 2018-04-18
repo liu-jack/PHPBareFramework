@@ -11,6 +11,7 @@
 namespace Controller\Api\Payment;
 
 use Bare\Controller;
+use Classes\Payment\PayUtil;
 
 /**
  * 支付平台相关
@@ -18,14 +19,24 @@ use Bare\Controller;
  * @package    Payment
  * @author     camfee<camfee@foxmail.com>
  * @date       2018-04-13
- * @deprecated since v1.1.0
  *
  */
 class Pay extends Controller
 {
-    public function create()
+    /**
+     *
+     */
+    public function order()
     {
+        $mid = intval($_POST['McId']);
+        $appid = trim($_POST['AppId']);
+        $sign = trim($_POST['sign']);
+        $sign_str = PayUtil::signStr($_POST);
+        if (PayUtil::verify($sign_str, $sign, $mid)) {
 
+        } else {
+            $this->output(255, '签名验证失败');
+        }
     }
 
     public function pay()
@@ -34,6 +45,11 @@ class Pay extends Controller
     }
 
     public function query()
+    {
+
+    }
+
+    public function refund()
     {
 
     }

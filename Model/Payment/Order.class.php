@@ -79,11 +79,12 @@ class Order extends Model
         'OrderNo' => true,
     ];
 
-    // 状态: 0：待支付 1：支付成功 2：取消支付 3：已退款
+    // 状态: 0：待支付 1：支付成功 2：取消支付 3：支付失败 4：已退款
     const STATUS_WAIT = 0;
     const STATUS_SUCCESS = 1;
     const STATUS_CANCELED = 2;
-    const STATUS_REFUND = 3;
+    const STATUS_FAILURE = 3;
+    const STATUS_REFUND = 4;
     //通知状态 0:待通知 1：通知成功 2：通知失败
     const NOTIFY_STATUS_WAIT = 0;
     const GOODS_STATUS_SUCCESS = 1;
