@@ -14,6 +14,8 @@ use Model\Application\Address;
 use Model\Application\GroupBuy;
 use Model\Application\GroupBuyList;
 use Model\Application\Product;
+use Classes\Pay\Pay;
+use Model\Application\Order;
 
 class test
 {
@@ -64,10 +66,22 @@ class test
         //        pre(GroupBuy::getProductGroup(1));
         //        $sn = \Model\Payment\Order::generateOrderNo(int2str(1));
         //                pre(date('YmdHis'), $sn, strlen($sn));
-//                pre(md5(microtime(true) . md5(microtime(true))));
-        $id = 1;//pow(10, 11);
-        $str = int2str($id);
-        pre($id, $str, str2int($str));
+        //                pre(md5(microtime(true) . md5(microtime(true))));
+        //        $id = 1;//pow(10, 11);
+        //        $str = int2str($id);
+        //        pre($id, $str, str2int($str));
+        $config = config('pay/pay');
+        $params = [
+            'app_id' => $config['AppId'],
+            'app_secret' => $config['AppSecret'],
+            'mid' => $config['MchId'],
+            'out_trade_no' => Order::generateOrderNo(Order::PAY_TYPE_PAY, 'default'),
+            'body' => 'test',
+            'total_fee' => 1,
+            'notify_url' => 'zf.bare.com/notify/pay/notify.php',
+            'create_ip' => ip(),
+        ];
+        pre(Pay::unified($params));
 
     }
 }

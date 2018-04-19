@@ -50,4 +50,8 @@ class RedisConst
     const CACHE_DB_W = DBConfig::REDIS_DB_CACHE_W;
     const PASSPORT_INDEX = 0; // 通行证
     const GROUP_BUY_INDEX = 10; // 团购
+    // 支付平台
+    const PAYMENT_DB_R = DBConfig::REDIS_DB_PAYMENT_R;
+    const PAYMENT_DB_W = DBConfig::REDIS_DB_PAYMENT_W;
+    const PAYMENT_INDEX = 0; // 支付平台
 }

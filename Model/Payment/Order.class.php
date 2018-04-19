@@ -10,6 +10,7 @@
 namespace Model\Payment;
 
 use Bare\Model;
+use Common\RedisConst;
 use Config\DBConfig;
 
 class Order extends Model
@@ -54,9 +55,9 @@ class Order extends Model
         self::CF_MC_TIME => 86400,
         // 可选, redis (来自DB配置), w: 写, r: 读
         self::CF_RD => [
-            self::CF_DB_W => '',
-            self::CF_DB_R => '',
-            self::CF_RD_INDEX => 0,
+            self::CF_DB_W => RedisConst::PAYMENT_DB_W,
+            self::CF_DB_R => RedisConst::PAYMENT_DB_R,
+            self::CF_RD_INDEX => RedisConst::PAYMENT_INDEX,
             self::CF_RD_TIME => 86400,
             self::CF_RD_KEY => '', // 可选, redis KEY, "KeyName:%d", %d会用主键ID替代
         ],
@@ -77,6 +78,15 @@ class Order extends Model
         'TotalFee' => true,
         'NotifyUrl' => true,
         'OrderNo' => true,
+    ];
+
+    const UPDATE_DEL_CACHE_LIST = true; // 更新是否清除列表缓存
+    const REDIS_INFO_ORDER_NO = 'REDIS_INFO_ORDER_NO:{OrderNo}';
+    protected static $_cache_list_keys = [
+        self::REDIS_INFO_ORDER_NO => [
+            self::CACHE_LIST_TYPE => self::CACHE_LIST_TYPE_REDIS,
+            self::CACHE_LIST_FIELDS => 'OrderNo',
+        ]
     ];
 
     // 状态: 0：待支付 1：支付成功 2：取消支付 3：支付失败 4：已退款
@@ -111,20 +121,27 @@ class Order extends Model
     }
 
     /**
-     * 通过第三方订单号获取订单详情
+     * 通过平台订单号获取订单详情
      *
      * @param string $sn 支付流水号
      * @return array|bool
      */
     public static function getOrderByNo($sn)
     {
-        return self::getList(['OutTradeNo' => $sn], 0, 1)['data'];
+        $redis_key = str_replace('{OrderNo}', $sn, self::REDIS_INFO_ORDER_NO);
+        $data = self::getRedis(true)->getS($redis_key);
+        if ($data === false) {
+            $data = self::getPdo()->clear()->select('*')->from(self::$_conf[self::CF_TABLE])->where(['OrderNo' => $sn])->limit(1)->getOne();
+            self::getRedis(true)->setS($redis_key, $data, self::$_conf[self::CF_RD][self::CF_RD_TIME]);
+        }
+
+        return $data;
     }
 
     /**
      * 支付成功
      *
-     * @param string $sn 订单流水号
+     * @param string $sn 平台订单号
      * @param        $info
      * @return int
      */

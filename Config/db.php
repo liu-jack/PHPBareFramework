@@ -57,6 +57,10 @@ $config = [
             'cache' => [
                 'w' => ['host' => __REDIS_IP__, 'port' => 6387, 'auth' => ''],
                 'r' => ['host' => __REDIS_IP__, 'port' => 6387, 'auth' => '']
+            ],
+            'payment' => [
+                'w' => ['host' => __REDIS_IP__, 'port' => 6388, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6388, 'auth' => '']
             ]
         ],
         'search' => [
@@ -113,6 +117,10 @@ $config = [
             'cache' => [
                 'w' => ['host' => __REDIS_IP__, 'port' => 6387, 'auth' => ''],
                 'r' => ['host' => __REDIS_IP__, 'port' => 6387, 'auth' => '']
+            ],
+            'payment' => [
+                'w' => ['host' => __REDIS_IP__, 'port' => 6388, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6388, 'auth' => '']
             ]
         ],
         'search' => [
@@ -169,6 +177,10 @@ $config = [
             'cache' => [
                 'w' => ['host' => __REDIS_IP__, 'port' => 6387, 'auth' => ''],
                 'r' => ['host' => __REDIS_IP__, 'port' => 6387, 'auth' => '']
+            ],
+            'payment' => [
+                'w' => ['host' => __REDIS_IP__, 'port' => 6388, 'auth' => ''],
+                'r' => ['host' => __REDIS_IP__, 'port' => 6388, 'auth' => '']
             ]
         ],
         'search' => [

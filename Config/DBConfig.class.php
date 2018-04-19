@@ -101,6 +101,8 @@ class DBConfig
     const REDIS_SYNC_EVENT_W = 15;
     const REDIS_DB_CACHE_R = 16;
     const REDIS_DB_CACHE_W = 17;
+    const REDIS_DB_PAYMENT_R = 18;
+    const REDIS_DB_PAYMENT_W = 19;
 
     protected static $_redis_cfgs = [
         self::REDIS_DEFAULT_R => 'default',
@@ -121,6 +123,8 @@ class DBConfig
         self::REDIS_SYNC_EVENT_W => 'queue',
         self::REDIS_DB_CACHE_R => 'cache',
         self::REDIS_DB_CACHE_W => 'cache',
+        self::REDIS_DB_PAYMENT_R => 'payment',
+        self::REDIS_DB_PAYMENT_W => 'payment',
     ];
 
     /**

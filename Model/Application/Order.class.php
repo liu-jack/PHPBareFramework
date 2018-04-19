@@ -88,12 +88,22 @@ class Order extends Model
         'TotalFee' => true,
     ];
 
-    // 支付类型, 0 appstore, 1 支付宝, 2 微信js 3 微信app 4 微信小程序
+    const UPDATE_DEL_CACHE_LIST = true; // 更新是否清除列表缓存
+    const MC_INFO_ORDER_NO = 'MC_INFO_ORDER_NO:{OrderNo}';
+    protected static $_cache_list_keys = [
+        self::MC_INFO_ORDER_NO => [
+            self::CACHE_LIST_TYPE => self::CACHE_LIST_TYPE_MC,
+            self::CACHE_LIST_FIELDS => 'OrderNo',
+        ]
+    ];
+
+    // 支付类型, 0 appstore, 1 支付宝, 2 微信js 3 微信app 4 微信小程序 5:Pay
     const PAY_TYPE_APP_STORE = 0;
     const PAY_TYPE_ALIPAY = 1;
     const PAY_TYPE_WEIXIN_JS = 2;
     const PAY_TYPE_WEIXIN = 3;
     const PAY_TYPE_WEIXIN_XCX = 4;
+    const PAY_TYPE_PAY = 5;
     // 状态: 0 等待支付, 1 支付中，2 支付成功，3 支付失败，4 取消支付 5:已退款
     const STATUS_WAIT = 0;
     const STATUS_PAYING = 1;
@@ -108,21 +118,20 @@ class Order extends Model
     const GOODS_STATUS_REFUND = 3;
 
     /**
-     * 生成支付流水号, appid(2) + $pay_type(1) + channel(6) + yymmddHHMMSSssssss(18) + rand_number
+     * 生成支付流水号, $pay_type(1) + channel(8) + yymmddHHMMSSssssss(18) + rand_number
      *
-     * @param int    $app_id   应用id
      * @param int    $pay_type 支付类型
      * @param string $channel  渠道号
      * @return string
      */
-    public static function generateOrderNo($app_id, $pay_type, $channel)
+    public static function generateOrderNo($pay_type, $channel)
     {
-        if (strlen($channel) > 6) {
-            $channel = substr($channel, 0, 6);
+        if (strlen($channel) > 8) {
+            $channel = substr($channel, 0, 8);
         }
         $us_str = sprintf('%f', microtime(true));
         $arr = explode('.', $us_str);
-        $sn = sprintf("%d%d%s%s%d", $app_id, $pay_type, $channel, date('ymdHis'), $arr[1]);
+        $sn = sprintf("%d%s%s%d", $pay_type, $channel, date('YmdHis'), $arr[1]);
         $l = 32 - strlen($sn);
         if ($l > 0) {
             $num = rand(pow(10, $l - 1), pow(10, $l) - 1);
@@ -140,7 +149,14 @@ class Order extends Model
      */
     public static function getOrderByNo($sn)
     {
-        return self::getList(['OrderNo' => $sn], 0, 1)['data'];
+        $mc_key = str_replace('{OrderNo}', $sn, self::MC_INFO_ORDER_NO);
+        $data = self::getMC()->get($mc_key);
+        if ($data === false) {
+            $data = self::getPdo()->clear()->select('*')->from(self::$_conf[self::CF_TABLE])->where(['OrderNo' => $sn])->limit(1)->getOne();
+            self::getMC()->set($mc_key, $data, self::$_conf[self::CF_MC_TIME]);
+        }
+
+        return $data;
     }
 
     /**

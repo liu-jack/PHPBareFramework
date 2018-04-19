@@ -274,6 +274,7 @@ class Bare
         $GLOBALS[G_APP_TYPE] = $app_type;
         $GLOBALS[G_VER] = $ver;
         $GLOBALS[G_DEVICE_ID] = $deviceid;
+        $GLOBALS[G_CHANNEL] = $channel;
 
         // 本地环境特殊处理
         if (defined("__ENV__")) {

@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS `Order` (
   `RefundTime` datetime DEFAULT NULL COMMENT '退款时间',
   `CreateTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`Id`),
-  KEY `Idx_Appid` (`Appid`) USING BTREE,
-  KEY `Idx_OutTradeNo` (`OutTradeNo`) USING BTREE,
+  UNIQUE KEY `Idx_OrderNo` (`OrderNo`) USING BTREE,
+  KEY `Idx_Appid` (`AppId`) USING BTREE,
   KEY `Idx_Status` (`Status`,`NotifyStatus`,`NotifyTimes`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';
 EOT

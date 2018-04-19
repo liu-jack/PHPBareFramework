@@ -16,12 +16,12 @@ class Api
     public static $appid = 10;
     //apptype 0:web 1:wap 2:android 3:ios 4:xcx
     public static $apptype = 0;
-    // 接口版本
-    public static $verid;
     // 渠道来源
     public static $channel = 'default';
     // 设备id
     public static $deviceid = 0;
+    // 接口版本
+    public static $verid;
     // 接口appkey
     protected static $appkey;
     // rsa公钥

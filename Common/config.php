@@ -35,6 +35,7 @@ define('G_TYPES', 'g_app_types');
 define('G_APP_ID', 'g_appid');
 define('G_APP_TYPE', 'g_apptype');
 define('G_VER', 'g_ver');
+define('G_CHANNEL', 'g_channel');
 define('G_DEVICE_ID', 'g_deviceid');
 
 $GLOBALS[G_TYPES] = [

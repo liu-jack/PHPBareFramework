@@ -15,20 +15,23 @@ class PayUtil
     /**
      * 生成预签名字符串
      *
-     * @param $params
+     * @param        $params
      * @return string
      */
-    public static function signStr($params)
+    public static function signStr(&$params)
     {
-        ksort($params);
-        unset($params['sign']);
-        foreach ($params as $k => $v) {
+        $data = $params;
+        ksort($data);
+        unset($data['sign']);
+        foreach ($data as $k => $v) {
             if ($v === '') {
-                unset($params[$k]);
+                unset($data[$k]);
             }
         }
+        $sign_str = md5(http_build_query($data));
+        unset($params['app_secret']);
 
-        return http_build_query($params);
+        return $sign_str;
     }
 
     /**

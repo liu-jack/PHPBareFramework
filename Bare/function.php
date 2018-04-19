@@ -461,7 +461,7 @@ function ip()
         }
     }
     if (!preg_match('/[\d\.]{7,15}/', $ip)) {
-        $ip = '0.0.0.0';
+        $ip = '';
     }
 
     return $ip;
