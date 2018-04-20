@@ -102,7 +102,7 @@ class Pay extends Controller
 
     public function pay()
     {
-        $uid = self::isLogin(V_API);
+        $uid = self::isLogin();
         $mid = intval($_POST['mid']);
         $app_id = trim($_POST['app_id']);
         $sign = trim($_POST['sign']);

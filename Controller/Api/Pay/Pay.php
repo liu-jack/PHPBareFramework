@@ -61,7 +61,7 @@ class Pay extends Controller
      */
     public function order()
     {
-        $uid = $this->isLogin(V_API);
+        $uid = $this->isLogin();
         $pid = intval($_POST['product_id']);
         $gid = intval($_POST['group_id']);
         $aid = intval($_POST['address_id']);
@@ -140,7 +140,7 @@ class Pay extends Controller
      */
     public function query()
     {
-        $uid = $this->isLogin(V_API);
+        $uid = $this->isLogin();
         $sn = trim($_GET['sn']);
         $order_info = Order::getOrderByNo($sn);
         if (empty($order_info) || $order_info['UserId'] != $uid) {
@@ -184,7 +184,7 @@ class Pay extends Controller
      */
     public function refund()
     {
-        $uid = $this->isLogin(V_API);
+        $uid = $this->isLogin();
         $sn = trim($_GET['sn']);
         $order_info = Order::getOrderByNo($sn);
         if (empty($order_info) || $order_info['UserId'] != $uid) {

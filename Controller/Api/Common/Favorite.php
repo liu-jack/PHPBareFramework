@@ -57,7 +57,7 @@ class Favorite extends Controller
      */
     public function add()
     {
-        $uid = $this->isLogin(V_API, true);
+        $uid = $this->isLogin(true);
         $type = (int)$_POST['type'];
         $itemid = (int)$_POST['itemid'];
 
@@ -126,7 +126,7 @@ class Favorite extends Controller
      */
     public function remove()
     {
-        $uid = $this->isLogin(V_API, true);
+        $uid = $this->isLogin(true);
         $type = (int)$_POST['type'];
         $itemid = (int)$_POST['itemid'];
 

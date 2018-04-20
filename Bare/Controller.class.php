@@ -154,13 +154,24 @@ EOT;
     }
 
     /**
-     * 登录状态验证
+     * 是否登录 接口使用
      *
-     * @param int  $type 0:web/wap 1:api 2:admin 详见 V_*
-     * @param bool $auto 接口未登录是否退出程序
+     * @param bool $break
      * @return int
      */
-    public static function isLogin($type = V_API, $auto = true)
+    public static function isLogin($break = true)
+    {
+        return self::checkLogin(V_API, $break);
+    }
+
+    /**
+     * 登录状态验证
+     *
+     * @param int  $type  0:web/wap V_WEB 1:api V_API 2:admin V_ADMIN
+     * @param bool $break 接口未登录是否退出程序
+     * @return int
+     */
+    public static function checkLogin($type = V_WEB, $break = false)
     {
         switch ($type) {
             case V_WEB:  // 网站登录验证
@@ -197,7 +208,7 @@ EOT;
 
                 fail:
                 unset($_SESSION['uid']);
-                if ($auto) {
+                if ($break) {
                     self::output($code, $msg);
                 } else {
                     return false;

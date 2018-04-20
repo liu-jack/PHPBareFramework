@@ -122,7 +122,7 @@ class Index extends Controller
         $brkey = sprintf(self::CK_BOOK_RECOMMEND, $bid);
         $isrec = !empty($_COOKIE[$brkey]) ? $_COOKIE[$brkey] : 0;
         $isfav = 0;
-        if ($uid = $this->isLogin(V_WEB)) {
+        if ($uid = $this->checkLogin()) {
             if (BookFavorite::isFavorite($uid, $bid)) {
                 $isfav = 1;
             }
@@ -170,7 +170,7 @@ class Index extends Controller
         // 记录章节阅读历史
         $ckey = sprintf(self::CK_READ_RECORD, $fid, $bid);
         setcookie($ckey, $cid, time() + self::CK_TIME, '/');
-        if ($uid = $this->isLogin(V_WEB)) {
+        if ($uid = $this->checkLogin()) {
             Column::setReadRecord($uid, $fid, $bid, $cid);
             if (preg_match('#/[\d]+_[\d]+(\.html)?$#isU', $_SERVER['HTTP_REFERER'])) {
                 UserData::userReadBook($uid, $bid); // 记录书本阅读历史
@@ -255,7 +255,7 @@ class Index extends Controller
      */
     public function shelf()
     {
-        $uid = $this->isLogin(V_WEB);
+        $uid = $this->checkLogin();
         if (empty($uid)) {
             redirect(url('account/user/login', '', true));
         }
@@ -295,7 +295,7 @@ class Index extends Controller
      */
     public function history()
     {
-        $uid = $this->isLogin(V_WEB);
+        $uid = $this->checkLogin();
         if (empty($uid)) {
             redirect(url('account/user/login', '', true));
         }
@@ -342,7 +342,7 @@ class Index extends Controller
      */
     public function favorite()
     {
-        $uid = $this->isLogin(V_WEB);
+        $uid = $this->checkLogin();
         if (empty($uid)) {
             output(551, ['url' => url('account/user/login')]);
         }
