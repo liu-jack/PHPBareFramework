@@ -34,6 +34,7 @@ class User extends Model
             'HeadUrl' => self::VAR_TYPE_STRING,
             'RealName' => self::VAR_TYPE_STRING,
             'Balance' => self::VAR_TYPE_INT,
+            'PayPassword' => self::VAR_TYPE_PASSWORD,
             'UpdateTime' => self::VAR_TYPE_STRING,
             'CreateTime' => self::VAR_TYPE_STRING,
         ],
@@ -60,4 +61,16 @@ class User extends Model
      * @see \Bare\Model::getList() 条件查询
      * @see \Bare\Model::delete() 删除
      */
+
+    /**
+     * 用户余额更改
+     *
+     * @param $uid
+     * @param $num
+     * @return bool
+     */
+    public static function updateBalance($uid, $num)
+    {
+        return self::update($uid, ['Balance' => ['Balance', '+' . $num]]);
+    }
 }

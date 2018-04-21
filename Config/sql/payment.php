@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `User` (
   `HeadUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
   `RealName` varchar(20) NOT NULL DEFAULT '' COMMENT '姓名',
   `Balance` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '余额',
+  `PayPassword` varchar(255) NOT NULL DEFAULT '' COMMENT '支付密码',
   `UpdateTime` datetime DEFAULT NULL COMMENT '更新时间',
   `CreateTime` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`UserId`)
@@ -54,6 +55,7 @@ EOT
     'create_order' => <<<EOT
 CREATE TABLE IF NOT EXISTS `Order` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `UserId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `AppId` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '应用id',
   `OutTradeNo` varchar(64) NOT NULL DEFAULT '' COMMENT '商户生成订单号',
   `Body` varchar(255) NOT NULL DEFAULT '' COMMENT '主体信息',

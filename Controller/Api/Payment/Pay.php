@@ -11,9 +11,13 @@
 namespace Controller\Api\Payment;
 
 use Bare\Controller;
+use Classes\Encrypt\Rsa;
 use Classes\Payment\PayUtil;
+use Model\Passport\Login;
 use Model\Payment\Application;
+use Model\Payment\Merchant;
 use Model\Payment\Order;
+use Model\Payment\User;
 
 /**
  * 支付平台相关
@@ -107,14 +111,31 @@ class Pay extends Controller
         $app_id = trim($_POST['app_id']);
         $sign = trim($_POST['sign']);
         $app_id = str2int($app_id);
+        $order_no = trim($_POST['order_no']);
+        $pwd = trim($_POST['pwd']);
         $app_info = Application::getInfoByIds($app_id);
         if (empty($app_info)) {
             $this->output(251, 'appid 错误');
+        }
+        $order_info = Order::getOrderByNo($order_no);
+        if (empty($order_info)) {
+            $this->output(252, '订单号错误');
         }
         $params = $_POST;
         $params['app_secret'] = $app_info['AppSecret'];
         $sign_str = PayUtil::signStr($params);
         if (PayUtil::verify($sign_str, $sign, $mid)) {
+            $merchant = Merchant::getInfoByIds($mid);
+            $rsa_key = file_get_contents(DATA_PATH . $merchant['RsaPrivateKey']);
+            $pwd = Rsa::private_decode($pwd, $rsa_key);
+            if (empty($pwd)) {
+                $this->output(253, '密码校验失败,请检查手机时间设置');
+            }
+            $userinfo = User::getInfoByIds($uid);
+            if (!password_verify($pwd, $userinfo['Password'])) {
+                $this->output(254, '支付密码不正确');
+            }
+
             $this->output();
         } else {
             $this->output(255, '签名验证失败');
@@ -245,10 +266,17 @@ class Pay extends Controller
         if (empty($order_info)) {
             $this->output(252, '订单号错误');
         }
+        if (empty($order_info['Status'] != Order::STATUS_SUCCESS)) {
+            $this->output(253, '订单未支付');
+        }
         $params = $_POST;
         $params['app_secret'] = $app_info['AppSecret'];
         $sign_str = PayUtil::signStr($params);
         if (PayUtil::verify($sign_str, $sign, $mid)) {
+            $res = Order::refund($order_info);
+            if ($res === false) {
+                $this->output(254, '退款失败');
+            }
             $this->output();
         } else {
             $this->output(255, '签名验证失败');

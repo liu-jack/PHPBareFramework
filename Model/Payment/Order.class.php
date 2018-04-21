@@ -31,6 +31,7 @@ class Order extends Model
         // 必选, 字段信息
         self::CF_FIELDS => [
             'Id' => self::VAR_TYPE_KEY,
+            'UserId' => self::VAR_TYPE_INT,
             'AppId' => self::VAR_TYPE_INT,
             'OutTradeNo' => self::VAR_TYPE_STRING,
             'Body' => self::VAR_TYPE_STRING,
@@ -139,19 +140,59 @@ class Order extends Model
     }
 
     /**
-     * 支付成功
+     * 订单支付
      *
-     * @param string $sn 平台订单号
-     * @param        $info
-     * @return int
+     * @param $order
+     * @return bool
      */
-    public static function paySuccess($sn, $info)
+    public static function pay($order)
     {
-        $pay_info = self::getOrderByNo($sn);
-        if (empty($pay_info)) {
+        if ($order['Status'] != self::STATUS_WAIT) {
             return false;
         }
+    }
 
-        return self::update($pay_info['Id'], $info);
+    /**
+     * 订单退款
+     *
+     * @param $order
+     * @return bool
+     */
+    public static function refund($order)
+    {
+        if ($order['Status'] != self::STATUS_SUCCESS || empty($order['UserId'])) {
+            return false;
+        }
+        $app_info = Application::getInfoByIds($order['AppId']);
+        $ret = User::updateBalance($app_info['UserId'], -$order['TotalFee']);
+        if ($ret === false) {
+            $log = [
+                'order_id' => $order['Id'],
+                'msg' => 'update merchant balance err'
+            ];
+            logs($log, 'Payment/Order/refund_err');
+
+            return false;
+        }
+        $res = User::updateBalance($order['UserId'], $order['TotalFee']);
+        if ($res === false) {
+            $log = [
+                'order_id' => $order['Id'],
+                'msg' => 'update user balance err'
+            ];
+            logs($log, 'Payment/Order/refund_err');
+
+            return false;
+        }
+        $r = self::update($order['Id'], ['Status' => self::STATUS_REFUND]);
+        if ($r === false) {
+            $log = [
+                'order_id' => $order['Id'],
+                'msg' => 'update order status err'
+            ];
+            logs($log, 'Payment/Order/refund_err');
+        }
+
+        return true;
     }
 }
