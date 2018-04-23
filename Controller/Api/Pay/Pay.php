@@ -122,16 +122,7 @@ class Pay extends Controller
      * <pre>
      * {
      *     "Code": 200,
-     *     "Data": {
-     *         "OutTradeNo": "5default201804191715078214696784", // 商户订单号
-     *         "Body": "test1",
-     *         "TotalFee": "1",
-     *         "ExpireTime": "2018-04-20 01:15:07",
-     *         "Status": "0", // 订单状态 0：待支付 1：支付成功 2：取消支付 3:支付失败 4：已退款
-     *         "OrderNo": "19XTC6F1TT2018041917150782919006", // 平台订单号
-     *         "PayTime": "",
-     *         "CreateTime": "2018-04-19 17:15:07"
-     *     }
+     *     "Data": {}
      * }
      * 异常状态：
      * 201：参数错误
@@ -146,19 +137,31 @@ class Pay extends Controller
         if (empty($order_info) || $order_info['UserId'] != $uid) {
             $this->output(201, '参数错误');
         }
-        $config = config('pay/pay');
-        $params = [
-            'app_id' => $config['AppId'],
-            'app_secret' => $config['AppSecret'],
-            'mid' => $config['MchId'],
-            'order_no' => $order_info['TradeNo'],
-        ];
-        $res = MPay::query($params);
-        if (!empty($res['OrderNo'])) {
-            $this->output(200, $res);
-        } else {
-            $this->output(202, '订单不存在' . $res['msg']);
+        if ($order_info['Status'] == Order::STATUS_SUCCESS) {
+            $this->output(200);
+        } elseif (in_array($order_info['Status'], [Order::STATUS_WAIT, Order::STATUS_PAYING])) {
+            $config = config('pay/pay');
+            $params = [
+                'app_id' => $config['AppId'],
+                'app_secret' => $config['AppSecret'],
+                'mid' => $config['MchId'],
+                'order_no' => $order_info['TradeNo'],
+            ];
+            $res = MPay::query($params);
+            if (!empty($res['OrderNo'])) {
+                $update = [
+                    'ThirdNo' => $res['OrderNo'],
+                    'Status' => Order::STATUS_SUCCESS,
+                    'PayTime' => date('Y-m-d H:i:s'),
+                    'Content' => $res,
+                ];
+                Order::paySuccess($sn, $update);
+                $this->output(200);
+            } else {
+                $this->output(202, '订单不存在' . $res['msg']);
+            }
         }
+
     }
 
     /**

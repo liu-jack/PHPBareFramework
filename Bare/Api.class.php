@@ -78,21 +78,7 @@ class Api
     public static function request($url, $data = [], $timeout = 15)
     {
         $time_start = microtime(true);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // stop verifying certificate
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if (!empty($data['header'])) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $data['header']); // 加入header
-            unset($data['header']);
-        }
-        if (!empty($data)) {
-            curl_setopt($ch, CURLOPT_POST, true); // enable posting
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data); // post files
-        }
-        $res = curl_exec($ch);
-        curl_close($ch);
+        $res = self::httpPost($url, $data, $timeout);
         $res = json_decode($res, true);
         if (empty($res['Code']) || !is_array($res)) {
             $log['url'] = $url;
@@ -121,6 +107,35 @@ class Api
         }
 
         return self::checkRes($res);
+    }
+
+    /**
+     * http请求
+     *
+     * @param       $url
+     * @param array $post
+     * @param int   $timeout
+     * @return mixed
+     */
+    public static function httpPost($url, $post = [], $timeout = 15)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // stop verifying certificate
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if (!empty($post['header'])) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $post['header']); // 加入header
+            unset($post['header']);
+        }
+        if (!empty($post)) {
+            curl_setopt($ch, CURLOPT_POST, true); // enable posting
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post); // post files
+        }
+        $res = curl_exec($ch);
+        curl_close($ch);
+
+        return $res;
     }
 
     /**

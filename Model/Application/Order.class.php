@@ -42,7 +42,7 @@ class Order extends Model
             'TradeNo' => self::VAR_TYPE_STRING,
             'TotalFee' => self::VAR_TYPE_INT,
             'ThirdNo' => self::VAR_TYPE_STRING,
-            'Content' => self::VAR_TYPE_STRING,
+            'Content' => self::VAR_TYPE_ARRAY,
             'Status' => self::VAR_TYPE_INT,
             'GoodsStatus' => self::VAR_TYPE_INT,
             'InviteUserId' => self::VAR_TYPE_INT,
@@ -104,10 +104,10 @@ class Order extends Model
     const PAY_TYPE_WEIXIN = 3;
     const PAY_TYPE_WEIXIN_XCX = 4;
     const PAY_TYPE_PAY = 5;
-    // 状态: 0 等待支付, 1 支付中，2 支付成功，3 支付失败，4 取消支付 5:已退款
+    // 状态: 0 等待支付, 1 支付成功， 2 支付中，3 支付失败，4 取消支付 5:已退款
     const STATUS_WAIT = 0;
-    const STATUS_PAYING = 1;
-    const STATUS_SUCCESS = 2;
+    const STATUS_SUCCESS = 1;
+    const STATUS_PAYING = 2;
     const STATUS_FAILURE = 3;
     const STATUS_CANCELED = 4;
     const STATUS_REFUND = 5;

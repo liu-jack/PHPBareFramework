@@ -12,7 +12,7 @@ define('CONFIG_PATH', ROOT_PATH . 'Config/');
 define('COMMON_PATH', ROOT_PATH . 'Common/');
 define('QUEUE_PATH', ROOT_PATH . 'Queue/');
 define('DATA_PATH', ROOT_PATH . 'Data/');
-define('LOG_PATH', DATA_PATH . 'log/');
+define('LOG_PATH', DATA_PATH . 'logs/');
 define('FONT_PATH', DATA_PATH . 'font/');
 define('CACHE_PATH', DATA_PATH . 'cache/');
 define('TEMP_PATH', DATA_PATH . 'temp/');

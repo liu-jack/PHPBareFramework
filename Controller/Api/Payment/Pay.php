@@ -29,6 +29,8 @@ use Model\Payment\User;
  */
 class Pay extends Controller
 {
+    const ERR_LOG_ORDER = 'Api/Payment/Pay/order_err'; // 下单错误日志
+
     /**
      * 下单
      *
@@ -57,7 +59,7 @@ class Pay extends Controller
      * 250：参数错误
      * 251：appid错误
      * 254：下单失败
-     * 255：签名验证失败
+     * 290：签名验证失败
      * </pre>
      */
     public function order()
@@ -94,51 +96,53 @@ class Pay extends Controller
             ];
             $ret = Order::add($add);
             if ($ret === false) {
-                logs($add, 'Api/Payment/Pay_Err');
+                logs($add, self::ERR_LOG_ORDER);
                 $this->output(254, '下单失败');
             } else {
                 $this->output(200, ['OrderNo' => $sn]);
             }
         } else {
-            $this->output(255, '签名验证失败');
+            $this->output(290, '签名验证失败');
         }
     }
 
     public function pay()
     {
         $uid = self::isLogin();
-        $mid = intval($_POST['mid']);
-        $app_id = trim($_POST['app_id']);
         $sign = trim($_POST['sign']);
-        $app_id = str2int($app_id);
         $order_no = trim($_POST['order_no']);
         $pwd = trim($_POST['pwd']);
-        $app_info = Application::getInfoByIds($app_id);
-        if (empty($app_info)) {
-            $this->output(251, 'appid 错误');
-        }
         $order_info = Order::getOrderByNo($order_no);
         if (empty($order_info)) {
-            $this->output(252, '订单号错误');
+            $this->output(251, '订单号错误');
         }
+        if ($order_info['Status'] == Order::STATUS_SUCCESS) {
+            $this->output();
+        }
+        $app_info = Application::getInfoByIds($order_info['AppId']);
+        $mid = $app_info['MerchantId'];
         $params = $_POST;
-        $params['app_secret'] = $app_info['AppSecret'];
         $sign_str = PayUtil::signStr($params);
         if (PayUtil::verify($sign_str, $sign, $mid)) {
-            $merchant = Merchant::getInfoByIds($mid);
-            $rsa_key = file_get_contents(DATA_PATH . $merchant['RsaPrivateKey']);
+            $rsa_key = file_get_contents(DATA_PATH . 'rsa/payment.pem');
             $pwd = Rsa::private_decode($pwd, $rsa_key);
             if (empty($pwd)) {
-                $this->output(253, '密码校验失败,请检查手机时间设置');
+                $this->output(252, '密码校验失败');
             }
             $userinfo = User::getInfoByIds($uid);
-            if (!password_verify($pwd, $userinfo['Password'])) {
-                $this->output(254, '支付密码不正确');
+            debug_log($pwd);
+            if (!password_verify($pwd, $userinfo['PayPassword'])) {
+                $this->output(253, '支付密码不正确');
             }
-
+            $order_info['UserId'] = $uid;
+            $ret = Order::pay($order_info);
+            if ($ret === false) {
+                $this->output(254, '支付失败');
+            }
+            Order::notify($order_no);
             $this->output();
         } else {
-            $this->output(255, '签名验证失败');
+            $this->output(290, '签名验证失败');
         }
     }
 
@@ -173,7 +177,7 @@ class Pay extends Controller
      * 250：参数错误
      * 251：appid错误
      * 252：订单号错误
-     * 255：签名验证失败
+     * 290：签名验证失败
      * </pre>
      */
     public function query()
@@ -210,7 +214,7 @@ class Pay extends Controller
             ];
             $this->output(200, $data);
         } else {
-            $this->output(255, '签名验证失败');
+            $this->output(290, '签名验证失败');
         }
     }
 
@@ -245,7 +249,7 @@ class Pay extends Controller
      * 250：参数错误
      * 251：appid错误
      * 252：订单号错误
-     * 255：签名验证失败
+     * 290：签名验证失败
      * </pre>
      */
     public function refund()
@@ -279,7 +283,7 @@ class Pay extends Controller
             }
             $this->output();
         } else {
-            $this->output(255, '签名验证失败');
+            $this->output(290, '签名验证失败');
         }
     }
 }

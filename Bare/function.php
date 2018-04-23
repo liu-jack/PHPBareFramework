@@ -380,7 +380,7 @@ function logs($content, $name = '', $log_path = LOG_PATH)
                     $v = serialize($v);
                 }
                 if (!is_numeric($k)) {
-                    $v .= $k . ': ' . $v;
+                    $v = $k . ': ' . $v;
                 }
             }
         } else {

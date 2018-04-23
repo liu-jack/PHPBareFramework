@@ -9,12 +9,16 @@
 
 namespace Model\Payment;
 
+use Bare\Api;
 use Bare\Model;
+use Classes\Payment\PayUtil;
 use Common\RedisConst;
 use Config\DBConfig;
 
 class Order extends Model
 {
+    const ERR_LOG_PAY = 'Payment/Order/pay_err'; // 支付错误日志
+    const ERR_LOG_REFUND = 'Payment/Order/refund_err'; // 退款错误日志
     /**
      * 基础配置文件
      *
@@ -98,8 +102,8 @@ class Order extends Model
     const STATUS_REFUND = 4;
     //通知状态 0:待通知 1：通知成功 2：通知失败
     const NOTIFY_STATUS_WAIT = 0;
-    const GOODS_STATUS_SUCCESS = 1;
-    const GOODS_STATUS_FAILURE = 2;
+    const NOTIFY_STATUS_SUCCESS = 1;
+    const NOTIFY_STATUS_FAILURE = 2;
 
     /**
      * 生成支付流水号, appid(10) + yyyymmddHHMMSSssss(18) + rand_number
@@ -147,9 +151,95 @@ class Order extends Model
      */
     public static function pay($order)
     {
+        if ($order['Status'] === self::STATUS_SUCCESS) {
+            return true;
+        }
         if ($order['Status'] != self::STATUS_WAIT) {
             return false;
         }
+        $res = User::updateBalance($order['UserId'], -$order['TotalFee']);
+        if ($res === false) {
+            $log = [
+                'order_id' => $order['Id'],
+                'msg' => 'update user balance err'
+            ];
+            logs($log, self::ERR_LOG_PAY);
+
+            return false;
+        }
+        $app_info = Application::getInfoByIds($order['AppId']);
+        $ret = User::updateBalance($app_info['UserId'], +$order['TotalFee']);
+        if ($ret === false) {
+            $log = [
+                'order_id' => $order['Id'],
+                'msg' => 'update merchant balance err'
+            ];
+            logs($log, self::ERR_LOG_PAY);
+
+            return false;
+        }
+        $update = [
+            'Status' => self::STATUS_SUCCESS,
+            'UserId' => $order['UserId'],
+            'PayTime' => date('Y-m-d H:i:s')
+        ];
+        $r = self::update($order['Id'], $update);
+        if ($r === false) {
+            $log = [
+                'order_id' => $order['Id'],
+                'msg' => 'update order status err'
+            ];
+            logs($log, self::ERR_LOG_PAY);
+        }
+
+        return true;
+    }
+
+    /**
+     * 支付通知
+     *
+     * @param $sn
+     * @return bool
+     */
+    public static function notify($sn)
+    {
+        $order = self::getOrderByNo($sn);
+        if ($order['NotifyStatus'] == self::NOTIFY_STATUS_SUCCESS) {
+            return true;
+        }
+        if ($order['Status'] != self::STATUS_SUCCESS) {
+            return false;
+        }
+        $app_id = $order['AppId'];
+        $app_info = Application::getInfoByIds($app_id);
+        $mid = $app_info['MerchantId'];
+        $post = [
+            'app_secret' => $app_info['AppSecret'],
+            'OutTradeNo' => $order['OutTradeNo'],
+            'TotalFee' => $order['TotalFee'],
+            'OrderNo' => $order['OrderNo'],
+            'Status' => $order['Status'],
+            'PayTime' => $order['PayTime'],
+        ];
+        $sign_str = PayUtil::signStr($post);
+        $post['sign'] = PayUtil::sign($sign_str, $mid);
+        $ret = Api::httpPost($order['NotifyUrl'], $post);
+
+        if (strtoupper($ret) === 'SUCCESS') {
+            $update = [
+                'NotifyStatus' => self::NOTIFY_STATUS_SUCCESS,
+                'NotifyTime' => date('Y-m-d H:i:s'),
+                'NotifyTimes' => ['NotifyTimes', '+1'],
+            ];
+        } else {
+            $update = [
+                'NotifyStatus' => self::NOTIFY_STATUS_FAILURE,
+                'NotifyTime' => date('Y-m-d H:i:s'),
+                'NotifyTimes' => ['NotifyTimes', '+1'],
+            ];
+        }
+
+        return self::update($order['Id'], $update);
     }
 
     /**
@@ -170,7 +260,7 @@ class Order extends Model
                 'order_id' => $order['Id'],
                 'msg' => 'update merchant balance err'
             ];
-            logs($log, 'Payment/Order/refund_err');
+            logs($log, self::ERR_LOG_REFUND);
 
             return false;
         }
@@ -180,17 +270,21 @@ class Order extends Model
                 'order_id' => $order['Id'],
                 'msg' => 'update user balance err'
             ];
-            logs($log, 'Payment/Order/refund_err');
+            logs($log, self::ERR_LOG_REFUND);
 
             return false;
         }
-        $r = self::update($order['Id'], ['Status' => self::STATUS_REFUND]);
+        $update = [
+            'Status' => self::STATUS_REFUND,
+            'RefundTime' => date('Y-m-d H:i:s')
+        ];
+        $r = self::update($order['Id'], $update);
         if ($r === false) {
             $log = [
                 'order_id' => $order['Id'],
                 'msg' => 'update order status err'
             ];
-            logs($log, 'Payment/Order/refund_err');
+            logs($log, self::ERR_LOG_REFUND);
         }
 
         return true;

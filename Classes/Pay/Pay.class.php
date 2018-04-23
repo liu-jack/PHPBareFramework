@@ -9,6 +9,7 @@
 namespace Classes\Pay;
 
 use Bare\Api;
+use Classes\Encrypt\Rsa;
 
 class Pay extends Api
 {
@@ -53,17 +54,16 @@ class Pay extends Api
     public static function pay($params, $auth)
     {
         $required_fields = [
-            'app_id' => true,
-            'mid' => true,
             'order_no' => true,
-            'body' => true,
-            'total_fee' => true,
-            'notify_url' => true,
-            'sign' => true,
+            'pwd' => true,
         ];
         if (count(array_diff_key($required_fields, $params)) > 0) {
             return false;
         }
+        $pub_key = config('payment/pay')['RsaPublicKey'];
+        $params['pwd'] = Rsa::public_encode($params['pwd'], $pub_key);
+        $sign_str = self::signStr($params);
+        $params['sign'] = self::sign($sign_str);
         $post = $params;
         $url = self::getUrl('Payment/Pay/pay');
         $post['header'] = [
@@ -139,6 +139,7 @@ class Pay extends Api
             'app_id' => $config['AppId'], // APP ID
             'app_secret' => $config['AppSecret'], // APP SECRET
             'mid' => $config['MchId'], // 商户ID
+            'out_trade_no' => $param['out_trade_no'], // 支付平台订单号
             'order_no' => $param['order_no'], // 支付平台订单号
             'body' => $param['body'], // 商品的自定义名称
             'total_fee' => $param['total_fee'], // 商品金额

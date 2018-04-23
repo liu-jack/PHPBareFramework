@@ -70,19 +70,32 @@ class test
         //        $id = 1;//pow(10, 11);
         //        $str = int2str($id);
         //        pre($id, $str, str2int($str));
-//        $config = config('pay/pay');
-//        $params = [
-//            'app_id' => $config['AppId'],
-//            'app_secret' => $config['AppSecret'],
-//            'mid' => $config['MchId'],
-//            'out_trade_no' => Order::generateOrderNo(Order::PAY_TYPE_PAY, 'default'),
-//            'body' => 'test',
-//            'total_fee' => 1,
-//            'notify_url' => 'zf.bare.com/notify/pay/notify.php',
-//            'create_ip' => ip(),
-//        ];
-//        pre(Pay::unified($params));
-
+        //        $config = config('pay/pay');
+        //        $params = [
+        //            'app_id' => $config['AppId'],
+        //            'app_secret' => $config['AppSecret'],
+        //            'mid' => $config['MchId'],
+        //            'out_trade_no' => Order::generateOrderNo(Order::PAY_TYPE_PAY, 'default'),
+        //            'body' => 'test',
+        //            'total_fee' => 1,
+        //            'notify_url' => 'zf.bare.com/notify/pay/notify.php',
+        //            'create_ip' => ip(),
+        //        ];
+        //        pre(Pay::unified($params));
+        //        $puser = [
+        //            'UserId' => 2,
+        //            'UserNick' => 'test2',
+        //            'RealName' => 'camfee',
+        //            'Balance' => 99999,
+        //            'PayPassword' => 123456
+        //        ];
+        //        var_dump(\Model\Payment\User::add($puser));
+        $p_pay = [
+            'order_no' => '19XTC6F1TT2018042314124061375043',
+            'pwd' => '123456',
+        ];
+        $auth = 'ce2829e83efd946613bb0c870f5b99449946cad5a3eeb174';
+        var_dump(Classes\Pay\Pay::pay($p_pay, $auth));
     }
 }
 
