@@ -49,7 +49,7 @@ class RedisQueue
         try {
             return $this->_redis->rPush($this->_queueName, serialize($data));
         } catch (\Exception $exception) {
-            debug_log($exception, JF_LOG_ERROR);
+            debug_log($exception);
 
             return false;
         }
@@ -88,7 +88,7 @@ class RedisQueue
 
             return $ret;
         } catch (\Exception $exception) {
-            debug_log($exception, JF_LOG_ERROR);
+            debug_log($exception);
 
             return false;
         }
