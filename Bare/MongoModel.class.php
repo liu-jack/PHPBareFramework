@@ -9,6 +9,8 @@
 
 namespace Bare;
 
+use MongoDB\BSON\ObjectID;
+
 class MongoModel
 {
     // 库名 继承修改
@@ -320,6 +322,45 @@ class MongoModel
         ], $options);
 
         return is_array($ret) ? $ret : [];
+    }
+
+    /**
+     * 根据id获取详细数据
+     *
+     * @param $id
+     * @return array|bool|null|object
+     */
+    public function getInfoById($id)
+    {
+        $ret = static::findOneData([
+            '_id' => new ObjectID($id)
+        ]);
+
+        return $ret;
+    }
+
+    /**
+     * 列表分页查询
+     *
+     * @param $offset
+     * @param $limit
+     * @param $filter
+     * @return array
+     */
+    public static function getList($offset, $limit, $filter = [])
+    {
+        $options = [
+            'limit' => $limit,
+            'skip' => $offset,
+            'sort' => ['CreateTime' => -1]
+        ];
+        $total = static::getDataCount($filter);
+        $rows = static::findData($filter, $options);
+
+        return [
+            'Total' => $total,
+            'List' => $rows
+        ];
     }
 
     /**
