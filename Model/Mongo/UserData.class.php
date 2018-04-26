@@ -102,4 +102,63 @@ class UserData extends MongoModel
 
         return $ret;
     }
+
+    /**
+     * 聚合查询 where group by
+     *
+     * @param $start_time
+     * @param $end_time
+     * @return array
+     */
+    public static function userAgg($start_time, $end_time)
+    {
+        $ret = self::aggregation([
+            [
+                '$match' => ['CreateTime' => ['$gte' => $start_time, '$lte' => $end_time]],
+            ],
+            [
+                '$group' => ['_id' => ['ScaleId' => '$ScaleId', 'AgentId' => '$AgentId', '_id' => '$_id']],
+            ],
+            [
+                '$group' => [
+                    '_id' => ['ScaleId' => '$_id.ScaleId', 'AgentId' => '$_id.AgentId'],
+                    'count' => ['$sum' => 1]
+                ]
+            ],
+            [
+                '$project' => ['_id' => 0, 'ScaleId' => '$_id.ScaleId', 'AgentId' => '$_id.AgentId', 'count' => 1],
+            ]
+        ])->toArray();
+
+        return !empty($ret) ? $ret : [];
+    }
+
+    /**
+     * 统计个数
+     *
+     * @param $score
+     * @return int
+     */
+    public static function getTotal($score)
+    {
+        $ret = self::aggregation([
+            [
+                '$match' => ['Score' => ['$lt' => $score]],
+            ],
+            [
+                '$group' => ['_id' => null, 'total' => ['$sum' => '$Count']]
+            ]
+        ], [
+            'useCursor' => false
+        ]);
+        $total = -1;
+        if ($ret == false || $ret->count() == 0) {
+            return $total;
+        }
+        if (count($ret) > 0) {
+            $total = (int)$ret[0]->total;
+        }
+
+        return $total;
+    }
 }
