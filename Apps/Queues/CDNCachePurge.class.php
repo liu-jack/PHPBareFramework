@@ -1,8 +1,6 @@
 <?php
 
-namespace Queue\Queues;
-
-use Queue\Queue;
+namespace Apps\Queues;
 
 /**
  * 刷缓存队列

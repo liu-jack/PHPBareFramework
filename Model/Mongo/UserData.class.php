@@ -9,14 +9,14 @@
 
 namespace Model\Mongo;
 
-use Bare\MongoModel;
+use Bare\MongoBase;
 
-class UserData extends MongoModel
+class UserData extends MongoBase
 {
     // 库名
     protected static $_db = 'user';
     // 集合名
-    protected static $_collection = 'userdata';
+    protected static $_table = 'userdata';
     // 已读书本记录
     const FIELD_BOOK_READ_HISTORY = 'book_read_history';
     // 总数限制
@@ -49,7 +49,7 @@ class UserData extends MongoModel
             $id = (int)$id;
             if ($id > 0) {
                 $bids[] = $id;
-                self::update($uid, [
+                self::updateById($uid, [
                     '$pull' => [
                         self::FIELD_BOOK_READ_HISTORY => $id
                     ]
@@ -58,7 +58,7 @@ class UserData extends MongoModel
         }
 
         if (count($bids) > 0) {
-            $ret = self::update($uid, [
+            $ret = self::updateById($uid, [
                 '$addToSet' => [
                     self::FIELD_BOOK_READ_HISTORY => [
                         '$each' => $bids
@@ -66,7 +66,7 @@ class UserData extends MongoModel
                 ]
             ], true);
             if ($ret !== false) {
-                self::update($uid, [
+                self::updateById($uid, [
                     '$push' => [
                         self::FIELD_BOOK_READ_HISTORY => [
                             '$each' => [],
@@ -98,7 +98,7 @@ class UserData extends MongoModel
             }
         }
 
-        $ret = self::get($uid, ['projection' => $user_fields]);
+        $ret = self::getById($uid, ['projection' => $user_fields]);
 
         return $ret;
     }
@@ -128,6 +128,8 @@ class UserData extends MongoModel
             [
                 '$project' => ['_id' => 0, 'ScaleId' => '$_id.ScaleId', 'AgentId' => '$_id.AgentId', 'count' => 1],
             ]
+        ], [
+            'useCursor' => true
         ])->toArray();
 
         return !empty($ret) ? $ret : [];

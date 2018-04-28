@@ -10,7 +10,7 @@ define('LIB_PATH', ROOT_PATH . 'Lib/');
 define('VIEW_PATH', ROOT_PATH . 'View/');
 define('CONFIG_PATH', ROOT_PATH . 'Config/');
 define('COMMON_PATH', ROOT_PATH . 'Common/');
-define('QUEUE_PATH', ROOT_PATH . 'Queue/');
+define('APPS_PATH', ROOT_PATH . 'Apps/');
 define('DATA_PATH', ROOT_PATH . 'Data/');
 define('LOG_PATH', DATA_PATH . 'logs/');
 define('FONT_PATH', DATA_PATH . 'font/');

@@ -37,11 +37,14 @@ class MongodbDB extends Client
     public function __construct(array $params, array $options = [])
     {
         $uri = 'mongodb://' . $params['host'] . ':' . $params['port'];
-        $uri_options = [
-            'username' => $params['user'],
-            'password' => $params['password'],
-            'authSource' => 'admin',
-        ];
+        $uri_options = [];
+        if (!empty($params['password'])) {
+            $uri_options = [
+                'username' => $params['user'],
+                'password' => $params['password'],
+                'authSource' => 'admin',
+            ];
+        }
 
         $this->options = array_merge($this->options, $options);
         parent::__construct($uri, $uri_options, $this->options);

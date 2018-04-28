@@ -67,7 +67,7 @@ $config = [
             'default' => ['host' => __SEARCH_IP__, 'port' => 9200],
         ],
         'mongodb' => [
-            'default' => ['host' => __MONGODB_IP__, 'port' => 27017, 'user' => 'camfee', 'password' => 'camfee29']
+            'default' => ['host' => __MONGODB_IP__, 'port' => 27017, 'user' => 'camfee', 'password' => '']
         ]
     ],
     'TEST' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace Queue;
+namespace Apps\Queues;
 
 abstract class Queue
 {

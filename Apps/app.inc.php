@@ -12,7 +12,7 @@ if (version_compare(PHP_VERSION, '7.0.0', '<')) {
     die('require PHP >= 7.0.0 !');
 }
 // 程序根目录
-define('ROOT_PATH', __DIR__ . '/');
+define('ROOT_PATH', dirname(__DIR__) . '/');
 // 加载系统配置
 require ROOT_PATH . 'Bare/config.php';
 // 共用配置
@@ -85,7 +85,7 @@ $cfg['page'] = [
 ];
 // Smarty tpl与缓存
 $cfg['smarty'] = [
-    'template_dir' => VIEW_PATH . 'smarty/',
+    'template_dir' => VIEW_PATH . 'Apps/smarty/',
     'compile_dir' => $cfg['path']['cache'] . 'smarty/',
 ];
 

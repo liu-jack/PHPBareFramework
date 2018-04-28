@@ -16,6 +16,7 @@ use Model\Application\GroupBuyList;
 use Model\Application\Product;
 use Classes\Pay\Pay;
 use Model\Application\Order;
+use Model\Mongo\Book;
 
 class test
 {
@@ -90,12 +91,24 @@ class test
         //            'PayPassword' => 123456
         //        ];
         //        var_dump(\Model\Payment\User::add($puser));
-        $p_pay = [
-            'order_no' => '19XTC6F1TT2018042314124061375043',
-            'pwd' => '123456',
-        ];
-        $auth = 'ce2829e83efd946613bb0c870f5b99449946cad5a3eeb174';
-        var_dump(Classes\Pay\Pay::pay($p_pay, $auth));
+        //        $p_pay = [
+        //            'order_no' => '19XTC6F1TT2018042314124061375043',
+        //            'pwd' => '123456',
+        //        ];
+        //        $auth = 'ce2829e83efd946613bb0c870f5b99449946cad5a3eeb174';
+        //        var_dump(Classes\Pay\Pay::pay($p_pay, $auth));
+        //        $book = [
+        //            Book::FIELD_ID => 3,
+        //            Book::FIELD_NAME => 'test3',
+        //            Book::FIELD_AUTHOR => 'camfee',
+        //            Book::FIELD_TYPE => 3,
+        //            Book::FIELD_CREATE_TIME => date('Y-m-d H:i:s'),
+        //        ];
+        //        var_dump(Book::add($book));
+        //        pre(Book::getInfoByIds([1, 2, 3]));
+        //        pre(array_combine(['k1', 'k2', 'k3', 'k4'], range(1, 4, 1)));
+        //        pre(Book::getList(['Name' => ['like' => 'test']], 0, 0, '_id,Name'));
+        //        var_dump(Book::delete(1));
     }
 }
 

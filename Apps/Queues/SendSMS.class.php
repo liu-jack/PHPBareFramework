@@ -3,9 +3,8 @@
  * 发送手机短信队列
  */
 
-namespace Queue\Queues;
+namespace Apps\Queues;
 
-use Queue\Queue;
 use Sms\LsmSms as SmsCtrl;
 
 class SendSMS extends Queue

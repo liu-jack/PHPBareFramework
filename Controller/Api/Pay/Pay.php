@@ -24,7 +24,7 @@ use Model\Application\Product;
  */
 class Pay extends Controller
 {
-    const NOTIFY_URL = 'http://zf.bare.com/notify/pay/notify.php';
+    const NOTIFY_URL = 'http://zf.bare.com/Apps/notify/pay/notify.php';
 
     /**
      * 下单
