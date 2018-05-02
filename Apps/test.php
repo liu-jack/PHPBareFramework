@@ -67,7 +67,7 @@ class test
         //        pre(GroupBuy::getProductGroup(1));
         //        $sn = \Model\Payment\Order::generateOrderNo(int2str(1));
         //                pre(date('YmdHis'), $sn, strlen($sn));
-        //                pre(md5(microtime(true) . md5(microtime(true))));
+                        pre(md5(microtime(true) . md5(microtime(true))));
         //        $id = 1;//pow(10, 11);
         //        $str = int2str($id);
         //        pre($id, $str, str2int($str));
