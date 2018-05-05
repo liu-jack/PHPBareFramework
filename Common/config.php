@@ -38,12 +38,10 @@ define('G_VER', 'g_ver');
 define('G_CHANNEL', 'g_channel');
 define('G_DEVICE_ID', 'g_deviceid');
 
-$GLOBALS = [
-    G_TYPES => [
-        APP_TYPE_WEB => APP_TYPE_WEB,
-        APP_TYPE_WAP => APP_TYPE_WAP,
-        APP_TYPE_ADR => APP_TYPE_ADR,
-        APP_TYPE_IOS => APP_TYPE_IOS,
-        APP_TYPE_XCX => APP_TYPE_XCX,
-    ]
+$GLOBALS[G_TYPES] = [
+    APP_TYPE_WEB => APP_TYPE_WEB,
+    APP_TYPE_WAP => APP_TYPE_WAP,
+    APP_TYPE_ADR => APP_TYPE_ADR,
+    APP_TYPE_IOS => APP_TYPE_IOS,
+    APP_TYPE_XCX => APP_TYPE_XCX,
 ];

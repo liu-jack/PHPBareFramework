@@ -17,14 +17,14 @@ class buildBookSearch
     const PAGE_SIZE = 1000;
 
     /**
-     * 重建书本搜索 php buildBookSearch.php _v1
+     * 重建书本搜索 php buildBookSearch.php v1
      */
     public function doIndex()
     {
         need_cli();
         global $argv;
         if (empty($argv[1])) {
-            exit('usage: php buildBookSearch.php _v[x]');
+            exit('usage: php buildBookSearch.php v[x]');
         }
         $pdo = DB::pdo(DB::DB_29SHU_R);
         $count = $pdo->select("max(BookId)")->from(self::TABLE)->getValue();
