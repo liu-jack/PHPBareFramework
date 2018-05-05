@@ -274,6 +274,7 @@ class SearchBase
                 $row['UpdateTime'] = $row['CreateTime'] ?? date('Y-m-d H:i:s');
             }
             $t_body = static::checkFields($row);
+            unset($t_body[static::INDEX_KEY]);
 
             $query .= json_encode($t_body) . "\n";
         }

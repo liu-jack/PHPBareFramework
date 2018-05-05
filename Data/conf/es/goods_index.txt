@@ -8,7 +8,6 @@ curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -d '
     "mappings": {
         "list": {
             "properties" : {
-            "id" : { "type" : "long"},
             "title": {"type": "text"},
             "cover": {"type": "text", "index": "not_analyzed"},
             "category_1": {"type": "long"},
@@ -64,6 +63,15 @@ curl -XPOST http://127.0.0.1:9200/_aliases?pretty -d '
 curl -XPOST http://127.0.0.1:9200/changmai_goods/list/_delete_by_query?pretty -d'
 {
     "query":{
+        "match_all": {}
+    }
+}';
+
+curl http://127.0.0.1:9200/changmai_goods?pretty
+
+curl -XGET localhost:9200/changmai_goods/list/_search?pretty -d'
+{
+    "query": {
         "match_all": {}
     }
 }';
