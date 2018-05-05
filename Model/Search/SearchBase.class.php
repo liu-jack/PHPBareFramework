@@ -168,6 +168,10 @@ class SearchBase
             }, static::$_search_fields);
         } elseif (is_string($fields)) {
             $fields = explode(',', $fields);
+            $fields_map = array_map(function ($val) {
+                return $val[1];
+            }, static::$_search_fields);
+            $fields = array_intersect($fields_map, $fields);
         }
 
         return $fields;
