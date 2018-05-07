@@ -214,7 +214,7 @@ class Filter
                 if (in_array($v, $key_words)) {
                     unset($filter[$k]);
                 } else {
-                    $v = mysqlQuote($v);
+                    $v = mysql_quote($v);
                     $sql_value .= "(\"{$v}\"),";
                 }
             }

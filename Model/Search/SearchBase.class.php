@@ -22,6 +22,10 @@ class SearchBase
     protected static $_search_index_prefix = '29shu_book';
     // 搜索队列名称
     protected static $_search_queue = 'SearchBook';
+    // 搜索库
+    protected static $_search_db = DB::SEARCH_DEFAULT;
+    // 搜索连接实例
+    private static $_instance = [];
 
     // 搜索主键
     const INDEX_KEY = '_id';
@@ -29,6 +33,21 @@ class SearchBase
     const T_STRING = 'string';
     const T_FLOAT = 'float';
     const T_STRTOTIME = 'strtotime';
+
+    /**
+     * 搜索实例
+     *
+     * @return mixed
+     */
+    protected static function instance()
+    {
+        if (empty(self::$_instance[static::$_search_db])) {
+            self::$_instance[static::$_search_db] = DB::search(static::$_search_db);
+        }
+
+        return self::$_instance[static::$_search_db];
+    }
+
     /**
      * 搜索字段
      */
@@ -120,7 +139,7 @@ class SearchBase
      */
     public static function query($query)
     {
-        $es = DB::search(DB::SEARCH_DEFAULT);
+        $es = static::instance();
 
         return $es->query(static::$_search_index . '_search', $es::HTTP_POST, $query);
     }
@@ -211,7 +230,7 @@ class SearchBase
         $query = static::$_search_index . $data[static::INDEX_KEY];
         $id = $data[static::INDEX_KEY];
         unset($data[static::INDEX_KEY]);
-        $es = DB::search(DB::SEARCH_DEFAULT);
+        $es = static::instance();
         $ret = $es->query($query, $es::HTTP_PUT, $data);
         if ($ret === false) {
             logs([
@@ -235,7 +254,7 @@ class SearchBase
         $query = static::$_search_index . $data[static::INDEX_KEY] . '/_update';
         $id = $data[static::INDEX_KEY];
         unset($data[static::INDEX_KEY]);
-        $es = DB::search(DB::SEARCH_DEFAULT);
+        $es = static::instance();
         $ret = $es->query($query, $es::HTTP_POST, ['doc' => $data]);
         if ($ret === false) {
             logs([
@@ -256,7 +275,7 @@ class SearchBase
     public static function delete()
     {
         $query = static::$_search_index_prefix;
-        $es = DB::search(DB::SEARCH_DEFAULT);
+        $es = static::instance();
 
         return $es->query($query, $es::HTTP_DELETE);
     }
@@ -283,7 +302,7 @@ class SearchBase
             $query .= json_encode($t_body) . "\n";
         }
 
-        $es = DB::search(DB::SEARCH_DEFAULT);
+        $es = static::instance();
         $ret = $es->query("_bulk", $es::HTTP_POST, $query);
         if ($ret === false) {
             echo json_encode($es->getLastError()) . "\n";

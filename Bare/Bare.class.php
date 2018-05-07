@@ -205,21 +205,6 @@ class Bare
     }
 
     /**
-     * @var array 错误代码
-     */
-    private static $api_errno = [
-        500 => '缺少必选参数：%s',
-        501 => '调用方法不存在',
-        502 => '请求失效,请检查本机时间',
-        503 => '未知错误, 代码：%d',
-        504 => 'AppId不存在',
-        505 => 'HASH值错误',
-        506 => '请求URL格式不正确',
-        507 => '仅公测版本可用',
-        508 => '服务器维护中，暂停服务',
-    ];
-
-    /**
      * 检查参数
      *
      * @param string  $ver      版本
@@ -321,7 +306,7 @@ class Bare
     {
         $json = [];
         $json['Code'] = $errno;
-        $json['Msg'] = self::$api_errno[$errno];
+        $json['Msg'] = error_msg($errno);
         if (!empty($str)) {
             $json['Msg'] = sprintf($json['Msg'], $str);
         }

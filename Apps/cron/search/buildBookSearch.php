@@ -32,10 +32,8 @@ class buildBookSearch
             $page = ceil($count / self::PAGE_SIZE);
             echo "buildBookSearch Start!\n";
             for ($i = 1; $i <= $page; $i++) {
-
                 $start = ($i - 1) * self::PAGE_SIZE;
                 $end = $start + self::PAGE_SIZE;
-
                 $pdo = DB::pdo(DB::DB_29SHU_R);
                 $data = $pdo->select("*")->from(self::TABLE)->where([
                     "BookId >" => $start,
@@ -44,11 +42,9 @@ class buildBookSearch
                 $pdo->close();
                 DB::pdo(DB::DB_29SHU_R, 'force_close');
                 $pdo = null;
-
                 if (count($data) > 0) {
                     SBook::insertSearch($data, trim($argv[1]));
                 }
-
                 echo "Process: {$i}/{$page}\r";
             }
             echo "\nFinished!\n";

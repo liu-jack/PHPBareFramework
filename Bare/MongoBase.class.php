@@ -40,7 +40,7 @@ class MongoBase
      *
      * @return null|\MongoDB\Client
      */
-    protected static function getConn()
+    private static function getConn()
     {
         if (empty(self::$_conn)) {
             self::$_conn = DB::mongodb(static::$_dns);
@@ -59,8 +59,19 @@ class MongoBase
         if (empty(self::$_mongo)) {
             self::$_mongo = self::getConn()->selectCollection(static::$_db, static::$_table);
         }
+        static::_before();
 
         return self::$_mongo;
+    }
+
+    /**
+     * 创建索引等前置操作
+     *
+     * @return bool
+     */
+    protected static function _before()
+    {
+        return false;
     }
 
     /**
@@ -79,12 +90,15 @@ class MongoBase
     /**
      * 切换数据表
      *
-     * @param $db
-     * @param $table
+     * @param        $table
+     * @param string $db
      * @return \MongoDB\Collection|null
      */
-    public static function changeTable($db, $table)
+    public static function changeTable($table, $db = '')
     {
+        if (empty($db)) {
+            $db = static::$_db;
+        }
         self::$_mongo = self::$_conn->selectCollection($db, $table);
 
         return self::$_mongo;
@@ -99,24 +113,24 @@ class MongoBase
      */
     public static function selectDatabase($db, $options = [])
     {
-        return static::getConn()->selectDatabase($db, $options);
+        return self::getConn()->selectDatabase($db, $options);
     }
 
     /**
      * 切换集合
      *
-     * @param       $collection
-     * @param null  $db
-     * @param array $options
+     * @param        $collection
+     * @param array  $options
+     * @param string $db
      * @return \MongoDB\Collection
      */
-    public static function selectCollection($collection, $db = null, $options = [])
+    public static function selectCollection($collection, $options = [], $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
         }
 
-        return static::getConn()->selectCollection($db, $collection, $options);
+        return self::getConn()->selectCollection($db, $collection, $options);
     }
 
     /**
@@ -128,7 +142,7 @@ class MongoBase
     public static function getDataBases($options = [])
     {
         $dbs = [];
-        $databases = static::getConn()->listDatabases($options);
+        $databases = self::getConn()->listDatabases($options);
         foreach ($databases as $databaseInfo) {
             $name = $databaseInfo->getName();
             if (!empty($name)) {
@@ -148,7 +162,7 @@ class MongoBase
      */
     public static function removeDataBase($db, $options = [])
     {
-        $ret = (array)static::getConn()->dropDatabase($db, $options);
+        $ret = (array)self::getConn()->dropDatabase($db, $options);
         if (!empty($ret['ok'])) {
             return true;
         }
@@ -159,11 +173,11 @@ class MongoBase
     /**
      * 获取所有集合
      *
-     * @param string $db
      * @param array  $options
+     * @param string $db
      * @return array|\MongoDB\Model\CollectionInfoIterator
      */
-    public static function getCollections($db = '', $options = [])
+    public static function getCollections($options = [], $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
@@ -184,11 +198,11 @@ class MongoBase
      * 新建集合
      *
      * @param string $collection
-     * @param string $db
      * @param array  $options
+     * @param string $db
      * @return array|object|bool
      */
-    public static function createCollection($collection, $db = '', $options = [])
+    public static function createCollection($collection, $options = [], $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
@@ -204,12 +218,12 @@ class MongoBase
     /**
      * 删除集合
      *
+     * @param array  $options
      * @param string $collection
      * @param string $db
-     * @param array  $options
      * @return bool
      */
-    public static function removeCollection($collection, $db = '', $options = [])
+    public static function removeCollection($collection, $options = [], $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
@@ -225,12 +239,12 @@ class MongoBase
     /**
      * 获取所有索引
      *
-     * @param string $db
-     * @param string $collection
      * @param array  $options
-     * @return array|\MongoDB\Model\IndexInfoIterator
+     * @param string $collection
+     * @param string $db
+     * @return array
      */
-    public static function getIndexes($db = '', $collection = '', $options = [])
+    public static function getIndexes($options = [], $collection = '', $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
@@ -253,13 +267,13 @@ class MongoBase
     /**
      * 创建索引
      *
-     * @param array  $key
-     * @param string $db
-     * @param string $collection
+     * @param        $key
      * @param array  $options
-     * @return string
+     * @param string $collection
+     * @param string $db
+     * @return bool
      */
-    public static function createIndex($key, $db = '', $collection = '', $options = [])
+    public static function createIndex($key, $options = [], $collection = '', $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
@@ -279,12 +293,12 @@ class MongoBase
      * 删除索引
      *
      * @param null   $indexName
-     * @param string $db
-     * @param string $collection
      * @param array  $options
-     * @return array|object|bool
+     * @param string $collection
+     * @param string $db
+     * @return bool
      */
-    public static function removeIndexes($indexName = null, $db = '', $collection = '', $options = [])
+    public static function removeIndexes($indexName = null, $options = [], $collection = '', $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;
@@ -309,11 +323,11 @@ class MongoBase
      *
      * @param        $pipeline
      * @param array  $options
-     * @param string $db
      * @param string $collection
+     * @param string $db
      * @return bool|\Traversable
      */
-    public static function aggregation($pipeline, $options = [], $db = '', $collection = '')
+    public static function aggregation($pipeline, $options = [], $collection = '', $db = '')
     {
         if (empty($db)) {
             $db = static::$_db;

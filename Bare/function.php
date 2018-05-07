@@ -101,7 +101,7 @@ function view($path = '', $ext = VEXT)
     } else {
         $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
     }
-    $view_path = parseTemplate($view_path);
+    $view_path = parse_template($view_path);
     include_once $view_path;
 }
 
@@ -112,7 +112,7 @@ function view($path = '', $ext = VEXT)
  * @return string
  * @throws Exception
  */
-function parseTemplate($path)
+function parse_template($path)
 {
     $cmp = filemtime($path); // md5_file($path)
     $md5 = md5($path);
@@ -179,7 +179,7 @@ function parseTemplate($path)
     if (!is_dir(dirname($cache_path))) {
         mkdir(dirname($cache_path), 0755, true);
     }
-    file_put_contents($cache_path, compressAll($content));
+    file_put_contents($cache_path, compress_all($content));
     file_put_contents($cmp_path, $cmp);
     unset($content);
 
@@ -193,7 +193,7 @@ function parseTemplate($path)
  * @param  boolean $del_note [是否删除注释]
  * @return string
  */
-function compressAll($content, $del_note = true)
+function compress_all($content, $del_note = true)
 {
     $pattern = [
         "/(\s|;|\(|\)|\{|\}|\}|[^pst]:)\s*\/\/(.*)(\\n|\\r\\n|\\r)/isU",/*0 //行注释*/
@@ -253,7 +253,7 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
         $domain .= '/index.php/';
     }
 
-    $url = parseUri($url);
+    $url = parse_uri($url);
 
     $params = $query = '';
     if (!empty($vars)) {
@@ -290,7 +290,7 @@ function url($url = '', $vars = '', $domain = '', $suffix = VEXT)
  * @param int    $type 0: lcfirst 1:ucfirst
  * @return string
  */
-function parseUri($uri = '', $type = 0)
+function parse_uri($uri = '', $type = 0)
 {
     $func = $type == 0 ? 'lcfirst' : 'ucfirst';
     if (empty($uri)) {
@@ -626,7 +626,7 @@ function autohost($url)
 }
 
 /**
- * 函数返回码
+ * 函数返回码 基类使用
  *
  * @param int          $code 返回码
  * @param array|string $data 返回数据
@@ -644,4 +644,17 @@ function back($code = 200, $data = [])
     }
 
     return $ret;
+}
+
+/**
+ *  获取错误信息 接口使用
+ *
+ * @param $code
+ * @return mixed|string
+ */
+function error_msg($code)
+{
+    $error_msg = config('error_msg');
+
+    return $error_msg[$code] ?? '';
 }

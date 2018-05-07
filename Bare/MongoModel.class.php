@@ -48,6 +48,17 @@ abstract class MongoModel extends MongoBase
     const VAR_TYPE_PASSWORD = 'password';
 
     /**
+     * 前置操作 建立索引
+     */
+    protected static function _before()
+    {
+        parent::createIndex([
+            self::FIELD_ID => -1,
+            self::FIELD_CREATE_TIME => -1
+        ], ['unique' => true]);
+    }
+
+    /**
      * 新增数据
      *
      * @param $data

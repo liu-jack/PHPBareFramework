@@ -20,21 +20,6 @@ require_once dirname(__DIR__) . '/app.inc.php';
 class index
 {
     /**
-     * @var array 错误代码
-     */
-    public $errno = [
-        500 => '缺少必选参数：%s',
-        501 => '调用方法不存在',
-        502 => '请求失效,请检查本机时间',
-        503 => '未知错误, 代码：%d',
-        504 => 'AppId不存在',
-        505 => 'HASH值错误',
-        506 => '请求URL格式不正确',
-        507 => '仅公测版本可用',
-        508 => '服务器维护中，暂停服务',
-    ];
-
-    /**
      * 入口
      */
     public function doDefault()
@@ -200,7 +185,7 @@ class index
     {
         $json = [];
         $json['Status'] = $errno;
-        $json['Result'] = $this->errno[$errno];
+        $json['Result'] = error_msg($errno);
 
         if (!empty($str)) {
             $json['Result'] = sprintf($json['Result'], $str);

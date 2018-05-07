@@ -54,7 +54,7 @@ Class Controller
     {
         if (!empty($path)) {
             if (substr_count($path, '/') == 0) {
-                $path = parseUri($path, 1);
+                $path = parse_uri($path, 1);
             }
             if (isset($_GET[ADMIN_VAR])) {
                 $path = ADMIN_PATH . '/' . $path;
@@ -63,7 +63,7 @@ Class Controller
         } else {
             $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
         }
-        $view_path = parseTemplate($view_path);
+        $view_path = parse_template($view_path);
         extract($this->_var, EXTR_OVERWRITE);
         include_once $view_path;
     }
@@ -100,6 +100,9 @@ Class Controller
     public static function output($code = 200, $data = [])
     {
         $result['Code'] = $code;
+        if ($code != 200 && empty($data)) {
+            $data = error_msg($code);
+        }
         if (is_string($data)) {
             $result['Msg'] = $data;
         } else {

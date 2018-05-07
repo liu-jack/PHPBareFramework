@@ -424,7 +424,7 @@ class Tags extends CommonModel
 
     public static function getTagIcon($id, $ext = 'png')
     {
-        $path_url = getSavePath(PathConst::IMG_TAG_ICON, $id, $ext, PathConst::IMG_TAG_ICON_SIZE);
+        $path_url = build_file_path(PathConst::IMG_TAG_ICON, $id, $ext, PathConst::IMG_TAG_ICON_SIZE);
 
         return (string)$path_url['url'];
     }
@@ -457,7 +457,7 @@ class Tags extends CommonModel
 
     public static function getTagCover($id, $ext = 'jpg')
     {
-        $path_url = getSavePath(PathConst::IMG_TAG_COVER, $id, $ext, PathConst::IMG_TAG_COVER_SIZE);
+        $path_url = build_file_path(PathConst::IMG_TAG_COVER, $id, $ext, PathConst::IMG_TAG_COVER_SIZE);
 
         return (string)$path_url['url'];
     }
