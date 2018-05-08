@@ -1,10 +1,10 @@
 <?php
 
-namespace Bare\DB;
+namespace Bare\DataDriver;
 
 use Memcached;
 
-class MemcachedDB
+class MemcachedDriver
 {
     /**
      * @var Memcached $memcached Memcached 缓存连接对象

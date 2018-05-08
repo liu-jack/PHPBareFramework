@@ -1,12 +1,12 @@
 <?php
 
-namespace Bare\DB;
+namespace Bare\DataDriver;
 
 use PDO;
 use PDOStatement;
 use PDOException;
 
-class PDODB extends PDO
+class PDODriver extends PDO
 {
     /**
      * DSN 连接信息

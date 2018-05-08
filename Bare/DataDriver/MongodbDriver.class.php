@@ -7,13 +7,13 @@
  *
  */
 
-namespace Bare\DB;
+namespace Bare\DataDriver;
 
 use MongoDB\Client;
 
 include_once(LIB_PATH . 'MongoDB/functions.php');
 
-class MongodbDB extends Client
+class MongodbDriver extends Client
 {
     /**
      * 默认选项

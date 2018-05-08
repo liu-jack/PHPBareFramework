@@ -1,6 +1,6 @@
 <?php defined('ROOT_PATH') or exit('Access deny');
 /**
- * url地址映射(重写)配置
+ * url地址重写配置
  */
 $config = [
     'DEV' => [

@@ -18,6 +18,8 @@ use Classes\Pay\Pay;
 use Model\Application\Order;
 use Model\Mongo\Book;
 use Model\Search\BookSearch;
+use Bare\DB;
+use Common\FileData;
 
 class test
 {
@@ -110,6 +112,9 @@ class test
         //        pre(array_combine(['k1', 'k2', 'k3', 'k4'], range(1, 4, 1)));
         //        pre(Book::getList(['Name' => ['like' => 'test']], 0, 0, '_id,Name'));
         //        var_dump(Book::delete(1));
+
+//        var_dump(FileData::set(FileData::KEY_TEST, time(), 3600));
+        var_dump(FileData::get(FileData::KEY_TEST));
     }
 }
 

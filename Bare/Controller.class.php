@@ -1,4 +1,4 @@
-<?php
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * 基类控制器
  *

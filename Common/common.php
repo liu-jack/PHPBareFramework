@@ -379,7 +379,7 @@ function decode_id(string $id): int
  * @param boolean $is_timestamp 当$datetime为时间戳时设为true
  * @return string
  */
-function date_format($datetime, $is_timestamp = false)
+function format_date($datetime, $is_timestamp = false)
 {
     static $OFFSET = 28800; // 8 小时时差
     static $ONEDAY = 86400; // 1 天

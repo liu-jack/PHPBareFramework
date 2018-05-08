@@ -14,7 +14,7 @@ class Bare
      */
     public static function init()
     {
-        $path_info = self::urlMap(PATH_INFO);
+        $path_info = self::urlRewrite(PATH_INFO);
         $url_param = explode('/', $path_info);
         if (!empty($url_param[0]) || !empty($_GET['m'])) {
             $GLOBALS['_M'] = !empty($url_param[0]) ? ucfirst($url_param[0]) : ucfirst($_GET['m']);
@@ -182,14 +182,14 @@ class Bare
     }
 
     /**
-     * url地址映射（重写）
+     * url地址重写
      *
      * @param string $path_info url参数
      * @return mixed
      */
-    private static function urlMap($path_info)
+    private static function urlRewrite($path_info)
     {
-        $map = config('urlmap');
+        $map = config('bare/rewrite');
         if (!empty($map)) {
             foreach ($map as $v) {
                 if (!empty($v['pos']) && !empty($v['rules'])) {

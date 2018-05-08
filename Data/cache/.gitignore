@@ -1,5 +1,5 @@
 # Ignore everything in this directory
-*
+/template/
+/smarty/
 # Except this file
-!.gitignore
-!*/
+#!.gitignore

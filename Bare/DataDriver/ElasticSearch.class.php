@@ -1,6 +1,6 @@
 <?php
 
-namespace Bare\DB;
+namespace Bare\DataDriver;
 
 class ElasticSearch
 {
@@ -118,22 +118,18 @@ class ElasticSearch
     private function _curl($url, $data = '', $method)
     {
         $ch = curl_init();
-
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECT_TIMEOUT);
-
         if (!empty($data) || '0' === $data) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, '');
         }
-
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_NOBODY, $method == self::HTTP_HEAD);
-
         $response = curl_exec($ch);
         curl_close($ch);
 

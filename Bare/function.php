@@ -654,7 +654,7 @@ function back($code = 200, $data = [])
  */
 function error_msg($code)
 {
-    $error_msg = config('error_msg');
+    $error_msg = config('bare/error_msg');
 
     return $error_msg[$code] ?? '';
 }

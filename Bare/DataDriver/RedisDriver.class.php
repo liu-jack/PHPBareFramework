@@ -1,8 +1,8 @@
 <?php
 
-namespace Bare\DB;
+namespace Bare\DataDriver;
 
-class RedisDB extends \Redis
+class RedisDriver extends \Redis
 {
     /**
      * 默认端口号

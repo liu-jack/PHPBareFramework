@@ -4,7 +4,6 @@
  *
  * @author  camefe
  *
- * $Id$
  */
 
 namespace Smarty;
@@ -119,7 +118,7 @@ class PageSmarty
     public function output($template = '', $fetch = false)
     {
         if ($template) {
-            $this->params['template'] = $template;
+            $this->params['template'] = strpos($template, '.') === false ? $template . '.html' : $template;
         } else {
             if (!isset($this->params['template'])) {
                 $path_len = strlen($this->app->cfg['path']['root']);
@@ -132,6 +131,8 @@ class PageSmarty
             return $this->smarty->fetch($this->params['template']);
         }
         $this->smarty->display($this->params['template']);
+
+        return null;
     }
 
     /**

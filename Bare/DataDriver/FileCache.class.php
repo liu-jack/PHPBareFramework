@@ -1,16 +1,16 @@
 <?php
 
-namespace Bare\DB;
+namespace Bare\DataDriver;
 
-use Bare\Util\FileSystem;
+use Classes\Util\FileSystem;
 
-class FileDB
+class FileCache
 {
     /**
      * @var string $cachePath 缓存文件目录
      * @access public
      */
-    public $cachePath = CACHE_PATH;
+    public $cachePath = FILE_CACHE_PATH;
 
     /**
      * 构造函数
@@ -19,8 +19,7 @@ class FileDB
      */
     public function __construct($path = './')
     {
-        ($path[strlen($path) - 1] != '/') && $path .= '/';
-        (!empty($path)) && $this->cachePath .= $path;
+        (!empty($path)) && $this->cachePath .= ltrim($path, '/');
         (!is_dir($this->cachePath)) && FileSystem::makeDir($this->cachePath);
     }
 
