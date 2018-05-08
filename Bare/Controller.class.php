@@ -1,4 +1,4 @@
-<?php
+<?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * 基类控制器
  *
@@ -54,7 +54,7 @@ Class Controller
     {
         if (!empty($path)) {
             if (substr_count($path, '/') == 0) {
-                $path = parseUri($path, 1);
+                $path = parse_uri($path, 1);
             }
             if (isset($_GET[ADMIN_VAR])) {
                 $path = ADMIN_PATH . '/' . $path;
@@ -63,7 +63,7 @@ Class Controller
         } else {
             $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
         }
-        $view_path = parseTemplate($view_path);
+        $view_path = parse_template($view_path);
         extract($this->_var, EXTR_OVERWRITE);
         include_once $view_path;
     }
@@ -100,6 +100,9 @@ Class Controller
     public static function output($code = 200, $data = [])
     {
         $result['Code'] = $code;
+        if ($code != 200 && empty($data)) {
+            $data = error_msg($code);
+        }
         if (is_string($data)) {
             $result['Msg'] = $data;
         } else {
@@ -154,13 +157,24 @@ EOT;
     }
 
     /**
-     * 登录状态验证
+     * 是否登录 接口使用
      *
-     * @param int  $type 0:web/wap 1:api 2:admin 详见 V_*
-     * @param bool $auto 接口未登录是否退出程序
+     * @param bool $break
      * @return int
      */
-    public static function isLogin($type = V_WEB, $auto = false)
+    public static function isLogin($break = true)
+    {
+        return self::checkLogin(V_API, $break);
+    }
+
+    /**
+     * 登录状态验证
+     *
+     * @param int  $type  0:web/wap V_WEB 1:api V_API 2:admin V_ADMIN
+     * @param bool $break 接口未登录是否退出程序
+     * @return int
+     */
+    public static function checkLogin($type = V_WEB, $break = false)
     {
         switch ($type) {
             case V_WEB:  // 网站登录验证
@@ -197,7 +211,7 @@ EOT;
 
                 fail:
                 unset($_SESSION['uid']);
-                if ($auto) {
+                if ($break) {
                     self::output($code, $msg);
                 } else {
                     return false;

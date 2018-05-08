@@ -35,7 +35,7 @@ class Upload
             } else {
                 $image_type = 'jpg';
             }
-            $path_url = getSavePath($path, $itemid, $image_type, $size);
+            $path_url = build_file_path($path, $itemid, $image_type, $size);
             if (!is_numeric(key($path_url))) {
                 $path_url = [$path_url];
             }
@@ -55,7 +55,7 @@ class Upload
             }
             $image_status = PhotoImage::checkImageByUrl(HTTP_HOST . $img_info['url']);
         }
-        $path_url = getSavePath($path, $itemid, $image_status['image_type'], $size);
+        $path_url = build_file_path($path, $itemid, $image_status['image_type'], $size);
         if (!is_numeric(key($path_url))) {
             $path_url = [$path_url];
         }

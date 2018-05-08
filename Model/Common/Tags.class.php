@@ -20,6 +20,7 @@ class Tags extends CommonModel
      * @var string
      */
     const MC_PFX = 'Tags:';
+    const MC_TIME = 86400;
 
     /**
      * 匹配标签名的正则
@@ -423,7 +424,7 @@ class Tags extends CommonModel
 
     public static function getTagIcon($id, $ext = 'png')
     {
-        $path_url = getSavePath(PathConst::IMG_TAG_ICON, $id, $ext, PathConst::IMG_TAG_ICON_SIZE);
+        $path_url = build_file_path(PathConst::IMG_TAG_ICON, $id, $ext, PathConst::IMG_TAG_ICON_SIZE);
 
         return (string)$path_url['url'];
     }
@@ -456,7 +457,7 @@ class Tags extends CommonModel
 
     public static function getTagCover($id, $ext = 'jpg')
     {
-        $path_url = getSavePath(PathConst::IMG_TAG_COVER, $id, $ext, PathConst::IMG_TAG_COVER_SIZE);
+        $path_url = build_file_path(PathConst::IMG_TAG_COVER, $id, $ext, PathConst::IMG_TAG_COVER_SIZE);
 
         return (string)$path_url['url'];
     }
@@ -685,7 +686,7 @@ class Tags extends CommonModel
                         $data['FollowCount'] = $row['FollowCount'];
                         $rets[$tagid] = $data;
 
-                        $mc->set($id_map[$tagid], $data);
+                        $mc->set($id_map[$tagid], $data, self::MC_TIME);
                     }
                 }
             }
@@ -799,7 +800,7 @@ class Tags extends CommonModel
                         }
 
                         $data[$name] = $id;
-                        $mc->set($name_map[$lower_name], $id);
+                        $mc->set($name_map[$lower_name], $id, self::MC_TIME);
                     }
                 }
             }
@@ -859,7 +860,7 @@ class Tags extends CommonModel
                     foreach ($result as $row) {
                         $cache[$row['rid']] = (int)$row['tid'];
                     }
-                    $mc->set($mc_key, empty($cache) ? -1 : $cache);
+                    $mc->set($mc_key, empty($cache) ? -1 : $cache, self::MC_TIME);
                 }
             }
         }

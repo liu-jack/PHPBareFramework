@@ -28,7 +28,7 @@ function table($id, $table = '')
  * @param int|array $size   图片裁剪大小
  * @return mixed|string
  */
-function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
+function build_file_path($path, $itemid = 0, $ext = 'jpg', $size = 0)
 {
     if ($itemid) {
         $hash1 = sprintf("%02x", $itemid % 256);
@@ -63,7 +63,7 @@ function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
 }
 
 /**
- * 获取|保存 文件路径
+ * 获取|保存 文件路径 根路径 图片域名单独配置
  *
  * @param string    $path   路径
  * @param int       $itemid 项目id
@@ -71,7 +71,7 @@ function getSavePath($path, $itemid = 0, $ext = 'jpg', $size = 0)
  * @param int|array $size   图片裁剪大小
  * @return mixed|string
  */
-function getSavePath2($path, $itemid = 0, $ext = 'jpg', $size = 0)
+function get_file_path($path, $itemid = 0, $ext = 'jpg', $size = 0)
 {
     if (IS_ONLINE) {
         $base_dir = '/data/prj_jinguo/';
@@ -119,7 +119,7 @@ function getSavePath2($path, $itemid = 0, $ext = 'jpg', $size = 0)
  * @param bool   $isimg
  * @return string
  */
-function getFileExt($filepath, $isimg = true)
+function get_file_ext($filepath, $isimg = true)
 {
     $ext = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
     if ($isimg && !in_array($ext, ['jpg', 'png', 'gif', 'webp'])) {
@@ -157,7 +157,7 @@ function cover($id, $ver = -1, $ext = '.jpg')
  * @param int    $ver 图片版本号
  * @return mixed|string
  */
-function contentImg($id, $fid, $ver = -1, $ext = '.gif')
+function book_content_img($id, $fid, $ver = -1, $ext = '.gif')
 {
     $base = 'book/content/%02x/%02x/%s' . $ext;
     $url = UPLOAD_URI . sprintf($base, $fid % 256, $id % 256, $fid . '_' . $id);
@@ -193,7 +193,7 @@ function head($userid, $size = 100, $ver = 0)
  * @param int $type appid|应用类型ID 0:web 1:wap 2:android 3:iphone
  * @return string
  */
-function getDeviceId($type = 0)
+function create_device_id($type = 0)
 {
     return $type . sprintf('%02x', crc32(php_uname('n'))) . str_replace('.', '', uniqid('', true));
 }
@@ -204,7 +204,7 @@ function getDeviceId($type = 0)
  * @param $deviceid
  * @return int
  */
-function intDeviceId($deviceid)
+function device_id2int($deviceid)
 {
     $len = strlen($deviceid);
     $sum = 0;
@@ -227,7 +227,7 @@ function intDeviceId($deviceid)
  * @param string $access    public or protected  or private or final 方法的访问权限
  * @return array(methodname=>access)  or array(methodname)
  */
-function getMethods($classname, $access = null)
+function get_methods($classname, $access = null)
 {
     $class = new \ReflectionClass($classname);
     $methods = $class->getMethods();
@@ -278,7 +278,7 @@ function getMethods($classname, $access = null)
  * @param int    $order2 排序方式 SORT_DESC|SORT_ASC
  * @return mixed
  */
-function arraySort($arr, $field1, $order1 = SORT_DESC, $field2 = '', $order2 = SORT_DESC)
+function array_sort($arr, $field1, $order1 = SORT_DESC, $field2 = '', $order2 = SORT_DESC)
 {
     foreach ($arr as $k => $v) {
         $volume1[$k] = $v[$field1];
@@ -301,7 +301,7 @@ function arraySort($arr, $field1, $order1 = SORT_DESC, $field2 = '', $order2 = S
  * @param string|array $urls url地址,支持数组
  * @return boolean
  */
-function cdnCachePurge($urls)
+function cdn_cache_purge($urls)
 {
     $urls = is_array($urls) ? $urls : [$urls];
 
@@ -316,7 +316,7 @@ function cdnCachePurge($urls)
  * @param bool   $filter_percent 是否转义%, 默认false(关)
  * @return mixed
  */
-function mysqlQuote($str, $utf8_safe = true, $filter_percent = false)
+function mysql_quote($str, $utf8_safe = true, $filter_percent = false)
 {
     if (!is_string($str)) {
         return '';
@@ -341,7 +341,7 @@ function mysqlQuote($str, $utf8_safe = true, $filter_percent = false)
  * @param int $id 产品ID(必须为正数)
  * @return string 加密后的ID
  */
-function encodeId(int $id): string
+function encode_id(int $id): string
 {
     $salt = sprintf("%02u", $id % 97);
 
@@ -354,7 +354,7 @@ function encodeId(int $id): string
  * @param string $id 加密后的产品ID
  * @return int 解密后的ID
  */
-function decodeId(string $id): int
+function decode_id(string $id): int
 {
     $number = base_convert($id, 36, 10);
 
@@ -379,7 +379,7 @@ function decodeId(string $id): int
  * @param boolean $is_timestamp 当$datetime为时间戳时设为true
  * @return string
  */
-function dateFormat($datetime, $is_timestamp = false)
+function format_date($datetime, $is_timestamp = false)
 {
     static $OFFSET = 28800; // 8 小时时差
     static $ONEDAY = 86400; // 1 天
@@ -436,4 +436,37 @@ function dateFormat($datetime, $is_timestamp = false)
     }
 
     return gmdate($dtformat, $timestamp);
+}
+
+/**
+ * 字符串转为id
+ *
+ * @param $str
+ * @return float|int
+ */
+function str2int($str)
+{
+    $hex_str = substr_replace($str, '', 4, 2);
+    $res = base_convert($hex_str, 36, 16);
+
+    return hexdec($res) - pow(10, 11);
+}
+
+/**
+ * id转为字符串
+ *
+ * @param        $id
+ * @param string $key
+ * @return string
+ */
+function int2str($id, $key = 'www.29fh.com')
+{
+    $id = pow(10, 11) + intval($id);
+    $hex_id = dechex($id);
+    $md5_str = substr(md5($key . (string)$hex_id), -2);
+    $hex_str = base_convert($hex_id, 16, 36);
+    $hex_len = strlen($hex_str);
+    $res = substr($hex_str, 0, 4) . $md5_str . substr($hex_str, -($hex_len - 4));
+
+    return strtoupper($res);
 }

@@ -1,2 +1,2 @@
-php /home/camfee/www/www.bare.com/index.php Queue/Index/index UpdateCount &
-php /home/camfee/www/www.bare.com/index.php Queue/Index/index SearchBook &
+php /home/camfee/www/www.bare.com/Apps/queue/index.php UpdateCount &
+php /home/camfee/www/www.bare.com/Apps/queue/index.php SearchBook &

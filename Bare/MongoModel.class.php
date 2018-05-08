@@ -1,558 +1,188 @@
 <?php
 /**
  * MongoModel.class.php
+ * mongodb抽象基类模型
  *
- * @author camfee<camfee@foxmail.com>
- * @date   2017/7/5 10:46
+ * @author camfee <camfee@foxmail.com>
+ * @date   18-4-28 上午10:18
  *
  */
 
 namespace Bare;
 
-class MongoModel
+use Config\DBConfig;
+
+abstract class MongoModel extends MongoBase
 {
-    // 库名 继承修改
+    // 数据库
     protected static $_db = 'test';
-    // 集合名  继承修改
-    protected static $_collection = 'test';
+    // 数据表
+    protected static $_table = 'test';
     // mongodb 连接参数
-    protected static $_dns = DB::MONGODB_DEFAULT;
-    // mongodb 实例
-    protected static $_mongo = null;
-    // mongodb conn
-    protected static $_conn = null;
+    protected static $_dns = DBConfig::MONGODB_DEFAULT;
+
+    const FIELD_ID = '_id';
+    const FIELD_CREATE_TIME = 'CreateTime';
+    /**
+     * @var array 字段
+     */
+    protected static $_fields = [
+        self::FIELD_ID => self::VAR_TYPE_INT,
+        self::FIELD_CREATE_TIME => self::VAR_TYPE_STRING,
+    ];
 
     /**
-     * 获取连接实例
-     *
-     * @return null|\MongoDB\Client
+     * @see \Bare\MongoModel::add() 新增
+     * @see \Bare\MongoModel::update() 更新
+     * @see \Bare\MongoModel::getInfoByIds() 按主键id查询
+     * @see \Bare\MongoModel::getList() 条件查询
+     * @see \Bare\MongoModel::delete() 删除
      */
-    protected static function getConn()
-    {
-        if (empty(static::$_conn)) {
-            static::$_conn = DB::mongodb(static::$_dns);
-        }
 
-        return static::$_conn;
+    // 主键/字段类型
+    const VAR_TYPE_INT = 'int';
+    const VAR_TYPE_FLOAT = 'float';
+    const VAR_TYPE_STRING = 'string';
+    const VAR_TYPE_ARRAY = 'array';
+    const VAR_TYPE_JSON = 'json';
+    const VAR_TYPE_PASSWORD = 'password';
+
+    /**
+     * 前置操作 建立索引
+     */
+    protected static function _before()
+    {
+        parent::createIndex([
+            self::FIELD_ID => -1,
+            self::FIELD_CREATE_TIME => -1
+        ], ['unique' => true]);
     }
 
     /**
-     * 获取实例化类
+     * 新增数据
      *
-     * @return null|\MongoDB\Collection
-     */
-    protected static function getMongodb()
-    {
-        if (empty(static::$_mongo)) {
-            static::$_mongo = self::getConn()->selectCollection(static::$_db, static::$_collection);
-        }
-
-        return static::$_mongo;
-    }
-
-    /**
-     * 切换连接
-     *
-     * @param $dns
-     * @return \MongoDB\Client
-     */
-    public static function changeConn($dns)
-    {
-        static::$_conn = DB::mongodb($dns);
-
-        return static::$_conn;
-    }
-
-    /**
-     * 切换数据库
-     *
-     * @param string $db
-     * @param array  $options
-     * @return \MongoDB\Database
-     */
-    public static function selectDatabase($db, $options = [])
-    {
-        return static::getConn()->selectDatabase($db, $options);
-    }
-
-    /**
-     * 切换集合
-     *
-     * @param       $collection
-     * @param null  $db
-     * @param array $options
-     * @return \MongoDB\Collection
-     */
-    public static function selectCollection($collection, $db = null, $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-
-        return static::getConn()->selectCollection($db, $collection, $options);
-    }
-
-    /**
-     * 获取所有数据库
-     *
-     * @param array $options
-     * @return array|\MongoDB\Model\DatabaseInfoIterator
-     */
-    public static function getDataBases($options = [])
-    {
-        $dbs = [];
-        $databases = static::getConn()->listDatabases($options);
-        foreach ($databases as $databaseInfo) {
-            $name = $databaseInfo->getName();
-            if (!empty($name)) {
-                $dbs[$name] = $name;
-            }
-        }
-
-        return $dbs;
-    }
-
-    /**
-     * 删除数据库
-     *
-     * @param       $db
-     * @param array $options
-     * @return array|object|bool
-     */
-    public static function removeDataBase($db, $options = [])
-    {
-        $ret = (array)static::getConn()->dropDatabase($db, $options);
-        if (!empty($ret['ok'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 获取所有集合
-     *
-     * @param string $db
-     * @param array  $options
-     * @return array|\MongoDB\Model\CollectionInfoIterator
-     */
-    public static function getCollections($db = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        $colls = [];
-        $collects = static::selectDatabase($db)->listCollections($options);
-        foreach ($collects as $collect) {
-            $name = $collect->getName();
-            if (!empty($name)) {
-                $colls[$name] = $name;
-            }
-        }
-
-        return $colls;
-    }
-
-    /**
-     * 新建集合
-     *
-     * @param string $collection
-     * @param string $db
-     * @param array  $options
-     * @return array|object|bool
-     */
-    public static function createCollection($collection, $db = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        $ret = (array)static::selectDatabase($db)->createCollection($collection, $options);
-        if (!empty($ret['ok'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 删除集合
-     *
-     * @param string $collection
-     * @param string $db
-     * @param array  $options
-     * @return bool
-     */
-    public static function removeCollection($collection, $db = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        $ret = (array)static::selectDatabase($db)->dropCollection($collection, $options);
-        if (!empty($ret['ok'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 获取所有索引
-     *
-     * @param string $db
-     * @param string $collection
-     * @param array  $options
-     * @return array|\MongoDB\Model\IndexInfoIterator
-     */
-    public static function getIndexes($db = '', $collection = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        if (empty($collection)) {
-            $collection = static::$_collection;
-        }
-        $idx = [];
-        $indexs = static::selectCollection($collection, $db)->listIndexes($options);
-        foreach ($indexs as $index) {
-            $name = $index->getName();
-            if (!empty($name)) {
-                $idx[$name] = $name;
-            }
-        }
-
-        return $idx;
-    }
-
-    /**
-     * 创建索引
-     *
-     * @param array  $key
-     * @param string $db
-     * @param string $collection
-     * @param array  $options
-     * @return string
-     */
-    public static function createIndex($key, $db = '', $collection = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        if (empty($collection)) {
-            $collection = static::$_collection;
-        }
-        $ret = (array)static::selectCollection($collection, $db)->createIndex($key, $options);
-        if (!empty($ret['ok'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 删除索引
-     *
-     * @param null   $indexName
-     * @param string $db
-     * @param string $collection
-     * @param array  $options
-     * @return array|object|bool
-     */
-    public static function removeIndexes($indexName = null, $db = '', $collection = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        if (empty($collection)) {
-            $collection = static::$_collection;
-        }
-        if ($indexName === null) {
-            $ret = (array)static::selectCollection($collection, $db)->dropIndexes($options = []);
-        } else {
-            $ret = (array)static::selectCollection($collection, $db)->dropIndex($indexName, $options);
-        }
-        if (!empty($ret['ok'])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 聚合操作
-     *
-     * @param        $pipeline
-     * @param string $db
-     * @param string $collection
-     * @param array  $options
-     * @return bool|\Traversable
-     */
-    public static function aggregation($pipeline, $db = '', $collection = '', $options = [])
-    {
-        if (empty($db)) {
-            $db = static::$_db;
-        }
-        if (empty($collection)) {
-            $collection = static::$_collection;
-        }
-        try {
-            $ret = static::selectCollection($collection, $db)->aggregate($pipeline, $options);
-        } catch (\Exception $e) {
-            static::log($e, $pipeline);
-
-            return false;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * 查询
-     *
-     * @param       $id
-     * @param array $options
-     * @return array|bool|null|object
-     */
-    public static function get($id, $options = [])
-    {
-        $id = is_numeric($id) ? (int)$id : (string)$id;
-        $ret = static::findOneData([
-            '_id' => $id
-        ], $options);
-
-        return is_array($ret) ? $ret : [];
-    }
-
-    /**
-     * 获取总数量
-     *
-     * @param       $id
-     * @param array $options
-     * @return int
-     */
-    public static function count($id, $options = [])
-    {
-        $id = is_numeric($id) ? (int)$id : (string)$id;
-        $ret = static::getDataCount([
-            '_id' => $id
-        ], $options);
-
-        return $ret;
-    }
-
-    /**
-     * 新增
-     *
-     * @param $id
      * @param $data
      * @return bool|mixed
      */
-    public static function add($id, $data)
+    public static function add($data)
     {
-        $id = is_numeric($id) ? (int)$id : (string)$id;
-        $data['_id'] = $id;
-        $ret = static::insertOneData($data);
+        $data = self::checkFields($data);
 
-        return $ret;
+        return parent::insertOneData($data);
     }
 
     /**
-     * 修改
+     * 更新
      *
-     * @param      $id
-     * @param      $data
-     * @param bool $upsert
+     * @param $id
+     * @param $data
      * @return bool
      */
-    public static function update($id, $data, $upsert = true)
+    public static function update($id, $data)
     {
-        $id = is_numeric($id) ? (int)$id : (string)$id;
+        $data = self::checkFields($data);
 
-        $ret = static::updateOneData([
-            '_id' => $id
-        ], $data, [
-            'upsert' => $upsert
-        ]);
-
-        return $ret;
+        return parent::updateById($id, $data);
     }
 
     /**
-     * 删除
+     * 根据id获取数据
+     *
+     * @param $id
+     * @return array|bool|null|object
+     */
+    public static function getInfoByIds($id)
+    {
+        if (is_array($id)) {
+            static $_cache;
+            $data = [];
+            $list = parent::findData([
+                static::FIELD_ID => ['$in' => $id]
+            ]);
+            if (!empty($list)) {
+                foreach ($list as $v) {
+                    $_cache[$v[static::FIELD_ID]] = $v;
+                }
+            }
+            foreach ($id as $_id) {
+                if (isset($_cache[$_id])) {
+                    $data[$_id] = $_cache[$_id];
+                }
+            }
+        } else {
+            $data = parent::getById($id);
+        }
+
+        return !empty($data) ? $data : [];
+    }
+
+    /**
+     * 获取列表
+     *
+     * @param array        $where ['Title'=>['LIKE'=>'test'],'Type'=>['$gte'=>0]]
+     * @param int          $offset
+     * @param int          $limit
+     * @param string|array $field
+     * @param array        $order
+     * @return array
+     */
+    public static function getList($where = [], $offset = 0, $limit = 0, $field = '', $order = [])
+    {
+        return parent::getPageList($where, $offset, $limit, $field, $order);
+    }
+
+    /**
+     * 删除数据
      *
      * @param $id
      * @return bool
      */
     public static function delete($id)
     {
-        $id = is_numeric($id) ? (int)$id : (string)$id;
-        $data['_id'] = $id;
-        $ret = static::deleteOneData(['_id' => $id]);
-
-        return $ret;
+        return parent::deleteById($id);
     }
 
     /**
-     * 获取总数量
+     * 字段类型验证
      *
-     * @param array $filter
-     * @param array $options
-     * @return int
+     * @param array $rows
+     * @return array
      */
-    protected static function getDataCount($filter, $options = [])
+    private static function checkFields($rows = [])
     {
-        try {
-            $ret = static::getMongodb()->count($filter, $options);
-        } catch (\Exception $e) {
-            static::log($e, $filter);
-            $ret = 0;
+        foreach ($rows as $k => &$v) {
+            if (is_numeric($k)) {
+                $v = static::checkFields($v);
+            } else {
+                if (!isset(static::$_fields[$k])) {
+                    unset($rows[$k]);
+                } else {
+                    switch (static::$_fields[$k]) {
+                        case static::VAR_TYPE_INT:
+                            $v = is_array($v) ? $v : intval($v);
+                            break;
+                        case static::VAR_TYPE_FLOAT:
+                            $v = is_array($v) ? $v : floatval($v);
+                            break;
+                        case static::VAR_TYPE_ARRAY:
+                            $v = is_array($v) ? serialize($v) : $v;
+                            break;
+                        case static::VAR_TYPE_JSON:
+                            $v = is_array($v) ? json_encode($v) : $v;
+                            break;
+                        case static::VAR_TYPE_PASSWORD:
+                            $v = !empty($v) ? password_hash($v, PASSWORD_DEFAULT) : $v;
+                            break;
+                        case static::VAR_TYPE_STRING:
+                            $v = is_array($v) ? $v : strval($v);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
 
-        return $ret;
-    }
-
-    /**
-     * 获取单个数据
-     *
-     * @param       $filter
-     * @param array $options
-     * @return array|bool|null|object
-     */
-    protected static function findOneData($filter, $options = [])
-    {
-        try {
-            $ret = static::getMongodb()->findOne($filter, $options);
-        } catch (\Exception $e) {
-            static::log($e, $filter);
-            $ret = false;
-        }
-        if ($ret === null) {
-            $ret = false;
-        }
-
-        return $ret;
-    }
-
-    /**
-     * 查找多个
-     *
-     * @param       $filter
-     * @param array $options
-     * @return array|bool
-     */
-    protected static function findData($filter, $options = [])
-    {
-        try {
-            $list = static::getMongodb()->find($filter, $options);
-        } catch (\Exception $e) {
-            static::log($e, $filter);
-
-            return false;
-        }
-
-        return $list->toArray();
-    }
-
-    /**
-     * 删除多个
-     *
-     * @param       $filter
-     * @param array $options
-     * @return bool
-     */
-    protected static function deleteData($filter, $options = [])
-    {
-        try {
-            $ret = static::getMongodb()->deleteMany($filter, $options);
-        } catch (\Exception $e) {
-            static::log($e, $filter);
-
-            return false;
-        }
-        if (!$ret->isAcknowledged()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 删除单个
-     *
-     * @param       $filter
-     * @param array $options
-     * @return bool
-     */
-    protected static function deleteOneData($filter, $options = [])
-    {
-        try {
-            $ret = static::getMongodb()->deleteOne($filter, $options);
-        } catch (\Exception $e) {
-            static::log($e, $filter);
-
-            return false;
-        }
-        if (!$ret->isAcknowledged()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 插入一条数据
-     *
-     * @param       $document
-     * @param array $options
-     * @return bool|mixed
-     */
-    protected static function insertOneData($document, $options = [])
-    {
-        try {
-            $ret = static::getMongodb()->insertOne($document, $options);
-        } catch (\Exception $e) {
-            static::log($e, $document);
-
-            return false;
-        }
-        if (!$ret->isAcknowledged()) {
-            return false;
-        }
-
-        return $ret->getInsertedId();
-    }
-
-    /**
-     * 更新一条记录
-     *
-     * @param       $filter
-     * @param       $updates
-     * @param array $options
-     * @return bool
-     */
-    protected static function updateOneData($filter, $updates, $options = [])
-    {
-        try {
-            $ret = static::getMongodb()->updateOne($filter, $updates, $options);
-        } catch (\Exception $e) {
-            static::log($e, $updates);
-
-            return false;
-        }
-        if (!$ret->isAcknowledged()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected static function log(\Exception $e, $data = '')
-    {
-        $log = [
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'msg' => $e->getMessage(),
-            'data' => $data,
-        ];
-        logs($log, "MongoDB/" . __CLASS__);
+        return $rows;
     }
 }

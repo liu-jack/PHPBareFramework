@@ -242,7 +242,7 @@ class AdminLogin
             $path = CONTROLLER_PATH . ADMIN_PATH . '/' . $v . EXT;
             if (file_exists($path)) {
                 $class = 'Controller\\' . ADMIN_PATH . '\\' . str_replace('/', '\\', $v);
-                $method = getMethods($class, 'public');
+                $method = get_methods($class, 'public');
                 foreach ($method as $mk => $mv) {
                     if (strpos($mk, '__') !== 0) {
                         $url = $v . '/' . $mk;

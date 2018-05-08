@@ -24,15 +24,18 @@ define('APP_TYPE_WEB', 0);       // web
 define('APP_TYPE_WAP', 1);       // wap
 define('APP_TYPE_ADR', 2);       // android
 define('APP_TYPE_IOS', 3);       // ISO
+define('APP_TYPE_XCX', 4);       // 小程序
 define('APP_APPID_WEB', 10);     // web appid
 define('APP_APPID_WAP', 30);     // wap appid
 define('APP_APPID_ADR', 50);     // android appid
 define('APP_APPID_IOS', 70);     // ISO appid
+define('APP_APPID_XCX', 90);     // 小程序
 
 define('G_TYPES', 'g_app_types');
 define('G_APP_ID', 'g_appid');
 define('G_APP_TYPE', 'g_apptype');
 define('G_VER', 'g_ver');
+define('G_CHANNEL', 'g_channel');
 define('G_DEVICE_ID', 'g_deviceid');
 
 $GLOBALS[G_TYPES] = [
@@ -40,4 +43,5 @@ $GLOBALS[G_TYPES] = [
     APP_TYPE_WAP => APP_TYPE_WAP,
     APP_TYPE_ADR => APP_TYPE_ADR,
     APP_TYPE_IOS => APP_TYPE_IOS,
+    APP_TYPE_XCX => APP_TYPE_XCX,
 ];

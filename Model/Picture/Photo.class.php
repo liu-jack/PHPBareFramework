@@ -177,7 +177,7 @@ class Photo extends ViewModel
                 foreach ($list_info['data'] as $v) {
                     $data['data'][] = $v[self::FD_PHOTO_ID];
                 }
-                $mc->set($mc_key, $data);
+                $mc->set($mc_key, $data, self::$_conf[self::CF_MC_TIME]);
             }
         }
         if ($limit > 0) {

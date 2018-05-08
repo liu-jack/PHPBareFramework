@@ -3,6 +3,7 @@
 namespace Model\RedisDB;
 
 use Bare\DB;
+use Common\RedisConst;
 
 /**
  * RedisQueue.class.php
@@ -13,15 +14,12 @@ use Bare\DB;
  */
 class RedisQueue
 {
-    // 通知队列
-    const TYPE_MESSAGE_NOTICE = 'MessageNotice';
     //异步更新所有表数据队列
     const TYPE_ASYNC_TABLES = 'AsyncAllTables';
+    // 通知队列
+    const TYPE_MESSAGE_NOTICE = 'MessageNotice';
 
-    const DB_INDEX = 1;
-
-    static $_instance = null;
-
+    private static $_instance = [];
     private $_queueName = '';
     private $_redis = null;
 
@@ -51,7 +49,7 @@ class RedisQueue
         try {
             return $this->_redis->rPush($this->_queueName, serialize($data));
         } catch (\Exception $exception) {
-            debug_log($exception, JF_LOG_ERROR);
+            debug_log($exception);
 
             return false;
         }
@@ -90,7 +88,7 @@ class RedisQueue
 
             return $ret;
         } catch (\Exception $exception) {
-            debug_log($exception, JF_LOG_ERROR);
+            debug_log($exception);
 
             return false;
         }
@@ -104,6 +102,6 @@ class RedisQueue
      */
     public function getRedis($write = true)
     {
-        return DB::redis($write ? DB::REDIS_SYNC_EVENT_W : DB::REDIS_SYNC_EVENT_R, self::DB_INDEX);
+        return DB::redis($write ? RedisConst::SYNC_DB_W : RedisConst::SYNC_DB_R, RedisConst::SYNC_DB_INDEX);
     }
 }

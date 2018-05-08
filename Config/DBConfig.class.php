@@ -42,6 +42,8 @@ class DBConfig
     const DB_MOBILE_W = 27;
     const DB_PICTURE_R = 28;
     const DB_PICTURE_W = 29;
+    const DB_PAYMENT_R = 30;
+    const DB_PAYMENT_W = 31;
 
     protected static $_db_cfgs = [
         self::DB_BARE_R => ['name' => 'default', 'db' => 'bare'],
@@ -74,6 +76,8 @@ class DBConfig
         self::DB_MOBILE_W => ['name' => 'default', 'db' => 'zf_mobile'],
         self::DB_PICTURE_R => ['name' => 'default', 'db' => 'zf_picture'],
         self::DB_PICTURE_W => ['name' => 'default', 'db' => 'zf_picture'],
+        self::DB_PAYMENT_R => ['name' => 'default', 'db' => 'zf_payment'],
+        self::DB_PAYMENT_W => ['name' => 'default', 'db' => 'zf_payment'],
     ];
 
     /**
@@ -97,6 +101,8 @@ class DBConfig
     const REDIS_SYNC_EVENT_W = 15;
     const REDIS_DB_CACHE_R = 16;
     const REDIS_DB_CACHE_W = 17;
+    const REDIS_DB_PAYMENT_R = 18;
+    const REDIS_DB_PAYMENT_W = 19;
 
     protected static $_redis_cfgs = [
         self::REDIS_DEFAULT_R => 'default',
@@ -113,8 +119,12 @@ class DBConfig
         self::REDIS_MOBILE_W => 'mobile',
         self::REDIS_NOTICE_R => 'notice',
         self::REDIS_NOTICE_W => 'notice',
-        self::REDIS_SYNC_EVENT_R => 'default',
-        self::REDIS_SYNC_EVENT_W => 'default',
+        self::REDIS_SYNC_EVENT_R => 'queue',
+        self::REDIS_SYNC_EVENT_W => 'queue',
+        self::REDIS_DB_CACHE_R => 'cache',
+        self::REDIS_DB_CACHE_W => 'cache',
+        self::REDIS_DB_PAYMENT_R => 'payment',
+        self::REDIS_DB_PAYMENT_W => 'payment',
     ];
 
     /**

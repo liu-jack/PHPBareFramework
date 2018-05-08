@@ -19,6 +19,7 @@ class Passport
      * @var string
      */
     protected static $_mc_prefix_user = 'PUser_';
+    protected static $_mc_time = 86400;
 
     /**
      * 通行证允许更新的字段
@@ -258,7 +259,7 @@ class Passport
             ]);
             if (is_array($ret) && count($ret) > 0) {
                 foreach ($ret as & $v) {
-                    $mc->set(self::$_mc_prefix_user . $v['UserId'], $v);
+                    $mc->set(self::$_mc_prefix_user . $v['UserId'], $v, self::$_mc_time);
                     $data_cache[$v['UserId']] = $v;
                 }
             }

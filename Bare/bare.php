@@ -1,8 +1,9 @@
 <?php defined('ROOT_PATH') or exit('Access deny');
 /**
  * bare框架入口
+ *
  * @author camfee <camfee@yeah.net>
- * @since v1.0 2016.09.12
+ * @since  v1.0 2016.09.12
  */
 
 // 检测PHP环境

@@ -49,7 +49,7 @@ EOT
     'create_account' => <<<EOT
 CREATE TABLE IF NOT EXISTS `User` (
   `Id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `Userid` bigint(20) unsigned NOT NULL COMMENT '用户ID',
+  `UserId` bigint(20) unsigned NOT NULL COMMENT '用户ID',
   `LoginName` varchar(32) NOT NULL DEFAULT '' COMMENT '登录名',
   `UserNick` varchar(32) NOT NULL DEFAULT '' COMMENT '昵称',
   `Gender` tinyint(4) NOT NULL DEFAULT '0' COMMENT '性别 0:未填 1：男 2：女',

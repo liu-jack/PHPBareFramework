@@ -1,0 +1,77 @@
+创建索引
+curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -d '
+{
+    "settings": {
+        "number_of_shards": 5,
+        "number_of_replicas": 1
+    },
+    "mappings": {
+        "list": {
+            "properties" : {
+            "title": {"type": "text"},
+            "cover": {"type": "text", "index": "not_analyzed"},
+            "category_1": {"type": "long"},
+            "category_2": {"type": "long"},
+            "category_3": {"type": "long"},
+            "dateline": {"type": "long"},
+            "is_valid": {"type": "long"},
+            "amount": {"type": "double"},
+            "pay_amount": {"type": "double"},
+            "supply_price": {"type": "double"},
+            "is_best": {"type": "long"},
+            "is_new": {"type": "long"},
+            "is_hot": {"type": "long"},
+            "is_sale": {"type": "long"},
+            "is_shipping": {"type": "long"},
+            "shipping_type": {"type": "long"},
+            "num": {"type": "long"},
+            "saler_count": {"type": "long"},
+            "brand": {"type": "long"},
+            "lastdate": {"type": "long"},
+            "shelf_life": {"type": "long"},
+            "production_date": {"type": "long"},
+            "type": {"type": "long"},
+            "sort": {"type": "long"},
+            "day_commend": {"type": "long"},
+            "high_commend": {"type": "long"},
+            "supplier": {"type": "long"},
+            "part_number": {"type": "text"},
+            "bar_code": {"type": "text"},
+            "packing_ratio": {"type": "long"},
+            "is_tax": {"type": "long"},
+            "is_recommend": {"type": "long"},
+            "is_treasure": {"type": "long"},
+            "is_today": {"type": "long"},
+            "is_group": {"type": "long"}
+            }
+        }
+    }
+}';
+
+curl -XDELETE http://127.0.0.1:9200/changmai_goods_v1?pretty
+
+设置别名
+curl -XPOST http://127.0.0.1:9200/_aliases?pretty -d '
+{
+    "actions": [
+        { "remove": { "index": "changmai_goods_v1", "alias": "changmai_goods" }},
+        { "add":    { "index": "changmai_goods_v1", "alias": "changmai_goods" }}
+    ]
+}';
+
+# 清空所有数据
+curl -XPOST http://127.0.0.1:9200/changmai_goods/list/_delete_by_query?pretty -d'
+{
+    "query":{
+        "match_all": {}
+    }
+}';
+
+curl http://127.0.0.1:9200/changmai_goods?pretty
+
+curl -XGET localhost:9200/changmai_goods/list/_search?pretty -d'
+{
+    "query": {
+        "match_all": {}
+    }
+}';

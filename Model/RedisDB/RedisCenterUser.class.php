@@ -10,14 +10,25 @@ namespace Model\RedisDB;
 
 use Bare\DB;
 
-class RedisCenterUser extends RedisDB
+class RedisCenterUser extends RedisCache
 {
     const REDIS_DB = DB::REDIS_DB_CACHE_W;
     const REDIS_DB_INDEX = self::REDIS_DB_INDEX_ACCOUNT;
+    const TABLE_NAME = 'User';
+    const MYSQL_DB = DB::DB_ACCOUNT_W;
+    const PRIMARY_KEY = 'UserId';
 
-    public static function instance($redisDb = self::REDIS_DB, $dbIndex = self::REDIS_DB_INDEX)
+    /**
+     * 获取redis缓存实例
+     *
+     * @param int    $redis_db
+     * @param int    $db_index
+     * @param string $class
+     * @return mixed|RedisCache
+     */
+    public static function instance($redis_db = self::REDIS_DB, $db_index = self::REDIS_DB_INDEX, $class = __CLASS__)
     {
-        return parent::instance($redisDb, $dbIndex);
+        return parent::instance($redis_db, $db_index, $class);
     }
 
     /**
@@ -28,22 +39,32 @@ class RedisCenterUser extends RedisDB
      */
     public static function getKey($uid)
     {
-        $arr = ['C_User_' . sprintf('%02x', $uid % 256), $uid];
+        $arr = ['CUser_' . sprintf('%02x', $uid % 256), $uid];
 
         return parent::getKey($arr);
     }
 
+    /**
+     * @param string $redis_key
+     * @param string $primary_value
+     * @param array  $fields
+     * @param string $table_name
+     * @param int    $db
+     * @param string $primary_key
+     * @param int    $redis_db_index
+     * @param int    $redis_db
+     */
     public function async(
-        $redisKey,
-        $db,
-        $tableName,
-        $primaryKey,
-        $primaryValue,
+        $redis_key,
+        $primary_value,
         $fields,
-        $redisDbIndex = self::REDIS_DB_INDEX,
-        $redisDb = self::REDIS_DB
+        $table_name = self::TABLE_NAME,
+        $db = self::MYSQL_DB,
+        $primary_key = self::PRIMARY_KEY,
+        $redis_db_index = self::REDIS_DB_INDEX,
+        $redis_db = self::REDIS_DB
     ) {
-        parent::async($redisKey, $db, $tableName, $primaryKey, $primaryValue, $fields, $redisDbIndex, $redisDb);
+        parent::async($redis_key, $primary_value, $fields, $table_name, $db, $primary_key, $redis_db_index, $redis_db);
 
     }
 }

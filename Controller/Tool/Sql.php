@@ -136,11 +136,10 @@ class Sql extends Controller
     public function application()
     {
         need_cli();
-        //        $sql = '';
-        //        for ($i = 0; $i < 256; $i++) {
-        //            $this->_m->runApplication($sql);
-        //            echo $i . PHP_EOL;
-        //        }
+        $sqls = config('sql/application');
+        foreach ($sqls as $k => $v) {
+            $this->_m->runApplication($v);
+        }
     }
 
     /**
@@ -225,6 +224,37 @@ class Sql extends Controller
         $sqls = config('sql/picture');
         foreach ($sqls as $k => $v) {
             $this->_m->runPicture($v);
+        }
+    }
+
+    /**
+     * 支付平台管理 php index.php Tool/Sql/payment
+     */
+    public function payment()
+    {
+        need_cli();
+        $sqls = config('sql/payment');
+        foreach ($sqls as $k => $v) {
+            $this->_m->runPayment($v);
+        }
+    }
+
+    /**
+     * 标签表管理 php index.php Tool/Sql/update
+     */
+    public function update()
+    {
+        need_cli();
+        $sqls = 'ALTER TABLE `User` CHANGE COLUMN `Userid` `UserId`  bigint(20) UNSIGNED NOT NULL COMMENT \'用户ID\' AFTER `Id`';
+        $search = '`User`';
+        $repalce = '`User_';
+        $func = 'runAccount';
+
+        for ($i = 0; $i < 256; $i++) {
+            $suff = sprintf('%02x', $i);
+            $sql = str_replace($search, $repalce . $suff . '`', $sqls);
+            $this->_m->$func($sql);
+            echo $i . PHP_EOL;
         }
     }
 }

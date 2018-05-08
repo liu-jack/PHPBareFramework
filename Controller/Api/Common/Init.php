@@ -70,7 +70,7 @@ class Init extends Controller
         $height = intval($_GET['height']);
 
         $appid = $GLOBALS[G_APP_ID];
-        $uid = (int)$this->isLogin(V_API);
+        $uid = (int)$this->isLogin();
 
         $result = [
             'StopServer' => [
@@ -220,7 +220,7 @@ class Init extends Controller
         $ios_token = trim($_POST['ios_token']);
 
         $appid = $GLOBALS[G_APP_ID];
-        $uid = (int)$this->isLogin(V_API);
+        $uid = (int)$this->isLogin();
 
         if (empty($token)) {
             $this->output(201, '推送ID不可为空');

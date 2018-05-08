@@ -60,12 +60,13 @@ IpqGahj2O3VB+H85lgW0h3iDMDrAdigU10CGaIpzn4zhvn83A9JrC7tmC0Aprj8B
      * 私钥解密
      *
      * @param string $code 加密代码
-     * @param string $key 私钥, 可选
+     * @param string $key  私钥, 可选
      * @return bool|string    解密成功返回明文, 失败返回false
      */
     public static function private_decode($code, $key = '')
     {
         openssl_private_decrypt(base64_decode($code), $private_decode, $key == '' ? self::$private_key : $key);
+
         return empty($private_decode) ? false : $private_decode;
     }
 
@@ -73,12 +74,13 @@ IpqGahj2O3VB+H85lgW0h3iDMDrAdigU10CGaIpzn4zhvn83A9JrC7tmC0Aprj8B
      * 私钥加密
      *
      * @param string $data 明文
-     * @param string $key 私钥, 可选
+     * @param string $key  私钥, 可选
      * @return bool|string    加密成功返回密文, 失败返回false
      */
     public static function private_encode($data, $key = '')
     {
         openssl_private_encrypt($data, $private_encode, $key == '' ? self::$private_key : $key);
+
         return empty($private_encode) ? false : base64_encode($private_encode);
     }
 
@@ -86,12 +88,13 @@ IpqGahj2O3VB+H85lgW0h3iDMDrAdigU10CGaIpzn4zhvn83A9JrC7tmC0Aprj8B
      * 公钥解密
      *
      * @param string $code 加密代码
-     * @param string $key 公钥, 可选
+     * @param string $key  公钥, 可选
      * @return bool|string    解密成功返回明文, 失败返回false
      */
     public static function public_decode($code, $key = '')
     {
         openssl_public_decrypt(base64_decode($code), $public_decode, $key == '' ? self::$public_key : $key);
+
         return empty($public_decode) ? false : $public_decode;
     }
 
@@ -99,12 +102,13 @@ IpqGahj2O3VB+H85lgW0h3iDMDrAdigU10CGaIpzn4zhvn83A9JrC7tmC0Aprj8B
      * 公钥加密
      *
      * @param string $data 明文
-     * @param string $key 公钥, 可选
+     * @param string $key  公钥, 可选
      * @return bool|string    加密成功返回密文, 失败返回false
      */
     public static function public_encode($data, $key = '')
     {
         openssl_public_encrypt($data, $public_encode, $key == '' ? self::$public_key : $key);
+
         return empty($public_encode) ? false : base64_encode($public_encode);
     }
 }

@@ -323,7 +323,7 @@ class Index extends Controller
         $read_record = 0;
         $book_recommend = 0;
         $isfav = 0;
-        if ($uid = $this->isLogin(V_API)) {
+        if ($uid = $this->isLogin()) {
             $read_record = Column::getReadRecord($uid, $fid, $bid);
             $book_recommend = Column::getRecom($uid, $bid);
             if (BookFavorite::isFavorite($uid, $bid)) {
@@ -415,7 +415,7 @@ class Index extends Controller
         $column = Column::getColumnById($bid, $cid);
         $content = Content::getContentByChapterId($bid, $cid);
         $prev_next = Column::getPrevNext($fid, $bid, $cid);
-        if ($uid = $this->isLogin(V_API)) {
+        if ($uid = $this->isLogin()) {
             Column::setReadRecord($uid, $fid, $bid, $cid);
         }
         $prev = $prev_next['prev'];

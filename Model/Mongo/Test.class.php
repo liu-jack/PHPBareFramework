@@ -9,14 +9,14 @@
 
 namespace Model\Mongo;
 
-use Bare\MongoModel;
+use Bare\MongoBase;
 
-class Test extends MongoModel
+class Test extends MongoBase
 {
     // 库名
     protected static $_db = 'test';
     // 集合名
-    protected static $_collection = 'test';
+    protected static $_table = 'test';
     // 列表
     const FIELD_TEST_LIST = 'test_list';
     const FIELD_UID = 'uid';
@@ -41,7 +41,7 @@ class Test extends MongoModel
         }
         $uid = is_numeric($uid) ? (int)$uid : (string)$uid;
         $data = ['uid' => $uid, 'date' => $date];
-        self::change(['db' => 'test', 'col' => 'testhash']);
+        self::changeTable('test', 'testhash');
         $res = self::findOneData($data);
 
         return $res;
@@ -62,7 +62,7 @@ class Test extends MongoModel
         $uid = is_numeric($uid) ? (int)$uid : (string)$uid;
 
         $data['$inc'] = [self::FIELD_COUNT => +1];
-        self::change(['db' => 'test', 'col' => 'testhash']);
+        self::changeTable('test', 'testhash');
         if (is_array($data) && count($data) > 0) {
             self::updateOneData([
                 'uid' => $uid,
@@ -91,7 +91,7 @@ class Test extends MongoModel
         }
         $data = !is_numeric(key($data)) ? [$data] : $data;
 
-        $ret = self::update($id, [
+        $ret = self::updateById($id, [
             '$addToSet' => [
                 self::FIELD_TEST_LIST => [
                     '$each' => $data
@@ -99,7 +99,7 @@ class Test extends MongoModel
             ]
         ], true);
         if ($ret !== false) {
-            self::update($id, [
+            self::updateById($id, [
                 '$push' => [
                     self::FIELD_TEST_LIST => [
                         '$each' => [],
@@ -130,7 +130,7 @@ class Test extends MongoModel
             }
         }
 
-        $ret = self::get($id, ['projection' => $user_fields]);
+        $ret = self::getById($id, ['projection' => $user_fields]);
 
         return $ret;
     }

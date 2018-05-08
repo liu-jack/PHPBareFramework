@@ -325,10 +325,10 @@ class CollectBook77 extends CollectBookBase
             // http://www.xiaoshuo77.com/view/25/25768/7757638.html
             $contentimg = $cc->match(['img' => '@<div id="content">\s*<div class="divimage"><img src="([^"]+)" border="0" class="imagecontent"></div>\s*</div>@isU'])->getMatch();
             if (!empty($contentimg['img'])) {
-                if (!file_exists(contentImg($chapterid, $bookid))) {
-                    $cc->getImage($contentimg['img'], contentImg($chapterid, $bookid));
+                if (!file_exists(book_content_img($chapterid, $bookid))) {
+                    $cc->getImage($contentimg['img'], book_content_img($chapterid, $bookid));
                 }
-                $content['content'] = contentImg($chapterid, $bookid, 0);
+                $content['content'] = book_content_img($chapterid, $bookid, 0);
             } else {
                 logs("match content failed {$bookid} : {$chapterid}", $log_path);
             }

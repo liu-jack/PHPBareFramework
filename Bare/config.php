@@ -10,11 +10,14 @@ define('LIB_PATH', ROOT_PATH . 'Lib/');
 define('VIEW_PATH', ROOT_PATH . 'View/');
 define('CONFIG_PATH', ROOT_PATH . 'Config/');
 define('COMMON_PATH', ROOT_PATH . 'Common/');
+define('APPS_PATH', ROOT_PATH . 'Apps/');
 define('DATA_PATH', ROOT_PATH . 'Data/');
-define('LOG_PATH', DATA_PATH . 'log/');
+define('LOG_PATH', DATA_PATH . 'logs/');
 define('FONT_PATH', DATA_PATH . 'font/');
+define('TEMP_PATH', DATA_PATH . 'temp/');
 define('CACHE_PATH', DATA_PATH . 'cache/');
-define('CACHE_TEMPLATE_PATH', DATA_PATH . 'cache/template/');
+define('CACHE_TEMPLATE_PATH', CACHE_PATH . 'template/');
+define('FILE_CACHE_PATH', CACHE_PATH . 'fileCache/');
 define('UPLOAD_PATH', ROOT_PATH . 'Public/upload/');
 define('UPLOAD_URI', '/Public/upload/');
 define('CURRENT_HOST', !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '29shu.iok.la');
@@ -56,12 +59,12 @@ if (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQU
 
 // 实时日志开关配置
 define('RUNTIME_LOG', false);
-defined('JF_LOG_DEBUG') || define('JF_LOG_DEBUG', 0);
-defined('JF_LOG_INFO') || define('JF_LOG_INFO', 1);
-defined('JF_LOG_NOTICE') || define('JF_LOG_NOTICE', 2);
-defined('JF_LOG_WARNING') || define('JF_LOG_WARNING', 3);
-defined('JF_LOG_ERROR') || define('JF_LOG_ERROR', 4);
-defined('JF_LOG_CRITICAL') || define('JF_LOG_CRITICAL', 5);
+defined('JF_LOG_DEBUG') or define('JF_LOG_DEBUG', 0);
+defined('JF_LOG_INFO') or define('JF_LOG_INFO', 1);
+defined('JF_LOG_NOTICE') or define('JF_LOG_NOTICE', 2);
+defined('JF_LOG_WARNING') or define('JF_LOG_WARNING', 3);
+defined('JF_LOG_ERROR') or define('JF_LOG_ERROR', 4);
+defined('JF_LOG_CRITICAL') or define('JF_LOG_CRITICAL', 5);
 
 $env = get_cfg_var('environment');
 define('DEV', 'DEV');
@@ -69,21 +72,21 @@ define('TEST', 'TEST');
 define('ONLINE', 'ONLINE');
 if ($env === 'DEV') {
     // 定义开发环境  
-    define('__ENV__', 'DEV');
+    define('__ENV__', DEV);
     define('__KEY__', '86f64532553eeb9111cf66233d6726df');
     define('IS_ONLINE', false);
     define('__LOG_LEVEL__', JF_LOG_DEBUG);
     define('__IP__', '127.0.0.1');
 } elseif ($env === 'TEST') {
     // 定义测试环境
-    define('__ENV__', 'TEST');
+    define('__ENV__', TEST);
     define('__KEY__', '6facf75d3bac75b1cdfde6d94ee0aaec');
     define('IS_ONLINE', false);
     define('__LOG_LEVEL__', JF_LOG_DEBUG);
     define('__IP__', '127.0.0.1');
 } else {
     // 定义线上环境
-    define('__ENV__', 'ONLINE');
+    define('__ENV__', ONLINE);
     define('__KEY__', '1be811d9b9a37d91893b3588e270d519');
     define('IS_ONLINE', true);
     define('__LOG_LEVEL__', JF_LOG_INFO);

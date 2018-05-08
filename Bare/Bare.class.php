@@ -14,7 +14,7 @@ class Bare
      */
     public static function init()
     {
-        $path_info = self::urlMap(PATH_INFO);
+        $path_info = self::urlRewrite(PATH_INFO);
         $url_param = explode('/', $path_info);
         if (!empty($url_param[0]) || !empty($_GET['m'])) {
             $GLOBALS['_M'] = !empty($url_param[0]) ? ucfirst($url_param[0]) : ucfirst($_GET['m']);
@@ -182,14 +182,14 @@ class Bare
     }
 
     /**
-     * url地址映射（重写）
+     * url地址重写
      *
      * @param string $path_info url参数
      * @return mixed
      */
-    private static function urlMap($path_info)
+    private static function urlRewrite($path_info)
     {
-        $map = config('urlmap');
+        $map = config('bare/rewrite');
         if (!empty($map)) {
             foreach ($map as $v) {
                 if (!empty($v['pos']) && !empty($v['rules'])) {
@@ -203,21 +203,6 @@ class Bare
 
         return $path_info;
     }
-
-    /**
-     * @var array 错误代码
-     */
-    private static $api_errno = [
-        500 => '缺少必选参数：%s',
-        501 => '调用方法不存在',
-        502 => '请求失效,请检查本机时间',
-        503 => '未知错误, 代码：%d',
-        504 => 'AppId不存在',
-        505 => 'HASH值错误',
-        506 => '请求URL格式不正确',
-        507 => '仅公测版本可用',
-        508 => '服务器维护中，暂停服务',
-    ];
 
     /**
      * 检查参数
@@ -244,17 +229,8 @@ class Bare
             'version' => $ver,
             'time' => $time
         ];
-        if (in_array($app_type, [APP_TYPE_WEB, APP_TYPE_WAP]) && empty($fields['deviceid'])) {
-            if (empty($fields['deviceid'])) {
-                unset($fields['deviceid']);
-            }
-            if (empty($fields['channel'])) {
-                unset($fields['channel']);
-            }
-        }
-
         foreach ($fields as $k => $v) {
-            if (empty($v) && $v !== 0) {
+            if (empty($v) && $v != 0) {
                 if ($k == 'deviceid' && $method == 'Common/Init/start') {
                     continue;
                 }
@@ -283,6 +259,7 @@ class Bare
         $GLOBALS[G_APP_TYPE] = $app_type;
         $GLOBALS[G_VER] = $ver;
         $GLOBALS[G_DEVICE_ID] = $deviceid;
+        $GLOBALS[G_CHANNEL] = $channel;
 
         // 本地环境特殊处理
         if (defined("__ENV__")) {
@@ -292,13 +269,14 @@ class Bare
         }
 
         // 判断hash
-        $hash1 = $key . $ver . $method;
+        $hash_str = $key . $ver . $method;
+        ksort($_GET);
         foreach ($_GET as $k => $v) {
             if ($k != API_VAR && $k != 'hash' && $v !== '') {
-                $hash1 .= $v;
+                $hash_str .= $v;
             }
         }
-        $real_hash = md5($hash1);
+        $real_hash = md5($hash_str);
         if ($real_hash != $hash) {
             // HASH值错误
             self::apiError(505);
@@ -328,7 +306,7 @@ class Bare
     {
         $json = [];
         $json['Code'] = $errno;
-        $json['Msg'] = self::$api_errno[$errno];
+        $json['Msg'] = error_msg($errno);
         if (!empty($str)) {
             $json['Msg'] = sprintf($json['Msg'], $str);
         }

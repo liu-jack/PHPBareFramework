@@ -99,11 +99,11 @@ class Test extends Controller
         //        $info = Collect77::getBook('http://www.xiaoshuo77.com/view/0/207/');
         //        pre($info);die;
         //        var_dump(Book::updateBook(285,['IsFinish' => 2]));
-        //        var_dump(arraySort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
+        //        var_dump(array_sort($data, 'ParentId', SORT_DESC, 'AdminMenuId', SORT_DESC));
         //        var_dump(ViewModel::add([]));
         //        test2::test();
         //        test1::test1();
-        //        var_dump(getFileExt('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
+        //        var_dump(get_file_ext('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png'));
         //        $image_status = PhotoImage::checkImageByUrl('http://meitetest.oss-cn-hangzhou.aliyuncs.com/config/ecomm_ad/2017/09/13_33c56480.png');
         //var_dump(Upload::saveImg(PathConst::IMG_TEST, $image_status));
         //        var_dump(Upload::saveImg(PathConst::IMG_TEST, $image_status, [0, 450], 1, ['height' => [450 => 290]]));

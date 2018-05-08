@@ -15,6 +15,8 @@ class Filter
      */
     private static $mc_key = 'Filter_Keywords';
 
+    private static $mc_time = 86400;
+
     /**
      * array 关键字数组
      */
@@ -43,7 +45,7 @@ class Filter
                     $key_words[] = $v['Word'];
                 }
                 $key_words = empty($key_words) ? [] : $key_words;
-                $mc->set(self::$mc_key, $key_words);
+                $mc->set(self::$mc_key, $key_words, self::$mc_time);
             }
             self::$key_words = $key_words;
         }
@@ -184,7 +186,7 @@ class Filter
                     foreach ($del_filter as $v) {
                         unset($key_words[array_search($v, $key_words)]);
                     }
-                    $mc->set(self::$mc_key, $key_words);
+                    $mc->set(self::$mc_key, $key_words, self::$mc_time);
                     self::$key_words = $key_words;
                 }
 
@@ -212,7 +214,7 @@ class Filter
                 if (in_array($v, $key_words)) {
                     unset($filter[$k]);
                 } else {
-                    $v = mysqlQuote($v);
+                    $v = mysql_quote($v);
                     $sql_value .= "(\"{$v}\"),";
                 }
             }
@@ -227,7 +229,7 @@ class Filter
 
                 if ($count > 0) {
                     self::$key_words = array_merge($key_words, $filter);
-                    $mc->set(self::$mc_key, self::$key_words);
+                    $mc->set(self::$mc_key, self::$key_words, self::$mc_time);
 
                     return true;
                 }

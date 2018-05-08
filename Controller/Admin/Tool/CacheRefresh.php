@@ -32,7 +32,7 @@ class CacheRefresh extends AdminController
                 output(201, ['title' => '提交失败', 'text' => 'url地址存在不合法', 'type' => 'error']);
             }
 
-            cdnCachePurge($urls);
+            cdn_cache_purge($urls);
             $this->adminLog('缓存刷新', 'refresh', 0, $urls, 'CDNCachePurge');
             output(200, ['title' => '操作成功', 'type' => 'success']);
         }

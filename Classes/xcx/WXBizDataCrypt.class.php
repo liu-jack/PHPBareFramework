@@ -1,0 +1,97 @@
+<?php
+namespace lib\plugins\xcx;
+
+class WXBizDataCrypt
+{
+    private $appid;
+    private $sessionKey;
+
+    /**
+     * 构造函数
+     *
+     * @param $sessionKey string 用户在小程序登录后获取的会话密钥
+     * @param $appid      string 小程序的appid
+     */
+    public function __construct($appid, $sessionKey)
+    {
+        $this->sessionKey = $sessionKey;
+        $this->appid      = $appid;
+    }
+
+
+    /**
+     * 检验数据的真实性，并且获取解密后的明文.
+     *
+     * @param $encryptedData string 加密的用户数据
+     * @param $iv            string 与用户数据一同返回的初始向量
+     * @param $data          string 解密后的原文
+     *
+     * @return int 成功0，失败返回对应的错误码
+     */
+    public function decryptData($encryptedData, $iv, &$data)
+    {
+        if (strlen($this->sessionKey) != 24) {
+            return ErrorCode::$IllegalAesKey;
+        }
+        $aesKey = base64_decode($this->sessionKey);
+
+
+        if (strlen($iv) != 24) {
+            return ErrorCode::$IllegalIv;
+        }
+        $aesIV = base64_decode($iv);
+
+        $aesCipher = base64_decode($encryptedData);
+
+        $result = openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+
+        $dataObj=json_decode( $result );
+        if( $dataObj  == NULL )
+        {
+            debug_log(["decryptData: ", $result], JF_LOG_ERROR);
+            return ErrorCode::$IllegalBuffer;
+        }
+        if( $dataObj->watermark->appid != $this->appid )
+        {
+            debug_log(["decryptData: ", $dataObj], JF_LOG_ERROR);
+            return ErrorCode::$IllegalBuffer;
+        }
+        $data = $result;
+        return ErrorCode::$OK;
+
+        /*
+
+        $pc     = new Prpcrypt($aesKey);
+        $result = $pc->decrypt($aesCipher, $aesIV);
+
+        if ($result[0] != 0) {
+            return $result[0];
+        }
+
+        $dataObj = json_decode($result[1]);
+        if ($dataObj == null) {
+            return ErrorCode::$IllegalBuffer;
+        }
+        if ($dataObj->watermark->appid != $this->appid) {
+            return ErrorCode::$IllegalBuffer;
+        }
+        $data = $result[1];
+        return ErrorCode::$OK;
+        */
+    }
+    /*
+    public static function decodeData($encryptedData, $iv, $sessionKey)
+    {
+    $appId = 'wxe8004d9b2efb7baf';
+    $pc = new \lib\plugins\xcx\WXBizDataCrypt($appId, $sessionKey);
+
+    $errCode = $pc->decryptData($encryptedData, $iv, $info);
+
+    if ($errCode == 0) {
+    return json_decode($info, true);
+    }
+
+    return ['code' => $errCode, 'data' => $info];
+    }
+     */
+}

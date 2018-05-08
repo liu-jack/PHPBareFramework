@@ -29,6 +29,10 @@ class RedisConst
     const BOOK_DB_R = DBConfig::REDIS_DEFAULT_R;
     const BOOK_DB_W = DBConfig::REDIS_DEFAULT_W;
     const BOOK_DB_INDEX = 0;
+    // 团购缓存
+    const GROUP_DB_R = DBConfig::REDIS_DEFAULT_R;
+    const GROUP_DB_W = DBConfig::REDIS_DEFAULT_W;
+    const GROUP_DB_INDEX = 1;
     // 手机app
     const MOBILE_DB_R = DBConfig::REDIS_MOBILE_R;
     const MOBILE_DB_W = DBConfig::REDIS_MOBILE_W;
@@ -37,4 +41,17 @@ class RedisConst
     const FAST_DB_R = DBConfig::REDIS_OTHER_R;
     const FAST_DB_W = DBConfig::REDIS_OTHER_W;
     const FAST_DB_INDEX = 0;
+    // 数据表同步队列
+    const SYNC_DB_R = DBConfig::REDIS_SYNC_EVENT_R;
+    const SYNC_DB_W = DBConfig::REDIS_SYNC_EVENT_W;
+    const SYNC_DB_INDEX = 1;
+    // 数据表缓存
+    const CACHE_DB_R = DBConfig::REDIS_DB_CACHE_R;
+    const CACHE_DB_W = DBConfig::REDIS_DB_CACHE_W;
+    const PASSPORT_INDEX = 0; // 通行证
+    const GROUP_BUY_INDEX = 10; // 团购
+    // 支付平台
+    const PAYMENT_DB_R = DBConfig::REDIS_DB_PAYMENT_R;
+    const PAYMENT_DB_W = DBConfig::REDIS_DB_PAYMENT_W;
+    const PAYMENT_INDEX = 0; // 支付平台
 }

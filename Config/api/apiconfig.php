@@ -27,6 +27,12 @@ $config = [
         'appkey' => 'c4491d446bb9fbd9cc504228466fd939',
         'rsakey' => '',
     ],
+    90 => [ // xcx
+        'appid' => 90,
+        'verid' => 'v1.0.0',
+        'appkey' => '496acce22300e77fed171eca5b07606e',
+        'rsakey' => '',
+    ],
 ];
 
 return $config;

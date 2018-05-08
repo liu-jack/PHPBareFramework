@@ -27,3 +27,6 @@ start cmd /c "mode con cols=45 lines=10 && title admin && php index.php Tool/Sql
 REM 采集
 start cmd /c "mode con cols=45 lines=10 && title collect && php index.php Tool/Sql/collect"
 start cmd /c "mode con cols=45 lines=10 && title picture && php index.php Tool/Sql/picture"
+
+REM 支付平台
+start cmd /c "mode con cols=45 lines=10 && title collect && php index.php Tool/Sql/payment"

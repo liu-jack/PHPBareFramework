@@ -9,14 +9,14 @@
 
 namespace Model\Mongo;
 
-use Bare\MongoModel;
+use Bare\MongoBase;
 
-class UserData extends MongoModel
+class UserData extends MongoBase
 {
     // 库名
     protected static $_db = 'user';
     // 集合名
-    protected static $_collection = 'userdata';
+    protected static $_table = 'userdata';
     // 已读书本记录
     const FIELD_BOOK_READ_HISTORY = 'book_read_history';
     // 总数限制
@@ -49,7 +49,7 @@ class UserData extends MongoModel
             $id = (int)$id;
             if ($id > 0) {
                 $bids[] = $id;
-                self::update($uid, [
+                self::updateById($uid, [
                     '$pull' => [
                         self::FIELD_BOOK_READ_HISTORY => $id
                     ]
@@ -58,7 +58,7 @@ class UserData extends MongoModel
         }
 
         if (count($bids) > 0) {
-            $ret = self::update($uid, [
+            $ret = self::updateById($uid, [
                 '$addToSet' => [
                     self::FIELD_BOOK_READ_HISTORY => [
                         '$each' => $bids
@@ -66,7 +66,7 @@ class UserData extends MongoModel
                 ]
             ], true);
             if ($ret !== false) {
-                self::update($uid, [
+                self::updateById($uid, [
                     '$push' => [
                         self::FIELD_BOOK_READ_HISTORY => [
                             '$each' => [],
@@ -98,8 +98,69 @@ class UserData extends MongoModel
             }
         }
 
-        $ret = self::get($uid, ['projection' => $user_fields]);
+        $ret = self::getById($uid, ['projection' => $user_fields]);
 
         return $ret;
+    }
+
+    /**
+     * 聚合查询 where group by
+     *
+     * @param $start_time
+     * @param $end_time
+     * @return array
+     */
+    public static function userAgg($start_time, $end_time)
+    {
+        $ret = self::aggregation([
+            [
+                '$match' => ['CreateTime' => ['$gte' => $start_time, '$lte' => $end_time]],
+            ],
+            [
+                '$group' => ['_id' => ['ScaleId' => '$ScaleId', 'AgentId' => '$AgentId', '_id' => '$_id']],
+            ],
+            [
+                '$group' => [
+                    '_id' => ['ScaleId' => '$_id.ScaleId', 'AgentId' => '$_id.AgentId'],
+                    'count' => ['$sum' => 1]
+                ]
+            ],
+            [
+                '$project' => ['_id' => 0, 'ScaleId' => '$_id.ScaleId', 'AgentId' => '$_id.AgentId', 'count' => 1],
+            ]
+        ], [
+            'useCursor' => true
+        ])->toArray();
+
+        return !empty($ret) ? $ret : [];
+    }
+
+    /**
+     * 统计个数
+     *
+     * @param $score
+     * @return int
+     */
+    public static function getTotal($score)
+    {
+        $ret = self::aggregation([
+            [
+                '$match' => ['Score' => ['$lt' => $score]],
+            ],
+            [
+                '$group' => ['_id' => null, 'total' => ['$sum' => '$Count']]
+            ]
+        ], [
+            'useCursor' => false
+        ]);
+        $total = -1;
+        if ($ret == false || $ret->count() == 0) {
+            return $total;
+        }
+        if (count($ret) > 0) {
+            $total = (int)$ret[0]->total;
+        }
+
+        return $total;
     }
 }

@@ -8,12 +8,10 @@
 
 namespace Bare;
 
-use Bare\DB\MemcacheDB;
 
 abstract class Model
 {
     const FIELD_VAR_TYPE = 'var_type';
-
     // 配置变量名称
     const CF_DB = 'db';
     const CF_DB_W = 'w';
@@ -26,10 +24,12 @@ abstract class Model
     const CF_RD = 'redis';
     const CF_RD_INDEX = 'redis_index';
     const CF_RD_TIME = 'redis_expire';
+    const CF_RD_KEY = 'redis_key';
     const CF_PRIMARY_KEY = '_primary_key';
     const CF_FIELDS_ARRAY = '_fields_array';
     const CF_FIELDS_JSON = '_fields_json';
     const CF_USE_MC = '_use_memcache';
+    const CF_USE_RD = '_use_redis';
 
     /**
      * 基础配置文件
@@ -57,9 +57,18 @@ abstract class Model
             self::CF_DB_W => '',
             self::CF_DB_R => '',
             self::CF_RD_INDEX => 0,
-            self::CF_RD_TIME => 0,
+            self::CF_RD_TIME => 86400,
+            self::CF_RD_KEY => '', // 可选, redis KEY, "KeyName:%d", %d会用主键ID替代
         ],
     ];
+
+    /**
+     * @see \Bare\Model::add() 新增
+     * @see \Bare\Model::update() 更新
+     * @see \Bare\Model::getInfoByIds() 按主键id查询
+     * @see \Bare\Model::getList() 条件查询
+     * @see \Bare\Model::delete() 删除
+     */
 
     // 主键/字段类型
     const VAR_TYPE_KEY = 'PRIMARY KEY';
@@ -70,12 +79,10 @@ abstract class Model
     const VAR_TYPE_JSON = 'json';
     const VAR_TYPE_PASSWORD = 'password';
     const VAR_TYPE_HIDDEN = 'hidden';
-
     // 强制不用缓存
     const EXTRA_NO_CACHE = 'no_cache';
     // 从写库读取数据
     const EXTRA_FROM_W = 'from_w';
-
     const EXTRA_DB = 'db';
     const EXTRA_FIELDS = 'fields';
     const EXTRA_OFFSET = 'offset';
@@ -89,11 +96,15 @@ abstract class Model
     const EXTRA_MC_TIME = 'mc_expire';
     const EXTRA_LIST_KEY = 'list_key_field';
     const EXTRA_LIST_VAL = 'list_val_field';
+    const EXTRA_RD_KEY = 'redis_key';
+    const EXTRA_RD_TIME = 'redis_expire';
 
     // 模块类型, MC模式
     const MOD_TYPE_MEMCACHE = 1;
     // 模块类型, DB模式
     const MOD_TYPE_DB = 2;
+    // 模块类型, REDIS模式
+    const MOD_TYPE_REDIS = 3;
 
     //{{{ curd基础方法
 
@@ -200,7 +211,7 @@ abstract class Model
             $ret = static::addData($data, $ignore, table($data[static::$_suffix_field] ?? ''));
             if (!empty(static::$_cache_list_keys) && $ret !== false) {
                 if (empty($data[0])) {
-                    $data[key(static::$_conf[static::CF_FIELDS])] = $ret;
+                    $data[static::$_conf[static::CF_PRIMARY_KEY]] = $ret;
                 } else {
                     $data = $data[0];
                 }
@@ -369,22 +380,20 @@ abstract class Model
     {
         $rows = static::checkParams($rows);
         $options = $ignore ? ['ignore' => true] : [];
-
         $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
         $ret = $pdo->insert(static::$_conf[static::CF_TABLE] . $suffix, $rows, $options);
         if ($ret !== false) {
             if ($ret > 0) {
-                return $pdo->lastInsertId();
+                $id = $pdo->lastInsertId();
             } else {
-                return 0;
+                $id = 0;
             }
         }
-
         $pdo->close();
         DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
         $pdo = null;
 
-        return false;
+        return isset($id) ? $id : false;
 
     }
 
@@ -400,7 +409,6 @@ abstract class Model
     protected static function getDataById($id, $extra = [], $suffix = '')
     {
         static::checkParams();
-
         $tmp_ids = is_array($id) ? $id : [$id];
         $ids = [];
         foreach ($tmp_ids as $v) {
@@ -409,17 +417,13 @@ abstract class Model
                 $ids[$v] = $v;
             }
         }
-
         if (empty($ids)) {
             return [];
         }
-
         $db = !empty($extra[self::EXTRA_FROM_W]) ? static::$_conf[static::CF_DB][static::CF_DB_W] : static::$_conf[static::CF_DB][static::CF_DB_R];
-
-        if (!static::$_conf[static::CF_USE_MC] || !empty($extra[self::EXTRA_NO_CACHE])) {
+        if ((!static::$_conf[static::CF_USE_RD] && !static::$_conf[static::CF_USE_MC]) || !empty($extra[self::EXTRA_NO_CACHE])) {
             $data = static::getFromDb($ids, $db, $suffix);
             $data = array_column($data, null, static::$_conf[static::CF_PRIMARY_KEY]);
-
             $order_data = [];
             foreach ($ids as $v) {
                 if (isset($data[$v]) && $data[$v][static::$_conf[static::CF_PRIMARY_KEY]] > 0) {
@@ -427,32 +431,44 @@ abstract class Model
                 }
             }
         } else {
-            $mc_ids = [];
-            $nocache_ids = [];
-            foreach ($ids as $v) {
-                $mc_ids[$v] = sprintf(static::$_conf[static::CF_MC_KEY], $v);
-                $nocache_ids[$v] = $v;
+            $mc_ids = $nocache_ids = [];
+            if (static::$_conf[static::CF_USE_RD]) {
+                foreach ($ids as $v) {
+                    $mc_ids[$v] = sprintf(static::$_conf[static::CF_RD][static::CF_RD_KEY], $v);
+                    $nocache_ids[$v] = $v;
+                }
+                $mc = static::getRedis(true);
+                $data = $mc->mget($mc_ids);
+            } else {
+                foreach ($ids as $v) {
+                    $mc_ids[$v] = sprintf(static::$_conf[static::CF_MC_KEY], $v);
+                    $nocache_ids[$v] = $v;
+                }
+                $mc = static::getMC();
+                $data = $mc->get($mc_ids);
             }
-
-            $mc = static::getMC();
-            $data = $mc->get($mc_ids);
-
             $data_cache = [];
             if (is_array($data) && count($data) > 0) {
                 foreach ($data as $v) {
+                    if (static::$_conf[static::CF_USE_RD]) {
+                        $v = unserialize($v);
+                    }
                     $data_cache[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v;
                     unset($nocache_ids[$v[static::$_conf[static::CF_PRIMARY_KEY]]]);
                 }
             }
-
             if (count($nocache_ids) > 0) {
                 $data = static::getFromDb($nocache_ids, $db, $suffix);
                 foreach ($data as $v) {
-                    $mc->set(sprintf(static::$_conf[static::CF_MC_KEY], $v[static::$_conf[static::CF_PRIMARY_KEY]]), $v, static::$_conf[static::CF_MC_TIME]);
+                    if (static::$_conf[static::CF_USE_RD]) {
+                        $mc->set(sprintf(static::$_conf[static::CF_RD][static::CF_RD_KEY], $v[static::$_conf[static::CF_PRIMARY_KEY]]), serialize($v), static::$_conf[static::CF_RD][static::CF_RD_TIME]);
+                    } else {
+                        $mc->set(sprintf(static::$_conf[static::CF_MC_KEY], $v[static::$_conf[static::CF_PRIMARY_KEY]]), $v, static::$_conf[static::CF_MC_TIME]);
+                    }
+
                     $data_cache[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v;
                 }
             }
-
             $order_data = [];
             foreach ($mc_ids as $k => $v) {
                 if (isset($data_cache[$k]) && $data_cache[$k][static::$_conf[static::CF_PRIMARY_KEY]] > 0) {
@@ -460,7 +476,6 @@ abstract class Model
                 }
             }
         }
-
         if (is_numeric($id)) {
             $order_data = current($order_data);
 
@@ -485,17 +500,21 @@ abstract class Model
         $rows = static::checkParams($rows);
         // 主键不支持更新
         unset($rows[static::$_conf[static::CF_PRIMARY_KEY]]);
-
         if ($id > 0) {
             $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
             $ret = $pdo->update(static::$_conf[static::CF_TABLE] . $suffix, $rows, [
                 static::$_conf[static::CF_PRIMARY_KEY] => $id
             ]);
-            if ($ret !== false && !empty(static::$_conf[static::CF_MC_KEY])) {
-                $mc = static::getMC();
-                $mc->delete(sprintf(static::$_conf[static::CF_MC_KEY], $id));
+            if ($ret !== false) {
+                if (!empty(static::$_conf[static::CF_MC_KEY])) {
+                    $mc = static::getMC();
+                    $mc->delete(sprintf(static::$_conf[static::CF_MC_KEY], $id));
+                }
+                if (!empty(static::$_conf[static::CF_RD][static::CF_RD_KEY])) {
+                    $redis = static::getRedis(true);
+                    $redis->delete(sprintf(static::$_conf[static::CF_RD][static::CF_RD_KEY], $id));
+                }
             }
-
             $pdo->close();
             DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
             $pdo = null;
@@ -518,18 +537,21 @@ abstract class Model
     {
         $id = (int)$id;
         static::checkParams();
-
         if ($id > 0) {
             $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
             $ret = $pdo->delete(static::$_conf[static::CF_TABLE] . $suffix, [
                 static::$_conf[static::CF_PRIMARY_KEY] => $id
             ]);
-
-            if ($ret !== false && !empty(static::$_conf[static::CF_MC_KEY])) {
-                $mc = static::getMC();
-                $mc->delete(sprintf(static::$_conf[static::CF_MC_KEY], $id));
+            if ($ret !== false) {
+                if (!empty(static::$_conf[static::CF_MC_KEY])) {
+                    $mc = static::getMC();
+                    $mc->delete(sprintf(static::$_conf[static::CF_MC_KEY], $id));
+                }
+                if (!empty(static::$_conf[static::CF_RD][static::CF_RD_KEY])) {
+                    $redis = static::getRedis(true);
+                    $redis->delete(sprintf(static::$_conf[static::CF_RD][static::CF_RD_KEY], $id));
+                }
             }
-
             $pdo->close();
             DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W], 'force_close');
             $pdo = null;
@@ -552,6 +574,12 @@ abstract class Model
      *                     mctime: 可选, 0, 过期时间, 默认不过期
      *                     mc: 可选, MC连接, 默认用static::$_conf['mc'] > memcache_default
      *
+     *                     REDIS模式:
+     *                     type: static::MOD_TYPE_REDIS, REDIS模式, 只返回主键ID
+     *                     rediskey: 必选, XXX_{Uid}:{TestId}, 字段只能在传入条件中, 不存在替换为0
+     *                     redistime: 可选, 0, 过期时间, 默认不过期
+     *                     redis: 可选, redis连接, 默认用static::$_conf['redis']['r'] > redis_default
+     *
      *                     DB模式
      *                     type: static::MOD_TYPE_DB, 数据模式, 返回查询的具体数据
      *                     fields: 可选, 字段, 逗号分隔, 默认仅为主键ID
@@ -571,9 +599,7 @@ abstract class Model
     protected static function getDataByFields($where, $extra = [], $suffix = '')
     {
         static::checkParams();
-
         $data = [];
-
         $where_normal = [];
         foreach ($where as $k => $v) {
             $p = strpos($k, ' ');
@@ -584,25 +610,66 @@ abstract class Model
                 $where_normal[$q] = $v;
             }
         }
-
         $extra[static::EXTRA_DB] = $extra[static::EXTRA_DB] == static::$_conf[static::CF_DB][static::CF_DB_W] ? static::$_conf[static::CF_DB][static::CF_DB_W] : static::$_conf[static::CF_DB][static::CF_DB_R];
         $extra[static::EXTRA_OFFSET] = empty($extra[static::EXTRA_OFFSET]) ? 0 : max(0, $extra[static::EXTRA_OFFSET]);
         $extra[static::EXTRA_LIMIT] = empty($extra[static::EXTRA_LIMIT]) ? 0 : $extra[static::EXTRA_LIMIT];
         $extra[static::EXTRA_ORDER] = empty($extra[static::EXTRA_ORDER]) ? static::$_conf[static::CF_PRIMARY_KEY] . " DESC" : $extra[static::EXTRA_ORDER];
         $extra[static::EXTRA_GET_COUNT] = $extra[static::EXTRA_GET_COUNT] === 0 ? 0 : 1;
         $extra[static::EXTRA_GET_RET] = $extra[static::EXTRA_GET_RET] === 0 ? 0 : 1;
-
-        if ($extra[static::EXTRA_MOD_TYPE] == static::MOD_TYPE_MEMCACHE) {
+        if ($extra[static::EXTRA_MOD_TYPE] == static::MOD_TYPE_REDIS) {
+            if (empty($extra[static::EXTRA_RD_KEY])) {
+                throw new \Exception("MOD_TYPE_REDIS: redis_key is empty!");
+            }
+            $extra[static::EXTRA_RD_TIME] = $extra[static::EXTRA_RD_TIME] > 0 ? $extra[static::EXTRA_RD_TIME] : 86400;
+            $key = preg_replace_callback("/\{(\w+)\}/", function ($matchs) use ($where_normal) {
+                return $where_normal[$matchs[1]] ?? 0;
+            }, $extra[static::EXTRA_RD_KEY]);
+            $redis = static::getRedis(true);
+            $data = unserialize($redis->get($key));
+            if (!is_array($data)) {
+                $pdo = DB::pdo($extra[static::EXTRA_DB]);
+                $ret = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where, static::$_conf[static::CF_PRIMARY_KEY], $extra[static::EXTRA_ORDER]);
+                $data = [];
+                if (is_array($ret)) {
+                    if (!empty($extra[self::EXTRA_LIST_KEY])) {
+                        if (!empty($extra[self::EXTRA_LIST_VAL])) {
+                            if (is_array($extra[self::EXTRA_LIST_VAL])) {
+                                foreach ($ret as $v) {
+                                    foreach ($extra[self::EXTRA_LIST_VAL] as $lv) {
+                                        $data[$v[$extra[self::EXTRA_LIST_KEY]]][$lv] = $v[$lv];
+                                    }
+                                }
+                            } else {
+                                foreach ($ret as $v) {
+                                    $data[$v[$extra[self::EXTRA_LIST_KEY]]] = $v[$extra[self::EXTRA_LIST_VAL]];
+                                }
+                            }
+                        } else {
+                            foreach ($ret as $v) {
+                                $data[$v[$extra[self::EXTRA_LIST_KEY]]] = $v;
+                            }
+                        }
+                    } else {
+                        foreach ($ret as $v) {
+                            $data[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v[static::$_conf[static::CF_PRIMARY_KEY]];
+                        }
+                    }
+                    $redis->set($key, serialize($data), $extra[static::EXTRA_RD_TIME]);
+                }
+            }
+            $count = count($data);
+            if ($extra[static::EXTRA_LIMIT] > 0) {
+                $data = array_slice($data, $extra[static::EXTRA_OFFSET], $extra[static::EXTRA_LIMIT], true);
+            }
+        } elseif ($extra[static::EXTRA_MOD_TYPE] == static::MOD_TYPE_MEMCACHE) {
             if (empty($extra[static::EXTRA_MC_KEY])) {
                 throw new \Exception("MOD_TYPE_MEMCACHE: mckey is empty!");
             }
             $extra[static::EXTRA_MC_TIME] = $extra[static::EXTRA_MC_TIME] > 0 ? $extra[static::EXTRA_MC_TIME] : 0;
             $extra[static::EXTRA_MC] = empty($extra[static::EXTRA_MC]) ? (static::$_conf[static::CF_MC] ? static::$_conf[static::CF_MC] : DB::MEMCACHE_DEFAULT) : $extra[static::EXTRA_MC];
-
             $key = preg_replace_callback("/\{(\w+)\}/", function ($matchs) use ($where_normal) {
                 return $where_normal[$matchs[1]] ?? 0;
             }, $extra[static::EXTRA_MC_KEY]);
-
             $mc = static::getMC($extra[static::EXTRA_MC]);
             $data = $mc->get($key);
             if (!is_array($data)) {
@@ -646,18 +713,15 @@ abstract class Model
             if ($extra[static::EXTRA_LIMIT] > 0) {
                 $limit = [$extra[static::EXTRA_OFFSET], $extra[static::EXTRA_LIMIT]];
             }
-
             $pdo = DB::pdo($extra[static::EXTRA_DB]);
             $count = -1;
             if ($extra[static::EXTRA_GET_COUNT] == 1) {
                 $count = $pdo->select('COUNT(' . static::$_conf[static::CF_PRIMARY_KEY] . ')')->from(static::$_conf[static::CF_TABLE] . $suffix)->where($where)->getValue();
             }
-
             if ($extra[static::EXTRA_GET_RET] == 1 && ($count == -1 || $count > 0)) {
                 $data = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where, $extra[static::EXTRA_FIELDS], $extra[static::EXTRA_ORDER], $limit);
             }
         }
-
         if (!empty($pdo)) {
             $pdo->close();
             DB::pdo($extra[static::EXTRA_DB], 'force_close');
@@ -695,7 +759,7 @@ abstract class Model
      * 获取redis实例
      *
      * @param bool $w
-     * @return \Redis
+     * @return \Bare\DB\RedisDB
      */
     protected static function getRedis($w = false)
     {
@@ -719,7 +783,7 @@ abstract class Model
      * 获取mc实例
      *
      * @param string $option
-     * @return MemcacheDB
+     * @return \Bare\DB\MemcacheDB
      */
     protected static function getMC($option = null)
     {
@@ -748,11 +812,9 @@ abstract class Model
         $ret = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, [
             static::$_conf[static::CF_PRIMARY_KEY] . ' IN' => $ids
         ]);
-
         $pdo->close();
         DB::pdo($db, 'force_close');
         $pdo = null;
-
         if (is_array($ret) && count($ret) > 0) {
             foreach ($ret as & $v) {
                 foreach (static::$_conf[static::CF_FIELDS_ARRAY] as $x) {
@@ -802,6 +864,7 @@ abstract class Model
                 }
             }
             $conf[static::CF_USE_MC] = !empty($conf[static::CF_MC]) && !empty($conf[static::CF_MC_KEY]);
+            $conf[static::CF_USE_RD] = !empty($conf[static::CF_RD][static::CF_DB_W]) && !empty($conf[static::CF_RD][static::CF_RD_KEY]);
             if ($flag) {
                 throw new \Exception('primary_key not set');
             }

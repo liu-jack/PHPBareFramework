@@ -1,6 +1,6 @@
 <?php
 
-namespace Bare\Util;
+namespace Classes\Util;
 
 class FileSystem
 {
@@ -8,10 +8,10 @@ class FileSystem
     /**
      * 移动文件
      *
-     * @param array  $fileList
-     * @param string $from
-     * @param string $to
-     * @param string $option
+     * @param array|string $fileList
+     * @param string       $from
+     * @param string       $to
+     * @param string       $option
      * @return void
      * @static
      */

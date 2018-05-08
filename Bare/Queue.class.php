@@ -9,7 +9,7 @@
 
 namespace Bare;
 
-declare(ticks=1);
+//declare(ticks=1);
 
 use Common\RedisConst;
 
@@ -194,7 +194,7 @@ class Queue
     /**
      * 队列循环入口
      *
-     * @param \Model\Queue\Queue $class
+     * @param \Queue\Queue $class
      */
     public function doLoop($class)
     {
@@ -234,6 +234,9 @@ class Queue
                 if ($class->usleeptime > 0) {
                     usleep($class->usleeptime);
                 }
+            }
+            if (function_exists('pcntl_signal_dispatch')) {
+                pcntl_signal_dispatch();
             }
         }
     }

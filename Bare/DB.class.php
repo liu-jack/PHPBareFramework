@@ -5,8 +5,8 @@ namespace Bare;
 defined('ROOT_PATH') or exit('Access deny');
 
 use Config\DBConfig;
-use Bare\DB\{
-    PDODB, MemcachedDB, MemcacheDB, RedisDB, ElasticSearch as ESDB, MongodbDB, FileDB
+use Bare\DataDriver\{
+    PDODriver, MemcachedDriver, MemcacheDriver, RedisDriver, ElasticSearch, MongodbDriver, FileCache
 };
 
 /**
@@ -22,7 +22,7 @@ class DB extends DBConfig
      *
      * @param mixed $params  连接参数
      * @param mixed $options 选项
-     * @return bool|PDODB
+     * @return bool|PDODriver
      */
     public static function pdo($params, $options = null)
     {
@@ -50,7 +50,7 @@ class DB extends DBConfig
 
             self::_checkConnectionParams([$params], 'mysql');
 
-            $_static[$key] = new PDODB($params, $options);
+            $_static[$key] = new PDODriver($params, $options);
         } else {
             if (method_exists($_static[$key], 'clear')) {
                 $_static[$key]->clear();
@@ -99,7 +99,7 @@ class DB extends DBConfig
         static $_static = [];
 
         if (empty($_static)) {
-            $_static = config('db');
+            $_static = config('bare/db');
         }
 
         return $_static[$type];
@@ -167,7 +167,7 @@ class DB extends DBConfig
      * @param mixed   $params  连接参数
      * @param integer $dbindex 库号
      * @param integer $timeout 超时时间
-     * @return RedisDB
+     * @return RedisDriver
      */
     public static function redis($params, $dbindex = 0, $timeout = 5)
     {
@@ -187,7 +187,7 @@ class DB extends DBConfig
             self::_checkConnectionParams([$params], 'redis');
             $auth = isset($params['auth']) ? $params['auth'] : false;
 
-            $_static[$key] = new RedisDB($params, $dbindex, $timeout, $auth);
+            $_static[$key] = new RedisDriver($params, $dbindex, $timeout, $auth);
         }
 
         return $_static[$key];
@@ -222,7 +222,7 @@ class DB extends DBConfig
      *
      * @param mixed   $params  连接参数
      * @param integer $timeout 超时时间
-     * @return MemcacheDB
+     * @return MemcacheDriver
      */
     public static function memcache($params = self::MEMCACHE_DEFAULT, $timeout = 5)
     {
@@ -240,9 +240,9 @@ class DB extends DBConfig
             self::_checkConnectionParams($params, 'memcache');
 
             if (class_exists("Memcached")) {
-                $_static[$key] = new MemcachedDB($params, $timeout, $key);
+                $_static[$key] = new MemcachedDriver($params, $timeout, $key);
             } else {
-                $_static[$key] = new MemcacheDB($params, $timeout, $key);
+                $_static[$key] = new MemcacheDriver($params, $timeout, $key);
             }
         }
 
@@ -276,7 +276,7 @@ class DB extends DBConfig
      *
      * @param mixed   $params  连接参数
      * @param integer $timeout 超时时间
-     * @return ESDB
+     * @return ElasticSearch
      */
     public static function search($params = self::SEARCH_DEFAULT, $timeout = 2)
     {
@@ -315,7 +315,7 @@ class DB extends DBConfig
 
             $params['timeout'] = (is_numeric($timeout) && ($timeout = (int)$timeout) > 0) ? $timeout : 2;
 
-            $_static[$key] = new ESDB($params);
+            $_static[$key] = new ElasticSearch($params);
         }
 
         return $_static[$key];
@@ -347,15 +347,15 @@ class DB extends DBConfig
      * 返回文件缓存实例
      *
      * @param string $path 缓存路径
-     * @return FileDB
+     * @return FileCache
      */
-    public static function filecache($path)
+    public static function fileCache($path)
     {
         static $_static = [];
 
         $key = md5($path);
         if (!isset($_static[$key])) {
-            $_static[$key] = new FileDB($path);
+            $_static[$key] = new FileCache($path);
         }
 
         return $_static[$key];
@@ -381,7 +381,7 @@ class DB extends DBConfig
                 }
             }
 
-            $_static[$key] = new MongodbDB($params, $options);
+            $_static[$key] = new MongodbDriver($params, $options);
         }
 
         return $_static[$key];
