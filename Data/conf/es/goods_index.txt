@@ -1,5 +1,5 @@
-创建索引
-curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -d '
+# 创建搜索索引 mapping
+curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -H 'Content-Type: application/json' -d '
 {
     "settings": {
         "number_of_shards": 5,
@@ -39,7 +39,6 @@ curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -d '
             "bar_code": {"type": "text"},
             "packing_ratio": {"type": "long"},
             "is_tax": {"type": "long"},
-            "is_recommend": {"type": "long"},
             "is_treasure": {"type": "long"},
             "is_today": {"type": "long"},
             "is_group": {"type": "long"}
@@ -48,10 +47,8 @@ curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -d '
     }
 }';
 
-curl -XDELETE http://127.0.0.1:9200/changmai_goods_v1?pretty
-
 设置别名
-curl -XPOST http://127.0.0.1:9200/_aliases?pretty -d '
+curl -XPOST http://127.0.0.1:9200/_aliases?pretty -H 'Content-Type: application/json' -d '
 {
     "actions": [
         { "remove": { "index": "changmai_goods_v1", "alias": "changmai_goods" }},
@@ -60,16 +57,21 @@ curl -XPOST http://127.0.0.1:9200/_aliases?pretty -d '
 }';
 
 # 清空所有数据
-curl -XPOST http://127.0.0.1:9200/changmai_goods/list/_delete_by_query?pretty -d'
+curl -XPOST http://127.0.0.1:9200/changmai_goods/list/_delete_by_query?pretty -H 'Content-Type: application/json' -d'
 {
     "query":{
         "match_all": {}
     }
 }';
 
-curl http://127.0.0.1:9200/changmai_goods?pretty
+# 删除搜索库
+curl -XDELETE http://127.0.0.1:9200/changmai_goods_v1?pretty -H 'Content-Type: application/json'
 
-curl -XGET localhost:9200/changmai_goods/list/_search?pretty -d'
+# 查看搜索库信息
+curl http://127.0.0.1:9200/changmai_goods?pretty -H 'Content-Type: application/json'
+
+# 查看搜索数据
+curl -XGET localhost:9200/changmai_goods/list/_search?pretty -H 'Content-Type: application/json' -d'
 {
     "query": {
         "match_all": {}
