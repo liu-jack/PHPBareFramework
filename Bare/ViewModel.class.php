@@ -8,6 +8,8 @@
 
 namespace Bare;
 
+defined('ROOT_PATH') or exit('Access deny');
+
 class ViewModel extends Model
 {
     // 变量名称

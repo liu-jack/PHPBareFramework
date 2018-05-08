@@ -1,4 +1,4 @@
-<?php defined('ROOT_PATH') or exit('Access deny');
+<?php
 /**
  * 基类控制器
  *
@@ -7,6 +7,8 @@
  */
 
 namespace Bare;
+
+defined('ROOT_PATH') or exit('Access deny');
 
 use Model\Account\User as AUser;
 use Model\Passport\PassportApi;

@@ -7,6 +7,8 @@
 
 namespace Bare;
 
+defined('ROOT_PATH') or exit('Access deny');
+
 class CommonModel
 {
     // 主键/字段类型
@@ -74,7 +76,7 @@ class CommonModel
                     switch ($fields[$k]) {
                         case self::VAR_TYPE_KEY:
                         case self::VAR_TYPE_INT:
-                            $v = is_array($v)? $v : intval($v);
+                            $v = is_array($v) ? $v : intval($v);
                             break;
                         case self::VAR_TYPE_ARRAY:
                             $v = is_array($v) ? serialize($v) : $v;

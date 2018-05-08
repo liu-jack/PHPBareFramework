@@ -110,15 +110,30 @@ class ElasticSearch
         return $this->error;
     }
 
+    /**
+     * 报错
+     *
+     * @param $errno
+     * @param $error
+     */
     private function _setError($errno, $error)
     {
         $this->error = ['code' => $errno, 'msg' => $error];
     }
 
+    /**
+     * 请求
+     *
+     * @param        $url
+     * @param string $data
+     * @param        $method
+     * @return mixed
+     */
     private function _curl($url, $data = '', $method)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);

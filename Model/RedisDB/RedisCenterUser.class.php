@@ -9,11 +9,12 @@
 namespace Model\RedisDB;
 
 use Bare\DB;
+use Common\RedisConst;
 
 class RedisCenterUser extends RedisCache
 {
-    const REDIS_DB = DB::REDIS_DB_CACHE_W;
-    const REDIS_DB_INDEX = self::REDIS_DB_INDEX_ACCOUNT;
+    const REDIS_DB = RedisConst::ACCOUNT_DB_W;
+    const REDIS_DB_INDEX = RedisConst::ACCOUNT_DB_INDEX;
     const TABLE_NAME = 'User';
     const MYSQL_DB = DB::DB_ACCOUNT_W;
     const PRIMARY_KEY = 'UserId';

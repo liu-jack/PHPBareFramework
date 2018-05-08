@@ -32,12 +32,12 @@ class SearchBase
     const T_INT = 'int';
     const T_STRING = 'string';
     const T_FLOAT = 'float';
-    const T_STRTOTIME = 'strtotime';
+    const T_STR2TIME = 'str2time';
 
     /**
      * 搜索实例
      *
-     * @return mixed
+     * @return \Bare\DataDriver\ElasticSearch
      */
     protected static function instance()
     {
@@ -155,16 +155,23 @@ class SearchBase
     {
         $total = empty($ret['hits']['total']) ? 0 : $ret['hits']['total'];
         $data = [];
-        if ($ret != false) {
+        if ($ret !== false) {
             $hits = $ret['hits']['hits'];
+            $only_id = count($fields) == 1 && key($fields) == static::$_primary_key;
             foreach ($hits as $result) {
-                $items[static::$_primary_key] = $result[static::INDEX_KEY];
-                foreach ($fields as $field => $key) {
-                    if (isset($result['_source'][$key])) {
-                        $items[$field] = $result['_source'][$key];
+                if ($only_id) {
+                    $data[$result[static::INDEX_KEY]] = $result[static::INDEX_KEY];
+                } else {
+                    $items[static::$_primary_key] = $result[static::INDEX_KEY];
+                    foreach ($fields as $field => $key) {
+                        if (isset($result['_source'][$key])) {
+                            $items[$field] = $result['_source'][$key];
+                        }
                     }
+                    $data[] = $items;
                 }
-                $data[] = $items;
+
+
             }
         }
 

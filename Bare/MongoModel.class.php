@@ -10,6 +10,8 @@
 
 namespace Bare;
 
+defined('ROOT_PATH') or exit('Access deny');
+
 use Config\DBConfig;
 
 abstract class MongoModel extends MongoBase

@@ -9,6 +9,8 @@
 
 namespace Bare;
 
+defined('ROOT_PATH') or exit('Access deny');
+
 use MongoDB\BSON\ObjectID;
 use MongoDB\BSON\Regex;
 
