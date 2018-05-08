@@ -9,7 +9,7 @@ curl -XPUT http://127.0.0.1:9200/changmai_goods_v1?pretty -H 'Content-Type: appl
         "list": {
             "properties" : {
             "title": {"type": "text"},
-            "cover": {"type": "text", "index": "not_analyzed"},
+            "cover": {"type": "text", "index": "false"},
             "category_1": {"type": "long"},
             "category_2": {"type": "long"},
             "category_3": {"type": "long"},
