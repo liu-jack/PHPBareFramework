@@ -5,6 +5,7 @@
 
 namespace Apps\Queues;
 
+use Bare\C\Queue;
 use Sms\LsmSms as SmsCtrl;
 
 class SendSMS extends Queue

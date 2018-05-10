@@ -8,6 +8,7 @@
 
 namespace Apps\Queues;
 
+use Bare\C\Queue;
 use Classes\Push\JPush;
 
 class AppPushTag extends Queue

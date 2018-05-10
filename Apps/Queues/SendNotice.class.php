@@ -5,6 +5,8 @@
 
 namespace Apps\Queues;
 
+use Bare\C\Queue;
+
 class SendNotice extends Queue
 {
     const REDIS_KEY_TIME_LIMIT = 'T:%d:%d';

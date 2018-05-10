@@ -8,6 +8,7 @@
 
 namespace Apps\Queues;
 
+use Bare\C\Queue;
 use Model\Search\BookSearch as SBook;
 
 class SearchBook extends Queue

@@ -2,6 +2,8 @@
 
 namespace Apps\Queues;
 
+use Bare\C\Queue;
+
 /**
  * 刷缓存队列
  */

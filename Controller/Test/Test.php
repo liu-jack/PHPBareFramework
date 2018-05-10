@@ -127,6 +127,8 @@ class Test extends Controller
         //        $this->crossOutput('', []);
         //        pre(get_defined_constants());
         //        var_dump(Photo::getListByAtlasId(1, 0, 2));
+        $this->model('Test\Preg');
+        var_dump($this->Preg->test());
     }
 
     /**

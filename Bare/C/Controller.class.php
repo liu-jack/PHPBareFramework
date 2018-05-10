@@ -24,7 +24,7 @@ Class Controller
         // 模型加载
         $model_path = MODEL_PATH . $GLOBALS['_MPATH'] . CEXT;
         if (file_exists($model_path)) {
-            $model = '\\Model' . $GLOBALS['_NAMESPACE'];
+            $model = '\Model' . $GLOBALS['_NAMESPACE'];
             $this->_m = new $model;
         }
         //接口访问设置
@@ -94,6 +94,29 @@ Class Controller
     }
 
     /**
+     * 加载模块
+     *
+     * @param $name
+     */
+    public function model($name)
+    {
+        $name = stripos($name, 'Model\\') === false ? 'Model\\' . $name : $name;
+        $this->load($name);
+    }
+
+    /**
+     * 加载类
+     *
+     * @param $name
+     */
+    public function load($name)
+    {
+        $name = '\\' . trim($name, '\\');
+        $_val = trim(substr($name, (int)strrpos($name, '\\')), '\\');
+        $this->$_val = new $name;
+    }
+
+    /**
      * 接口数据输出
      *
      * @param int   $code 返回码 200：成功
@@ -130,7 +153,7 @@ Class Controller
      * @param array        $data   数据, 建议使用array
      * @param string|mixed $domain 请求发起域名
      */
-    public static function crossOutput($func, $data, $domain = DOMAIN_HOST)
+    public static function crossOutput($func, $data, $domain = HOST_DOMAIN)
     {
         $data = rawurlencode(json_encode($data));
         $time = time();
@@ -140,7 +163,7 @@ Class Controller
         }
 
         if (!preg_match('/[a-z0-9\.]+/i', $domain)) {
-            $domain = DOMAIN_HOST;
+            $domain = HOST_DOMAIN;
         }
 
         echo <<<EOT
@@ -391,6 +414,8 @@ EOT;
         }
         $this->value('pages_total', $pages_total);
         $this->value('pages', $html);
+
+        return null;
     }
 
     /**

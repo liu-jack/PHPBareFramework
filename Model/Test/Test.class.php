@@ -7,7 +7,6 @@ use Bare\M\Model;
 
 class Test extends Model
 {
-
     /**
      * 配置文件
      *

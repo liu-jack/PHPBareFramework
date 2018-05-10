@@ -8,6 +8,7 @@
 
 namespace Apps\Queues;
 
+use Bare\C\Queue;
 use Model\Book\Book;
 
 class UpdateCount extends Queue
