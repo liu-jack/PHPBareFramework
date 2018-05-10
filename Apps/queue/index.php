@@ -2,7 +2,7 @@
 
 require dirname(__DIR__) . '/app.inc.php';
 
-use Bare\Queue;
+use Bare\M\Queue;
 
 /**
  * 队列控制器

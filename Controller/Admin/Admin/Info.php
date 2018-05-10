@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Model\Admin\Admin\AdminGroup;
 use Model\Admin\Admin\AdminLogin;
 

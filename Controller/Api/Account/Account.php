@@ -6,7 +6,7 @@
 
 namespace Controller\Api\Account;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Account\User as AUser;
 
 

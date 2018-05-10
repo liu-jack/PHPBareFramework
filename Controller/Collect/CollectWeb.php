@@ -9,7 +9,7 @@
 namespace Controller\Collect;
 
 use Bare\DB;
-use Bare\Controller;
+use Bare\C\Controller;
 
 class CollectWeb extends Controller
 {

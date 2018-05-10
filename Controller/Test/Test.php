@@ -2,9 +2,9 @@
 
 namespace Controller\Test;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Bare\DB;
-use Bare\ViewModel;
+use Bare\M\ViewModel;
 use Classes\Image\PhotoImage;
 use Classes\Safe\HTMLClean;
 use Common\PathConst;
@@ -22,7 +22,7 @@ use Model\Favorite\BookFavorite;
 use Model\Admin\Admin\AdminUser;
 use Model\Admin\Admin\AdminGroup;
 use Model\Admin\Admin\AdminMenu;
-use Bare\MongoModel;
+use Bare\M\MongoModel;
 use Model\Admin\Admin\AdminLogin;
 use Model\Collect\CollectBook77 as Collect77;
 use Model\Mongo\Test as MTest;

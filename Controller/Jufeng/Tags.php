@@ -3,7 +3,7 @@
 namespace Controller\Jufeng;
 
 use Bare\DB;
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 测试用控制器

@@ -6,7 +6,10 @@
  * @since  v1.0 2017.08.26
  */
 
-namespace Bare;
+namespace Bare\M;
+
+use Bare\DB;
+use Bare\M\Model;
 
 defined('ROOT_PATH') or exit('Access deny');
 

@@ -7,7 +7,7 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Classes\Encrypt\Rsa;
 use Classes\Image\Securimage;
 use Model\Admin\Admin\AdminGroup;

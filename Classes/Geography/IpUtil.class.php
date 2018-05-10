@@ -10,7 +10,7 @@
 
 namespace Classes\Geography;
 
-use Bare\CommonModel;
+use Bare\M\CommonModel;
 
 class IpUtil extends CommonModel
 {

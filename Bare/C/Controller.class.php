@@ -6,7 +6,7 @@
  * @since  v1.0 2016.09.12
  */
 
-namespace Bare;
+namespace Bare\C;
 
 defined('ROOT_PATH') or exit('Access deny');
 
@@ -36,7 +36,7 @@ Class Controller
     /**
      * 数据模型
      *
-     * @var \Model\Tool\Sql|\Bare\Model|\Bare\ViewModel
+     * @var \Model\Tool\Sql|\Bare\M\Model|\Bare\M\ViewModel
      */
     protected $_m = null;
 

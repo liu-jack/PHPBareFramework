@@ -3,7 +3,7 @@
 namespace Model\Jufeng;
 
 use Bare\DB;
-use Bare\Model;
+use Bare\M\Model;
 
 class Collect extends Model
 {

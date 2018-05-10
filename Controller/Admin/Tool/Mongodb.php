@@ -2,8 +2,8 @@
 
 namespace Controller\Admin\Tool;
 
-use Bare\AdminController;
-use Bare\MongoModel;
+use Bare\C\AdminController;
+use Bare\M\MongoModel;
 
 class Mongodb extends AdminController
 {

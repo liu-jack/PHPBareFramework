@@ -44,7 +44,7 @@ class Bare
                 }
                 $kv++;
             }
-            $_GET = array_merge($_GET, $get);
+            $_GET = array_merge($get, $_GET);
         }
 
         self::start();
@@ -239,10 +239,12 @@ class Bare
             }
         }
 
-        $appconfig = config('api/apiconfig')[$appid];
-        if (!empty($appconfig)) {
-            $key = $appconfig['appkey'];
-        } else {
+
+        $key = version_app_key($appid, $ver);
+        if (empty($key)) {
+            $key = config('api/apiconfig')[$appid]['appkey'];
+        }
+        if (empty($key)) {
             // AppId不存在
             self::apiError(504);
             exit;

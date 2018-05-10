@@ -6,7 +6,7 @@
 
 namespace Model\Mobile;
 
-use Bare\RedisFastInterface as Fast;
+use Bare\M\RedisFastInterface as Fast;
 use Bare\DB;
 
 class AppInfo

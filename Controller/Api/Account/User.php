@@ -6,7 +6,7 @@
 
 namespace Controller\Api\Account;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Mobile\Device;
 use Model\Passport\PassportApi;
 use Model\Passport\User as PUser;

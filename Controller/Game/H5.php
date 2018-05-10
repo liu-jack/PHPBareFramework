@@ -2,7 +2,7 @@
 
 namespace Controller\Game;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * H5游戏

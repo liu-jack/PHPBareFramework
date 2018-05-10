@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Mobile;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Model\Admin\Admin\AdminCron;
 
 class Cron extends AdminController

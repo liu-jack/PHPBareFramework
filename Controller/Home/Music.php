@@ -2,7 +2,7 @@
 
 namespace Controller\Home;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 音乐

@@ -2,7 +2,7 @@
 
 namespace Controller\Jufeng;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Classes\Net\Collects;
 use Classes\Tool\Emoji;
 

@@ -5,7 +5,7 @@ namespace Bare;
 defined('ROOT_PATH') or exit('Access deny');
 
 use Config\DBConfig;
-use Bare\DataDriver\{
+use Bare\D\{
     PDODriver, MemcachedDriver, MemcacheDriver, RedisDriver, ElasticSearch, MongodbDriver, FileCache
 };
 

@@ -7,7 +7,7 @@
 
 namespace Controller\Api\Book;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Book\Book;
 use Model\Book\Column;
 use Model\Book\Content;

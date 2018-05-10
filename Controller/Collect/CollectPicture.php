@@ -2,7 +2,7 @@
 
 namespace Controller\Collect;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Classes\Net\Collects;
 use Model\Collect\{
     Atlas, Picture

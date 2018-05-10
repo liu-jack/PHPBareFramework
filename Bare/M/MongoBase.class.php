@@ -7,10 +7,11 @@
  *
  */
 
-namespace Bare;
+namespace Bare\M;
 
 defined('ROOT_PATH') or exit('Access deny');
 
+use Bare\DB;
 use MongoDB\BSON\ObjectID;
 use MongoDB\BSON\Regex;
 

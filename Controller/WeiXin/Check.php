@@ -9,7 +9,7 @@
 
 namespace WeiXin\Check;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 class Check extends Controller
 {

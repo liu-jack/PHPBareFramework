@@ -1,6 +1,6 @@
 <?php
 
-namespace Bare\DataDriver;
+namespace Bare\D;
 
 use Memcached;
 

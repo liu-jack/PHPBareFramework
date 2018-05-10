@@ -113,13 +113,15 @@ class test
         //        pre(Book::getList(['Name' => ['like' => 'test']], 0, 0, '_id,Name'));
         //        var_dump(Book::delete(1));
 
-        $test = [
-            'name' => 'test',
-            'value' => 'test',
-            'date' => date('Y-m-d H:i:s'),
-        ];
-//        var_dump(FileData::set(FileData::KEY_TEST, $test));
-        pre(FileData::get(FileData::KEY_TEST));
+        //        $test = [
+        //            'name' => 'test',
+        //            'value' => 'test',
+        //            'date' => date('Y-m-d H:i:s'),
+        //        ];
+        //        var_dump(FileData::set(FileData::KEY_TEST, $test));
+        //        pre(FileData::get(FileData::KEY_TEST));
+        //        pre(version_app_key(APP_APPID_ADR, 'v1.0.1'));
+
     }
 }
 

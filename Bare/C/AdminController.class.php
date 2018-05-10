@@ -6,7 +6,7 @@
  * @since  v1.0 2017.09.04
  */
 
-namespace Bare;
+namespace Bare\C;
 
 use Model\Admin\Admin\AdminLogin;
 use Model\Admin\Admin\AdminLog;

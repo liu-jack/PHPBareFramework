@@ -4,8 +4,9 @@
  * Redis 快速数据片接口
  */
 
-namespace Bare;
+namespace Bare\M;
 
+use Bare\DB;
 use Common\RedisConst;
 
 class RedisFastInterface
@@ -194,7 +195,7 @@ class RedisFastInterface
      * 初始化Redis连接(读/写)
      *
      * @param string $mod w: Write, r: Read
-     * @return \Bare\DB\RedisDB
+     * @return \Bare\D\RedisDriver
      */
     private function _redis($mod = 'w')
     {

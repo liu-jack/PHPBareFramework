@@ -37,7 +37,7 @@ class SearchBase
     /**
      * 搜索实例
      *
-     * @return \Bare\DataDriver\ElasticSearch
+     * @return \Bare\D\ElasticSearch
      */
     protected static function instance()
     {

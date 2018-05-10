@@ -7,7 +7,7 @@
 
 namespace Model\Account;
 
-use Bare\CommonModel;
+use Bare\M\CommonModel;
 use Bare\DB;
 use Classes\Image\PhotoImage;
 use Common\RedisConst;

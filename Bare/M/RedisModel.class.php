@@ -8,7 +8,9 @@
  *
  */
 
-namespace Bare;
+namespace Bare\M;
+
+use Bare\DB;
 
 defined('ROOT_PATH') or exit('Access deny');
 
@@ -53,12 +55,12 @@ abstract class RedisModel
     ];
 
     /**
-     * @see \Bare\RedisModel::add() 新增
-     * @see \Bare\RedisModel::update() 更新
-     * @see \Bare\RedisModel::updateCount() 更新计数
-     * @see \Bare\RedisModel::getInfoByIds() 按主键id查询
-     * @see \Bare\RedisModel::getList() 条件查询
-     * @see \Bare\RedisModel::delete() 删除
+     * @see \Bare\M\RedisModel::add() 新增
+     * @see \Bare\M\RedisModel::update() 更新
+     * @see \Bare\M\RedisModel::updateCount() 更新计数
+     * @see \Bare\M\RedisModel::getInfoByIds() 按主键id查询
+     * @see \Bare\M\RedisModel::getList() 条件查询
+     * @see \Bare\M\RedisModel::delete() 删除
      */
 
     const CF_DB = 'db';
@@ -357,7 +359,7 @@ abstract class RedisModel
      * 获取pdo实例
      *
      * @param bool $w
-     * @return DB\PDODB|bool
+     * @return \Bare\D\PDODriver|bool
      */
     protected static function getPdo($w = false)
     {
@@ -381,7 +383,7 @@ abstract class RedisModel
      * 获取redis实例
      *
      * @param bool $w
-     * @return \Bare\DB\RedisDB
+     * @return \Bare\D\RedisDriver
      */
     protected static function getRedis($w = false)
     {
@@ -404,8 +406,8 @@ abstract class RedisModel
     /**
      * 获取mc实例
      *
-     * @param string $option
-     * @return \Bare\DB\MemcacheDB
+     * @param null $option
+     * @return \Bare\D\MemcacheDriver
      */
     protected static function getMC($option = null)
     {

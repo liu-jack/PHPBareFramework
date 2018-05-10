@@ -6,7 +6,7 @@
 namespace Controller\Collect;
 
 use Bare\DB;
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Book\{
     Book, Collect, Column
 };

@@ -134,7 +134,10 @@ class index
             }
         }
 
-        $key = config('api/apiconfig')[$appid]['appkey'];
+        $key = version_app_key($appid, $ver);
+        if (empty($key)) {
+            $key = config('api/apiconfig')[$appid]['appkey'];
+        }
         if (!empty($key)) {
             // AppId不存在
             $this->_error(504);

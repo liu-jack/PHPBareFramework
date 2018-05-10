@@ -7,10 +7,11 @@
  * @since  v1.0 2017.04.13
  */
 
-namespace Bare;
+namespace Bare\M;
 
 //declare(ticks=1);
 
+use Bare\DB;
 use Common\RedisConst;
 
 /**
@@ -194,7 +195,7 @@ class Queue
     /**
      * 队列循环入口
      *
-     * @param \Queue\Queue $class
+     * @param $class
      */
     public function doLoop($class)
     {

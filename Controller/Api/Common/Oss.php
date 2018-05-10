@@ -8,7 +8,7 @@
 
 namespace controls\MobileApi\Common;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 阿里云获取临时token接口

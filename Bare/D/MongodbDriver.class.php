@@ -7,7 +7,7 @@
  *
  */
 
-namespace Bare\DataDriver;
+namespace Bare\D;
 
 use MongoDB\Client;
 

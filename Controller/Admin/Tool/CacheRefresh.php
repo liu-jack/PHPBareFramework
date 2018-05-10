@@ -5,7 +5,7 @@
 
 namespace Controller\Admin\Tool;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 
 class CacheRefresh extends AdminController
 {

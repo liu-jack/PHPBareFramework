@@ -11,7 +11,7 @@
 namespace Model\Comment;
 
 use Bare\DB;
-use Bare\CommonModel;
+use Bare\M\CommonModel;
 use Common\DataType;
 
 abstract class CommentBase extends CommonModel

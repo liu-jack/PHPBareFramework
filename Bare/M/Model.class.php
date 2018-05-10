@@ -6,7 +6,9 @@
  * @since  v1.0 2016.09.25
  */
 
-namespace Bare;
+namespace Bare\M;
+
+use Bare\DB;
 
 defined('ROOT_PATH') or exit('Access deny');
 
@@ -64,11 +66,11 @@ abstract class Model
     ];
 
     /**
-     * @see \Bare\Model::add() 新增
-     * @see \Bare\Model::update() 更新
-     * @see \Bare\Model::getInfoByIds() 按主键id查询
-     * @see \Bare\Model::getList() 条件查询
-     * @see \Bare\Model::delete() 删除
+     * @see \Bare\M\Model::add() 新增
+     * @see \Bare\M\Model::update() 更新
+     * @see \Bare\M\Model::getInfoByIds() 按主键id查询
+     * @see \Bare\M\Model::getList() 条件查询
+     * @see \Bare\M\Model::delete() 删除
      */
 
     // 主键/字段类型
@@ -736,7 +738,7 @@ abstract class Model
      * 获取pdo实例
      *
      * @param bool $w
-     * @return DB\PDODB|bool
+     * @return \Bare\D\PDODriver|bool
      */
     protected static function getPdo($w = false)
     {
@@ -760,7 +762,7 @@ abstract class Model
      * 获取redis实例
      *
      * @param bool $w
-     * @return \Bare\DB\RedisDB
+     * @return \Bare\D\RedisDriver
      */
     protected static function getRedis($w = false)
     {
@@ -783,8 +785,8 @@ abstract class Model
     /**
      * 获取mc实例
      *
-     * @param string $option
-     * @return \Bare\DB\MemcacheDB
+     * @param null $option
+     * @return \Bare\D\MemcacheDriver
      */
     protected static function getMC($option = null)
     {

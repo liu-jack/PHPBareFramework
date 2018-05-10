@@ -10,7 +10,7 @@
 
 namespace Controller\Api\Payment;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Classes\Encrypt\Rsa;
 use Classes\Payment\PayUtil;
 use Model\Passport\Login;

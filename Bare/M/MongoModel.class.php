@@ -8,7 +8,7 @@
  *
  */
 
-namespace Bare;
+namespace Bare\M;
 
 defined('ROOT_PATH') or exit('Access deny');
 
@@ -34,11 +34,11 @@ abstract class MongoModel extends MongoBase
     ];
 
     /**
-     * @see \Bare\MongoModel::add() 新增
-     * @see \Bare\MongoModel::update() 更新
-     * @see \Bare\MongoModel::getInfoByIds() 按主键id查询
-     * @see \Bare\MongoModel::getList() 条件查询
-     * @see \Bare\MongoModel::delete() 删除
+     * @see \Bare\M\MongoModel::add() 新增
+     * @see \Bare\M\MongoModel::update() 更新
+     * @see \Bare\M\MongoModel::getInfoByIds() 按主键id查询
+     * @see \Bare\M\MongoModel::getList() 条件查询
+     * @see \Bare\M\MongoModel::delete() 删除
      */
 
     // 主键/字段类型

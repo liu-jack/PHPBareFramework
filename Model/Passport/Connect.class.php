@@ -10,7 +10,7 @@
 
 namespace Model\Passport;
 
-use Bare\Model;
+use Bare\M\Model;
 use Bare\DB;
 
 class Connect extends Model implements ISiteType

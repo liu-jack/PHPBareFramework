@@ -8,7 +8,7 @@
 
 namespace Model\Api\Test;
 
-use Bare\Model;
+use Bare\M\Model;
 
 class Index extends Model
 {

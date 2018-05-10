@@ -2,7 +2,7 @@
 
 namespace Controller\Book;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Favorite\BookFavorite;
 use Model\Account\User as AUser;
 use Model\Mongo\UserData;

@@ -6,7 +6,7 @@
 namespace Controller\Admin\Tool;
 
 use Bare\DB;
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Common\RedisConst;
 
 class Queue extends AdminController

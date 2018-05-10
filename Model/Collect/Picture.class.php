@@ -3,7 +3,7 @@
 namespace Model\Collect;
 
 use Bare\DB;
-use Bare\Model;
+use Bare\M\Model;
 
 class Picture extends Model
 {

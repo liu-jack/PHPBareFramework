@@ -5,7 +5,7 @@
  *
  */
 
-namespace Bare;
+namespace Bare\M;
 
 defined('ROOT_PATH') or exit('Access deny');
 

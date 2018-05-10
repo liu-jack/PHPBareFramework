@@ -9,7 +9,7 @@
 
 namespace Controller\Api\Pay;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Classes\Pay\Pay as MPay;
 use Model\Application\Order;
 use Model\Application\Product;

@@ -658,3 +658,17 @@ function error_msg($code)
 
     return $error_msg[$code] ?? '';
 }
+
+/**
+ * 获取应用版本的appkey
+ *
+ * @param $appid
+ * @param $version
+ * @return string
+ */
+function version_app_key($appid, $version)
+{
+    $config = config('api/appkey');
+
+    return $config[$appid][$version] ?? '';
+}
