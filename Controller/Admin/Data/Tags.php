@@ -253,7 +253,7 @@ class Tags extends AdminController
                     'msg' => '图片上传成功',
                     'data' => [
                         'img_url' => $res,
-                        'auto_img_url' => autohost($res),
+                        'auto_img_url' => auto_host($res),
                         'file_name' => $file_name,
                     ]
                 ]);

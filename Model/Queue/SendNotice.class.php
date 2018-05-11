@@ -3,7 +3,7 @@
  *  发送消息
  */
 
-namespace Apps\Queues;
+namespace Model\Queue;
 
 use Bare\C\Queue;
 

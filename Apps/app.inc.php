@@ -34,7 +34,7 @@ if (defined('SESSION') && SESSION) {
 // 定义HTTP协议
 define("HTTP_SCHEME", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') ? 'https' : 'http');
 // 网站起始路径
-define('ROOT_URL', autohost(HTTP_SCHEME . '://www.qbaoting.com/'));
+define('ROOT_URL', auto_host(HTTP_SCHEME . '://zf.bare.com/'));
 // 初始化配置变量
 $cfg = [
     'path' => [

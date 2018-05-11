@@ -74,11 +74,11 @@ class pushact extends lib\core\Action
                 $content = "欢迎加入【小学生成语水平提升计划】！\n我们将为你量身定制属于你的成语提升课程，深刻理解成语背后的故事及含义，快速提升写作水平及语言表达能力，实现“出口成章、笔下生花”的梦想。";
                 break;
             case 2:
-                $url = autohost("http://" . self::$host . "/select");
+                $url = auto_host("http://" . self::$host . "/select");
                 $content = "你已完成【小学生成语计划】测试部分，系统已为你生成定制课程。请选择报名方式：\n【方式一】\n99元购买课程<a href='{$url}'>点击购买</a>\n【方式二】\n分享下方邀请卡给好友，3人扫码完成关注并测试，你即成为志愿者，免费入学";
                 break;
             case 3:
-                $url = autohost("http://" . self::$host . "/invite");
+                $url = auto_host("http://" . self::$host . "/invite");
                 $content = "<a href='{$url}'>点我获得邀请卡</a>";
                 break;
         }

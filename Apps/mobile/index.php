@@ -7,13 +7,12 @@
 
 require '../app.inc.php';
 
-class index extends \Smarty\Action
+class index extends \Bare\C\AppsAction
 {
     function doIndex()
     {
-        $smarty = $this->app->page();
-        $smarty->value('title', 'm站');
-        $smarty->output();
+        $this->value('title', 'm站');
+        $this->view();
     }
 }
 

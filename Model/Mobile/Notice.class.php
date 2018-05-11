@@ -523,7 +523,7 @@ class Notice
                                 $str = $users['UserNick'];
                             }
                         }
-                        $data = [AppPush::EXTRA_FIELD_STR => autohost('http://m.tatoutiao.com/app/task/invite.php?tab=1')];
+                        $data = [AppPush::EXTRA_FIELD_STR => auto_host('http://m.tatoutiao.com/app/task/invite.php?tab=1')];
                         $msg = '你成功邀请了一个闺蜜' . $str;
                         $type = AppPush::PUSH_TYPE_URL;
                         break;

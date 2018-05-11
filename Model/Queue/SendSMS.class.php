@@ -3,7 +3,7 @@
  * 发送手机短信队列
  */
 
-namespace Apps\Queues;
+namespace Model\Queue;
 
 use Bare\C\Queue;
 use Sms\LsmSms as SmsCtrl;

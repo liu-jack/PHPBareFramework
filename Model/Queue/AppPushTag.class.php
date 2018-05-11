@@ -6,7 +6,7 @@
  *
  */
 
-namespace Apps\Queues;
+namespace Model\Queue;
 
 use Bare\C\Queue;
 use Classes\Push\JPush;

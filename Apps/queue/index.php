@@ -20,10 +20,10 @@ class index
             exit("usage: php index.php [QueueName]\n");
         }
         $class_name = trim($argv[1]);
-        $class_file = APPS_PATH . 'Queues/' . $class_name . CEXT;
+        $class_file = MODEL_PATH . 'Queue/' . $class_name . CEXT;
         if (file_exists($class_file)) {
             $queue = new Queue($class_name);
-            $class_name = '\Apps\Queues\\' . $class_name;
+            $class_name = '\Model\Queue\\' . $class_name;
             $class = new $class_name();
             $queue->doLoop($class);
         } else {

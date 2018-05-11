@@ -6,7 +6,7 @@
  * Time: 15:50
  */
 
-namespace Apps\Queues;
+namespace Model\Queue;
 
 use Bare\C\Queue;
 use Model\Search\BookSearch as SBook;

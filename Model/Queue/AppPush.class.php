@@ -3,7 +3,7 @@
  * App推送队列
  */
 
-namespace Apps\Queues;
+namespace Model\Queue;
 
 use Bare\C\Queue;
 use Classes\Push\JPush;

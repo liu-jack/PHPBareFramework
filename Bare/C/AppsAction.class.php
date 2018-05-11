@@ -1,17 +1,16 @@
 <?php
-
 /**
- * Action类
+ * AppAction.class.php
+ * Apps 控制器
  *
- * @author camfee
+ * @author camfee <camfee@foxmail.com>
+ * @date   18-5-11 下午4:14
  *
- * $Id$
  */
 
-namespace Smarty;
+namespace Bare\C;
 
-
-class Action
+class AppsAction
 {
     /**
      * 登录用户ID
@@ -122,5 +121,50 @@ class Action
 EOT
         ;
         exit;
+    }
+
+    /**
+     * 模板赋值
+     *
+     * @param      $name
+     * @param null $value
+     */
+    public function value($name, $value = null)
+    {
+        $this->app->page()->value($name, $value);
+    }
+
+    /**
+     * 加载模板文件
+     *
+     * @param string $template
+     * @param bool   $fetch
+     */
+    public function view($template = '', $fetch = false)
+    {
+        $this->app->page()->output($template, $fetch);
+    }
+
+    /**
+     * 加载模块
+     *
+     * @param $name
+     */
+    public function model($name)
+    {
+        $name = stripos($name, 'Model\\') === false ? 'Model\\' . $name : $name;
+        $this->load($name);
+    }
+
+    /**
+     * 加载类
+     *
+     * @param $name
+     */
+    public function load($name)
+    {
+        $name = '\\' . trim($name, '\\');
+        $_val = trim(substr($name, (int)strrpos($name, '\\')), '\\');
+        $this->$_val = new $name;
     }
 }

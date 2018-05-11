@@ -137,23 +137,23 @@ function parse_template($path)
         '@\{\@([\w_]+\([^}]*\))\}@isU',
         // 3. {foreach ($group as $v)}{if(xx)}
         '@\{(foreach|if)\s+([^}]*)\}@isU',
-        // 3.1 {elseif(xx)}
+        // 4 {elseif(xx)}
         '@\{(elseif)\s+([^}]*)\}@isU',
-        // 4. {else}
+        // 5. {else}
         '@\{(else)\}@isU',
-        // 5. {/foreach}{/if}
+        // 6. {/foreach}{/if}
         '@\{/(foreach|if)\}@isU',
-        // 6. {$a.b.c}
+        // 7. {$a.b.c}
         '@\{(\$[\w_]+)\.([\w_]+)\.([\w_]+)\}@isU',
-        // 7. {$a.b}
+        // 8. {$a.b}
         '@\{(\$[\w_]+)\.([\w_]+)\}@isU',
-        // 8. {$a} {$a['b']} {$a[$b['c']]}
+        // 9. {$a} {$a['b']} {$a[$b['c']]}
         '@\{(\$[\w_][^.}]*)\}@isU',
-        // 9. {STATICS_JS}
+        // 10. {STATICS_JS}
         '@\{([A-Z_]+)\}@isU',
-        // 10. {url('add')}
+        // 11. {url('add')}
         '@\{([\w_]+\([^}]*\))\}@isU',
-        // 11. {@$i = 1}{@$i++}
+        // 12. {@$i = 1}{@$i++}
         '@\{\@(\$[\w_][^}]*)\}@isU',
     ];
     $replace = [
@@ -616,7 +616,7 @@ function show404($path = '')
  * @param string $url
  * @return string
  */
-function autohost($url)
+function auto_host($url)
 {
     if (__ENV__ == TEST && strpos($_SERVER['HTTP_HOST'], 'test.') !== false && strpos($url, '://test.') === false && strpos($url, 'http') === 0) {
         return str_replace('://', '://test.', $url);
