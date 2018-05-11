@@ -85,7 +85,7 @@ $cfg['page'] = [
 ];
 // Smarty tpl与缓存
 $cfg['smarty'] = [
-    'template_dir' => VIEW_PATH . 'Apps/smarty/',
+    'template_dir' => VIEW_PATH . 'Apps/',
     'compile_dir' => $cfg['path']['cache'] . 'smarty/',
 ];
 
