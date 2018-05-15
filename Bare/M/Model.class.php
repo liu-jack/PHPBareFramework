@@ -628,7 +628,7 @@ abstract class Model
                 return $where_normal[$matchs[1]] ?? 0;
             }, $extra[static::EXTRA_RD_KEY]);
             $redis = static::getRedis(true);
-            $data = unserialize($redis->get($key));
+            $data = $redis->getS($key);
             if (!is_array($data)) {
                 $pdo = DB::pdo($extra[static::EXTRA_DB]);
                 $ret = $pdo->find(static::$_conf[static::CF_TABLE] . $suffix, $where, static::$_conf[static::CF_PRIMARY_KEY], $extra[static::EXTRA_ORDER]);
@@ -657,7 +657,7 @@ abstract class Model
                             $data[$v[static::$_conf[static::CF_PRIMARY_KEY]]] = $v[static::$_conf[static::CF_PRIMARY_KEY]];
                         }
                     }
-                    $redis->set($key, serialize($data), $extra[static::EXTRA_RD_TIME]);
+                    $redis->setS($key, $data, $extra[static::EXTRA_RD_TIME]);
                 }
             }
             $count = count($data);

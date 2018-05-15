@@ -46,6 +46,7 @@ abstract class MongoModel extends MongoBase
     const VAR_TYPE_FLOAT = 'float';
     const VAR_TYPE_STRING = 'string';
     const VAR_TYPE_ARRAY = 'array';
+    const VAR_TYPE_SERIALIZE = 'serialize';
     const VAR_TYPE_JSON = 'json';
     const VAR_TYPE_PASSWORD = 'password';
 
@@ -167,10 +168,13 @@ abstract class MongoModel extends MongoBase
                             $v = is_array($v) ? $v : floatval($v);
                             break;
                         case static::VAR_TYPE_ARRAY:
-                            $v = is_array($v) ? serialize($v) : $v;
+                            $v = is_array($v) ? $v : (array)$v;
                             break;
                         case static::VAR_TYPE_JSON:
                             $v = is_array($v) ? json_encode($v) : $v;
+                            break;
+                        case static::VAR_TYPE_SERIALIZE:
+                            $v = is_array($v) ? serialize($v) : $v;
                             break;
                         case static::VAR_TYPE_PASSWORD:
                             $v = !empty($v) ? password_hash($v, PASSWORD_DEFAULT) : $v;
