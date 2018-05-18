@@ -161,8 +161,13 @@ abstract class Model
             self::EXTRA_LIST_VAL => '',
             self::EXTRA_ORDER => '',
         ];
+        try {
+            $data = self::getDataByFields($where, $extra);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
 
-        return self::getDataByFields($where, $extra);
+        return $data ?? [];
     }
 
     /**
@@ -185,7 +190,11 @@ abstract class Model
             self::EXTRA_MC_TIME => 86400,
             self::EXTRA_ORDER => '',
         ];
-        $data = self::getDataByFields($where, $extra);
+        try {
+            $data = self::getDataByFields($where, $extra);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
 
         if (!empty($data['data'])) {
             $data['data'] = array_slice($data['data'], $offset, $limit);
@@ -273,9 +282,13 @@ abstract class Model
         if (empty($ids)) {
             return [];
         }
-        $ret = static::getDataById($ids, $extra, $suffix);
+        try {
+            $data = static::getDataById($ids, $extra, $suffix);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
 
-        return $ret;
+        return $data ?? [];
     }
 
     /**
@@ -297,8 +310,13 @@ abstract class Model
             static::EXTRA_LIMIT => $limit,
             static::EXTRA_ORDER => $order,
         ];
+        try {
+            $data = static::getDataByFields($where, $extra, $suffix);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
 
-        return static::getDataByFields($where, $extra, $suffix);
+        return $data ?? [];
     }
 
     /**
@@ -315,7 +333,11 @@ abstract class Model
             if (!empty(static::$_cache_list_keys)) {
                 $info = static::getInfoByIds($id);
             }
-            $ret = static::delData($id, $suffix);
+            try {
+                $ret = static::delData($id, $suffix);
+            } catch (\Exception $e) {
+                echo $e->getCode() . ':' . $e->getMessage();
+            }
             if ($ret !== false && !empty($info)) {
                 static::delListCache($info);
             }
@@ -377,11 +399,14 @@ abstract class Model
      * @param bool   $ignore 是否使用IGNORE, 默认不使用
      * @param string $suffix 分表后缀名称
      * @return bool|int|string 成功返回LastInsertId, 未插入数据返回0, 插入失败返回false
-     * @throws \Exception
      */
     protected static function addData($rows, $ignore = false, $suffix = '')
     {
-        $rows = static::checkParams($rows);
+        try {
+            $rows = static::checkParams($rows);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
         $options = $ignore ? ['ignore' => true] : [];
         $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
         $ret = $pdo->insert(static::$_conf[static::CF_TABLE] . $suffix, $rows, $options);
@@ -407,11 +432,14 @@ abstract class Model
      * @param array     $extra  见 self::EXTRA_*
      * @param string    $suffix 分表后缀名称
      * @return array 单条返回['feild1'=>'value1',..], 多条返回['主键ID1' => [...],]
-     * @throws \Exception
      */
     protected static function getDataById($id, $extra = [], $suffix = '')
     {
-        static::checkParams();
+        try {
+            static::checkParams();
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
         $tmp_ids = is_array($id) ? $id : [$id];
         $ids = [];
         foreach ($tmp_ids as $v) {
@@ -495,12 +523,15 @@ abstract class Model
      * @param array  $rows   见static::$_conf['_fields_array'], 不支持修改主键ID
      * @param string $suffix 分表后缀名称
      * @return bool
-     * @throws \Exception
      */
     protected static function updateData($id, $rows = [], $suffix = '')
     {
         $id = (int)$id;
-        $rows = static::checkParams($rows);
+        try {
+            $rows = static::checkParams($rows);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
         // 主键不支持更新
         unset($rows[static::$_conf[static::CF_PRIMARY_KEY]]);
         if ($id > 0) {
@@ -534,12 +565,15 @@ abstract class Model
      * @param int    $id     主键ID
      * @param string $suffix 分表后缀名称
      * @return bool
-     * @throws \Exception
      */
     protected static function delData($id, $suffix = '')
     {
         $id = (int)$id;
-        static::checkParams();
+        try {
+            static::checkParams();
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
         if ($id > 0) {
             $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
             $ret = $pdo->delete(static::$_conf[static::CF_TABLE] . $suffix, [
@@ -601,7 +635,11 @@ abstract class Model
      */
     protected static function getDataByFields($where, $extra = [], $suffix = '')
     {
-        static::checkParams();
+        try {
+            static::checkParams();
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
         $data = [];
         $where_normal = [];
         foreach ($where as $k => $v) {

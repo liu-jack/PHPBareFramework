@@ -65,7 +65,11 @@ Class Controller
         } else {
             $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
         }
-        $view_path = parse_template($view_path);
+        try {
+            $view_path = parse_template($view_path);
+        } catch (\Exception $e) {
+            echo $e->getCode() . ':' . $e->getMessage();
+        }
         extract($this->_var, EXTR_OVERWRITE);
         include_once $view_path;
     }
@@ -88,9 +92,15 @@ Class Controller
      * @param string $name 保存到前端模板的变量名
      * @param mixed  $data 要保存到前端模板的数据
      */
-    public function value($name, $data)
+    public function value($name, $data = null)
     {
-        $this->_var[$name] = $data;
+        if (is_array($name)) {
+            foreach ($name as $k => $v) {
+                $this->_var[$k] = $v;
+            }
+        } else {
+            $this->_var[$name] = $data;
+        }
     }
 
     /**
