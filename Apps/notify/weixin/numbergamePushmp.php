@@ -11,7 +11,7 @@ require_once '../../common.inc.php';
 use lib\core\Action;
 use Weixin\Material;
 use lib\plugins\weixin\PushMessage;
-use Mobile\RecomData;
+use Model\Common\RecomData;
 
 class numbergamePushmp extends Action
 {
