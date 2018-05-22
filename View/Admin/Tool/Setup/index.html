@@ -12,24 +12,24 @@
 
                 {if !empty($input_switch_setup)}
                 {foreach $input_switch_setup as $k => $v}
-                <form action="{url('switchSetup')}" method="post" class="form-horizontal">
-                    <table class="table table-bordered table-hover">
-                        <thead style="background-color: #ddd;">
-                        <tr>
-                            <th style="width: 20%" colspan="3">{$v}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td style="width: 20%">{$v}</td>
-                            <td><input class="input_switch_setup btn btn-default" type="button" data-field="{$k}"
-                                       data-value="{$switch_setup_val[$k]}"
-                                       value="{if ($switch_setup_val[$k] == 1)}是{else}否{/if}"/>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color: #ddd;">
+                    <tr>
+                        <th style="width: 20%" colspan="3">{$k}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $v as $kk => $vv}
+                    <tr>
+                        <td style="width: 20%">{$vv}</td>
+                        <td><input class="input_switch_setup btn btn-default" type="button" data-field="{$kk}"
+                                   data-value="{$switch_setup_val[$kk]}"
+                                   value="{if ($switch_setup_val[$kk] == 1)}是{else}否{/if}"/>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
                 {/foreach}
                 {/if}
 
@@ -39,16 +39,18 @@
                     <table class="table table-bordered table-hover">
                         <thead style="background-color: #ddd;">
                         <tr>
-                            <th style="width: 20%">{$v}</th>
+                            <th style="width: 20%">{$k}</th>
                             <th><input type="submit" value="更新" class="btn btn-primary btn-sm"/></th>
                         </tr>
                         </thead>
                         <tbody>
+                        {foreach $v as $kk => $vv}
                         <tr>
-                            <td style="width: 20%">{$v}</td>
-                            <td><input class="form-control" name="{$k}" type="text" value="{$text_setup_val[$k]}"
+                            <td style="width: 20%">{$vv}</td>
+                            <td><input class="form-control" name="{$kk}" type="text" value="{$text_setup_val[$kk]}"
                                        style="width: 61.8%"></td>
                         </tr>
+                        {/foreach}
                         </tbody>
                     </table>
                 </form>
