@@ -64,7 +64,7 @@ class SearchBase
         try {
             $row = static::checkFields($row, true);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         $ret = Queue::add(static::$_search_queue, [
             'type' => 'add',
@@ -102,7 +102,7 @@ class SearchBase
         try {
             $row = static::checkFields($row);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         $ret = true;
         if (count($row) > 0) {
@@ -128,7 +128,7 @@ class SearchBase
         try {
             $row = static::checkFields($row);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         $ret = true;
         if (count($row) > 0) {
@@ -314,7 +314,7 @@ class SearchBase
             try {
                 $t_body = static::checkFields($row);
             } catch (\Exception $e) {
-                echo $e->getCode() . ':' . $e->getMessage();
+                exit($e->getCode() . ':' . $e->getMessage());
             }
             unset($t_body[static::INDEX_KEY]);
 

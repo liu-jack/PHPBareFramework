@@ -104,7 +104,7 @@ function view($path = '', $ext = VEXT)
     try {
         $view_path = parse_template($view_path);
     } catch (\Exception $e) {
-        echo $e->getCode() . ':' . $e->getMessage();
+        exit($e->getCode() . ':' . $e->getMessage());
     }
     include_once $view_path;
 }

@@ -164,7 +164,7 @@ abstract class Model
         try {
             $data = self::getDataByFields($where, $extra);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
 
         return $data ?? [];
@@ -193,7 +193,7 @@ abstract class Model
         try {
             $data = self::getDataByFields($where, $extra);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
 
         if (!empty($data['data'])) {
@@ -285,7 +285,7 @@ abstract class Model
         try {
             $data = static::getDataById($ids, $extra, $suffix);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
 
         return $data ?? [];
@@ -313,7 +313,7 @@ abstract class Model
         try {
             $data = static::getDataByFields($where, $extra, $suffix);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
 
         return $data ?? [];
@@ -336,7 +336,7 @@ abstract class Model
             try {
                 $ret = static::delData($id, $suffix);
             } catch (\Exception $e) {
-                echo $e->getCode() . ':' . $e->getMessage();
+                exit($e->getCode() . ':' . $e->getMessage());
             }
             if ($ret !== false && !empty($info)) {
                 static::delListCache($info);
@@ -405,7 +405,7 @@ abstract class Model
         try {
             $rows = static::checkParams($rows);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         $options = $ignore ? ['ignore' => true] : [];
         $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
@@ -438,7 +438,7 @@ abstract class Model
         try {
             static::checkParams();
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         $tmp_ids = is_array($id) ? $id : [$id];
         $ids = [];
@@ -530,7 +530,7 @@ abstract class Model
         try {
             $rows = static::checkParams($rows);
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         // 主键不支持更新
         unset($rows[static::$_conf[static::CF_PRIMARY_KEY]]);
@@ -572,7 +572,7 @@ abstract class Model
         try {
             static::checkParams();
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         if ($id > 0) {
             $pdo = DB::pdo(static::$_conf[static::CF_DB][static::CF_DB_W]);
@@ -631,14 +631,13 @@ abstract class Model
      *
      * @param string $suffix 分表后缀名称
      * @return array ['count' => 总数, 'data' => [查询的数据]]
-     * @throws \Exception
      */
     protected static function getDataByFields($where, $extra = [], $suffix = '')
     {
         try {
             static::checkParams();
         } catch (\Exception $e) {
-            echo $e->getCode() . ':' . $e->getMessage();
+            exit($e->getCode() . ':' . $e->getMessage());
         }
         $data = [];
         $where_normal = [];
@@ -659,7 +658,7 @@ abstract class Model
         $extra[static::EXTRA_GET_RET] = $extra[static::EXTRA_GET_RET] === 0 ? 0 : 1;
         if ($extra[static::EXTRA_MOD_TYPE] == static::MOD_TYPE_REDIS) {
             if (empty($extra[static::EXTRA_RD_KEY])) {
-                throw new \Exception("MOD_TYPE_REDIS: redis_key is empty!");
+                exit('"MOD_TYPE_REDIS: redis_key is empty!"');
             }
             $extra[static::EXTRA_RD_TIME] = $extra[static::EXTRA_RD_TIME] > 0 ? $extra[static::EXTRA_RD_TIME] : 86400;
             $key = preg_replace_callback("/\{(\w+)\}/", function ($matchs) use ($where_normal) {
@@ -704,7 +703,7 @@ abstract class Model
             }
         } elseif ($extra[static::EXTRA_MOD_TYPE] == static::MOD_TYPE_MEMCACHE) {
             if (empty($extra[static::EXTRA_MC_KEY])) {
-                throw new \Exception("MOD_TYPE_MEMCACHE: mckey is empty!");
+                exit("MOD_TYPE_MEMCACHE: mckey is empty!");
             }
             $extra[static::EXTRA_MC_TIME] = $extra[static::EXTRA_MC_TIME] > 0 ? $extra[static::EXTRA_MC_TIME] : 0;
             $extra[static::EXTRA_MC] = empty($extra[static::EXTRA_MC]) ? (static::$_conf[static::CF_MC] ? static::$_conf[static::CF_MC] : DB::MEMCACHE_DEFAULT) : $extra[static::EXTRA_MC];
