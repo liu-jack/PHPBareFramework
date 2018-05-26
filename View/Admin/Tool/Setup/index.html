@@ -79,13 +79,13 @@
     $(".input_switch_setup").each(function () {
         var _this = $(this);
         $(this).hover(function () {
-            if (_this.attr('data-val') == 1) {
+            if (_this.attr('data-value') == 1) {
                 _this.val('否');
             } else {
                 _this.val('是');
             }
         }, function () {
-            if (_this.attr('data-val') == 1) {
+            if (_this.attr('data-value') == 1) {
                 _this.val('是');
             } else {
                 _this.val('否');
