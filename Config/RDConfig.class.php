@@ -16,6 +16,7 @@ class RDConfig
     // 数据保存获取key mysql memcache
     const APP_TEST = 'app_test';
     const INPUT_TEXT_SETUP = 'input_text_setup';
+    const AREA_TEXT_SETUP = 'area_text_setup';
     const INPUT_SWITCH_SETUP = 'input_switch_setup';
     // 数据保存获取key redis
     const REDIS_APP_TEST = 'redis_app_test';
@@ -23,6 +24,7 @@ class RDConfig
     const KEY_CONFIG = [
         self::APP_TEST => 'app test',
         self::INPUT_TEXT_SETUP => '输入框文案配置',
+        self::AREA_TEXT_SETUP => '文本域文案配置',
         self::INPUT_SWITCH_SETUP => '开关设置配置',
         self::REDIS_APP_TEST => 'redis app test',
     ];
