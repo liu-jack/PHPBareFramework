@@ -15,7 +15,18 @@ use Model\Common\RecomData;
 
 class Setup extends AdminController
 {
-    // 文案配置 注意field key需要唯一
+    // 开关配置
+    private $input_switch_setup = [
+        '支付开关' => [
+            'Pay' => '支付开关',
+            'Pay2' => '支付开关2',
+        ],
+        '分享开关' => [
+            'Share' => '分享开关',
+            'Share2' => '分享开关2',
+        ],
+    ];
+    // 单行文案配置 注意field key需要唯一
     private $input_text_setup = [
         '比例配置（%）' => [
             'Rate1' => '比例1（%）',
@@ -41,15 +52,10 @@ class Setup extends AdminController
             'Text3' => '文案3',
         ],
     ];
-    // 开关配置
-    private $input_switch_setup = [
-        '支付开关' => [
-            'Pay' => '支付开关',
-            'Pay2' => '支付开关2',
-        ],
-        '分享开关' => [
-            'Share' => '分享开关',
-            'Share2' => '分享开关2',
+    // 富文本文案配置
+    private $editor_text_setup = [
+        '富文本配置' => [
+
         ],
     ];
 
