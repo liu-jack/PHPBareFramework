@@ -20,6 +20,7 @@ use Model\Mongo\Book;
 use Model\Search\BookSearch;
 use Bare\DB;
 use Common\FileData;
+use Common\RuntimeLog;
 
 class test
 {
@@ -121,6 +122,9 @@ class test
         //        var_dump(FileData::set(FileData::KEY_TEST, $test));
         //        pre(FileData::get(FileData::KEY_TEST));
         //        pre(version_app_key(APP_APPID_ADR, 'v1.0.1'));
+        RuntimeLog::start();
+        sleep(4);
+        RuntimeLog::end();
 
     }
 }
