@@ -12,8 +12,9 @@ namespace Common;
 
 class RuntimeLog
 {
+    const RUNTIME_DEBUG = true;
     // 计时段名称
-    private static $name = '';
+    private static $name = 0;
     // 计时段数据
     private static $data = [];
     // 计时段运行时长数据
@@ -57,38 +58,55 @@ class RuntimeLog
      * 开始计时点
      *
      * @param string $name
+     * @return bool|mixed
      */
     public function log_start($name = '')
     {
+        if (!self::RUNTIME_DEBUG) {
+            return false;
+        }
         if (empty($name)) {
-            $name = uniqid();
+            $name = self::$name + 1;
         }
         self::$name = $name;
-        self::$data[self::$name]['start'] = microtime(true);
+
+        return self::$data[self::$name]['start'] = microtime(true);
     }
 
     /**
      * 结束计时点
      *
      * @param string $name
+     * @return bool|mixed
      */
     public function log_end($name = '')
     {
+        if (!self::RUNTIME_DEBUG) {
+            return false;
+        }
         if (!empty($name)) {
             self::$name = $name;
         }
-        self::$data[self::$name]['end'] = microtime(true);
+
+        return self::$data[self::$name]['end'] = microtime(true);
     }
 
     /**
      * 运行时间信息显示
+     *
+     * @return array|bool
      */
     public static function show_debug()
     {
+        if (!self::RUNTIME_DEBUG) {
+            return false;
+        }
         foreach (self::$data as $k => $v) {
             self::$distance[$k] = sprintf('%.4f', $v['end'] - $v['start']);
         }
-        pre(self::$distance);
+        logs(self::$distance, 'RuntimeLog/debug');
+
+        return self::$distance;
     }
 
     /**

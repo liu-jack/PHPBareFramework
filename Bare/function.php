@@ -383,9 +383,7 @@ function logs($content, $name = '', $log_path = LOG_PATH)
                 if (is_array($v)) {
                     $v = serialize($v);
                 }
-                if (!is_numeric($k)) {
-                    $v = $k . ': ' . $v;
-                }
+                $v = $k . ': ' . $v;
             }
         } else {
             $content = [$content];
