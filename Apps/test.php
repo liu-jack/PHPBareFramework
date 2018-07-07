@@ -125,6 +125,9 @@ class test
         RuntimeLog::start();
         sleep(4);
         RuntimeLog::end();
+        RuntimeLog::start();
+        usleep(100000);
+        RuntimeLog::end();
 
     }
 }
