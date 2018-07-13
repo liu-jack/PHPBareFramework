@@ -31,4 +31,31 @@ class QrCode
 
         return self::$_instance[$class];
     }
+
+    public static function subStr($str, $len)
+    {
+
+        $strlen = strlen($str);
+        if ($strlen <= $len) {
+            return $str;
+        }
+        $n = 0;
+        $res = '';
+        for ($i = 0; $i <= $strlen; $i++) {
+            if (ord(substr($str, $i, 1)) > 0xa0) {
+                $res .= substr($str, $i, 3);
+                $i += 2;
+                $n += 3;
+            } else {
+                $res .= substr($str, $i, 1);
+                $n++;
+            }
+            if ($n >= $len) {
+                break;
+            }
+        }
+
+        return $res;
+
+    }
 }
