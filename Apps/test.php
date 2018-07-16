@@ -130,11 +130,10 @@ class test
         RuntimeLog::end();
 
         RuntimeLog::start();
-        for ($i=0;$i<=100;$i++){
+        for ($i=0; $i<=100; $i++) {
             usleep(1000 * $i);
         }
         RuntimeLog::end();
-
     }
 }
 
