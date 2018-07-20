@@ -83,7 +83,8 @@ class Bare
             $action = $GLOBALS['_A'];
             $bare->$action();
         } catch (Exception $e) {
-            echo $e->getMessage();
+            error_log($e->getCode() . ':' . $e->getMessage());
+            exit($e->getMessage());
         }
     }
 
