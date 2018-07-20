@@ -178,7 +178,7 @@ function parse_template($path)
     try {
         $content = preg_replace($pattern, $replace, $content);
     } catch (\Exception $e) {
-        error_log($e->getCode() . ':' . $e->getMessage());
+        error_logs($e->getCode() . ':' . $e->getMessage());
         echo $e->getMessage() . "parse template {$path} error";
     }
     if (!is_dir(dirname($cache_path))) {
@@ -417,7 +417,7 @@ function debug_log($content, $name = 'debug/debug')
  * @param        $content
  * @param string $name
  */
-function error_log($content, $name = 'error/error')
+function error_logs($content, $name = 'error/php_errors')
 {
     logs($content, $name);
 }
