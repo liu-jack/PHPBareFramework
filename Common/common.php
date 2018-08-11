@@ -229,13 +229,21 @@ function device_id2int($deviceid)
  */
 function get_methods($classname, $access = null)
 {
-    $class = new \ReflectionClass($classname);
+    try {
+        $class = new \ReflectionClass($classname);
+    } catch (\Exception $e) {
+        exit($e->getMessage());
+    }
     $methods = $class->getMethods();
     $returnArr = [];
     foreach ($methods as $value) {
         if ($value->class == $classname) {
             if ($access != null) {
-                $methodAccess = new \ReflectionMethod($classname, $value->name);
+                try {
+                    $methodAccess = new \ReflectionMethod($classname, $value->name);
+                } catch (\Exception $e) {
+                    exit($e->getMessage());
+                }
                 switch ($access) {
                     case 'public':
                         if ($methodAccess->isPublic()) {
@@ -305,7 +313,7 @@ function cdn_cache_purge($urls)
 {
     $urls = is_array($urls) ? $urls : [$urls];
 
-    return \Bare\Queue::addMulti("CDNCachePurge", $urls);
+    return \Bare\M\Queue::addMulti("CDNCachePurge", $urls);
 }
 
 /**
