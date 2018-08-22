@@ -108,8 +108,12 @@ class Apidoc extends Controller
         $file_path = CONTROLLER_PATH . API_PATH . '/' . str_replace('.', '/', $dir) . '/' . $class . '.php';
         include_once($file_path);
         //获取返回结果
-        $r_method = new \ReflectionMethod('\\Controller\\' . API_PATH . '\\' . str_replace('.', '\\',
-                $dir) . '\\' . $class, $method);
+        try {
+            $r_method = new \ReflectionMethod('\\Controller\\' . API_PATH . '\\' . str_replace('.', '\\', $dir) . '\\' . $class, $method);
+        } catch (\Exception $e) {
+            exit($e->getMessage());
+        }
+
         $doc_comment = $r_method->getDocComment();
         //获取接口参数
         $sp = '/*/';
@@ -228,9 +232,12 @@ class Apidoc extends Controller
      */
     private static function _getMethodData($class = '')
     {
-
         $arr_api = [];
-        $r_class = new \ReflectionClass($class);
+        try {
+            $r_class = new \ReflectionClass($class);
+        } catch (\Exception $e) {
+            exit($e->getMessage());
+        }
         $doc_class = $r_class->getDocComment();
         $class_desc = $class_author = $class_date = $class_deprecated = '';
         preg_match('#/\*\*[\s\* ]*(.*)[\s\* ]*(@|\*/)#isU', $doc_class, $out);
@@ -254,7 +261,11 @@ class Apidoc extends Controller
         $method = get_class_methods($class);
         if (!empty($method)) {
             foreach ($method as $m_value) {
-                $r_method = new \Reflectionmethod($class, $m_value);
+                try {
+                    $r_method = new \Reflectionmethod($class, $m_value);
+                } catch (\Exception $e) {
+                    exit($e->getMessage());
+                }
                 $desc = '';
                 $doc_comment = $r_method->getDocComment(); //获取注释
                 if ($doc_comment !== false) {
