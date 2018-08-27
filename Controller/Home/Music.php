@@ -49,10 +49,8 @@ class Music extends Controller
                 }
             }
         }
-        $json_string = "var musicList = " . json_encode($data);
-        file_put_contents(
-            str_replace('//', '/', ROOT_PATH . str_replace(STATICS_HOST, '', STATICS_JS) . 'musicList.js'),
-            $json_string);
+        $json_string = "var musicList = " . json_encode($data) . ";";
+        file_put_contents(str_replace('//', '/', ROOT_PATH . str_replace(STATICS_HOST, '', STATICS_JS) . 'musicList.js'), $json_string);
         exit('ok');
     }
 
@@ -70,6 +68,7 @@ class Music extends Controller
                 $data = mb_convert_encoding($data, 'UTF-8', $filetype);
             }
         }
+
         return $data;
     }
 

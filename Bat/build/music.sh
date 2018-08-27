@@ -1,3 +1,3 @@
 cd `dirname $0`
-cd ../
+cd ../../
 php index.php home/music/make
