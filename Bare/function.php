@@ -178,7 +178,7 @@ function parse_template($path)
     try {
         $content = preg_replace($pattern, $replace, $content);
     } catch (\Exception $e) {
-        $cnt =  $e->getMessage() . "parse template {$path} error";
+        $cnt = $e->getMessage() . "parse template {$path} error";
         IS_ONLINE ? error_logs($cnt) : exit($cnt);
     }
     if (!is_dir(dirname($cache_path))) {

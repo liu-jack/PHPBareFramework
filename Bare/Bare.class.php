@@ -83,8 +83,8 @@ class Bare
             $action = $GLOBALS['_A'];
             $bare->$action();
         } catch (Exception $e) {
-            error_logs($e->getCode() . ':' . $e->getMessage());
-            exit($e->getMessage());
+            $cnt = $e->getCode() . ':' . $e->getMessage();
+            IS_ONLINE ? error_logs($cnt) : exit($cnt);
         }
     }
 
