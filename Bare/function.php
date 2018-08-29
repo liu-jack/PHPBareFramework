@@ -178,8 +178,8 @@ function parse_template($path)
     try {
         $content = preg_replace($pattern, $replace, $content);
     } catch (\Exception $e) {
-        error_logs($e->getCode() . ':' . $e->getMessage());
-        echo $e->getMessage() . "parse template {$path} error";
+        $cnt =  $e->getMessage() . "parse template {$path} error";
+        IS_ONLINE ? error_logs($cnt) : exit($cnt);
     }
     if (!is_dir(dirname($cache_path))) {
         mkdir(dirname($cache_path), 0755, true);
