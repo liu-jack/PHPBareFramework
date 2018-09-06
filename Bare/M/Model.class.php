@@ -793,17 +793,19 @@ abstract class Model
     {
         static $pdo_w, $pdo_r;
         if ($w) {
-            if (empty($pdo_w)) {
-                $pdo_w = DB::pdo(static::$_conf[self::CF_DB][self::CF_DB_W]);
+            $db = static::$_conf[self::CF_DB][self::CF_DB_W];
+            if (empty($pdo_w[$db])) {
+                $pdo_w[$db] = DB::pdo($db);
             }
 
-            return $pdo_w;
+            return $pdo_w[$db];
         } else {
-            if (empty($pdo_r)) {
-                $pdo_r = DB::pdo(static::$_conf[self::CF_DB][self::CF_DB_R]);
+            $db = static::$_conf[self::CF_DB][self::CF_DB_R];
+            if (empty($pdo_r[$db])) {
+                $pdo_r[$db] = DB::pdo(static::$_conf[self::CF_DB][self::CF_DB_R]);
             }
 
-            return $pdo_r;
+            return $pdo_r[$db];
         }
     }
 
@@ -817,14 +819,16 @@ abstract class Model
     {
         static $redis_w, $redis_r;
         if ($w) {
-            if (empty($redis_w)) {
-                $redis_w = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_W], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
+            $db_index = static::$_conf[self::CF_RD][self::CF_DB_W] . static::$_conf[self::CF_RD][self::CF_RD_INDEX];
+            if (empty($redis_w[$db_index])) {
+                $redis_w[$db_index] = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_W], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
             }
 
-            return $redis_w;
+            return $redis_w[$db_index];
         } else {
-            if (empty($redis_r)) {
-                $redis_r = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_R], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
+            $db_index = static::$_conf[self::CF_RD][self::CF_DB_R] . static::$_conf[self::CF_RD][self::CF_RD_INDEX];
+            if (empty($redis_r[$db_index])) {
+                $redis_r[$db_index] = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_R], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
             }
 
             return $redis_r;
@@ -840,14 +844,14 @@ abstract class Model
     protected static function getMC($option = null)
     {
         static $mc;
-        if (empty($mc)) {
-            if (empty($option)) {
-                $option = static::$_conf[static::CF_MC];
-            }
-            $mc = DB::memcache($option);
+        if (empty($option)) {
+            $option = static::$_conf[static::CF_MC];
+        }
+        if (empty($mc[$option])) {
+            $mc[$option] = DB::memcache($option);
         }
 
-        return $mc;
+        return $mc[$option];
     }
 
     /**
