@@ -819,14 +819,14 @@ abstract class Model
     {
         static $redis_w, $redis_r;
         if ($w) {
-            $db_index = static::$_conf[self::CF_RD][self::CF_DB_W] . static::$_conf[self::CF_RD][self::CF_RD_INDEX];
+            $db_index = static::$_conf[self::CF_RD][self::CF_DB_W] . '_' . static::$_conf[self::CF_RD][self::CF_RD_INDEX];
             if (empty($redis_w[$db_index])) {
                 $redis_w[$db_index] = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_W], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
             }
 
             return $redis_w[$db_index];
         } else {
-            $db_index = static::$_conf[self::CF_RD][self::CF_DB_R] . static::$_conf[self::CF_RD][self::CF_RD_INDEX];
+            $db_index = static::$_conf[self::CF_RD][self::CF_DB_R] . '_' . static::$_conf[self::CF_RD][self::CF_RD_INDEX];
             if (empty($redis_r[$db_index])) {
                 $redis_r[$db_index] = DB::redis(static::$_conf[self::CF_RD][self::CF_DB_R], static::$_conf[self::CF_RD][self::CF_RD_INDEX]);
             }
