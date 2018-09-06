@@ -49,19 +49,32 @@ spl_autoload_register(function ($class) {
 /**
  * 全局错误记录
  */
-set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+set_error_handler('errorHandler', (RUNTIME_LOG) ? (E_ERROR | E_WARNING | E_PARSE | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_CORE_ERROR | E_COMPILE_ERROR | E_RECOVERABLE_ERROR) : (E_ERROR | E_PARSE | E_USER_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_RECOVERABLE_ERROR));
+register_shutdown_function('fatalErrorHandler');
+
+/**
+ * 全局错误记录函数
+ *
+ * @param $errno
+ * @param $errstr
+ * @param $errfile
+ * @param $errline
+ */
+function errorHandler($errno, $errstr, $errfile, $errline)
+{
     static $_error_types = [
         E_ERROR => 'E_ERROR',
         E_WARNING => 'E_WARNING',
+        E_PARSE => 'E_PARSE',
+        E_NOTICE => 'E_NOTICE',
         E_STRICT => 'E_STRICT',
         E_USER_ERROR => 'E_USER_ERROR',
         E_USER_WARNING => 'E_USER_WARNING',
-        E_USER_NOTICE => 'E_USER_NOTICE'
-    ];
-    static $_user_error_map = [
-        E_ERROR => E_USER_ERROR,
-        E_WARNING => E_USER_WARNING,
-        E_STRICT => E_USER_NOTICE
+        E_USER_NOTICE => 'E_USER_NOTICE',
+        E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR',
+        E_CORE_ERROR => 'E_CORE_ERROR',
+        E_COMPILE_ERROR => 'E_COMPILE_ERROR',
+        E_ALL => 'E_ALL'
     ];
 
     ob_start();
@@ -81,8 +94,45 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
     logs($info, 'debug/runtime_log');
 
-    trigger_error("{$errstr} {$errtype}({$errno}) in {$errfile} on line {$errline}", (isset($_user_error_map[$errno]) ? $_user_error_map[$errno] : $errno));
-}, (RUNTIME_LOG || IS_ONLINE == false) ? (E_ERROR | E_WARNING | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE) : E_USER_NOTICE);
+    $error_logs = [
+        'Type' => $errno,
+        'Url' => (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ''),
+        'Info' => serialize($info),
+        'CreateTime' => date('Y-m-d H:i:s')
+    ];
+    //\Admin\PhpErrorLog::add($error_logs);
+    if (in_array($errno, [E_ERROR, E_PARSE, E_USER_ERROR, E_RECOVERABLE_ERROR])) {
+        $key = 'Send_Php_Error_Notice_Sms';
+        $mc = \Bare\DB::memcache();
+        $check = $mc->get($key);
+        if (empty($check) && IS_ONLINE) {
+            $msg = "php报错监测警报：php运行产生致命错误！ 错误详细: {$errstr}";
+            //$notice_mobiles = config('tool/sms')['default'];
+            //foreach ($notice_mobiles as $val) {
+            //$ret = \Notice\Sms::send($val, $msg, 0, '', false, false);
+            //}
+            $mc->set($key, time(), 600);
+        }
+    }
+}
+
+/**
+ * 捕获致命错误fatalError
+ */
+function fatalErrorHandler()
+{
+    $e = error_get_last();
+    switch ($e['type']) {
+        case E_ERROR:
+        case E_PARSE:
+        case E_CORE_ERROR:
+        case E_COMPILE_ERROR:
+        case E_USER_ERROR:
+        case E_RECOVERABLE_ERROR:
+            errorHandler($e['type'], $e['message'], $e['file'], $e['line']);
+            break;
+    }
+}
 
 /**
  * html模板include其他模板函数 模板页面使用
