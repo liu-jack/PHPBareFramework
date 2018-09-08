@@ -43,7 +43,7 @@ define('V_API', 1); // 接口访问
 define('V_ADMIN', 2); // 后台访问
 
 if (php_sapi_name() !== 'cli') {
-    $path_info = str_replace(VEXT, '', $_SERVER['DOCUMENT_URI']);
+    $path_info = str_replace(VEXT, '', $_SERVER['DOCUMENT_URI'] ?? $_SERVER['PATH_INFO']);
     $pos = stripos($path_info, '.php');
     $path_info = $pos === false ? $path_info : substr($path_info, $pos + 4);
     define('PATH_INFO', trim($path_info, '/'));
