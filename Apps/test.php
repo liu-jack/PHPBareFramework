@@ -130,10 +130,32 @@ class test
         RuntimeLog::end();
 
         RuntimeLog::start();
-        for ($i=0; $i<=100; $i++) {
+        for ($i = 0; $i <= 100; $i++) {
             usleep(1000 * $i);
         }
         RuntimeLog::end();
+
+        // 先回应 然后继续后台运行
+        ignore_user_abort(true);
+        if (!function_exists('fastcgi_finish_request')) {
+            ob_end_flush();
+            ob_start();
+        }
+
+        echo date('Y-m-d H:i:s');
+
+        if (!function_exists('fastcgi_finish_request')) {
+            header("Content-Type: text/html;charset=utf-8");
+            header("Connection: close");
+            header('Content-Length: ' . ob_get_length());
+            ob_flush();
+            flush();
+        } else {
+            fastcgi_finish_request();
+        }
+
+        sleep(5);
+        logs(date('Y-m-d H:i:s'), 'test/test');
     }
 }
 
