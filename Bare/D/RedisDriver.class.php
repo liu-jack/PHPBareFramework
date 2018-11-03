@@ -108,7 +108,9 @@ class RedisDriver extends \Redis
      */
     public function getS($key)
     {
-        return unserialize(parent::get($key));
+        $ret = parent::get($key);
+
+        return $ret === false ? false : unserialize($ret);
     }
 
     /**
