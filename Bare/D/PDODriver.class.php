@@ -57,6 +57,7 @@ class PDODriver extends PDO
         'table' => '',
         'where' => '',
         'group' => null,
+        'having' => null,
         'order' => null,
         'limit' => null,
         'index' => null,
@@ -244,6 +245,19 @@ class PDODriver extends PDO
     }
 
     /**
+     * 链式查询 - 结果筛选方法
+     *
+     * @param string $having 结果筛选方法
+     * @return $this
+     */
+    public function having($having)
+    {
+        $this->chained['having'] = $having;
+
+        return $this;
+    }
+
+    /**
      * 链式查询 - 指定排序方法
      *
      * @param string $order 排序方法
@@ -298,7 +312,7 @@ class PDODriver extends PDO
     public function getAll($style = PDO::FETCH_ASSOC, $arg = null)
     {
         $opt = $this->chained;
-        $sql = sprintf("SELECT %s FROM `%s` %s %s %s %s", $opt['fields'], $opt['table'], $opt['where'], is_null($opt['group']) ? '' : 'GROUP BY ' . $opt['group'], is_null($opt['order']) ? '' : 'ORDER BY ' . $opt['order'], is_null($opt['limit']) ? '' : 'LIMIT ' . $opt['limit']);
+        $sql = sprintf("SELECT %s FROM `%s` %s %s %s %s %s", $opt['fields'], $opt['table'], $opt['where'], is_null($opt['group']) ? '' : 'GROUP BY ' . $opt['group'], is_null($opt['having']) ? '' : 'HAVING ' . $opt['having'], is_null($opt['order']) ? '' : 'ORDER BY ' . $opt['order'], is_null($opt['limit']) ? '' : 'LIMIT ' . $opt['limit']);
         $query = $this->prepare($sql);
 
         if (!($query instanceof PDOStatement)) {
@@ -400,6 +414,8 @@ class PDODriver extends PDO
         $this->chained = [
             'fields' => '*',
             'table' => '',
+            'group' => null,
+            'having' => null,
             'order' => null,
             'limit' => null,
             'where' => '',
