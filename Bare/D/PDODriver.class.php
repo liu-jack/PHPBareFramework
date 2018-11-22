@@ -55,9 +55,10 @@ class PDODriver extends PDO
     private $chained = [
         'fields' => '*',
         'table' => '',
+        'where' => '',
+        'group' => null,
         'order' => null,
         'limit' => null,
-        'where' => '',
         'index' => null,
         'bind' => []
     ];
@@ -115,11 +116,14 @@ class PDODriver extends PDO
      * @see PDO::query()
      *
      * @param string $statement
-     * @return PDOStatement
+     * @param int    $mode
+     * @param null   $arg3
+     * @param array  $ctorargs
+     * @return bool|PDOStatement
      */
-    public function query($statement)
+    public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null, array $ctorargs = array())
     {
-        $this->statement = parent::query($statement);
+        $this->statement = parent::query($statement, $mode, $arg3, $ctorargs);
         $this->statement->setFetchMode($this->opt['fetchMode']);
 
         return $this->statement;
@@ -227,6 +231,19 @@ class PDODriver extends PDO
     }
 
     /**
+     * 链式查询 - 指定分组方法
+     *
+     * @param string $group 分组方法
+     * @return $this
+     */
+    public function group($group)
+    {
+        $this->chained['group'] = $group;
+
+        return $this;
+    }
+
+    /**
      * 链式查询 - 指定排序方法
      *
      * @param string $order 排序方法
@@ -281,9 +298,7 @@ class PDODriver extends PDO
     public function getAll($style = PDO::FETCH_ASSOC, $arg = null)
     {
         $opt = $this->chained;
-        $sql = sprintf("SELECT %s FROM `%s` %s %s %s", $opt['fields'], $opt['table'], $opt['where'],
-            is_null($opt['order']) ? '' : 'ORDER BY ' . $opt['order'],
-            is_null($opt['limit']) ? '' : 'LIMIT ' . $opt['limit']);
+        $sql = sprintf("SELECT %s FROM `%s` %s %s %s %s", $opt['fields'], $opt['table'], $opt['where'], is_null($opt['group']) ? '' : 'GROUP BY ' . $opt['group'], is_null($opt['order']) ? '' : 'ORDER BY ' . $opt['order'], is_null($opt['limit']) ? '' : 'LIMIT ' . $opt['limit']);
         $query = $this->prepare($sql);
 
         if (!($query instanceof PDOStatement)) {
@@ -437,8 +452,7 @@ class PDODriver extends PDO
             $flag = false;
         }
 
-        $sql = sprintf("INSERT %s INTO  `%s` (%s) VALUES %s", $option, $tableName, implode(', ', $fields),
-            implode(', ', $inserts));
+        $sql = sprintf("INSERT %s INTO  `%s` (%s) VALUES %s", $option, $tableName, implode(', ', $fields), implode(', ', $inserts));
 
         $query = $this->prepare($sql);
         if (!($query instanceof PDOStatement)) {
@@ -509,8 +523,7 @@ class PDODriver extends PDO
             $ignore = '';
         }
 
-        $sql = sprintf("INSERT %s INTO `%s` (%s) VALUES %s {$update_clause}", $ignore, $tableName,
-            implode(', ', $fieldKeys), implode(', ', $inserts));
+        $sql = sprintf("INSERT %s INTO `%s` (%s) VALUES %s {$update_clause}", $ignore, $tableName, implode(', ', $fieldKeys), implode(', ', $inserts));
         $query = $this->prepare($sql);
         if (!($query instanceof PDOStatement)) {
             return false;
