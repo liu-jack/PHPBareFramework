@@ -478,3 +478,44 @@ function int2str($id, $key = 'www.29fh.com')
 
     return strtoupper($res);
 }
+
+/**
+ * xml 转 array
+ *
+ * @param $xml
+ * @return array|mixed
+ */
+function xml2array($xml)
+{
+    if (empty($xml)) {
+        return array();
+    }
+    libxml_disable_entity_loader(true);
+
+    return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+}
+
+/**
+ * array 转 xml
+ *
+ * @param $array
+ * @return bool|string
+ */
+function array2Xml($array)
+{
+    if (!is_array($array) || count($array) <= 0) {
+        return '';
+    }
+
+    $xml = "<xml>";
+    foreach ($array as $key => $val) {
+        if (is_numeric($val)) {
+            $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+        } else {
+            $xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
+        }
+    }
+    $xml .= "</xml>";
+
+    return $xml;
+}
