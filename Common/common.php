@@ -501,7 +501,7 @@ function xml2array($xml)
  * @param $array
  * @return bool|string
  */
-function array2Xml($array)
+function array2xml($array)
 {
     if (!is_array($array) || count($array) <= 0) {
         return '';
