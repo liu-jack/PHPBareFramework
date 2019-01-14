@@ -31,9 +31,9 @@ class Music extends Controller
         $data = [];
         foreach ($files as $v) {
             if ($v != '.' && $v != '..') {
-                if (is_file($dir . $v) && stripos($v, '.mp3') !== false) {
-                    $arr = explode(' - ', str_replace('.mp3', '', $v));
-                    $lrc = str_replace('.mp3', '.lrc', $v);
+                if (is_file($dir . $v) && (stripos($v, '.mp3') !== false || stripos($v, '.flac') !== false)) {
+                    $arr = explode(' - ', str_replace(['.mp3', '.flac'], '', $v));
+                    $lrc = str_replace(['.mp3', '.flac'], '.lrc', $v);
                     if (file_exists($dir . $lrc)) {
                         $str = file_get_contents($dir . $lrc);
                         $str = $this->strToUtf8($str);

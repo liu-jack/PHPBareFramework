@@ -519,3 +519,28 @@ function array2xml($array)
 
     return $xml;
 }
+
+/**
+ * 自然周转日期
+ *
+ * @param $year
+ * @param $week_num
+ * @return array
+ */
+function getWeekDate($year, $week_num)
+{
+    $first_day_of_year = mktime(0, 0, 0, 1, 1, $year);
+    $first_week_day = date('N', $first_day_of_year);
+    $first_week_num = date('W', $first_day_of_year);
+    if ($first_week_num == 1) {
+        $day = (1 - ($first_week_day - 1)) + 7 * ($week_num - 1);
+        $start_date = date('Y-m-d', mktime(0, 0, 0, 1, $day, $year));
+        $end_date = date('Y-m-d', mktime(0, 0, 0, 1, $day + 6, $year));
+    } else {
+        $day = (9 - $first_week_day) + 7 * ($week_num - 1);
+        $start_date = date('Y-m-d', mktime(0, 0, 0, 1, $day, $year));
+        $end_date = date('Y-m-d', mktime(0, 0, 0, 1, $day + 6, $year));
+    }
+
+    return [$start_date, $end_date];
+}
