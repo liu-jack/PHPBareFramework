@@ -68,7 +68,7 @@ defined('JF_LOG_WARNING') or define('JF_LOG_WARNING', 3);
 defined('JF_LOG_ERROR') or define('JF_LOG_ERROR', 4);
 defined('JF_LOG_CRITICAL') or define('JF_LOG_CRITICAL', 5);
 
-$env = get_cfg_var('environment');
+$env = strtoupper(get_cfg_var('environment'));
 define('DEV', 'DEV');
 define('TEST', 'TEST');
 define('ONLINE', 'ONLINE');

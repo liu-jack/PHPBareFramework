@@ -3,8 +3,8 @@
  * 公共配置
  */
 // 默认访问方法
-$GLOBALS['_M'] = $GLOBALS['_M'] ?? 'Book';
-$GLOBALS['_C'] = $GLOBALS['_C'] ?? 'Index';
+$GLOBALS['_M'] = $GLOBALS['_M'] ?? 'Game';
+$GLOBALS['_C'] = $GLOBALS['_C'] ?? 'H5';
 $GLOBALS['_A'] = $GLOBALS['_A'] ?? 'index';
 // 接口访问配置
 define('API_PATH', 'Api');       // Api路径名
