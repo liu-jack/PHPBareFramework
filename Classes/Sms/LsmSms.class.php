@@ -8,7 +8,7 @@
  *
  */
 
-namespace Sms;
+namespace Classes\Sms;
 
 /**
  * Trait SmsCtrl

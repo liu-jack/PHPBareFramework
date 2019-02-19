@@ -12,13 +12,12 @@ use Bare\DB;
 
 class CronQueue
 {
+    const NOTICE = 'Notice';// 通知队列
+
     // 队列数据保存位置
     const REDIS_DB_W = DB::REDIS_QUEUE_W;
     const REDIS_DB_R = DB::REDIS_QUEUE_R;
     const REDIS_DB_INDEX = 3;
-
-    // 通知
-    const NOTICE = 'Notice';
 
     /**
      * 向队列中添加一条数据

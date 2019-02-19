@@ -2,7 +2,7 @@
 
 namespace Controller\Test;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 前端默认首页控制器

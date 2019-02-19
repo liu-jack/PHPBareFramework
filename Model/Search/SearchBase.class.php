@@ -10,7 +10,7 @@
 namespace Model\Search;
 
 use Bare\DB;
-use Bare\Queue;
+use Bare\M\Queue;
 
 class SearchBase
 {
@@ -32,12 +32,12 @@ class SearchBase
     const T_INT = 'int';
     const T_STRING = 'string';
     const T_FLOAT = 'float';
-    const T_STRTOTIME = 'strtotime';
+    const T_STR2TIME = 'str2time';
 
     /**
      * 搜索实例
      *
-     * @return mixed
+     * @return \Bare\D\ElasticSearch
      */
     protected static function instance()
     {
@@ -57,16 +57,18 @@ class SearchBase
      * 新增同步搜索数据 （队列）
      *
      * @param array $row 所有字段必选, 见 self::$_search_fields 定义
-     * @throws \Exception
      * @return bool
      */
     public static function addSearch(array $row): bool
     {
-        $data = static::checkFields($row, true);
-
+        try {
+            $row = static::checkFields($row, true);
+        } catch (\Exception $e) {
+            exit($e->getCode() . ':' . $e->getMessage());
+        }
         $ret = Queue::add(static::$_search_queue, [
             'type' => 'add',
-            'data' => $data
+            'data' => $row
         ]);
 
         return $ret;
@@ -97,14 +99,17 @@ class SearchBase
      */
     public static function updateSearch(int $id, array $row): bool
     {
-        $data = static::checkFields($row);
-
+        try {
+            $row = static::checkFields($row);
+        } catch (\Exception $e) {
+            exit($e->getCode() . ':' . $e->getMessage());
+        }
         $ret = true;
-        if (count($data) > 0) {
-            $data[static::INDEX_KEY] = $id;
+        if (count($row) > 0) {
+            $row[static::INDEX_KEY] = $id;
             $ret = Queue::add(static::$_search_queue, [
                 'type' => 'update',
-                'data' => $data
+                'data' => $row
             ]);
         }
 
@@ -120,12 +125,15 @@ class SearchBase
      */
     public static function updateSearchDirect(int $id, array $row): bool
     {
-        $data = static::checkFields($row);
-
+        try {
+            $row = static::checkFields($row);
+        } catch (\Exception $e) {
+            exit($e->getCode() . ':' . $e->getMessage());
+        }
         $ret = true;
-        if (count($data) > 0) {
-            $data[static::INDEX_KEY] = $id;
-            $ret = static::update($data);
+        if (count($row) > 0) {
+            $row[static::INDEX_KEY] = $id;
+            $ret = static::update($row);
         }
 
         return $ret;
@@ -155,16 +163,23 @@ class SearchBase
     {
         $total = empty($ret['hits']['total']) ? 0 : $ret['hits']['total'];
         $data = [];
-        if ($ret != false) {
+        if ($ret !== false) {
             $hits = $ret['hits']['hits'];
+            $only_id = count($fields) == 1 && key($fields) == static::$_primary_key;
             foreach ($hits as $result) {
-                $items[static::$_primary_key] = $result[static::INDEX_KEY];
-                foreach ($fields as $field => $key) {
-                    if (isset($result['_source'][$key])) {
-                        $items[$field] = $result['_source'][$key];
+                if ($only_id) {
+                    $data[$result[static::INDEX_KEY]] = $result[static::INDEX_KEY];
+                } else {
+                    $items[static::$_primary_key] = $result[static::INDEX_KEY];
+                    foreach ($fields as $field => $key) {
+                        if (isset($result['_source'][$key])) {
+                            $items[$field] = $result['_source'][$key];
+                        }
                     }
+                    $data[] = $items;
                 }
-                $data[] = $items;
+
+
             }
         }
 
@@ -296,7 +311,11 @@ class SearchBase
             if (empty($row['UpdateTime']) || $row['UpdateTime'] == '0000-00-00 00:00:00') {
                 $row['UpdateTime'] = $row['CreateTime'] ?? date('Y-m-d H:i:s');
             }
-            $t_body = static::checkFields($row);
+            try {
+                $t_body = static::checkFields($row);
+            } catch (\Exception $e) {
+                exit($e->getCode() . ':' . $e->getMessage());
+            }
             unset($t_body[static::INDEX_KEY]);
 
             $query .= json_encode($t_body) . "\n";
@@ -339,7 +358,7 @@ class SearchBase
                     case static::T_STRING:
                         $t = (string)$t;
                         break;
-                    case static::T_STRTOTIME:
+                    case static::T_STR2TIME:
                         $t = empty($t) ? 0 : strtotime($t);
                         break;
                 }

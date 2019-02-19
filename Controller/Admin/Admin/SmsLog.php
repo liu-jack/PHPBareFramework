@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 
 class SmsLog extends AdminController
 {

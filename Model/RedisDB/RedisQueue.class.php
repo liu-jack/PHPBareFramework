@@ -98,7 +98,7 @@ class RedisQueue
      * 获取redis队列实例
      *
      * @param bool $write
-     * @return DB\RedisDB
+     * @return \Bare\D\RedisDriver
      */
     public function getRedis($write = true)
     {

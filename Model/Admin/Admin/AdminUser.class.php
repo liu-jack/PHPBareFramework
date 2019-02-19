@@ -9,7 +9,7 @@
 
 namespace Model\Admin\Admin;
 
-use Bare\Model;
+use Bare\M\Model;
 use Bare\DB;
 
 /**

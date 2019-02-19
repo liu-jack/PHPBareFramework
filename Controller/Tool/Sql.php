@@ -2,7 +2,7 @@
 
 namespace Controller\Tool;
 
-use  Bare\Controller;
+use  Bare\C\Controller;
 
 /**
  * 数据库管理

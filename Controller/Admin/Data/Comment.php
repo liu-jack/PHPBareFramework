@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Data;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Bare\DB;
 use Model\Comment\CommentBase;
 use Model\Mobile\AppPush;

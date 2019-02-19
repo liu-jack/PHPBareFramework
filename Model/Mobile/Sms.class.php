@@ -11,8 +11,8 @@
 namespace Model\Mobile;
 
 use Bare\DB;
-use Bare\Queue;
-use Sms\LsmSms as SmsCtrl;
+use Bare\M\Queue;
+use Classes\Sms\LsmSms as SmsCtrl;
 
 class Sms
 {

@@ -8,7 +8,7 @@
  * $Id$
  */
 
-namespace Model\Mobile;
+namespace Model\Common;
 
 use Bare\DB;
 use Config\RDConfig;
@@ -30,7 +30,7 @@ class RecomData extends RDConfig
      * 按key获取数据
      *
      * @param string|array $keys KEY见self::KEY_CONFIG
-     * @return array             ['key1' => [], 'key2' => [], ...]
+     * @return array|string             ['key1' => [], 'key2' => [], ...]
      *
      */
     public static function getData($keys)
@@ -75,9 +75,9 @@ class RecomData extends RDConfig
     /**
      * 保存数据
      *
-     * @param string $key    要设置的key,见self::KEY_CONFIG
-     * @param array  $data   要设置的数据, 不同key数据自定义, 见self::KEY_CONFIG
-     * @param string $prefix 要设置的key 前缀
+     * @param string       $key    要设置的key,见self::KEY_CONFIG
+     * @param array|string $data   要设置的数据, 不同key数据自定义, 见self::KEY_CONFIG
+     * @param string       $prefix 要设置的key 前缀
      * @return bool
      */
     public static function setData($key, $data, $prefix = '')

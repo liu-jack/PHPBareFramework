@@ -2,7 +2,7 @@
 
 namespace Controller\Account;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Passport\Login;
 use Model\Passport\Register;
 use Classes\Encrypt\Rsa;

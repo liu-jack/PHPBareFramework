@@ -10,9 +10,10 @@ class Data
      *
      * @author zhoujf
      */
-    public function exportExcel($list)
+    public static function exportExcel($list)
     {
         set_time_limit(0);
+        ini_set('memory_limit', '1024M');
         // //导出 .xls 格式
         $filename = mb_convert_encoding('测试数据-' . date("YmdHis"), "GB2312", "UTF-8");
         $filename_type = 'xls';
@@ -79,4 +80,59 @@ EOT;
          */
     }
 
+    /**
+     * 导出csv文件
+     *
+     * @param        $title
+     * @param        $list
+     * @param string $filename
+     * @param bool   $start
+     * @param bool   $end
+     */
+    public static function exportCsv($title, $list, $filename = '', $start = true, $end = true)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        if ($start) {
+            $header = [];
+            foreach ($title as $k => $v) {
+                $header[] = iconv("utf-8", "gb2312", $v);
+            }
+            $headerFile = implode(',', $header);
+            if (empty($filename)) {
+                $filename = '/tmp/' . date('Y-m-d H:i:s') . '_' . uniqid();
+            }
+            @unlink($filename);
+            file_put_contents($filename, $headerFile . "\n");
+        }
+
+        //打开文件
+        if (!$handle = fopen($filename, 'a')) {
+            echo "不能打开文件 $filename";
+            exit;
+        }
+        //写入文件
+        $excelString = [];
+        foreach ($list as $v) {
+            $dumpExcel = [];
+            foreach ($title as $field => &$tt) {
+                $dumpExcel[] = mb_convert_encoding($v[$field], 'GBK', 'UTF-8');
+            }
+            $excelString[] = implode(',', $dumpExcel);
+        }
+        //只能一行行些。不然容易漏
+        foreach ($excelString as $content) {
+            fwrite($handle, $content . "\n");
+        }
+        unset($excelString);
+        fclose($handle);
+
+        if ($end) {
+            //导出下载
+            header("Content-type: application/octet-stream");
+            header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+            header("Content-Length: " . filesize($filename));
+            readfile($filename);
+        }
+    }
 }

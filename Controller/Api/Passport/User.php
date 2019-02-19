@@ -8,7 +8,7 @@
 
 namespace Controller\Api\Passport;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Passport\Connect;
 use Model\Passport\Register;
 use Classes\Encrypt\Rsa;

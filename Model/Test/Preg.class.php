@@ -21,7 +21,7 @@ class Preg
         $text = preg_replace_callback($pattern, function ($match) use ($rep) {
             return $rep[$match[1]];
         }, $content);
-        //$text = preg_replace_callback($pattern, [$this, 'replace'], $content);
+//        $text = preg_replace_callback($pattern, [$this, 'replace'], $content);
         return $text;
     }
 

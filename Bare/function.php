@@ -49,19 +49,32 @@ spl_autoload_register(function ($class) {
 /**
  * 全局错误记录
  */
-set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+set_error_handler('errorHandler', (RUNTIME_LOG) ? (E_ERROR | E_WARNING | E_PARSE | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_CORE_ERROR | E_COMPILE_ERROR | E_RECOVERABLE_ERROR) : (E_ERROR | E_PARSE | E_USER_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_RECOVERABLE_ERROR));
+register_shutdown_function('fatalErrorHandler');
+
+/**
+ * 全局错误记录函数
+ *
+ * @param $errno
+ * @param $errstr
+ * @param $errfile
+ * @param $errline
+ */
+function errorHandler($errno, $errstr, $errfile, $errline)
+{
     static $_error_types = [
         E_ERROR => 'E_ERROR',
         E_WARNING => 'E_WARNING',
+        E_PARSE => 'E_PARSE',
+        E_NOTICE => 'E_NOTICE',
         E_STRICT => 'E_STRICT',
         E_USER_ERROR => 'E_USER_ERROR',
         E_USER_WARNING => 'E_USER_WARNING',
-        E_USER_NOTICE => 'E_USER_NOTICE'
-    ];
-    static $_user_error_map = [
-        E_ERROR => E_USER_ERROR,
-        E_WARNING => E_USER_WARNING,
-        E_STRICT => E_USER_NOTICE
+        E_USER_NOTICE => 'E_USER_NOTICE',
+        E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR',
+        E_CORE_ERROR => 'E_CORE_ERROR',
+        E_COMPILE_ERROR => 'E_COMPILE_ERROR',
+        E_ALL => 'E_ALL'
     ];
 
     ob_start();
@@ -81,8 +94,45 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
     logs($info, 'debug/runtime_log');
 
-    trigger_error("{$errstr} {$errtype}({$errno}) in {$errfile} on line {$errline}", (isset($_user_error_map[$errno]) ? $_user_error_map[$errno] : $errno));
-}, (RUNTIME_LOG || IS_ONLINE == false) ? (E_ERROR | E_WARNING | E_STRICT | E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE) : E_USER_NOTICE);
+    $error_logs = [
+        'Type' => $errno,
+        'Url' => (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : ''),
+        'Info' => serialize($info),
+        'CreateTime' => date('Y-m-d H:i:s')
+    ];
+    //\Admin\PhpErrorLog::add($error_logs);
+    if (in_array($errno, [E_ERROR, E_PARSE, E_USER_ERROR, E_RECOVERABLE_ERROR])) {
+        $key = 'Send_Php_Error_Notice_Sms';
+        $mc = \Bare\DB::memcache();
+        $check = $mc->get($key);
+        if (empty($check) && IS_ONLINE) {
+            $msg = "php报错监测警报：php运行产生致命错误！ 错误详细: {$errstr}";
+            //$notice_mobiles = config('tool/sms')['default'];
+            //foreach ($notice_mobiles as $val) {
+            //$ret = \Notice\Sms::send($val, $msg, 0, '', false, false);
+            //}
+            $mc->set($key, time(), 600);
+        }
+    }
+}
+
+/**
+ * 捕获致命错误fatalError
+ */
+function fatalErrorHandler()
+{
+    $e = error_get_last();
+    switch ($e['type']) {
+        case E_ERROR:
+        case E_PARSE:
+        case E_CORE_ERROR:
+        case E_COMPILE_ERROR:
+        case E_USER_ERROR:
+        case E_RECOVERABLE_ERROR:
+            errorHandler($e['type'], $e['message'], $e['file'], $e['line']);
+            break;
+    }
+}
 
 /**
  * html模板include其他模板函数 模板页面使用
@@ -101,7 +151,11 @@ function view($path = '', $ext = VEXT)
     } else {
         $view_path = VIEW_PATH . $GLOBALS['_PATH'] . $ext;
     }
-    $view_path = parse_template($view_path);
+    try {
+        $view_path = parse_template($view_path);
+    } catch (\Exception $e) {
+        exit($e->getCode() . ':' . $e->getMessage());
+    }
     include_once $view_path;
 }
 
@@ -137,23 +191,23 @@ function parse_template($path)
         '@\{\@([\w_]+\([^}]*\))\}@isU',
         // 3. {foreach ($group as $v)}{if(xx)}
         '@\{(foreach|if)\s+([^}]*)\}@isU',
-        // 3.1 {elseif(xx)}
+        // 4 {elseif(xx)}
         '@\{(elseif)\s+([^}]*)\}@isU',
-        // 4. {else}
+        // 5. {else}
         '@\{(else)\}@isU',
-        // 5. {/foreach}{/if}
+        // 6. {/foreach}{/if}
         '@\{/(foreach|if)\}@isU',
-        // 6. {$a.b.c}
+        // 7. {$a.b.c}
         '@\{(\$[\w_]+)\.([\w_]+)\.([\w_]+)\}@isU',
-        // 7. {$a.b}
+        // 8. {$a.b}
         '@\{(\$[\w_]+)\.([\w_]+)\}@isU',
-        // 8. {$a} {$a['b']} {$a[$b['c']]}
+        // 9. {$a} {$a['b']} {$a[$b['c']]}
         '@\{(\$[\w_][^.}]*)\}@isU',
-        // 9. {STATICS_JS}
+        // 10. {STATICS_JS}
         '@\{([A-Z_]+)\}@isU',
-        // 10. {url('add')}
+        // 11. {url('add')}
         '@\{([\w_]+\([^}]*\))\}@isU',
-        // 11. {@$i = 1}{@$i++}
+        // 12. {@$i = 1}{@$i++}
         '@\{\@(\$[\w_][^}]*)\}@isU',
     ];
     $replace = [
@@ -174,7 +228,8 @@ function parse_template($path)
     try {
         $content = preg_replace($pattern, $replace, $content);
     } catch (\Exception $e) {
-        echo $e->getMessage() . "parse template {$path} error";
+        $cnt = $e->getMessage() . "parse template {$path} error";
+        IS_ONLINE ? error_logs($cnt) : exit($cnt);
     }
     if (!is_dir(dirname($cache_path))) {
         mkdir(dirname($cache_path), 0755, true);
@@ -379,9 +434,7 @@ function logs($content, $name = '', $log_path = LOG_PATH)
                 if (is_array($v)) {
                     $v = serialize($v);
                 }
-                if (!is_numeric($k)) {
-                    $v = $k . ': ' . $v;
-                }
+                $v = $k . ': ' . $v;
             }
         } else {
             $content = [$content];
@@ -404,6 +457,17 @@ function logs($content, $name = '', $log_path = LOG_PATH)
  * @param string $name
  */
 function debug_log($content, $name = 'debug/debug')
+{
+    logs($content, $name);
+}
+
+/**
+ * 调试日志
+ *
+ * @param        $content
+ * @param string $name
+ */
+function error_logs($content, $name = 'error/php_errors')
 {
     logs($content, $name);
 }
@@ -616,7 +680,7 @@ function show404($path = '')
  * @param string $url
  * @return string
  */
-function autohost($url)
+function auto_host($url)
 {
     if (__ENV__ == TEST && strpos($_SERVER['HTTP_HOST'], 'test.') !== false && strpos($url, '://test.') === false && strpos($url, 'http') === 0) {
         return str_replace('://', '://test.', $url);
@@ -657,4 +721,18 @@ function error_msg($code)
     $error_msg = config('bare/error_msg');
 
     return $error_msg[$code] ?? '';
+}
+
+/**
+ * 获取应用版本的appkey
+ *
+ * @param $appid
+ * @param $version
+ * @return string
+ */
+function version_app_key($appid, $version)
+{
+    $config = config('api/appkey');
+
+    return $config[$appid][$version] ?? '';
 }

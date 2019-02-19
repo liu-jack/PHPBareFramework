@@ -3,7 +3,7 @@
 namespace Model\Book;
 
 use Bare\DB;
-use Bare\Model;
+use Bare\M\Model;
 use Common\RedisConst;
 
 class Column extends Model

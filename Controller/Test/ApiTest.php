@@ -3,7 +3,7 @@
 namespace Controller\Test;
 
 use Bare\Api;
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 测试用控制器

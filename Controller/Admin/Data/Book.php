@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Data;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Model\Book\Book as MBook;
 use Model\Book\Column;
 use Model\Book\Content;

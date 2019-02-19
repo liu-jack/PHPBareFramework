@@ -6,7 +6,7 @@
 
 namespace Controller\Api\Geo;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Classes\Geography\City;
 use Classes\Geography\Area;
 use Classes\Geography\Province;

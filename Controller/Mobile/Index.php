@@ -2,7 +2,7 @@
 
 namespace Controller\Mobile;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Mobile\AppInfo;
 
 /**

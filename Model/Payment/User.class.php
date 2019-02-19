@@ -9,7 +9,7 @@
 
 namespace Model\Payment;
 
-use Bare\Model;
+use Bare\M\Model;
 use Config\DBConfig;
 
 class User extends Model
@@ -55,11 +55,11 @@ class User extends Model
     ];
 
     /**
-     * @see \Bare\Model::add() 新增
-     * @see \Bare\Model::update() 更新
-     * @see \Bare\Model::getInfoByIds() 按主键id查询
-     * @see \Bare\Model::getList() 条件查询
-     * @see \Bare\Model::delete() 删除
+     * @see \Bare\M\Model::add() 新增
+     * @see \Bare\M\Model::update() 更新
+     * @see \Bare\M\Model::getInfoByIds() 按主键id查询
+     * @see \Bare\M\Model::getList() 条件查询
+     * @see \Bare\M\Model::delete() 删除
      */
 
     /**

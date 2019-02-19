@@ -9,7 +9,7 @@
 
 namespace Controller\Algorithm;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Classes\Algorithm\Math as MMath;
 use Classes\Algorithm\Sort;
 

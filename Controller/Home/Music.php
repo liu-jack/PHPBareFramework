@@ -2,7 +2,7 @@
 
 namespace Controller\Home;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 音乐
@@ -31,9 +31,9 @@ class Music extends Controller
         $data = [];
         foreach ($files as $v) {
             if ($v != '.' && $v != '..') {
-                if (is_file($dir . $v) && stripos($v, '.mp3') !== false) {
-                    $arr = explode(' - ', str_replace('.mp3', '', $v));
-                    $lrc = str_replace('.mp3', '.lrc', $v);
+                if (is_file($dir . $v) && (stripos($v, '.mp3') !== false || stripos($v, '.flac') !== false)) {
+                    $arr = explode(' - ', str_replace(['.mp3', '.flac'], '', $v));
+                    $lrc = str_replace(['.mp3', '.flac'], '.lrc', $v);
                     if (file_exists($dir . $lrc)) {
                         $str = file_get_contents($dir . $lrc);
                         $str = $this->strToUtf8($str);
@@ -49,10 +49,8 @@ class Music extends Controller
                 }
             }
         }
-        $json_string = "var musicList = " . json_encode($data);
-        file_put_contents(
-            str_replace('//', '/', ROOT_PATH . str_replace(STATICS_HOST, '', STATICS_JS) . 'musicList.js'),
-            $json_string);
+        $json_string = "var musicList = " . json_encode($data) . ";";
+        file_put_contents(str_replace('//', '/', ROOT_PATH . str_replace(STATICS_HOST, '', STATICS_JS) . 'musicList.js'), $json_string);
         exit('ok');
     }
 
@@ -70,6 +68,7 @@ class Music extends Controller
                 $data = mb_convert_encoding($data, 'UTF-8', $filetype);
             }
         }
+
         return $data;
     }
 

@@ -1,5 +1,5 @@
-## 创建mapping
-curl -XPUT http://127.0.0.1:9200/29shu_book_v1?pretty -d '
+## 创建搜索 mapping es6.2.4
+curl -XPUT http://127.0.0.1:9200/29shu_book_v1?pretty -H "Content-Type: application/json" -d '
 {
     "settings": {
         "number_of_shards": 5,
@@ -26,13 +26,13 @@ curl -XPUT http://127.0.0.1:9200/29shu_book_v1?pretty -d '
             }
         }
     }
-}'
+}';
 
 设置别名
-curl -XPOST http://127.0.0.1:9200/_aliases -d '
+curl -XPOST http://127.0.0.1:9200/_aliases?pretty -H "Content-Type: application/json" -d '
 {
     "actions": [
         { "remove":    { "index": "29shu_book_v1", "alias": "29shu_book" }},
-        { "add":    { "index": "29shu_book_v2", "alias": "29shu_book" }}
+        { "add":    { "index": "29shu_book_v1", "alias": "29shu_book" }}
     ]
-}'
+}';

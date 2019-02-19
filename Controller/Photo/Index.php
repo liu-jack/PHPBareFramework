@@ -9,7 +9,7 @@
 
 namespace Controller\Photo;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Picture\Atlas;
 use Model\Picture\Photo;
 

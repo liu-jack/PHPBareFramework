@@ -7,7 +7,7 @@
 
 namespace Controller\Api\Test;
 
-use Bare\Controller;
+use Bare\C\Controller;
 
 /**
  * 测试用类

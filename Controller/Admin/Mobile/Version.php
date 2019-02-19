@@ -6,7 +6,7 @@
 
 namespace Controller\Admin\Mobile;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Model\Mobile\AppInfo;
 use Model\Mobile\Version as MVersion;
 use Bare\DB;

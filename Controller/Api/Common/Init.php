@@ -6,7 +6,7 @@
 
 namespace Controller\Api\Common;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use Model\Mobile\AppInfo;
 use Model\Mobile\Device;
 

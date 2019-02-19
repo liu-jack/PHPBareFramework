@@ -3,11 +3,10 @@
 namespace Model\Test;
 
 use Bare\DB;
-use Bare\Model;
+use Bare\M\Model;
 
 class Test extends Model
 {
-
     /**
      * 配置文件
      *

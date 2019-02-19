@@ -7,7 +7,7 @@
 
 namespace controls\MobileApi\Common;
 
-use Bare\Controller;
+use Bare\C\Controller;
 use MobileApi\DataFormat;
 use Common\Tags as CTags;
 use Search\Tag as STag;

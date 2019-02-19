@@ -56,6 +56,5 @@ INSERT INTO `AdminMenu` VALUES (44, '图片', 'Admin_Picture', 0, 44);
 INSERT INTO `AdminMenu` VALUES (45, '相册', 'Picture/Atlas', 44, 9);
 INSERT INTO `AdminMenu` VALUES (46, '相册管理', 'Picture/Atlas/index', 45, 9);
 INSERT INTO `AdminMenu` VALUES (47, '相片管理', 'Picture/Photo/index', 45, 7);
-
-
+INSERT INTO `AdminMenu` VALUES (48, '设置配置', 'Tool/Setup/index', 16, 0);
 EOT;

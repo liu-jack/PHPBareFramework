@@ -9,7 +9,7 @@
 
 namespace Model\Mongo;
 
-use Bare\MongoBase;
+use Bare\M\MongoBase;
 
 class Test extends MongoBase
 {

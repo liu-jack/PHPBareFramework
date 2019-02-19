@@ -229,13 +229,21 @@ function device_id2int($deviceid)
  */
 function get_methods($classname, $access = null)
 {
-    $class = new \ReflectionClass($classname);
+    try {
+        $class = new \ReflectionClass($classname);
+    } catch (\Exception $e) {
+        exit($e->getMessage());
+    }
     $methods = $class->getMethods();
     $returnArr = [];
     foreach ($methods as $value) {
         if ($value->class == $classname) {
             if ($access != null) {
-                $methodAccess = new \ReflectionMethod($classname, $value->name);
+                try {
+                    $methodAccess = new \ReflectionMethod($classname, $value->name);
+                } catch (\Exception $e) {
+                    exit($e->getMessage());
+                }
                 switch ($access) {
                     case 'public':
                         if ($methodAccess->isPublic()) {
@@ -305,7 +313,7 @@ function cdn_cache_purge($urls)
 {
     $urls = is_array($urls) ? $urls : [$urls];
 
-    return \Bare\Queue::addMulti("CDNCachePurge", $urls);
+    return \Bare\M\Queue::addMulti("CDNCachePurge", $urls);
 }
 
 /**
@@ -469,4 +477,70 @@ function int2str($id, $key = 'www.29fh.com')
     $res = substr($hex_str, 0, 4) . $md5_str . substr($hex_str, -($hex_len - 4));
 
     return strtoupper($res);
+}
+
+/**
+ * xml 转 array
+ *
+ * @param $xml
+ * @return array|mixed
+ */
+function xml2array($xml)
+{
+    if (empty($xml)) {
+        return array();
+    }
+    libxml_disable_entity_loader(true);
+
+    return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+}
+
+/**
+ * array 转 xml
+ *
+ * @param $array
+ * @return bool|string
+ */
+function array2xml($array)
+{
+    if (!is_array($array) || count($array) <= 0) {
+        return '';
+    }
+
+    $xml = "<xml>";
+    foreach ($array as $key => $val) {
+        if (is_numeric($val)) {
+            $xml .= "<" . $key . ">" . $val . "</" . $key . ">";
+        } else {
+            $xml .= "<" . $key . "><![CDATA[" . $val . "]]></" . $key . ">";
+        }
+    }
+    $xml .= "</xml>";
+
+    return $xml;
+}
+
+/**
+ * 自然周转日期
+ *
+ * @param $year
+ * @param $week_num
+ * @return array
+ */
+function getWeekDate($year, $week_num)
+{
+    $first_day_of_year = mktime(0, 0, 0, 1, 1, $year);
+    $first_week_day = date('N', $first_day_of_year);
+    $first_week_num = date('W', $first_day_of_year);
+    if ($first_week_num == 1) {
+        $day = (1 - ($first_week_day - 1)) + 7 * ($week_num - 1);
+        $start_date = date('Y-m-d', mktime(0, 0, 0, 1, $day, $year));
+        $end_date = date('Y-m-d', mktime(0, 0, 0, 1, $day + 6, $year));
+    } else {
+        $day = (9 - $first_week_day) + 7 * ($week_num - 1);
+        $start_date = date('Y-m-d', mktime(0, 0, 0, 1, $day, $year));
+        $end_date = date('Y-m-d', mktime(0, 0, 0, 1, $day + 6, $year));
+    }
+
+    return [$start_date, $end_date];
 }

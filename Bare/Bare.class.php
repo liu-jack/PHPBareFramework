@@ -44,7 +44,7 @@ class Bare
                 }
                 $kv++;
             }
-            $_GET = array_merge($_GET, $get);
+            $_GET = array_merge($get, $_GET);
         }
 
         self::start();
@@ -83,7 +83,8 @@ class Bare
             $action = $GLOBALS['_A'];
             $bare->$action();
         } catch (Exception $e) {
-            echo $e->getMessage();
+            $cnt = $e->getCode() . ':' . $e->getMessage();
+            IS_ONLINE ? error_logs($cnt) : exit($cnt);
         }
     }
 
@@ -239,10 +240,12 @@ class Bare
             }
         }
 
-        $appconfig = config('api/apiconfig')[$appid];
-        if (!empty($appconfig)) {
-            $key = $appconfig['appkey'];
-        } else {
+
+        $key = version_app_key($appid, $ver);
+        if (empty($key)) {
+            $key = config('api/apiconfig')[$appid]['appkey'];
+        }
+        if (empty($key)) {
             // AppId不存在
             self::apiError(504);
             exit;

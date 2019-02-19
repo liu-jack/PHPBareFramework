@@ -5,9 +5,7 @@ namespace Bare;
 defined('ROOT_PATH') or exit('Access deny');
 
 use Config\DBConfig;
-use Bare\DataDriver\{
-    PDODriver, MemcachedDriver, MemcacheDriver, RedisDriver, ElasticSearch, MongodbDriver, FileCache
-};
+use Bare\D\{PDODriver, MemcachedDriver, MemcacheDriver, RedisDriver, ElasticSearch, MongodbDriver, FileCache};
 
 /**
  * 数据库操作基类
@@ -111,7 +109,6 @@ class DB extends DBConfig
      * @param array  $param_arr
      * @param string $type
      * @return bool
-     * @throws \Exception
      */
     protected static function _checkConnectionParams($param_arr, $type)
     {
@@ -155,7 +152,8 @@ class DB extends DBConfig
         }
 
         if (!$valid_params) {
-            throw new \Exception("Invalid Connection Parameters Of {$type}");
+            $cnt = "Invalid Connection Parameters Of {$type}";
+            IS_ONLINE ? error_logs($cnt) : exit($cnt);
         }
 
         return true;

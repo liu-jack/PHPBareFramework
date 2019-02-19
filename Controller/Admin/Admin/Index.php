@@ -7,7 +7,7 @@
 
 namespace Controller\Admin\Admin;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Classes\Encrypt\Rsa;
 use Classes\Image\Securimage;
 use Model\Admin\Admin\AdminGroup;
@@ -22,7 +22,7 @@ class Index extends AdminController
     public function index()
     {
         if (!AdminLogin::isLogin()) {
-            $this->alert('请先登录', url('admin/index/login'), '', 'top');
+            $this->alertErr('请先登录', url('admin/index/login'), '', 'top');
         }
 
         $menu = AdminLogin::getAuthMenu();
@@ -52,7 +52,7 @@ class Index extends AdminController
     {
         $uid = AdminLogin::isLogin();
         if ($uid < 1) {
-            $this->alert('请先登录', url('admin/index/login'));
+            $this->alertErr('请先登录', url('admin/index/login'));
         }
         if (!empty($_POST['user_pwd'])) {
             $pwd = strval($_POST['user_pwd']);

@@ -9,7 +9,7 @@
 
 namespace Model\Application;
 
-use Bare\RedisModel;
+use Bare\M\RedisModel;
 use Common\RedisConst;
 use Config\DBConfig;
 use Model\RedisDB\RedisGroupBuy;
@@ -73,12 +73,12 @@ class GroupBuy extends RedisModel
     ];
 
     /**
-     * @see \Bare\RedisModel::add() 新增
-     * @see \Bare\RedisModel::update() 更新
-     * @see \Bare\RedisModel::updateCount() 更新计数
-     * @see \Bare\RedisModel::getInfoByIds() 按主键id查询
-     * @see \Bare\RedisModel::getList() 条件查询
-     * @see \Bare\RedisModel::delete() 删除
+     * @see \Bare\M\RedisModel::add() 新增
+     * @see \Bare\M\RedisModel::update() 更新
+     * @see \Bare\M\RedisModel::updateCount() 更新计数
+     * @see \Bare\M\RedisModel::getInfoByIds() 按主键id查询
+     * @see \Bare\M\RedisModel::getList() 条件查询
+     * @see \Bare\M\RedisModel::delete() 删除
      */
 
     protected static $_add_must_fields = [

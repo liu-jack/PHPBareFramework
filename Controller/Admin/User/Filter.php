@@ -7,7 +7,7 @@
 namespace Controller\Admin\User;
 
 use Bare\DB;
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Classes\Safe\Filter as CFilter;
 
 class Filter extends AdminController

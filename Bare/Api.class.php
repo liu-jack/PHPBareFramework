@@ -8,6 +8,8 @@
 
 namespace Bare;
 
+defined('ROOT_PATH') or exit('Access deny');
+
 class Api
 {
     // 接口请求地址

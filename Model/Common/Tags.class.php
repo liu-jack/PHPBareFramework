@@ -5,7 +5,7 @@
 
 namespace Model\Common;
 
-use Bare\CommonModel;
+use Bare\M\CommonModel;
 use Bare\DB;
 use Common\Upload;
 use Common\PathConst;

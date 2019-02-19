@@ -1,0 +1,144 @@
+{:view('Public/header')}
+
+<!-- Main content starts -->
+<div class="content">
+    <div class="matter">
+        <div class="widget">
+            <div class="widget-head">
+                <div class="pull-left">设置配置</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+
+                {if !empty($input_switch_setup)}
+                {foreach $input_switch_setup as $k => $v}
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color: #ddd;">
+                    <tr>
+                        <th align="center" colspan="3">{$k}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $v as $kk => $vv}
+                    <tr>
+                        <td style="width: 38.2%">{$vv}</td>
+                        <td><input class="input_switch_setup btn btn-default" type="button" data-field="{$kk}"
+                                   data-value="{$switch_setup_val[$kk]}"
+                                   value="{if ($switch_setup_val[$kk] == 1)}是{else}否{/if}"/>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                {/foreach}
+                {/if}
+
+                {if !empty($input_text_setup)}
+                {foreach $input_text_setup as $k => $v}
+                <form action="{url('textSetup')}" method="post" class="form-horizontal">
+                    <table class="table table-bordered table-hover">
+                        <thead style="background-color: #ddd;">
+                        <tr>
+                            <th style="width: 38.2%">{$k}</th>
+                            <th><input type="submit" value="更新" class="btn btn-primary btn-sm"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach $v as $kk => $vv}
+                        <tr>
+                            <td style="width: 38.2%">{$vv}</td>
+                            <td><input class="form-control" name="{$kk}" type="text" value="{$text_setup_val[$kk]}"
+                                       style="width: 61.8%"></td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </form>
+                {/foreach}
+                {/if}
+
+                {if !empty($area_text_setup)}
+                {foreach $area_text_setup as $k => $v}
+                <form action="{url('areaSetup')}" method="post" class="form-horizontal">
+                    <table class="table table-bordered table-hover">
+                        <thead style="background-color: #ddd;">
+                        <tr>
+                            <th style="width: 38.2%">{$k}</th>
+                            <th><input type="submit" value="更新" class="btn btn-primary btn-sm"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach $v as $kk => $vv}
+                        <tr>
+                            <td style="width: 38.2%">{$vv}</td>
+                            <td><textarea cols="60" rows="3" class="form-control" name="{$kk}" style="width: 61.8%">{$area_setup_val[$kk]}</textarea></td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </form>
+                {/foreach}
+                {/if}
+
+                {if !empty($pages)}
+                <div class="widget-foot">
+                    <div class="pager pull-left">{$pages_total}</div>
+                    <ul class="pagination pull-right">
+                        {$pages}
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    <!-- Matter ends -->
+    <div class="clearfix"></div>
+</div>
+<!-- Content ends -->
+<script type="text/javascript">
+    //开关设置
+    $(".input_switch_setup").each(function () {
+        var _this = $(this);
+        $(this).hover(function () {
+            if (_this.attr('data-value') == 1) {
+                _this.val('否');
+            } else {
+                _this.val('是');
+            }
+        }, function () {
+            if (_this.attr('data-value') == 1) {
+                _this.val('是');
+            } else {
+                _this.val('否');
+            }
+        });
+        $(this).click(function () {
+            var value = $(this).attr('data-value');
+            var field = $(this).attr('data-field');
+            $.ajax({
+                url: "{url('switchSetup')}",
+                type: "POST",
+                dataType: "json",
+                data: {field: field, value: value},
+                success: function (json) {
+                    if (json.code == 200) {
+                        if (json.data.value == 1) {
+                            _this.val('是');
+                        } else {
+                            _this.val('否');
+                        }
+                        top.swal('操作成功！', '成功！', 'success');
+                        location.reload();
+                    } else {
+                        top.swal('操作失败！', '稍后再试！', 'error');
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+{@view('Public/footer')}

@@ -57,9 +57,14 @@ class PageSmarty
         // 赋值引用
         $this->smarty->assignByRef('cfg', $app->cfg);
         // 注册插件
-        $this->smarty->registerPlugin('modifier', 'head', 'head');
-        $this->smarty->registerPlugin('modifier', 'html', '_htmlspecialchars');
-        $this->smarty->registerPlugin('modifier', 'date_format', 'dateFormat');
+        try {
+            $this->smarty->registerPlugin('modifier', 'head', 'head');
+            $this->smarty->registerPlugin('modifier', 'html', '_htmlspecialchars');
+            $this->smarty->registerPlugin('modifier', 'format_date', 'format_date');
+        } catch (\Exception $e) {
+            exit($e->getMessage());
+        }
+
         // 设置默认的图片、样式、js、flash的模版路径
         $this->value('url_public', $app->cfg['url']['public']);
         $this->value('url_statics', $app->cfg['url']['statics']);
@@ -127,10 +132,14 @@ class PageSmarty
                 $this->params['template'] = $offsetPath . $this->app->name . '.html';
             }
         }
-        if ($fetch) {
-            return $this->smarty->fetch($this->params['template']);
+        try {
+            if ($fetch) {
+                return $this->smarty->fetch($this->params['template']);
+            }
+            $this->smarty->display($this->params['template']);
+        } catch (\Exception $e) {
+            exit($e->getMessage());
         }
-        $this->smarty->display($this->params['template']);
 
         return null;
     }

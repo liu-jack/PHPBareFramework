@@ -9,7 +9,7 @@
 
 namespace Controller\Admin\Picture;
 
-use Bare\AdminController;
+use Bare\C\AdminController;
 use Classes\Image\PhotoImage;
 use Model\Picture\Photo as MPhoto;
 
