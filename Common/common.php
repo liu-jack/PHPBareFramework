@@ -544,3 +544,19 @@ function getWeekDate($year, $week_num)
 
     return [$start_date, $end_date];
 }
+
+/**
+ * 异步运行脚本
+ *
+ * @param string $uri
+ * @param string $argv
+ */
+function ajax_cli($uri = 'cli/index/index', $argv = '')
+{
+    if (__ENV__ == DEV) {
+        $php = 'php ';
+    } else {
+        $php = 'php ';
+    }
+    pclose(popen($php . ROOT_PATH . "index.php {$uri} {$argv} &", 'r'));
+}
