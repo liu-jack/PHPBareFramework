@@ -16,8 +16,7 @@ class Sql extends Controller
     {
         need_cli();
         $sql = config('sql/database')['createdb'];
-        $dbconfig = config('db')['mysql']['create']['db'];
-
+        $dbconfig = config('bare/db')['mysql']['create']['db'];
         $dsn = "mysql:host={$dbconfig['host']};port={$dbconfig['port']};";
         $pdo = new \PDO($dsn, $dbconfig['user'], $dbconfig['password']);
 
